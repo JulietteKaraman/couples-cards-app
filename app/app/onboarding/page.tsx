@@ -1,9 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
+import { useAuth } from "@/components/providers/AuthProvider";
 
 const slides = [
   { src: "/cards/couples/cover.png", alt: "Cover" },
@@ -15,7 +16,22 @@ const slides = [
 function OnboardingContent() {
   const [i, setI] = useState(0);
   const router = useRouter();
+  const { hasAccess, loading } = useAuth();
   const isLast = i === slides.length - 1;
+
+  useEffect(() => {
+    if (!loading && !hasAccess) {
+      router.push("/app/unlock");
+    }
+  }, [hasAccess, loading, router]);
+
+  if (loading) {
+    return (
+      <main className="min-h-screen bg-black text-white flex items-center justify-center">
+        <div className="text-white/50">Loading...</div>
+      </main>
+    );
+  }
 
   return (
     <main className="min-h-screen bg-black text-white">

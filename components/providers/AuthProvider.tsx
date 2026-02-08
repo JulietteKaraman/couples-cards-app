@@ -3,9 +3,13 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { User } from "@supabase/supabase-js";
 import { supabaseBrowser } from "@/lib/supabase/client";
+import { EntitlementsRow } from "@/lib/supabase/client";
+import { verifyUserAccess } from "@/app/actions/verify-access";
 
 interface AuthContextType {
   user: User | null;
+  profile: EntitlementsRow | null;
+  hasAccess: boolean;
   loading: boolean;
   error: string | null;
   signIn: (email: string, password: string) => Promise<void>;
@@ -18,8 +22,23 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
+  const [profile, setProfile] = useState<EntitlementsRow | null>(null);
+  const [hasAccess, setHasAccess] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Verify access when user changes
+  async function checkAccess(userId: string) {
+    try {
+      const result = await verifyUserAccess(userId);
+      setProfile(result.profile);
+      setHasAccess(result.hasAccess);
+    } catch (err) {
+      console.error("Error verifying access:", err);
+      setProfile(null);
+      setHasAccess(false);
+    }
+  }
 
   // Initialize auth state
   useEffect(() => {
@@ -27,6 +46,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       try {
         const { data } = await supabaseBrowser.auth.getUser();
         setUser(data.user);
+        if (data.user) {
+          await checkAccess(data.user.id);
+        }
       } catch (err) {
         console.error("Auth initialization error:", err);
       } finally {
@@ -40,7 +62,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const {
       data: { subscription },
     } = supabaseBrowser.auth.onAuthStateChange((event, session) => {
-      setUser(session?.user ?? null);
+      const newUser = session?.user ?? null;
+      setUser(newUser);
+      if (newUser) {
+        checkAccess(newUser.id);
+      } else {
+        setProfile(null);
+        setHasAccess(false);
+      }
     });
 
     return () => subscription.unsubscribe();
@@ -54,7 +83,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         password,
       });
       if (error) throw error;
-      // Auth state change listener will update user
+      // Auth state change listener will update user and trigger access check
     } catch (err: any) {
       setError(err.message ?? "Sign in failed");
       throw err;
@@ -93,6 +122,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     <AuthContext.Provider
       value={{
         user,
+        profile,
+        hasAccess,
         loading,
         error,
         signIn,

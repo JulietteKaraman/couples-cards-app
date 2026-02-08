@@ -17,23 +17,29 @@ export type Database = {
       entitlements: {
         Row: {
           couples_access: boolean
+          last_verified_at: string | null
           purchased_at: string | null
           stripe_checkout_session_id: string | null
           stripe_customer_id: string | null
+          stripe_payment_intent_id: string | null
           user_id: string
         }
         Insert: {
           couples_access?: boolean
+          last_verified_at?: string | null
           purchased_at?: string | null
           stripe_checkout_session_id?: string | null
           stripe_customer_id?: string | null
+          stripe_payment_intent_id?: string | null
           user_id: string
         }
         Update: {
           couples_access?: boolean
+          last_verified_at?: string | null
           purchased_at?: string | null
           stripe_checkout_session_id?: string | null
           stripe_customer_id?: string | null
+          stripe_payment_intent_id?: string | null
           user_id?: string
         }
         Relationships: []

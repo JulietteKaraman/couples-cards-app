@@ -2,10 +2,10 @@ import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { headers } from "next/headers";
 import { supabaseAdmin } from "@/lib/supabase/admin";
-import { STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET } from "@/lib/environment";
+import { STRIPE_TEST_SECRET_KEY, STRIPE_WEBHOOK_SECRET } from "@/lib/environment";
 
-const stripe = new Stripe(STRIPE_SECRET_KEY, {
-  apiVersion: "2024-06-20",
+const stripe = new Stripe(STRIPE_TEST_SECRET_KEY, {
+  apiVersion: "2026-01-28.clover",
 });
 
 export async function POST(req: Request) {
@@ -33,12 +33,23 @@ export async function POST(req: Request) {
     const userId = session.metadata?.user_id;
 
     if (product === "couples" && userId) {
+      // Retrieve the full session with payment_intent expanded
+      const fullSession = await stripe.checkout.sessions.retrieve(session.id, {
+        expand: ['payment_intent']
+      });
+
+      const paymentIntentId = typeof fullSession.payment_intent === 'string'
+        ? fullSession.payment_intent
+        : fullSession.payment_intent?.id;
+
       await supabaseAdmin.from("entitlements").upsert({
         user_id: userId,
         couples_access: true,
         purchased_at: new Date().toISOString(),
         stripe_customer_id: typeof session.customer === "string" ? session.customer : null,
         stripe_checkout_session_id: session.id,
+        stripe_payment_intent_id: paymentIntentId || null,
+        last_verified_at: new Date().toISOString(),
       });
     }
   }

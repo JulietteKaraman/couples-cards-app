@@ -2,8 +2,10 @@
 
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import { COUPLES_CARDS, SECTIONS, SectionKey, CardPrompt } from "@/data/couples";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
+import { useAuth } from "@/components/providers/AuthProvider";
 
 function pickRandom<T>(arr: T[]) {
   return arr[Math.floor(Math.random() * arr.length)];
@@ -13,10 +15,19 @@ const STORAGE_KEY = "couples_selected_sections_v1";
 
 function DrawPageContent() {
   const allKeys = Object.keys(SECTIONS) as SectionKey[];
+  const router = useRouter();
+  const { hasAccess, loading } = useAuth();
 
   const [selected, setSelected] = useState<SectionKey[]>(allKeys);
   const [current, setCurrent] = useState<CardPrompt | null>(null);
   const [flipped, setFlipped] = useState(false);
+
+  // Check access
+  useEffect(() => {
+    if (!loading && !hasAccess) {
+      router.push("/app/unlock");
+    }
+  }, [hasAccess, loading, router]);
 
   // Restore selected sections from localStorage (nice quality-of-life)
   useEffect(() => {
@@ -63,6 +74,14 @@ function DrawPageContent() {
   }
 
   const template = current ? SECTIONS[current.section].templateImg : null;
+
+  if (loading) {
+    return (
+      <main className="min-h-screen bg-black text-white flex items-center justify-center">
+        <div className="text-white/50">Loading...</div>
+      </main>
+    );
+  }
 
   return (
     <main className="min-h-screen bg-black text-white">

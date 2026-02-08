@@ -6,7 +6,7 @@ import { useAuth } from "@/components/providers/AuthProvider";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 
 function AppHomeContent() {
-  const { user, signOut } = useAuth();
+  const { user, hasAccess, signOut } = useAuth();
 
   return (
     <main className="min-h-screen bg-black text-white">
@@ -28,12 +28,21 @@ function AppHomeContent() {
             Welcome back{user?.email ? `, ${user.email.split('@')[0]}` : ""}. Ready to begin?
           </p>
 
-          <Link
-            href="/app/onboarding"
-            className="block text-center rounded-xl bg-white text-black py-3 font-medium"
-          >
-            Start
-          </Link>
+          {hasAccess ? (
+            <Link
+              href="/app/onboarding"
+              className="block text-center rounded-xl bg-white text-black py-3 font-medium"
+            >
+              Start
+            </Link>
+          ) : (
+            <Link
+              href="/app/unlock"
+              className="block text-center rounded-xl bg-white text-black py-3 font-medium"
+            >
+              Unlock for £25
+            </Link>
+          )}
 
           <button
             onClick={signOut}
