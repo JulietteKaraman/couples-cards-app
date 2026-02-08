@@ -2,9 +2,9 @@ import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { headers } from "next/headers";
 import { supabaseAdmin } from "@/lib/supabase/admin";
-import { STRIPE_TEST_SECRET_KEY, STRIPE_WEBHOOK_SECRET } from "@/lib/environment";
+import { STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET } from "@/lib/environment";
 
-const stripe = new Stripe(STRIPE_TEST_SECRET_KEY!, {
+const stripe = new Stripe(STRIPE_SECRET_KEY!, {
   apiVersion: "2026-01-28.clover",
 });
 

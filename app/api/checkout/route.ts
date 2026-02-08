@@ -1,13 +1,9 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { withRetry } from "@/lib/utils/retry";
-import { STRIPE_TEST_SECRET_KEY, 
-  STRIPE_COUPLES_PRICE_ID, 
-  SITE_URL } from "@/lib/environment";
+import { SITE_URL, STRIPE_SECRET_KEY } from "@/lib/environment";
 
-console.log(process.env.STRIPE_TEST_SECRET_KEY)
-
-const stripe = new Stripe(process.env.STRIPE_TEST_SECRET_KEY!, {
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2026-01-28.clover",
 });
 
@@ -47,7 +43,7 @@ export async function POST(req: Request) {
           mode: "payment",
           allow_promotion_codes: true,
           customer_email: email,
-          line_items: [{ price: process.env.STRIPE_TEST_COUPLES_PRICE_ID, quantity: 1 }],
+          line_items: [{ price: process.env.STRIPE_COUPLES_PRICE_ID, quantity: 1 }],
           success_url: `${SITE_URL}/app?success=true`,
           cancel_url: `${SITE_URL}/app/unlock?canceled=true`,
           metadata: {

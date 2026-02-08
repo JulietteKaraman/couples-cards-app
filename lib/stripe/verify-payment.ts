@@ -1,7 +1,7 @@
 import Stripe from "stripe";
-import { STRIPE_TEST_SECRET_KEY } from "@/lib/environment";
+import { STRIPE_SECRET_KEY } from "@/lib/environment";
 
-const stripe = new Stripe(STRIPE_TEST_SECRET_KEY, {
+const stripe = new Stripe(STRIPE_SECRET_KEY, {
   apiVersion: "2026-01-28.clover",
 });
 
