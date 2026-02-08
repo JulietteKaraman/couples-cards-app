@@ -1,8 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { supabaseBrowser } from "@/lib/supabase/client";
 
 const slides = [
   { src: "/cards/couples/cover.png", alt: "Cover" },
@@ -13,8 +14,29 @@ const slides = [
 
 export default function Onboarding() {
   const [i, setI] = useState(0);
+  // const [checkingAuth, setCheckingAuth] = useState(true);
   const router = useRouter();
   const isLast = i === slides.length - 1;
+
+  // useEffect(() => {
+  //   async function checkAuth() {
+  //     const { data } = await supabaseBrowser.auth.getUser();
+  //     if (!data.user) {
+  //       router.push("/login");
+  //       return;
+  //     }
+  //     setCheckingAuth(false);
+  //   }
+  //   checkAuth();
+  // // }, [router]);
+
+  // if (checkingAuth) {
+  //   return (
+  //     <main className="min-h-screen bg-black text-white flex items-center justify-center">
+  //       <div className="text-white/50">Loading...</div>
+  //     </main>
+  //   );
+  // }
 
   return (
     <main className="min-h-screen bg-black text-white">
