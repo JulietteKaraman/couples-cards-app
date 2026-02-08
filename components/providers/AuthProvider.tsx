@@ -31,6 +31,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   async function checkAccess(userId: string) {
     try {
       const result = await verifyUserAccess(userId);
+
+      // console.log("Access result:", result);
+
       setProfile(result.profile);
       setHasAccess(result.hasAccess);
     } catch (err) {
