@@ -35,6 +35,10 @@ function UnlockPageContent() {
       });
 
       const out = await res.json();
+      
+      console.log("Checkout API response:", out);
+      console.log("Response status:", res.status);
+      console.log("Checkout URL:", out.url);
 
       if (!res.ok) {
         throw new Error(out.error || "Checkout failed");
@@ -44,6 +48,7 @@ function UnlockPageContent() {
         throw new Error("No checkout URL received");
       }
 
+      console.log("Redirecting to Stripe:", out.url);
       window.location.href = out.url;
     } catch (err: any) {
       console.error("Checkout error:", err);
