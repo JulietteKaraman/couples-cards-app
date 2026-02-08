@@ -36,17 +36,25 @@ function AppHomeContent() {
               Start
             </Link>
           ) : (
-            <Link
-              href="/app/unlock"
-              className="block text-center rounded-xl bg-white text-black py-3 font-medium"
-            >
-              Unlock for £25
-            </Link>
+            <div className="space-y-4">
+              <Link
+                href="/app/unlock"
+                className="block text-center rounded-xl bg-white text-black py-3 font-medium"
+              >
+                Unlock for £25
+              </Link>
+              <Link
+                href="/app/"
+                className="block text-center rounded-xl bg-black border border-white/15 text-white py-3 font-medium"
+              >
+                Back to Home
+              </Link>
+            </div>
           )}
 
           <button
             onClick={signOut}
-            className="w-full rounded-xl border border-white/15 py-3 font-medium text-white/70 hover:text-white"
+            className="w-full rounded-xl bg-red-500 py-3 font-medium text-white/70 hover:text-white"
           >
             Sign out
           </button>
