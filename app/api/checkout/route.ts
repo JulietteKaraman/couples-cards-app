@@ -12,10 +12,19 @@ const stripe = new Stripe(process.env.STRIPE_TEST_SECRET_KEY!, {
 });
 
 export async function POST(req: Request) {
+  console.log("========== CHECKOUT START ==========");
+  console.log("Timestamp:", new Date().toISOString());
+  
   try {
     const { userId, email, idempotencyKey } = await req.json();
 
+    console.log("Checkout request received:");
+    console.log("  userId:", userId);
+    console.log("  email:", email);
+    console.log("  idempotencyKey present:", !!idempotencyKey);
+
     if (!userId || !email) {
+      console.error("ERROR: Missing user information");
       return NextResponse.json(
         { error: "Missing user information" },
         { status: 400 }
@@ -23,12 +32,15 @@ export async function POST(req: Request) {
     }
 
     if (!idempotencyKey) {
+      console.error("ERROR: Missing idempotency key");
       return NextResponse.json(
         { error: "Missing idempotency key" },
         { status: 400 }
       );
     }
 
+    console.log("Creating Stripe checkout session...");
+    
     const session = await withRetry(
       () => stripe.checkout.sessions.create(
         {
@@ -48,16 +60,26 @@ export async function POST(req: Request) {
       3
     );
 
+    console.log("Checkout session created successfully:");
+    console.log("  Session ID:", session.id);
+    console.log("  Session URL present:", !!session.url);
+    console.log("  Metadata:", session.metadata);
+
     if (!session.url) {
+      console.error("ERROR: No session URL returned from Stripe");
       return NextResponse.json(
         { error: "Failed to create checkout session" },
         { status: 500 }
       );
     }
 
+    console.log("========== CHECKOUT END (SUCCESS) ==========");
     return NextResponse.json({ url: session.url });
   } catch (error: any) {
-    console.error("Checkout error:", error);
+    console.error("========== CHECKOUT ERROR ==========");
+    console.error("Error creating checkout:", error.message);
+    console.error("Error stack:", error.stack);
+    console.log("========== CHECKOUT END (ERROR) ==========");
     return NextResponse.json(
       { error: "Unable to initialize checkout. Please try again." },
       { status: 500 }
