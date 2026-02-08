@@ -3,7 +3,7 @@ import Stripe from "stripe";
 import { withRetry } from "@/lib/utils/retry";
 import { SITE_URL, STRIPE_SECRET_KEY } from "@/lib/environment";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+const stripe = new Stripe(STRIPE_SECRET_KEY!, {
   apiVersion: "2026-01-28.clover",
 });
 
