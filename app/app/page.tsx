@@ -1,15 +1,13 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
-import { createClient } from "@supabase/supabase-js";
+import { useAuth } from "@/components/providers/AuthProvider";
+import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!
-);
+function AppHomeContent() {
+  const { user, signOut } = useAuth();
 
-export default async function AppHome() {
-  // This page is server-rendered by default, so we won't use supabase client here.
-  // We'll keep this page simple and move entitlement checking to a client page next.
   return (
     <main className="min-h-screen bg-black text-white">
       <div className="max-w-md mx-auto px-4 py-8">
@@ -27,7 +25,7 @@ export default async function AppHome() {
         <div className="mt-6 space-y-3">
           <h1 className="text-xl font-semibold">Couples Edition</h1>
           <p className="text-sm text-white/70">
-            Welcome back. Ready to begin?
+            Welcome back{user?.email ? `, ${user.email.split('@')[0]}` : ""}. Ready to begin?
           </p>
 
           <Link
@@ -36,8 +34,23 @@ export default async function AppHome() {
           >
             Start
           </Link>
+
+          <button
+            onClick={signOut}
+            className="w-full rounded-xl border border-white/15 py-3 font-medium text-white/70 hover:text-white"
+          >
+            Sign out
+          </button>
         </div>
       </div>
     </main>
+  );
+}
+
+export default function AppHome() {
+  return (
+    <ProtectedRoute>
+      <AppHomeContent />
+    </ProtectedRoute>
   );
 }

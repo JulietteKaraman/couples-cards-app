@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { withRetry } from "@/lib/utils/retry";
+import { STRIPE_SECRET_KEY, STRIPE_COUPLES_PRICE_ID, SITE_URL } from "@/lib/environment";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+const stripe = new Stripe(STRIPE_SECRET_KEY, {
   apiVersion: "2024-06-20",
 });
 
@@ -30,9 +31,9 @@ export async function POST(req: Request) {
           mode: "payment",
           allow_promotion_codes: true,
           customer_email: email,
-          line_items: [{ price: process.env.STRIPE_COUPLES_PRICE_ID!, quantity: 1 }],
-          success_url: `${process.env.NEXT_PUBLIC_SITE_URL}/app?success=true`,
-          cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/app/unlock?canceled=true`,
+          line_items: [{ price: STRIPE_COUPLES_PRICE_ID, quantity: 1 }],
+          success_url: `${SITE_URL}/app?success=true`,
+          cancel_url: `${SITE_URL}/app/unlock?canceled=true`,
           metadata: {
             product: "couples",
             user_id: userId,

@@ -2,9 +2,8 @@
 
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
 import { COUPLES_CARDS, SECTIONS, SectionKey, CardPrompt } from "@/data/couples";
-import { supabaseBrowser } from "@/lib/supabase/client";
+import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 
 function pickRandom<T>(arr: T[]) {
   return arr[Math.floor(Math.random() * arr.length)];
@@ -12,27 +11,12 @@ function pickRandom<T>(arr: T[]) {
 
 const STORAGE_KEY = "couples_selected_sections_v1";
 
-export default function DrawPage() {
+function DrawPageContent() {
   const allKeys = Object.keys(SECTIONS) as SectionKey[];
-  const router = useRouter();
 
   const [selected, setSelected] = useState<SectionKey[]>(allKeys);
   const [current, setCurrent] = useState<CardPrompt | null>(null);
   const [flipped, setFlipped] = useState(false);
-  const [checkingAuth, setCheckingAuth] = useState(true);
-
-  // Auth check
-  useEffect(() => {
-    async function checkAuth() {
-      const { data } = await supabaseBrowser.auth.getUser();
-      if (!data.user) {
-        router.push("/login");
-        return;
-      }
-      setCheckingAuth(false);
-    }
-    checkAuth();
-  }, [router]);
 
   // Restore selected sections from localStorage (nice quality-of-life)
   useEffect(() => {
@@ -79,14 +63,6 @@ export default function DrawPage() {
   }
 
   const template = current ? SECTIONS[current.section].templateImg : null;
-
-  if (checkingAuth) {
-    return (
-      <main className="min-h-screen bg-black text-white flex items-center justify-center">
-        <div className="text-white/50">Loading...</div>
-      </main>
-    );
-  }
 
   return (
     <main className="min-h-screen bg-black text-white">
@@ -208,5 +184,13 @@ export default function DrawPage() {
         )}
       </div>
     </main>
+  );
+}
+
+export default function DrawPage() {
+  return (
+    <ProtectedRoute>
+      <DrawPageContent />
+    </ProtectedRoute>
   );
 }

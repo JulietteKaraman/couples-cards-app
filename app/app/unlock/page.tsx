@@ -1,42 +1,25 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { supabaseBrowser } from "@/lib/supabase/client";
+import { useState } from "react";
+import { useAuth } from "@/components/providers/AuthProvider";
+import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 
 function generateIdempotencyKey(): string {
   return `checkout-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
 }
 
-export default function UnlockPage() {
+function UnlockPageContent() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [checkingAuth, setCheckingAuth] = useState(true);
-  const router = useRouter();
-
-  useEffect(() => {
-    async function checkAuth() {
-      const { data } = await supabaseBrowser.auth.getUser();
-      if (!data.user) {
-        router.push("/login");
-        return;
-      }
-      setCheckingAuth(false);
-    }
-    checkAuth();
-  }, [router]);
+  const { user } = useAuth();
 
   async function startCheckout() {
     setLoading(true);
     setError(null);
 
     try {
-      const { data } = await supabaseBrowser.auth.getUser();
-      const user = data.user;
-
       if (!user?.id || !user.email) {
-        router.push("/login");
-        return;
+        throw new Error("User not authenticated");
       }
 
       const idempotencyKey = generateIdempotencyKey();
@@ -69,14 +52,6 @@ export default function UnlockPage() {
     }
   }
 
-  if (checkingAuth) {
-    return (
-      <main className="min-h-screen bg-black text-white flex items-center justify-center px-4">
-        <div className="text-white/50">Loading...</div>
-      </main>
-    );
-  }
-
   return (
     <main className="min-h-screen bg-black text-white flex items-center justify-center px-4">
       <div className="w-full max-w-md rounded-2xl border border-white/10 bg-white/5 p-6 space-y-4">
@@ -100,5 +75,13 @@ export default function UnlockPage() {
         </p>
       </div>
     </main>
+  );
+}
+
+export default function UnlockPage() {
+  return (
+    <ProtectedRoute>
+      <UnlockPageContent />
+    </ProtectedRoute>
   );
 }

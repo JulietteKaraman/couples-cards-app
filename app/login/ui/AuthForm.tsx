@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { supabaseBrowser } from "@/lib/supabase/client";
+import { useAuth } from "@/components/providers/AuthProvider";
 
 export default function AuthForm() {
   const [mode, setMode] = useState<"signin" | "signup">("signin");
@@ -9,27 +9,26 @@ export default function AuthForm() {
   const [password, setPassword] = useState("");
   const [msg, setMsg] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-
+  const { signIn, signUp, error: authError, clearError } = useAuth();
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setMsg(null);
+    clearError();
     setLoading(true);
 
     try {
       if (mode === "signup") {
-        const { error } = await supabaseBrowser.auth.signUp({ email, password });
-        console.log(error)
-        if (error) throw error;
+        await signUp(email, password);
         setMsg("Account created. You can now sign in.");
         setMode("signin");
       } else {
-        const { error } = await supabaseBrowser.auth.signInWithPassword({ email, password });
-        if (error) throw error;
+        await signIn(email, password);
         window.location.href = "/app";
       }
     } catch (err: any) {
-      setMsg(err.message ?? "Something went wrong.");
+      // Error is handled in context, but we display it here
+      setMsg(authError ?? err.message ?? "Something went wrong.");
     } finally {
       setLoading(false);
     }

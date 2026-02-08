@@ -1,9 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { supabaseBrowser } from "@/lib/supabase/client";
+import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 
 const slides = [
   { src: "/cards/couples/cover.png", alt: "Cover" },
@@ -12,31 +12,10 @@ const slides = [
   { src: "/cards/couples/instructions/3.png", alt: "Instructions 3" },
 ];
 
-export default function Onboarding() {
+function OnboardingContent() {
   const [i, setI] = useState(0);
-  // const [checkingAuth, setCheckingAuth] = useState(true);
   const router = useRouter();
   const isLast = i === slides.length - 1;
-
-  // useEffect(() => {
-  //   async function checkAuth() {
-  //     const { data } = await supabaseBrowser.auth.getUser();
-  //     if (!data.user) {
-  //       router.push("/login");
-  //       return;
-  //     }
-  //     setCheckingAuth(false);
-  //   }
-  //   checkAuth();
-  // // }, [router]);
-
-  // if (checkingAuth) {
-  //   return (
-  //     <main className="min-h-screen bg-black text-white flex items-center justify-center">
-  //       <div className="text-white/50">Loading...</div>
-  //     </main>
-  //   );
-  // }
 
   return (
     <main className="min-h-screen bg-black text-white">
@@ -73,5 +52,13 @@ export default function Onboarding() {
         </div>
       </div>
     </main>
+  );
+}
+
+export default function Onboarding() {
+  return (
+    <ProtectedRoute>
+      <OnboardingContent />
+    </ProtectedRoute>
   );
 }
