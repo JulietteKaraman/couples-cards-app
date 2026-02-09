@@ -180,16 +180,16 @@ function DrawPageContent() {
             <div className="absolute bottom-3 left-0 right-0 px-4">
               <div className="flex gap-2">
                 <button
-                  onClick={draw}
-                  className="flex-1 rounded-xl bg-black/70 text-white py-2 text-sm border border-white/10"
-                >
-                  Draw another
-                </button>
-                <button
                   onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
                   className="flex-1 rounded-xl bg-black/70 text-white py-2 text-sm border border-white/10"
                 >
                   Change sections
+                </button>
+                <button
+                  onClick={draw}
+                  className="flex-1 rounded-xl bg-black/70 text-white py-2 text-sm border border-white/10"
+                >
+                  Draw another
                 </button>
               </div>
             </div>
