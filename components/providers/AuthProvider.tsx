@@ -10,12 +10,14 @@ interface AuthContextType {
   user: User | null;
   profile: EntitlementsRow | null;
   hasAccess: boolean;
+  purchasedDecks: string[];
   loading: boolean;
   error: string | null;
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
   clearError: () => void;
+  refreshAccess: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -24,22 +26,47 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<EntitlementsRow | null>(null);
   const [hasAccess, setHasAccess] = useState(false);
+  const [purchasedDecks, setPurchasedDecks] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   // Verify access when user changes
   async function checkAccess(userId: string) {
     try {
+      // Check legacy entitlements (for couples access)
       const result = await verifyUserAccess(userId);
-
-      // console.log("Access result:", result);
-
       setProfile(result.profile);
       setHasAccess(result.hasAccess);
+
+      // Also check new user_decks table for multi-deck support
+      const { data: userDecks, error: decksError } = await supabaseBrowser
+        .from("user_decks")
+        .select("deck_type")
+        .eq("user_id", userId);
+
+      if (decksError) {
+        console.error("Error fetching user decks:", decksError);
+      } else if (userDecks) {
+        const decks = userDecks.map((d) => d.deck_type);
+        setPurchasedDecks(decks);
+        
+        // Also set hasAccess if they have couples in new table
+        if (decks.includes("couples")) {
+          setHasAccess(true);
+        }
+      }
     } catch (err) {
       console.error("Error verifying access:", err);
       setProfile(null);
       setHasAccess(false);
+      setPurchasedDecks([]);
+    }
+  }
+
+  // Refresh access (useful after restore purchase)
+  async function refreshAccess() {
+    if (user?.id) {
+      await checkAccess(user.id);
     }
   }
 
@@ -72,6 +99,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       } else {
         setProfile(null);
         setHasAccess(false);
+        setPurchasedDecks([]);
       }
     });
 
@@ -111,6 +139,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const { error } = await supabaseBrowser.auth.signOut();
       if (error) throw error;
       // Auth state change listener will update user to null
+      setPurchasedDecks([]);
     } catch (err: any) {
       setError(err.message ?? "Sign out failed");
       throw err;
@@ -127,12 +156,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         user,
         profile,
         hasAccess,
+        purchasedDecks,
         loading,
         error,
         signIn,
         signUp,
         signOut,
         clearError,
+        refreshAccess,
       }}
     >
       {children}
