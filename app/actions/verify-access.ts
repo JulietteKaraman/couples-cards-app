@@ -22,9 +22,55 @@ export async function verifyUserAccess(userId: string): Promise<AccessVerificati
     return { profile: null, hasAccess: false };
   }
   
-  // If no payment intent ID, can't verify with Stripe
+  // If no payment intent ID, trust the webhook's decision
+  // The checkout.session.completed event only fires for successful payments
+  // If couples_access was set to true by the webhook, honor it
   if (!entitlement.stripe_payment_intent_id) {
-    // Check if couples_access is already granted (backward compatibility)
+    console.log(`No payment intent ID for user ${userId}, using stored couples_access:`, entitlement.couples_access);
+    
+    // If access was granted by webhook, trust it and return
+    if (entitlement.couples_access) {
+      console.log(`Granting access based on webhook approval for user ${userId}`);
+      return { 
+        profile: entitlement, 
+        hasAccess: true 
+      };
+    }
+    
+    // If access is false but we have a checkout session ID, try to verify via session
+    if (entitlement.stripe_checkout_session_id && !entitlement.couples_access) {
+      console.log(`Attempting session-based verification for user ${userId}`);
+      try {
+        const { verifyCheckoutSession } = await import("@/lib/stripe/verify-payment");
+        const sessionVerification = await verifyCheckoutSession(entitlement.stripe_checkout_session_id);
+        
+        if (sessionVerification.isValid) {
+          // Update the record with the payment intent ID if found
+          const updateData: any = {
+            couples_access: true,
+            last_verified_at: new Date().toISOString(),
+          };
+          
+          if (sessionVerification.paymentIntentId) {
+            updateData.stripe_payment_intent_id = sessionVerification.paymentIntentId;
+          }
+          
+          await supabaseAdmin
+            .from("entitlements")
+            .update(updateData)
+            .eq("user_id", userId);
+          
+          console.log(`Session verification successful, granting access to user ${userId}`);
+          return {
+            profile: { ...entitlement, couples_access: true, stripe_payment_intent_id: sessionVerification.paymentIntentId || null },
+            hasAccess: true
+          };
+        }
+      } catch (err) {
+        console.error("Session verification failed:", err);
+      }
+    }
+    
     return { 
       profile: entitlement, 
       hasAccess: entitlement.couples_access 

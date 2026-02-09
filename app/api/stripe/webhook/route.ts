@@ -54,17 +54,35 @@ export async function POST(req: Request) {
       console.log("Conditions met - processing entitlement for user:", userId);
       
       try {
-        // Retrieve the full session with payment_intent expanded
-        const fullSession = await stripe.checkout.sessions.retrieve(session.id, {
-          expand: ['payment_intent']
-        });
+        // First, try to get payment_intent from the event object directly
+        let paymentIntentId = typeof session.payment_intent === 'string' 
+          ? session.payment_intent 
+          : (session.payment_intent as any)?.id;
+        
+        console.log("Payment Intent ID from session object:", paymentIntentId);
 
-        const paymentIntentId = typeof fullSession.payment_intent === 'string'
-          ? fullSession.payment_intent
-          : fullSession.payment_intent?.id;
+        // If not found, retrieve the full session with payment_intent expanded
+        if (!paymentIntentId) {
+          console.log("Payment intent not in session object, retrieving from Stripe...");
+          const fullSession = await stripe.checkout.sessions.retrieve(session.id, {
+            expand: ['payment_intent']
+          });
 
-        console.log("Payment Intent ID:", paymentIntentId);
+          paymentIntentId = typeof fullSession.payment_intent === 'string'
+            ? fullSession.payment_intent
+            : fullSession.payment_intent?.id;
 
+          console.log("Payment Intent ID from Stripe API:", paymentIntentId);
+        }
+
+        // If still not found, try payment_intent_data
+        if (!paymentIntentId && (session as any).payment_intent_data?.id) {
+          paymentIntentId = (session as any).payment_intent_data.id;
+          console.log("Payment Intent ID from payment_intent_data:", paymentIntentId);
+        }
+
+        // Ensure we always set couples_access to true for successful checkouts
+        // even if we can't get the payment intent ID
         const entitlementData = {
           user_id: userId,
           couples_access: true,
@@ -74,6 +92,8 @@ export async function POST(req: Request) {
           stripe_payment_intent_id: paymentIntentId || null,
           last_verified_at: new Date().toISOString(),
         };
+
+        console.log("Payment intent ID status:", paymentIntentId ? "FOUND" : "MISSING - will grant access anyway");
 
         console.log("Upserting entitlement:", entitlementData);
 

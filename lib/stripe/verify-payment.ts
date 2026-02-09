@@ -11,6 +11,13 @@ export interface PaymentVerificationResult {
   amountRefunded?: number;
 }
 
+export interface CheckoutSessionVerificationResult {
+  isValid: boolean;
+  status: string;
+  paymentIntentId?: string;
+  paymentStatus: string;
+}
+
 export async function verifyPaymentStatus(paymentIntentId: string): Promise<PaymentVerificationResult> {
   try {
     // Retrieve the payment intent
@@ -48,5 +55,35 @@ export async function verifyPaymentStatus(paymentIntentId: string): Promise<Paym
   } catch (error) {
     console.error("Error verifying payment status:", error);
     return { isValid: false, status: 'unknown' };
+  }
+}
+
+export async function verifyCheckoutSession(sessionId: string): Promise<CheckoutSessionVerificationResult> {
+  try {
+    // Retrieve the checkout session with payment intent expanded
+    const session = await stripe.checkout.sessions.retrieve(sessionId, {
+      expand: ['payment_intent']
+    });
+
+    const paymentIntentId = typeof session.payment_intent === 'string'
+      ? session.payment_intent
+      : session.payment_intent?.id;
+
+    // Check if payment was successful
+    const isPaid = session.payment_status === 'paid';
+    
+    return {
+      isValid: isPaid,
+      status: session.status,
+      paymentIntentId: paymentIntentId,
+      paymentStatus: session.payment_status
+    };
+  } catch (error) {
+    console.error("Error verifying checkout session:", error);
+    return { 
+      isValid: false, 
+      status: 'error',
+      paymentStatus: 'unknown'
+    };
   }
 }
