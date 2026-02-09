@@ -74,7 +74,7 @@ export async function verifyCheckoutSession(sessionId: string): Promise<Checkout
     
     return {
       isValid: isPaid,
-      status: session.status,
+      status: session.status || 'unknown',
       paymentIntentId: paymentIntentId,
       paymentStatus: session.payment_status
     };
