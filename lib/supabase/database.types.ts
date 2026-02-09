@@ -44,6 +44,47 @@ export type Database = {
         }
         Relationships: []
       }
+      user_decks: {
+        Row: {
+          id: string
+          user_id: string
+          deck_type: string
+          purchased_at: string | null
+          stripe_payment_intent_id: string | null
+          stripe_checkout_session_id: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          deck_type: string
+          purchased_at?: string | null
+          stripe_payment_intent_id?: string | null
+          stripe_checkout_session_id?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          deck_type?: string
+          purchased_at?: string | null
+          stripe_payment_intent_id?: string | null
+          stripe_checkout_session_id?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_decks_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
     }
     Views: {
       [_ in never]: never
