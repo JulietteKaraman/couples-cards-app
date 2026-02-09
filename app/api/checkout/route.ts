@@ -12,11 +12,12 @@ export async function POST(req: Request) {
   console.log("Timestamp:", new Date().toISOString());
   
   try {
-    const { userId, email, idempotencyKey } = await req.json();
+    const { userId, email, idempotencyKey, product } = await req.json();
 
     console.log("Checkout request received:");
     console.log("  userId:", userId);
     console.log("  email:", email);
+    console.log("  product:", product);
     console.log("  idempotencyKey present:", !!idempotencyKey);
 
     if (!userId || !email) {
@@ -35,7 +36,44 @@ export async function POST(req: Request) {
       );
     }
 
-    console.log("Creating Stripe checkout session...");
+    // Validate product type
+    const validProducts = ["couples", "friends", "bundle"];
+    const productType = product || "couples";
+    
+    if (!validProducts.includes(productType)) {
+      console.error("ERROR: Invalid product type:", productType);
+      return NextResponse.json(
+        { error: "Invalid product type" },
+        { status: 400 }
+      );
+    }
+
+    // Get the appropriate price ID
+    let priceId: string;
+    switch (productType) {
+      case "couples":
+        priceId = process.env.STRIPE_COUPLES_PRICE_ID!;
+        break;
+      case "friends":
+        priceId = process.env.STRIPE_FRIENDS_PRICE_ID!;
+        break;
+      case "bundle":
+        priceId = process.env.STRIPE_BUNDLE_PRICE_ID!;
+        break;
+      default:
+        priceId = process.env.STRIPE_COUPLES_PRICE_ID!;
+    }
+
+    if (!priceId) {
+      console.error("ERROR: Price ID not configured for product:", productType);
+      return NextResponse.json(
+        { error: "Price not configured" },
+        { status: 500 }
+      );
+    }
+
+    console.log("Creating Stripe checkout session for product:", productType);
+    console.log("Using price ID:", priceId);
     
     const session = await withRetry(
       () => stripe.checkout.sessions.create(
@@ -43,11 +81,11 @@ export async function POST(req: Request) {
           mode: "payment",
           allow_promotion_codes: true,
           customer_email: email,
-          line_items: [{ price: process.env.STRIPE_COUPLES_PRICE_ID, quantity: 1 }],
+          line_items: [{ price: priceId, quantity: 1 }],
           success_url: `${SITE_URL}/app?success=true`,
           cancel_url: `${SITE_URL}/app/unlock?canceled=true`,
           metadata: {
-            product: "couples",
+            product: productType,
             user_id: userId,
           },
         },

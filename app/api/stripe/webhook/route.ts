@@ -50,39 +50,90 @@ export async function POST(req: Request) {
     const product = session.metadata?.product;
     const userId = session.metadata?.user_id;
 
-    if (product === "couples" && userId) {
-      console.log("Conditions met - processing entitlement for user:", userId);
+    if (!userId) {
+      console.log("Skipping - no userId in metadata");
+      return NextResponse.json({ received: true });
+    }
+
+    // Handle different product types
+    const decksToGrant: string[] = [];
+    
+    if (product === "couples") {
+      decksToGrant.push("couples");
+    } else if (product === "friends") {
+      decksToGrant.push("friends");
+    } else if (product === "bundle") {
+      decksToGrant.push("couples", "friends");
+    } else {
+      console.log("Skipping - unknown product:", product);
+      return NextResponse.json({ received: true });
+    }
+
+    console.log("Processing purchase for product:", product);
+    console.log("Decks to grant:", decksToGrant);
+    console.log("User ID:", userId);
+    
+    try {
+      // First, try to get payment_intent from the event object directly
+      let paymentIntentId = typeof session.payment_intent === 'string' 
+        ? session.payment_intent 
+        : (session.payment_intent as any)?.id;
       
-      try {
-        // First, try to get payment_intent from the event object directly
-        let paymentIntentId = typeof session.payment_intent === 'string' 
-          ? session.payment_intent 
-          : (session.payment_intent as any)?.id;
-        
-        console.log("Payment Intent ID from session object:", paymentIntentId);
+      console.log("Payment Intent ID from session object:", paymentIntentId);
 
-        // If not found, retrieve the full session with payment_intent expanded
-        if (!paymentIntentId) {
-          console.log("Payment intent not in session object, retrieving from Stripe...");
-          const fullSession = await stripe.checkout.sessions.retrieve(session.id, {
-            expand: ['payment_intent']
-          });
+      // If not found, retrieve the full session with payment_intent expanded
+      if (!paymentIntentId) {
+        console.log("Payment intent not in session object, retrieving from Stripe...");
+        const fullSession = await stripe.checkout.sessions.retrieve(session.id, {
+          expand: ['payment_intent']
+        });
 
-          paymentIntentId = typeof fullSession.payment_intent === 'string'
-            ? fullSession.payment_intent
-            : fullSession.payment_intent?.id;
+        paymentIntentId = typeof fullSession.payment_intent === 'string'
+          ? fullSession.payment_intent
+          : fullSession.payment_intent?.id;
 
-          console.log("Payment Intent ID from Stripe API:", paymentIntentId);
+        console.log("Payment Intent ID from Stripe API:", paymentIntentId);
+      }
+
+      // If still not found, try payment_intent_data
+      if (!paymentIntentId && (session as any).payment_intent_data?.id) {
+        paymentIntentId = (session as any).payment_intent_data.id;
+        console.log("Payment Intent ID from payment_intent_data:", paymentIntentId);
+      }
+
+      console.log("Payment intent ID status:", paymentIntentId ? "FOUND" : "MISSING - will grant access anyway");
+
+      // Grant access to all relevant decks
+      for (const deckType of decksToGrant) {
+        const deckData = {
+          user_id: userId,
+          deck_type: deckType,
+          purchased_at: new Date().toISOString(),
+          stripe_checkout_session_id: session.id,
+          stripe_payment_intent_id: paymentIntentId || null,
+        };
+
+        console.log(`Granting access to ${deckType} deck:`, deckData);
+
+        const { data, error } = await supabaseAdmin
+          .from("user_decks")
+          .upsert(deckData, { onConflict: "user_id,deck_type" })
+          .select();
+
+        if (error) {
+          console.error(`DATABASE ERROR for ${deckType}:`, error);
+          console.error("Error code:", error.code);
+          console.error("Error message:", error.message);
+          console.error("Error details:", error.details);
+          console.log("========== WEBHOOK END (DB ERROR) ==========");
+          return new NextResponse(`Database error: ${error.message}`, { status: 500 });
         }
 
-        // If still not found, try payment_intent_data
-        if (!paymentIntentId && (session as any).payment_intent_data?.id) {
-          paymentIntentId = (session as any).payment_intent_data.id;
-          console.log("Payment Intent ID from payment_intent_data:", paymentIntentId);
-        }
+        console.log(`Deck access granted for ${deckType}:`, data);
+      }
 
-        // Ensure we always set couples_access to true for successful checkouts
-        // even if we can't get the payment intent ID
+      // Also update legacy entitlements table for backward compatibility
+      if (decksToGrant.includes("couples")) {
         const entitlementData = {
           user_id: userId,
           couples_access: true,
@@ -93,35 +144,20 @@ export async function POST(req: Request) {
           last_verified_at: new Date().toISOString(),
         };
 
-        console.log("Payment intent ID status:", paymentIntentId ? "FOUND" : "MISSING - will grant access anyway");
+        console.log("Updating legacy entitlements:", entitlementData);
 
-        console.log("Upserting entitlement:", entitlementData);
-
-        const { data, error } = await supabaseAdmin
+        await supabaseAdmin
           .from("entitlements")
           .upsert(entitlementData)
           .select();
-
-        if (error) {
-          console.error("DATABASE ERROR:", error);
-          console.error("Error code:", error.code);
-          console.error("Error message:", error.message);
-          console.error("Error details:", error.details);
-          console.log("========== WEBHOOK END (DB ERROR) ==========");
-          return new NextResponse(`Database error: ${error.message}`, { status: 500 });
-        }
-
-        console.log("Entitlement upserted successfully:", data);
-      } catch (dbError: any) {
-        console.error("UNEXPECTED ERROR during entitlement creation:", dbError);
-        console.error("Error stack:", dbError.stack);
-        console.log("========== WEBHOOK END (UNEXPECTED ERROR) ==========");
-        return new NextResponse("Entitlement creation failed", { status: 500 });
       }
-    } else {
-      console.log("Skipping - conditions not met:");
-      console.log("  product === 'couples':", product === "couples");
-      console.log("  userId exists:", !!userId);
+
+      console.log("All deck access granted successfully");
+    } catch (dbError: any) {
+      console.error("UNEXPECTED ERROR during entitlement creation:", dbError);
+      console.error("Error stack:", dbError.stack);
+      console.log("========== WEBHOOK END (UNEXPECTED ERROR) ==========");
+      return new NextResponse("Entitlement creation failed", { status: 500 });
     }
   } else {
     console.log("Ignoring event type:", event.type);
