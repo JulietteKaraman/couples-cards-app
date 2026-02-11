@@ -7,8 +7,9 @@ export default function Home() {
       <div className="max-w-md mx-auto px-4 py-8">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-2xl font-semibold mb-2">Touch Cards</h1>
-          <p className="text-white/60">Deep conversations for deeper connections</p>
+          <h1 className="text-2xl font-semibold mb-2">Communication & Intimacy Cards</h1>
+          <p className="text-white/60 mb-2">Deep conversations for deeper connections</p>
+          <p className="text-white/40 text-sm italic">Because every relationship deserves to feel seen, heard and understood</p>
         </div>
 
         {/* Couples Edition */}
