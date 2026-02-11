@@ -166,7 +166,30 @@ function UnlockPageContent() {
 
         <div className="space-y-4">
           <h1 className="text-2xl font-semibold">{deck.name}</h1>
-          <p className="text-white/70">{deck.description}</p>
+          
+          {/* Blurbs based on deck type */}
+          {deckType === "couples" && (
+            <div className="space-y-2">
+              <p className="text-white/80 font-medium">
+                150 prompts exploring Love, Desire, Body, Communication, and Repair
+              </p>
+              <p className="text-white/60 text-sm">
+                Perfect for date nights or quiet evenings when you want to feel each other again
+              </p>
+            </div>
+          )}
+          
+          {deckType === "friends" && (
+            <div className="space-y-2">
+              <p className="text-white/80 font-medium">
+                150 prompts around Life, Beliefs, Emotions, Family and Everyday Connection
+              </p>
+              <p className="text-white/60 text-sm">
+                For family dinners, car rides, or conversations that go deeper than small talk
+              </p>
+            </div>
+          )}
+          
           <p className="text-sm text-white/50">{deck.totalCards} cards • 5 sections</p>
 
           {error && (
