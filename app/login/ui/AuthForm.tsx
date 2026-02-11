@@ -22,6 +22,29 @@ export default function AuthForm() {
     try {
       if (mode === "signup") {
         await signUp(email, password, firstName, lastName);
+        
+        // Add user to Ivorey email list
+        try {
+          const ivoreyRes = await fetch("/api/add-to-ivorey", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              email,
+              firstName,
+              lastName,
+            }),
+          });
+          
+          if (!ivoreyRes.ok) {
+            console.error("Failed to add to Ivorey:", await ivoreyRes.text());
+          } else {
+            console.log("Successfully added to Ivorey");
+          }
+        } catch (ivoreyErr) {
+          console.error("Error adding to Ivorey:", ivoreyErr);
+          // Don't fail signup if Ivorey fails
+        }
+        
         setMsg("Account created. You can now sign in.");
         setMode("signin");
         // Clear form

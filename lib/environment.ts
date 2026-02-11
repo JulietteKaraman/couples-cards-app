@@ -14,3 +14,7 @@ export const STRIPE_COUPLES_PRICE_ID = process.env.STRIPE_COUPLES_PRICE_ID ?? pr
 export const STRIPE_FRIENDS_PRICE_ID = process.env.STRIPE_FRIENDS_PRICE_ID ?? process.env.STRIPE_FRIENDS_PRICE_ID;
 export const STRIPE_BUNDLE_PRICE_ID = process.env.STRIPE_BUNDLE_PRICE_ID ?? process.env.STRIPE_BUNDLE_PRICE_ID;
 export const STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET ?? process.env.STRIPE_WEBHOOK_SECRET;
+
+// Ivorey (server-only)
+export const IVOREY_API_KEY = process.env.IVOREY_API_KEY ?? process.env.IVOREY_API_KEY;
+export const IVOREY_API_ENDPOINT = process.env.IVOREY_API_ENDPOINT ?? process.env.IVOREY_API_ENDPOINT;
