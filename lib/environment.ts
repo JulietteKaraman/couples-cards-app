@@ -17,4 +17,3 @@ export const STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET ?? proces
 
 // Ivorey (server-only)
 export const IVOREY_API_KEY = process.env.IVOREY_API_KEY ?? process.env.IVOREY_API_KEY;
-export const IVOREY_API_ENDPOINT = process.env.IVOREY_API_ENDPOINT ?? process.env.IVOREY_API_ENDPOINT;
