@@ -7,6 +7,8 @@ export default function AuthForm() {
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [msg, setMsg] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const { signIn, signUp, error: authError, clearError } = useAuth();
@@ -19,9 +21,12 @@ export default function AuthForm() {
 
     try {
       if (mode === "signup") {
-        await signUp(email, password);
+        await signUp(email, password, firstName, lastName);
         setMsg("Account created. You can now sign in.");
         setMode("signin");
+        // Clear form
+        setFirstName("");
+        setLastName("");
       } else {
         await signIn(email, password);
         window.location.href = "/app";
@@ -36,6 +41,26 @@ export default function AuthForm() {
 
   return (
     <form onSubmit={onSubmit} className="space-y-3">
+      {mode === "signup" && (
+        <>
+          <input
+            className="w-full rounded-xl bg-black/30 border border-white/10 px-3 py-2 outline-none"
+            placeholder="First Name"
+            type="text"
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+            required
+          />
+          <input
+            className="w-full rounded-xl bg-black/30 border border-white/10 px-3 py-2 outline-none"
+            placeholder="Last Name"
+            type="text"
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+            required
+          />
+        </>
+      )}
       <input
         className="w-full rounded-xl bg-black/30 border border-white/10 px-3 py-2 outline-none"
         placeholder="Email"

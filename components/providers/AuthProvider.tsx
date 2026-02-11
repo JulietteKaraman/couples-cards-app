@@ -13,8 +13,9 @@ interface AuthContextType {
   purchasedDecks: string[];
   loading: boolean;
   error: string | null;
+  userName: string | null;
   signIn: (email: string, password: string) => Promise<void>;
-  signUp: (email: string, password: string) => Promise<void>;
+  signUp: (email: string, password: string, firstName: string, lastName: string) => Promise<void>;
   signOut: () => Promise<void>;
   clearError: () => void;
   refreshAccess: () => Promise<void>;
@@ -27,12 +28,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [profile, setProfile] = useState<EntitlementsRow | null>(null);
   const [hasAccess, setHasAccess] = useState(false);
   const [purchasedDecks, setPurchasedDecks] = useState<string[]>([]);
+  const [userName, setUserName] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   // Verify access when user changes
   async function checkAccess(userId: string) {
     try {
+      // Get user data to extract name from metadata
+      const { data: userData } = await supabaseBrowser.auth.getUser();
+      const firstName = userData.user?.user_metadata?.first_name;
+      const lastName = userData.user?.user_metadata?.last_name;
+      if (firstName) {
+        setUserName(firstName);
+      }
+
       // Check legacy entitlements (for couples access)
       const result = await verifyUserAccess(userId);
       setProfile(result.profile);
@@ -60,6 +70,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setProfile(null);
       setHasAccess(false);
       setPurchasedDecks([]);
+      setUserName(null);
     }
   }
 
@@ -121,10 +132,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
-  async function signUp(email: string, password: string) {
+  async function signUp(email: string, password: string, firstName: string, lastName: string) {
     setError(null);
     try {
-      const { error } = await supabaseBrowser.auth.signUp({ email, password });
+      const { error } = await supabaseBrowser.auth.signUp({ 
+        email, 
+        password,
+        options: {
+          data: {
+            first_name: firstName,
+            last_name: lastName,
+          }
+        }
+      });
       if (error) throw error;
       // Auth state change listener will update user
     } catch (err: any) {
@@ -140,6 +160,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (error) throw error;
       // Auth state change listener will update user to null
       setPurchasedDecks([]);
+      setUserName(null);
     } catch (err: any) {
       setError(err.message ?? "Sign out failed");
       throw err;
@@ -157,6 +178,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         profile,
         hasAccess,
         purchasedDecks,
+        userName,
         loading,
         error,
         signIn,

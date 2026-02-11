@@ -7,7 +7,7 @@ import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { getAllDecks, DECKS, BUNDLE_CONFIG } from "@/data/decks";
 
 function AppHomeContent() {
-  const { user, hasAccess, purchasedDecks, signOut } = useAuth();
+  const { user, hasAccess, purchasedDecks, signOut, userName } = useAuth();
   const decks = getAllDecks();
 
   const hasCouples = purchasedDecks.includes("couples") || hasAccess;
@@ -20,9 +20,11 @@ function AppHomeContent() {
       <div className="max-w-md mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-2xl font-semibold mb-2">Welcome</h1>
+          <h1 className="text-2xl font-semibold mb-2">
+            {userName ? `Welcome back, ${userName}` : "Welcome"}
+          </h1>
           <p className="text-white/70">
-            {user?.email ? `Signed in as ${user.email.split('@')[0]}` : "Ready to connect?"}
+            {user?.email ? `Signed in as ${user.email}` : "Ready to connect?"}
           </p>
         </div>
 

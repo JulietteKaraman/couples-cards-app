@@ -9,7 +9,7 @@ export default function Home() {
         <div className="text-center mb-8">
           <h1 className="text-2xl font-semibold mb-2">Communication & Intimacy Cards</h1>
           <p className="text-white/60 mb-2">Deep conversations for deeper connections</p>
-          <p className="text-white/40 text-sm italic">Because every relationship deserves to feel seen, heard and understood</p>
+          <p className="text-white/50 text-sm italic">Because every relationship deserves to feel seen, heard and understood</p>
         </div>
 
         {/* Couples Edition */}
@@ -30,7 +30,7 @@ export default function Home() {
             <p className="text-white/70 text-sm">
               150 prompts exploring Love, Desire, Body, Communication, and Repair
             </p>
-            <p className="text-white/50 text-xs">
+            <p className="text-white/60 text-xs">
               Perfect for date nights or quiet evenings when you want to feel each other again
             </p>
 
@@ -70,7 +70,7 @@ export default function Home() {
             <p className="text-white/70 text-sm">
               150 prompts around Life, Beliefs, Emotions, Family and Everyday Connection
             </p>
-            <p className="text-white/50 text-xs">
+            <p className="text-white/60 text-xs">
               For family dinners, car rides, or conversations that go deeper than small talk
             </p>
 
