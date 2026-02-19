@@ -9,7 +9,14 @@ export default function Home() {
         <div className="text-center mb-8">
           <h1 className="text-2xl font-semibold mb-2">Communication & Intimacy Cards</h1>
           <p className="text-white/60 mb-2">Deep conversations for deeper connections</p>
-          <p className="text-white/50 text-sm italic">Because every relationship deserves to feel seen, heard and understood</p>
+          <p className="text-white/50 text-sm italic mb-6">Because every relationship deserves to feel seen, heard and understood</p>
+          
+          <Link
+            href="/free"
+            className="inline-block rounded-xl bg-white/10 border border-white/20 text-white px-6 py-3 font-medium hover:bg-white/20 transition-colors"
+          >
+            Try 5 Cards Free
+          </Link>
         </div>
 
         {/* Couples Edition */}
