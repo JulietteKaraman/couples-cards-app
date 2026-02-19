@@ -33,8 +33,9 @@ export default function CouplesTasterPlayPage() {
       router.push("/free/couples/upgrade");
     } else {
       setCurrentCardIndex(currentCardIndex + 1);
-      setShowCard(false);
       setFlipped(false);
+      // Small delay to allow the card index to update before flipping
+      setTimeout(() => setFlipped(true), 100);
     }
   }
 
