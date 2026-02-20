@@ -15,7 +15,7 @@ export const TASTER_CARDS = {
       deck: "couples" as const,
       section: "RR",
       lines: [
-        { text: "Tell me your biggest fear and biggest desire for our relationship.", bold: true }
+        { text: "Tell me your biggest fear and biggest desire for our relationship", bold: true }
       ],
       templateImage: DECKS.couples.sections.RR.templateImg,
     },
@@ -32,79 +32,80 @@ export const TASTER_CARDS = {
     {
       id: 3,
       deck: "couples" as const,
-      section: "IR",
+      section: "TD",
       lines: [
-        { text: "Tell me about a way you've learned to receive love that once felt difficult or unlikely for you", bold: true }
+        { text: "Tell me a fantasy you've had, but never voiced", bold: true }
       ],
-      templateImage: DECKS.couples.sections.IR.templateImg,
+      templateImage: DECKS.couples.sections.TD.templateImg,
     },
     {
       id: 4,
       deck: "couples" as const,
-      section: "TD",
+      section: "HG",
       lines: [
-        { text: "Tell me a fantasy you've had, but never voiced.", bold: true }
+        { text: "Tell me something you're still healing from sexually.", bold: true }
       ],
-      templateImage: DECKS.couples.sections.TD.templateImg,
+      templateImage: DECKS.couples.sections.HG.templateImg,
     },
     {
       id: 5,
       deck: "couples" as const,
-      section: "TD",
+      section: "PD",
       lines: [
-        { text: "Tell me something you're still healing from sexually.", bold: true }
+        { text: "Tell me your favorite flirty memory with me.", bold: true }
       ],
-      templateImage: DECKS.couples.sections.TD.templateImg,
+      templateImage: DECKS.couples.sections.PD.templateImg,
     },
   ],
   friends: [
     {
       id: 1,
       deck: "friends" as const,
-      section: "BE",
+      section: "FM",
       lines: [
-        { text: "Tell me about an honest conversation you wish we'd have, but haven't yet.", bold: true }
+        { text: "TELL ME A TRAIT IN YOUR PARENTS OR SIBLINGS YOU DISLIKE.", bold: true },
+        { text: "DO YOU SEE IT IN YOURSELF TOO?" }
       ],
-      templateImage: DECKS.friends.sections.BE.templateImg,
+      templateImage: DECKS.friends.sections.FM.templateImg,
     },
     {
       id: 2,
       deck: "friends" as const,
       section: "LF",
       lines: [
-        { text: "Tell me about something you've done for another person that you're proud of.", bold: true }
+        { text: "TELL ME ABOUT A RISK YOU TOOK THAT PAID OFF OR DIDN'T.", bold: true },
+        { text: "WHAT DID YOU LEARN FROM IT?" }
       ],
       templateImage: DECKS.friends.sections.LF.templateImg,
     },
     {
       id: 3,
       deck: "friends" as const,
-      section: "FM",
+      section: "BE",
       lines: [
-        { text: "Tell me about a toxic relationship or pattern from your family or childhood.", bold: true },
-        { text: "How has it shaped you, and what are you changing?" }
+        { text: "TELL ME A STORY THAT CHANGED YOUR PERSPECTIVE OR DEEPLY IMPACTED YOU.", bold: true }
       ],
-      templateImage: DECKS.friends.sections.FM.templateImg,
+      templateImage: DECKS.friends.sections.BE.templateImg,
     },
     {
       id: 4,
       deck: "friends" as const,
       section: "FB",
       lines: [
-        { text: "Tell me about a vulnerability you hide.", bold: true },
-        { text: "What would help you share it safely?" }
+        { text: "TELL ME ABOUT A CONVERSATION YOU WISH YOU COULD REVISIT.", bold: true },
+        { text: "WHAT WOULD YOU SAY OR DO DIFFERENTLY?" }
       ],
       templateImage: DECKS.friends.sections.FB.templateImg,
     },
     {
       id: 5,
       deck: "friends" as const,
-      section: "FB",
+      section: "SG",
       lines: [
-        { text: "Tell me what you first thought about me when we met.", bold: true },
-        { text: "How has that first impression changed?" }
+        { text: "TELL ME A CHALLENGE YOU FACED THAT MADE YOU STRONGER.", bold: true },
+        { text: "HOW DID YOU GROW BECAUSE OF IT?" }
       ],
-      templateImage: DECKS.friends.sections.FB.templateImg,
+      templateImage: DECKS.friends.sections.SG.templateImg,
     },
   ],
 };
