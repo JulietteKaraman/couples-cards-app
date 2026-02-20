@@ -63,8 +63,8 @@ export const TASTER_CARDS = {
       deck: "friends" as const,
       section: "FM",
       lines: [
-        { text: "TELL ME A TRAIT IN YOUR PARENTS OR SIBLINGS YOU DISLIKE.", bold: true },
-        { text: "DO YOU SEE IT IN YOURSELF TOO?" }
+        { text: "Tell me a trait in your parents or siblings you dislike.", bold: true },
+        { text: "Do you see it in yourself too?" }
       ],
       templateImage: DECKS.friends.sections.FM.templateImg,
     },
@@ -73,8 +73,8 @@ export const TASTER_CARDS = {
       deck: "friends" as const,
       section: "LF",
       lines: [
-        { text: "TELL ME ABOUT A RISK YOU TOOK THAT PAID OFF OR DIDN'T.", bold: true },
-        { text: "WHAT DID YOU LEARN FROM IT?" }
+        { text: "Tell me about a risk you took that paid off or didn't.", bold: true },
+        { text: "What did you learn from it?" }
       ],
       templateImage: DECKS.friends.sections.LF.templateImg,
     },
@@ -83,7 +83,7 @@ export const TASTER_CARDS = {
       deck: "friends" as const,
       section: "BE",
       lines: [
-        { text: "TELL ME A STORY THAT CHANGED YOUR PERSPECTIVE OR DEEPLY IMPACTED YOU.", bold: true }
+        { text: "Tell me a story that changed your perspective or deeply impacted you.", bold: true }
       ],
       templateImage: DECKS.friends.sections.BE.templateImg,
     },
@@ -92,8 +92,8 @@ export const TASTER_CARDS = {
       deck: "friends" as const,
       section: "FB",
       lines: [
-        { text: "TELL ME ABOUT A CONVERSATION YOU WISH YOU COULD REVISIT.", bold: true },
-        { text: "WHAT WOULD YOU SAY OR DO DIFFERENTLY?" }
+        { text: "Tell me about a conversation you wish you could revisit.", bold: true },
+        { text: "What would you say or do differently?" }
       ],
       templateImage: DECKS.friends.sections.FB.templateImg,
     },
@@ -102,8 +102,8 @@ export const TASTER_CARDS = {
       deck: "friends" as const,
       section: "SG",
       lines: [
-        { text: "TELL ME A CHALLENGE YOU FACED THAT MADE YOU STRONGER.", bold: true },
-        { text: "HOW DID YOU GROW BECAUSE OF IT?" }
+        { text: "Tell me a challenge you faced that made you stronger.", bold: true },
+        { text: "How did you grow because of it?" }
       ],
       templateImage: DECKS.friends.sections.SG.templateImg,
     },
