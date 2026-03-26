@@ -62,8 +62,12 @@ export async function POST(req: Request) {
       decksToGrant.push("couples");
     } else if (product === "friends") {
       decksToGrant.push("friends");
+    } else if (product === "touch-languages") {
+      decksToGrant.push("touch-languages");
     } else if (product === "bundle") {
       decksToGrant.push("couples", "friends");
+    } else if (product === "all-three") {
+      decksToGrant.push("couples", "friends", "touch-languages");
     } else {
       console.log("Skipping - unknown product:", product);
       return NextResponse.json({ received: true });

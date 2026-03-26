@@ -19,6 +19,46 @@ export default function Home() {
           </Link>
         </div>
 
+        {/* Touch Languages Edition */}
+        <div className="mb-10">
+          <div className="rounded-2xl overflow-hidden border border-white/10">
+            <Image
+              src="/cards/touch/cover.png"
+              alt="The Touch Languages"
+              width={1200}
+              height={1600}
+              className="w-full h-auto"
+              priority
+            />
+          </div>
+
+          <div className="mt-5 space-y-3">
+            <h2 className="text-xl font-semibold">The Touch Languages</h2>
+            <p className="text-white/70 text-sm">
+              125 prompts exploring Erotic, Physical, Emotional, Spiritual, and Energetic Touch
+            </p>
+            <p className="text-white/60 text-xs">
+              For couples who want to deepen their intimacy through the language of touch
+            </p>
+
+            <div className="pt-2 space-y-2">
+              <Link
+                href="/login"
+                className="block text-center rounded-xl bg-white text-black py-3 font-medium"
+              >
+                Sign in
+              </Link>
+
+              <Link
+                href="/app/touch-languages/unlock"
+                className="block text-center rounded-xl border border-white/15 py-3 font-medium hover:bg-white/5 transition-colors"
+              >
+                Unlock for £25
+              </Link>
+            </div>
+          </div>
+        </div>
+
         {/* Couples Edition */}
         <div className="mb-10">
           <div className="rounded-2xl overflow-hidden border border-white/10">
@@ -28,7 +68,6 @@ export default function Home() {
               width={1200}
               height={1600}
               className="w-full h-auto"
-              priority
             />
           </div>
 
@@ -68,14 +107,13 @@ export default function Home() {
               width={1200}
               height={1600}
               className="w-full h-auto"
-              priority
             />
           </div>
 
           <div className="mt-5 space-y-3">
             <h2 className="text-xl font-semibold">Friends & Family Edition</h2>
             <p className="text-white/70 text-sm">
-              150 prompts around Life, Beliefs, Emotions, Family and Everyday Connection
+              152 prompts around Life, Beliefs, Emotions, Family and Everyday Connection
             </p>
             <p className="text-white/60 text-xs">
               For family dinners, car rides, or conversations that go deeper than small talk
@@ -99,17 +137,44 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Bundle Promotion */}
+        {/* Ultimate Collection (All Three) */}
         <div className="border-t border-white/10 pt-8">
           <div className="bg-gradient-to-br from-white/10 to-white/5 rounded-2xl p-6 border border-white/10">
             <div className="flex items-center justify-between mb-3">
-              <h2 className="text-lg font-semibold">Complete Collection</h2>
+              <h2 className="text-lg font-semibold">Ultimate Collection</h2>
               <span className="text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded-full">
+                Save £10
+              </span>
+            </div>
+            <p className="text-white/60 text-sm mb-4">
+              Get all three decks: Touch Languages, Couples, and Friends & Family. Perfect for every relationship in your life.
+            </p>
+            <div className="flex items-center justify-between">
+              <div>
+                <span className="text-2xl font-bold">£65</span>
+                <span className="text-white/40 text-sm ml-2 line-through">£75</span>
+              </div>
+              <Link
+                href="/app/all-three/unlock"
+                className="rounded-xl bg-white text-black px-6 py-2 font-medium"
+              >
+                View Bundle
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        {/* Complete Collection (Original Bundle - Couples + Friends) */}
+        <div className="border-t border-white/10 pt-8 mt-8">
+          <div className="bg-gradient-to-br from-white/5 to-transparent rounded-2xl p-6 border border-white/10">
+            <div className="flex items-center justify-between mb-3">
+              <h2 className="text-lg font-semibold">Complete Collection</h2>
+              <span className="text-xs bg-blue-500/20 text-blue-400 px-2 py-1 rounded-full">
                 Save £5
               </span>
             </div>
             <p className="text-white/60 text-sm mb-4">
-              Get both editions and save. Perfect for different occasions and relationships.
+              Get Couples and Friends & Family editions together. Great value for deepening all your relationships.
             </p>
             <div className="flex items-center justify-between">
               <div>
@@ -117,8 +182,8 @@ export default function Home() {
                 <span className="text-white/40 text-sm ml-2 line-through">£50</span>
               </div>
               <Link
-                href="/app/couples/unlock"
-                className="rounded-xl bg-white text-black px-6 py-2 font-medium"
+                href="/app/bundle/unlock"
+                className="rounded-xl bg-white/10 border border-white/20 px-6 py-2 font-medium hover:bg-white/20 transition-colors"
               >
                 View Bundle
               </Link>

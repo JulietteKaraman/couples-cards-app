@@ -36,8 +36,7 @@ export async function POST(req: Request) {
       );
     }
 
-    // Validate product type
-    const validProducts = ["couples", "friends", "bundle"];
+    const validProducts = ["couples", "friends", "touch-languages", "bundle", "all-three"];
     const productType = product || "couples";
     
     if (!validProducts.includes(productType)) {
@@ -48,7 +47,6 @@ export async function POST(req: Request) {
       );
     }
 
-    // Get the appropriate price ID
     let priceId: string;
     switch (productType) {
       case "couples":
@@ -57,8 +55,14 @@ export async function POST(req: Request) {
       case "friends":
         priceId = process.env.STRIPE_FRIENDS_PRICE_ID!;
         break;
+      case "touch-languages":
+        priceId = process.env.STRIPE_TOUCH_LANGUAGES_PRICE_ID!;
+        break;
       case "bundle":
         priceId = process.env.STRIPE_BUNDLE_PRICE_ID!;
+        break;
+      case "all-three":
+        priceId = process.env.STRIPE_ALL_THREE_PRICE_ID!;
         break;
       default:
         priceId = process.env.STRIPE_COUPLES_PRICE_ID!;

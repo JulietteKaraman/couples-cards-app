@@ -1,7 +1,8 @@
+import { TOUCH_LANGUAGES_CARDS, TOUCH_LANGUAGES_SECTIONS, TouchLanguagesSectionKey, TouchLanguagesCardPrompt } from "./touch-languages";
 import { COUPLES_CARDS, SECTIONS as COUPLES_SECTIONS, SectionKey as CouplesSectionKey, CardPrompt as CouplesCardPrompt } from "./couples";
 import { FRIENDS_CARDS, FRIENDS_SECTIONS, FriendsSectionKey, FriendsCardPrompt } from "./friends";
 
-export type DeckType = "couples" | "friends";
+export type DeckType = "couples" | "friends" | "touch-languages";
 
 export type SectionConfig = {
   title: string;
@@ -52,6 +53,17 @@ export const DECKS: Record<DeckType, DeckConfig> = {
     cards: FRIENDS_CARDS,
     totalCards: 152,
   },
+  "touch-languages": {
+    id: "touch-languages",
+    name: "The Touch Languages\u2122",
+    description: "Explore the 5 languages of touch: Erotic, Physical, Emotional, Spiritual, and Energetic",
+    price: 25,
+    stripePriceId: process.env.STRIPE_TOUCH_LANGUAGES_PRICE_ID || "",
+    coverImage: "/cards/touch/cover.png",
+    sections: TOUCH_LANGUAGES_SECTIONS,
+    cards: TOUCH_LANGUAGES_CARDS,
+    totalCards: 125,
+  },
 };
 
 export const BUNDLE_CONFIG = {
@@ -64,6 +76,16 @@ export const BUNDLE_CONFIG = {
   includes: ["couples", "friends"] as DeckType[],
 };
 
+export const ALL_THREE_BUNDLE_CONFIG = {
+  id: "all-three",
+  name: "Ultimate Collection",
+  description: "Get all three decks: Couples, Friends & Family, and The Touch Languages",
+  price: 65,
+  stripePriceId: process.env.STRIPE_ALL_THREE_PRICE_ID || "",
+  savings: 10,
+  includes: ["couples", "friends", "touch-languages"] as DeckType[],
+};
+
 export function getDeck(deckType: DeckType): DeckConfig {
   return DECKS[deckType];
 }
@@ -73,7 +95,14 @@ export function getAllDecks(): DeckConfig[] {
 }
 
 export function isValidDeck(deckType: string): deckType is DeckType {
-  return deckType === "couples" || deckType === "friends";
+  return deckType === "couples" || deckType === "friends" || deckType === "touch-languages";
 }
 
-export type { CouplesSectionKey, CouplesCardPrompt, FriendsSectionKey, FriendsCardPrompt };
+export type { 
+  CouplesSectionKey, 
+  CouplesCardPrompt, 
+  FriendsSectionKey, 
+  FriendsCardPrompt,
+  TouchLanguagesSectionKey,
+  TouchLanguagesCardPrompt,
+};
