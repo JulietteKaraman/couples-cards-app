@@ -80,9 +80,9 @@ export const ALL_THREE_BUNDLE_CONFIG = {
   id: "all-three",
   name: "Ultimate Collection",
   description: "Get all three decks: Couples, Friends & Family, and The Touch Languages",
-  price: 65,
+  price: 60,
   stripePriceId: process.env.STRIPE_ALL_THREE_PRICE_ID || "",
-  savings: 10,
+  savings: 15,
   includes: ["couples", "friends", "touch-languages"] as DeckType[],
 };
 

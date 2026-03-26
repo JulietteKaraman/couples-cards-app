@@ -306,7 +306,7 @@ function UnlockPageContent() {
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-sm font-medium">Ultimate Collection</span>
                   <span className="text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded">
-                    Save £10
+                    Save £15
                   </span>
                 </div>
                 <p className="text-sm text-white/60 mb-4">

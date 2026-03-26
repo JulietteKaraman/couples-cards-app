@@ -143,7 +143,7 @@ export default function Home() {
             <div className="flex items-center justify-between mb-3">
               <h2 className="text-lg font-semibold">Ultimate Collection</h2>
               <span className="text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded-full">
-                Save £10
+                Save £15
               </span>
             </div>
             <p className="text-white/60 text-sm mb-4">
@@ -151,7 +151,7 @@ export default function Home() {
             </p>
             <div className="flex items-center justify-between">
               <div>
-                <span className="text-2xl font-bold">£65</span>
+                <span className="text-2xl font-bold">£60</span>
                 <span className="text-white/40 text-sm ml-2 line-through">£75</span>
               </div>
               <Link
