@@ -18,7 +18,6 @@ function DrawPageContent() {
   
   const deckType = params.deck as string;
   
-  // Validate deck type
   if (!isValidDeck(deckType)) {
     return (
       <main className="min-h-screen bg-black text-white flex items-center justify-center">
@@ -38,13 +37,20 @@ function DrawPageContent() {
   const deck = getDeck(deckType as DeckType);
   const allKeys = Object.keys(deck.sections);
   const STORAGE_KEY = `${deckType}_selected_sections_v1`;
+  const INSTRUCTIONS_VIEWED_KEY = `${deckType}_instructions_viewed`;
 
+  const [showInstructions, setShowInstructions] = useState(false);
+  const [currentInstruction, setCurrentInstruction] = useState(0);
   const [selected, setSelected] = useState<string[]>(allKeys);
   const [current, setCurrent] = useState<{ id: number; section: string; lines: { text: string; bold?: boolean }[] } | null>(null);
   const [flipped, setFlipped] = useState(false);
 
-  // Check access for this specific deck
   const hasDeckAccess = purchasedDecks.includes(deckType) || hasAccess;
+  const instructions = [
+    `/cards/${deckType}/instructions/Instructions1.svg`,
+    `/cards/${deckType}/instructions/Instructions2.svg`,
+  ];
+  const isLastInstruction = currentInstruction === instructions.length - 1;
 
   useEffect(() => {
     if (!loading && !hasDeckAccess) {
@@ -52,7 +58,15 @@ function DrawPageContent() {
     }
   }, [hasDeckAccess, loading, router, deckType]);
 
-  // Restore selected sections from localStorage
+  useEffect(() => {
+    const viewed = localStorage.getItem(INSTRUCTIONS_VIEWED_KEY);
+    if (viewed) {
+      setShowInstructions(false);
+    } else {
+      setShowInstructions(true);
+    }
+  }, [INSTRUCTIONS_VIEWED_KEY]);
+
   useEffect(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
@@ -63,15 +77,29 @@ function DrawPageContent() {
     }
   }, [STORAGE_KEY]);
 
-  // Persist selected sections
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(selected));
   }, [selected, STORAGE_KEY]);
 
-  const pool = useMemo(() => {
-    const set = new Set(selected);
-    return deck.cards.filter((c) => set.has(c.section));
-  }, [selected, deck.cards]);
+  function nextInstruction() {
+    if (isLastInstruction) {
+      localStorage.setItem(INSTRUCTIONS_VIEWED_KEY, "true");
+      setShowInstructions(false);
+    } else {
+      setCurrentInstruction(currentInstruction + 1);
+    }
+  }
+
+  function prevInstruction() {
+    if (currentInstruction > 0) {
+      setCurrentInstruction(currentInstruction - 1);
+    }
+  }
+
+  function skipInstructions() {
+    localStorage.setItem(INSTRUCTIONS_VIEWED_KEY, "true");
+    setShowInstructions(false);
+  }
 
   function toggle(k: string) {
     setSelected((prev) =>
@@ -95,6 +123,11 @@ function DrawPageContent() {
     setTimeout(() => setFlipped(true), 140);
   }
 
+  const pool = useMemo(() => {
+    const set = new Set(selected);
+    return deck.cards.filter((c) => set.has(c.section));
+  }, [selected, deck.cards]);
+
   const template = current ? deck.sections[current.section as keyof typeof deck.sections].templateImg : null;
 
   if (loading) {
@@ -105,10 +138,71 @@ function DrawPageContent() {
     );
   }
 
+  if (showInstructions) {
+    return (
+      <main className="min-h-screen bg-black text-white">
+        <div className="max-w-md mx-auto px-4 py-6 min-h-screen flex flex-col">
+          <div className="flex justify-end mb-4">
+            <button 
+              onClick={skipInstructions}
+              className="text-sm text-white/50 hover:text-white"
+            >
+              Skip
+            </button>
+          </div>
+
+          <div className="flex justify-center gap-2 mb-8">
+            {instructions.map((_, idx) => (
+              <div
+                key={idx}
+                className={`w-2 h-2 rounded-full transition-colors ${
+                  idx === currentInstruction ? "bg-white" : "bg-white/30"
+                }`}
+              />
+            ))}
+          </div>
+
+          <div className="flex-1 flex flex-col items-center justify-center">
+            <div className="rounded-2xl overflow-hidden border border-white/10 mb-8 w-full">
+              <img
+                src={instructions[currentInstruction]}
+                alt={`Instructions ${currentInstruction + 1}`}
+                className="w-full h-auto"
+              />
+            </div>
+
+            <h2 className="text-2xl font-semibold text-center mb-3">
+              {deck.name}
+            </h2>
+            <p className="text-white/70 text-center">
+              {deck.description}
+            </p>
+          </div>
+
+          <div className="mt-8 space-y-3">
+            {currentInstruction > 0 && (
+              <button
+                onClick={prevInstruction}
+                className="w-full rounded-xl border border-white/20 text-white py-3 font-medium"
+              >
+                Back
+              </button>
+            )}
+            <button
+              onClick={nextInstruction}
+              className="w-full rounded-xl bg-white text-black py-3 font-medium"
+            >
+              {isLastInstruction ? "Start Playing" : "Next"}
+            </button>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
   return (
     <main className="min-h-screen bg-black text-white">
       <div className="max-w-md mx-auto px-4 py-6 space-y-5">
-        {/* Back button and Deck Title */}
         <div className="flex items-center justify-between">
           <button 
             onClick={() => router.push("/app")}
@@ -119,7 +213,6 @@ function DrawPageContent() {
           <h1 className="text-lg font-semibold">{deck.name}</h1>
         </div>
 
-        {/* FILTER HEADER */}
         <div className="flex items-center justify-between">
           <h2 className="text-base font-medium">Choose sections</h2>
           <div className="flex gap-3 text-xs">
@@ -132,7 +225,6 @@ function DrawPageContent() {
           </div>
         </div>
 
-        {/* SECTION COVER GRID */}
         <div className="grid grid-cols-2 gap-3">
           {allKeys.map((k) => {
             const isOn = selected.includes(k);
@@ -160,7 +252,6 @@ function DrawPageContent() {
           })}
         </div>
 
-        {/* DRAW BUTTON */}
         <button
           onClick={draw}
           disabled={!pool.length}
@@ -169,7 +260,6 @@ function DrawPageContent() {
           Draw a Card
         </button>
 
-        {/* CARD DISPLAY */}
         {current && template && (
           <div className="relative rounded-2xl overflow-hidden border border-white/10">
             <Image
@@ -183,7 +273,6 @@ function DrawPageContent() {
               priority
             />
 
-            {/* Prompt overlay */}
             <div className="absolute inset-0 flex items-center justify-center px-10">
               <div
                 className={`text-center transition-opacity duration-500 ${
@@ -209,7 +298,6 @@ function DrawPageContent() {
               </div>
             </div>
 
-            {/* FOOTER CONTROLS */}
             <div className="absolute bottom-3 left-0 right-0 px-4">
               <div className="flex gap-2">
                 <button
