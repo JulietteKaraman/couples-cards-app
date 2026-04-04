@@ -1,9 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  images: {
-    formats: ['image/avif', 'image/webp', 'image/svg+xml'],
-  },
+  /* config options here */
 };
 
 export default nextConfig;

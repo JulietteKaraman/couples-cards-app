@@ -7,9 +7,9 @@ import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { useAuth } from "@/components/providers/AuthProvider";
 
 const slides = [
-  { src: "/cards/couples/cover.png", alt: "Cover" },
-  { src: "/cards/couples/instructions/Insructions1.svg", alt: "Instructions 1" },
-  { src: "/cards/couples/instructions/Instructions2.svg", alt: "Instructions 2" },
+  { src: "/cards/couples/cover.png", alt: "Cover", isSvg: false },
+  { src: "/cards/couples/instructions/Instructions1.svg", alt: "Instructions 1", isSvg: true },
+  { src: "/cards/couples/instructions/Instructions2.svg", alt: "Instructions 2", isSvg: true },
 ];
 
 function OnboardingContent() {
@@ -17,6 +17,7 @@ function OnboardingContent() {
   const router = useRouter();
   const { hasAccess, loading } = useAuth();
   const isLast = i === slides.length - 1;
+  const currentSlide = slides[i];
 
   useEffect(() => {
     if (!loading && !hasAccess) {
@@ -36,14 +37,22 @@ function OnboardingContent() {
     <main className="min-h-screen bg-black text-white">
       <div className="max-w-md mx-auto px-4 py-6">
         <div className="rounded-2xl overflow-hidden border border-white/10">
-          <Image
-            src={slides[i].src}
-            alt={slides[i].alt}
-            width={1200}
-            height={1600}
-            className="w-full h-auto"
-            priority
-          />
+          {currentSlide.isSvg ? (
+            <img
+              src={currentSlide.src}
+              alt={currentSlide.alt}
+              className="w-full h-auto"
+            />
+          ) : (
+            <Image
+              src={currentSlide.src}
+              alt={currentSlide.alt}
+              width={1200}
+              height={1600}
+              className="w-full h-auto"
+              priority
+            />
+          )}
         </div>
 
         <div className="mt-4 flex gap-2">

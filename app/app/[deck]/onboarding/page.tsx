@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
@@ -11,7 +10,6 @@ function OnboardingContent() {
   const router = useRouter();
   const deckType = params.deck as string;
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [showInstructions, setShowInstructions] = useState(true);
 
   if (!isValidDeck(deckType)) {
     return (
@@ -32,7 +30,7 @@ function OnboardingContent() {
   const deck = DECKS[deckType];
   const instructions = [
     {
-      image: `/cards/${deckType}/instructions/Insructions1.svg`,
+      image: `/cards/${deckType}/instructions/Instructions1.svg`,
       title: "Welcome",
     },
     {
@@ -92,13 +90,10 @@ function OnboardingContent() {
         {/* Content */}
         <div className="flex-1 flex flex-col items-center justify-center">
           <div className="rounded-2xl overflow-hidden border border-white/10 mb-8 w-full">
-            <Image
+            <img
               src={instruction.image}
               alt={instruction.title}
-              width={800}
-              height={600}
               className="w-full h-auto"
-              priority
             />
           </div>
 

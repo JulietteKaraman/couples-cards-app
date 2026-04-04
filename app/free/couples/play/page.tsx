@@ -7,7 +7,7 @@ import Link from "next/link";
 import { getTasterCards } from "@/data/taster-cards";
 
 const instructions = [
-  "/cards/couples/instructions/Insructions1.svg",
+  "/cards/couples/instructions/Instructions1.svg",
   "/cards/couples/instructions/Instructions2.svg",
 ];
 
@@ -92,13 +92,10 @@ export default function CouplesTasterPlayPage() {
           {/* Instructions content */}
           <div className="flex-1 flex flex-col items-center justify-center">
             <div className="rounded-2xl overflow-hidden border border-white/10 mb-8 w-full">
-              <Image
+              <img
                 src={instructions[currentInstruction]}
                 alt={`Instructions ${currentInstruction + 1}`}
-                width={800}
-                height={600}
                 className="w-full h-auto"
-                priority
               />
             </div>
 
