@@ -97,8 +97,12 @@ function DrawPageContent() {
   }
 
   function skipInstructions() {
-    localStorage.setItem(INSTRUCTIONS_VIEWED_KEY, "true");
     setShowInstructions(false);
+  }
+
+  function viewInstructionsAgain() {
+    setCurrentInstruction(0);
+    setShowInstructions(true);
   }
 
   function toggle(k: string) {
@@ -210,7 +214,15 @@ function DrawPageContent() {
           >
             ← Back to decks
           </button>
-          <h1 className="text-lg font-semibold">{deck.name}</h1>
+          <div className="flex items-center gap-3">
+            <h1 className="text-lg font-semibold">{deck.name}</h1>
+            <button 
+              onClick={viewInstructionsAgain}
+              className="text-xs text-white/50 hover:text-white underline"
+            >
+              Instructions
+            </button>
+          </div>
         </div>
 
         <div className="flex items-center justify-between">
