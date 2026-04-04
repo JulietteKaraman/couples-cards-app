@@ -7,8 +7,8 @@ import Link from "next/link";
 import { getTasterCards } from "@/data/taster-cards";
 
 const instructions = [
-  "/cards/friends/instructions/Instructions1.png",
-  "/cards/friends/instructions/Instructions2.png",
+  "/cards/friends/instructions/Insructions1.svg",
+  "/cards/friends/instructions/Instructions2.svg",
 ];
 
 export default function FriendsTasterPlayPage() {
