@@ -6,19 +6,44 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { getTasterCards } from "@/data/taster-cards";
 
+const instructions = [
+  "/cards/friends/instructions/Instructions1.png",
+  "/cards/friends/instructions/Instructions2.png",
+];
+
 export default function FriendsTasterPlayPage() {
   const router = useRouter();
   const cards = getTasterCards("friends");
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
   const [showCard, setShowCard] = useState(false);
+  const [currentInstruction, setCurrentInstruction] = useState(0);
+  const [showInstructions, setShowInstructions] = useState(true);
 
   const currentCard = cards[currentCardIndex];
   const isLastCard = currentCardIndex === cards.length - 1;
+  const isLastInstruction = currentInstruction === instructions.length - 1;
+
+  function nextInstruction() {
+    if (isLastInstruction) {
+      setShowInstructions(false);
+    } else {
+      setCurrentInstruction(currentInstruction + 1);
+    }
+  }
+
+  function prevInstruction() {
+    if (currentInstruction > 0) {
+      setCurrentInstruction(currentInstruction - 1);
+    }
+  }
+
+  function skipInstructions() {
+    setShowInstructions(false);
+  }
 
   function drawCard() {
     if (isLastCard && showCard) {
-      // Go to upgrade page after last card
       router.push("/free/friends/upgrade");
       return;
     }
@@ -34,9 +59,77 @@ export default function FriendsTasterPlayPage() {
     } else {
       setCurrentCardIndex(currentCardIndex + 1);
       setFlipped(false);
-      // Small delay to allow the card index to update before flipping
       setTimeout(() => setFlipped(true), 100);
     }
+  }
+
+  if (showInstructions) {
+    return (
+      <main className="min-h-screen bg-black text-white">
+        <div className="max-w-md mx-auto px-4 py-6 min-h-screen flex flex-col">
+          {/* Skip button */}
+          <div className="flex justify-end mb-4">
+            <button 
+              onClick={skipInstructions}
+              className="text-sm text-white/50 hover:text-white"
+            >
+              Skip
+            </button>
+          </div>
+
+          {/* Progress dots */}
+          <div className="flex justify-center gap-2 mb-8">
+            {instructions.map((_, idx) => (
+              <div
+                key={idx}
+                className={`w-2 h-2 rounded-full transition-colors ${
+                  idx === currentInstruction ? "bg-white" : "bg-white/30"
+                }`}
+              />
+            ))}
+          </div>
+
+          {/* Instructions content */}
+          <div className="flex-1 flex flex-col items-center justify-center">
+            <div className="rounded-2xl overflow-hidden border border-white/10 mb-8 w-full">
+              <Image
+                src={instructions[currentInstruction]}
+                alt={`Instructions ${currentInstruction + 1}`}
+                width={800}
+                height={600}
+                className="w-full h-auto"
+                priority
+              />
+            </div>
+
+            <h2 className="text-2xl font-semibold text-center mb-3">
+              Friends & Family Edition Taster
+            </h2>
+            <p className="text-white/70 text-center">
+              Experience 5 cards from the deck for free
+            </p>
+          </div>
+
+          {/* Navigation */}
+          <div className="mt-8 space-y-3">
+            {currentInstruction > 0 && (
+              <button
+                onClick={prevInstruction}
+                className="w-full rounded-xl border border-white/20 text-white py-3 font-medium"
+              >
+                Back
+              </button>
+            )}
+            <button
+              onClick={nextInstruction}
+              className="w-full rounded-xl bg-white text-black py-3 font-medium"
+            >
+              {isLastInstruction ? "Start Taster" : "Next"}
+            </button>
+          </div>
+        </div>
+      </main>
+    );
   }
 
   return (

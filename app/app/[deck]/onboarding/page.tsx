@@ -4,31 +4,14 @@ import Image from "next/image";
 import { useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
-import { isValidDeck } from "@/data/decks";
-
-const INSTRUCTIONS = [
-  {
-    image: "/cards/friends/instructions/1.png",
-    title: "Welcome to Friends & Family",
-    description: "Deepen your connections through meaningful conversations",
-  },
-  {
-    image: "/cards/friends/instructions/2.png",
-    title: "Choose Your Sections",
-    description: "Select from Life, Family, Beliefs, Friendship, and Growth themes",
-  },
-  {
-    image: "/cards/friends/instructions/3.png",
-    title: "Draw a Card",
-    description: "Take turns reading and answering the prompts honestly",
-  },
-];
+import { isValidDeck, DECKS } from "@/data/decks";
 
 function OnboardingContent() {
   const params = useParams();
   const router = useRouter();
   const deckType = params.deck as string;
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [showInstructions, setShowInstructions] = useState(true);
 
   if (!isValidDeck(deckType)) {
     return (
@@ -46,8 +29,22 @@ function OnboardingContent() {
     );
   }
 
+  const deck = DECKS[deckType];
+  const instructions = [
+    {
+      image: `/cards/${deckType}/instructions/Instructions1.png`,
+      title: "Welcome",
+    },
+    {
+      image: `/cards/${deckType}/instructions/Instructions2.png`,
+      title: "Get Started",
+    },
+  ];
+
+  const totalSlides = instructions.length;
+
   const nextSlide = () => {
-    if (currentSlide < INSTRUCTIONS.length - 1) {
+    if (currentSlide < totalSlides - 1) {
       setCurrentSlide(currentSlide + 1);
     } else {
       router.push(`/app/${deckType}/draw`);
@@ -64,7 +61,8 @@ function OnboardingContent() {
     router.push(`/app/${deckType}/draw`);
   };
 
-  const instruction = INSTRUCTIONS[currentSlide];
+  const instruction = instructions[currentSlide];
+  const isLastSlide = currentSlide === totalSlides - 1;
 
   return (
     <main className="min-h-screen bg-black text-white">
@@ -81,7 +79,7 @@ function OnboardingContent() {
 
         {/* Progress dots */}
         <div className="flex justify-center gap-2 mb-8">
-          {INSTRUCTIONS.map((_, idx) => (
+          {instructions.map((_, idx) => (
             <div
               key={idx}
               className={`w-2 h-2 rounded-full transition-colors ${
@@ -105,10 +103,10 @@ function OnboardingContent() {
           </div>
 
           <h2 className="text-2xl font-semibold text-center mb-3">
-            {instruction.title}
+            {deck.name}
           </h2>
           <p className="text-white/70 text-center">
-            {instruction.description}
+            {deck.description}
           </p>
         </div>
 
@@ -126,7 +124,7 @@ function OnboardingContent() {
             onClick={nextSlide}
             className="w-full rounded-xl bg-white text-black py-3 font-medium"
           >
-            {currentSlide === INSTRUCTIONS.length - 1 ? "Start Playing" : "Next"}
+            {isLastSlide ? "Start Playing" : "Next"}
           </button>
         </div>
       </div>
