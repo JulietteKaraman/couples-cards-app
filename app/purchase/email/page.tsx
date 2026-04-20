@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 
@@ -8,10 +8,7 @@ function PurchaseEmailContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const product = searchParams.get("product") || "couples";
-  const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
 
   const productDetails: Record<string, { name: string; price: string }> = {
     couples: { name: "Couples Edition", price: "£25" },
@@ -23,36 +20,20 @@ function PurchaseEmailContent() {
 
   const productDetail = productDetails[product] || { name: "Couples Edition", price: "£25" };
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setError("");
-    
-    if (!email) {
-      setError("Please enter your email address");
-      return;
-    }
-
-    setLoading(true);
-
-    try {
-      const res = await fetch("/api/create-purchase-user", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, name, product }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.error || "Something went wrong");
+  // Listen for Ivorey form submission
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      if (event.data === "form_submitted" || (event.data && event.data.type === "form_submission_success")) {
+        setSuccess(true);
+        setTimeout(() => {
+          router.push(`/app/${product}/unlock`);
+        }, 2000);
       }
+    };
 
-      router.push(`/app/${product}/unlock`);
-    } catch (err: any) {
-      setError(err.message || "Failed to create account. Please try again.");
-      setLoading(false);
-    }
-  }
+    window.addEventListener("message", handleMessage);
+    return () => window.removeEventListener("message", handleMessage);
+  }, [router, product]);
 
   return (
     <main className="min-h-screen bg-black text-white">
@@ -65,53 +46,57 @@ function PurchaseEmailContent() {
         </Link>
 
         <div className="flex-1 flex flex-col items-center justify-center">
-          <div className="text-center mb-6">
-            <h1 className="text-2xl font-semibold mb-2">Unlock {productDetail.name}</h1>
-            <p className="text-white/70">
-              Enter your email to continue to checkout
-            </p>
-            <p className="text-white/50 text-sm mt-2">
-              One-time purchase of {productDetail.price}
-            </p>
-            <p className="text-white/50 text-sm">
-              You'll also receive updates about our card decks and special offers
-            </p>
-          </div>
-
-          <form onSubmit={handleSubmit} className="w-full space-y-4">
-            <div>
-              <input
-                type="text"
-                placeholder="Your name (optional)"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-white/40"
-              />
+          {success ? (
+            <div className="text-center">
+              <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg className="w-8 h-8 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <h2 className="text-2xl font-semibold mb-2">You're in!</h2>
+              <p className="text-white/70">Sending you to checkout...</p>
             </div>
-            
-            <div>
-              <input
-                type="email"
-                placeholder="Your email address"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-white/40"
-              />
-            </div>
+          ) : (
+            <>
+              <div className="text-center mb-6">
+                <h1 className="text-2xl font-semibold mb-2">Unlock {productDetail.name}</h1>
+                <p className="text-white/70">
+                  Enter your email to continue to checkout
+                </p>
+                <p className="text-white/50 text-sm mt-2">
+                  One-time purchase of {productDetail.price}
+                </p>
+                <p className="text-white/50 text-sm">
+                  You'll also receive updates about our card decks and special offers
+                </p>
+              </div>
 
-            {error && (
-              <p className="text-red-400 text-sm">{error}</p>
-            )}
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full rounded-xl bg-white text-black py-3 font-medium disabled:opacity-50"
-            >
-              {loading ? "Please wait..." : `Continue to Checkout - ${productDetail.price}`}
-            </button>
-          </form>
+              {/* Ivorey embed - captures to Ivorey automatically */}
+              <div 
+                className="w-full rounded-2xl overflow-hidden border border-white/10"
+                style={{ height: "468px" }}
+              >
+                <iframe
+                  src="https://links.ivorey.io/widget/form/TLzYfnzCX3pUjQd9FAK1"
+                  style={{ width: "100%", height: "100%", border: "none", borderRadius: "3px" }}
+                  id="inline-TLzYfnzCX3pUjQd9FAK1"
+                  data-layout='{"id":"INLINE"}'
+                  data-trigger-type="alwaysShow"
+                  data-trigger-value=""
+                  data-activation-type="alwaysActivated"
+                  data-activation-value=""
+                  data-deactivation-type="neverDeactivate"
+                  data-deactivation-value=""
+                  data-form-name="Pick A Card"
+                  data-height="468"
+                  data-layout-iframe-id="inline-TLzYfnzCX3pUjQd9FAK1"
+                  data-form-id="TLzYfnzCX3pUjQd9FAK1"
+                  title="Pick A Card"
+                />
+                <script src="https://links.ivorey.io/js/form_embed.js" async></script>
+              </div>
+            </>
+          )}
         </div>
 
         <p className="text-xs text-white/50 text-center mt-4">
