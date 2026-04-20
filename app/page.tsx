@@ -12,7 +12,7 @@ export default function Home() {
           <p className="text-white/50 text-sm italic mb-6">Because every relationship deserves to feel seen, heard and understood</p>
           
           <Link
-            href="/free"
+            href="/free/email"
             className="inline-block rounded-xl bg-white/10 border border-white/20 text-white px-6 py-3 font-medium hover:bg-white/20 transition-colors"
           >
             Try 5 Cards Free
@@ -50,7 +50,7 @@ export default function Home() {
               </Link>
 
               <Link
-                href="/app/touch-languages/unlock"
+                href="/purchase/email?product=touch-languages"
                 className="block text-center rounded-xl border border-white/15 py-3 font-medium hover:bg-white/5 transition-colors"
               >
                 Unlock for £25
@@ -89,7 +89,7 @@ export default function Home() {
               </Link>
 
               <Link
-                href="/app/couples/unlock"
+                href="/purchase/email?product=couples"
                 className="block text-center rounded-xl border border-white/15 py-3 font-medium hover:bg-white/5 transition-colors"
               >
                 Unlock for £25
@@ -128,7 +128,7 @@ export default function Home() {
               </Link>
 
               <Link
-                href="/app/friends/unlock"
+                href="/purchase/email?product=friends"
                 className="block text-center rounded-xl border border-white/15 py-3 font-medium hover:bg-white/5 transition-colors"
               >
                 Unlock for £25
@@ -155,7 +155,7 @@ export default function Home() {
                 <span className="text-white/40 text-sm ml-2 line-through">£75</span>
               </div>
               <Link
-                href="/app/all-three/unlock"
+                href="/purchase/email?product=all-three"
                 className="rounded-xl bg-white text-black px-6 py-2 font-medium"
               >
                 View Bundle
@@ -182,7 +182,7 @@ export default function Home() {
                 <span className="text-white/40 text-sm ml-2 line-through">£50</span>
               </div>
               <Link
-                href="/app/bundle/unlock"
+                href="/purchase/email?product=bundle"
                 className="rounded-xl bg-white/10 border border-white/20 px-6 py-2 font-medium hover:bg-white/20 transition-colors"
               >
                 View Bundle

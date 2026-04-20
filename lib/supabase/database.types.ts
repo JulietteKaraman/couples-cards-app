@@ -14,6 +14,30 @@ export type Database = {
   }
   public: {
     Tables: {
+      users: {
+        Row: {
+          id: string
+          email: string
+          name: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          email: string
+          name?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          email?: string
+          name?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       entitlements: {
         Row: {
           couples_access: boolean
@@ -84,6 +108,42 @@ export type Database = {
             referencedColumns: ["id"]
           }
         ]
+      }
+      ivorey_submissions: {
+        Row: {
+          id: string
+          user_id: string | null
+          email: string
+          name: string | null
+          form_id: string
+          product_intent: string | null
+          source: string
+          submitted_at: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id?: string | null
+          email: string
+          name?: string | null
+          form_id: string
+          product_intent?: string | null
+          source: string
+          submitted_at?: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string | null
+          email?: string
+          name?: string | null
+          form_id?: string
+          product_intent?: string | null
+          source?: string
+          submitted_at?: string
+          created_at?: string
+        }
+        Relationships: []
       }
     }
     Views: {
