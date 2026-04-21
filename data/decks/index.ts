@@ -35,7 +35,7 @@ export const DECKS: Record<DeckType, DeckConfig> = {
     id: "couples",
     name: "Couples Edition",
     description: "Deepen your connection with your partner through meaningful conversations",
-    price: 25,
+    price: 55,
     stripePriceId: process.env.STRIPE_COUPLES_PRICE_ID || "",
     coverImage: "/cards/couples/cover.png",
     sections: COUPLES_SECTIONS,
@@ -46,7 +46,7 @@ export const DECKS: Record<DeckType, DeckConfig> = {
     id: "friends",
     name: "Friends & Family Edition",
     description: "Strengthen bonds with friends and family through heartfelt conversations",
-    price: 25,
+    price: 55,
     stripePriceId: process.env.STRIPE_FRIENDS_PRICE_ID || "",
     coverImage: "/cards/friends/cover.png",
     sections: FRIENDS_SECTIONS,
@@ -57,7 +57,7 @@ export const DECKS: Record<DeckType, DeckConfig> = {
     id: "touch-languages",
     name: "The Touch Languages\u2122",
     description: "Explore the 5 languages of touch: Erotic, Physical, Emotional, Spiritual, and Energetic",
-    price: 25,
+    price: 55,
     stripePriceId: process.env.STRIPE_TOUCH_LANGUAGES_PRICE_ID || "",
     coverImage: "/cards/touch/cover.png",
     sections: TOUCH_LANGUAGES_SECTIONS,
@@ -68,21 +68,21 @@ export const DECKS: Record<DeckType, DeckConfig> = {
 
 export const BUNDLE_CONFIG = {
   id: "bundle",
-  name: "Complete Collection",
+  name: "Core Collection",
   description: "Get both Couples and Friends & Family editions",
-  price: 45,
+  price: 75,
   stripePriceId: process.env.STRIPE_BUNDLE_PRICE_ID || "",
-  savings: 5,
+  savings: 15,
   includes: ["couples", "friends"] as DeckType[],
 };
 
 export const ALL_THREE_BUNDLE_CONFIG = {
   id: "all-three",
-  name: "Ultimate Collection",
-  description: "Get all three decks: Couples, Friends & Family, and The Touch Languages",
-  price: 60,
+  name: "Full Core Set",
+  description: "Get all three decks: Touch Languages, Couples, and Friends & Family",
+  price: 95,
   stripePriceId: process.env.STRIPE_ALL_THREE_PRICE_ID || "",
-  savings: 15,
+  savings: 30,
   includes: ["couples", "friends", "touch-languages"] as DeckType[],
 };
 

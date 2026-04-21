@@ -53,7 +53,7 @@ export default function Home() {
                 href="/purchase/email?product=touch-languages"
                 className="block text-center rounded-xl border border-white/15 py-3 font-medium hover:bg-white/5 transition-colors"
               >
-                Unlock for £25
+                Unlock for £55
               </Link>
             </div>
           </div>
@@ -92,7 +92,7 @@ export default function Home() {
                 href="/purchase/email?product=couples"
                 className="block text-center rounded-xl border border-white/15 py-3 font-medium hover:bg-white/5 transition-colors"
               >
-                Unlock for £25
+                Unlock for £55
               </Link>
             </div>
           </div>
@@ -131,28 +131,28 @@ export default function Home() {
                 href="/purchase/email?product=friends"
                 className="block text-center rounded-xl border border-white/15 py-3 font-medium hover:bg-white/5 transition-colors"
               >
-                Unlock for £25
+                Unlock for £55
               </Link>
             </div>
           </div>
         </div>
 
-        {/* Ultimate Collection (All Three) */}
+        {/* Full Core Set (All Three) */}
         <div className="border-t border-white/10 pt-8">
           <div className="bg-gradient-to-br from-white/10 to-white/5 rounded-2xl p-6 border border-white/10">
             <div className="flex items-center justify-between mb-3">
-              <h2 className="text-lg font-semibold">Ultimate Collection</h2>
+              <h2 className="text-lg font-semibold">Full Core Set</h2>
               <span className="text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded-full">
-                Save £15
+                Save £30
               </span>
             </div>
             <p className="text-white/60 text-sm mb-4">
-              Get all three decks: Touch Languages, Couples, and Friends & Family. Perfect for every relationship in your life.
+              Get all three decks: Touch Languages, Couples, and Friends & Family. The complete set for every relationship in your life.
             </p>
             <div className="flex items-center justify-between">
               <div>
-                <span className="text-2xl font-bold">£60</span>
-                <span className="text-white/40 text-sm ml-2 line-through">£75</span>
+                <span className="text-2xl font-bold">£95</span>
+                <span className="text-white/40 text-sm ml-2 line-through">£125</span>
               </div>
               <Link
                 href="/purchase/email?product=all-three"
@@ -164,22 +164,22 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Complete Collection (Original Bundle - Couples + Friends) */}
+        {/* Core Collection (Couples + Friends) */}
         <div className="border-t border-white/10 pt-8 mt-8">
           <div className="bg-gradient-to-br from-white/5 to-transparent rounded-2xl p-6 border border-white/10">
             <div className="flex items-center justify-between mb-3">
-              <h2 className="text-lg font-semibold">Complete Collection</h2>
+              <h2 className="text-lg font-semibold">Core Collection</h2>
               <span className="text-xs bg-blue-500/20 text-blue-400 px-2 py-1 rounded-full">
-                Save £5
+                Save £15
               </span>
             </div>
             <p className="text-white/60 text-sm mb-4">
-              Get Couples and Friends & Family editions together. Great value for deepening all your relationships.
+              Get Couples and Friends & Family editions together. Perfect for deepening your closest relationships.
             </p>
             <div className="flex items-center justify-between">
               <div>
-                <span className="text-2xl font-bold">£45</span>
-                <span className="text-white/40 text-sm ml-2 line-through">£50</span>
+                <span className="text-2xl font-bold">£75</span>
+                <span className="text-white/40 text-sm ml-2 line-through">£90</span>
               </div>
               <Link
                 href="/purchase/email?product=bundle"
