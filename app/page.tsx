@@ -53,7 +53,7 @@ export default function Home() {
                 href="/purchase/email?product=touch-languages"
                 className="block text-center rounded-xl border border-white/15 py-3 font-medium hover:bg-white/5 transition-colors"
               >
-                Unlock for £55
+                Unlock for £35
               </Link>
             </div>
           </div>
@@ -92,7 +92,7 @@ export default function Home() {
                 href="/purchase/email?product=couples"
                 className="block text-center rounded-xl border border-white/15 py-3 font-medium hover:bg-white/5 transition-colors"
               >
-                Unlock for £55
+                Unlock for £35
               </Link>
             </div>
           </div>
@@ -131,7 +131,7 @@ export default function Home() {
                 href="/purchase/email?product=friends"
                 className="block text-center rounded-xl border border-white/15 py-3 font-medium hover:bg-white/5 transition-colors"
               >
-                Unlock for £55
+                Unlock for £35
               </Link>
             </div>
           </div>
@@ -151,8 +151,8 @@ export default function Home() {
             </p>
             <div className="flex items-center justify-between">
               <div>
-                <span className="text-2xl font-bold">£95</span>
-                <span className="text-white/40 text-sm ml-2 line-through">£125</span>
+                <span className="text-2xl font-bold">£75</span>
+                <span className="text-white/40 text-sm ml-2 line-through">£105</span>
               </div>
               <Link
                 href="/purchase/email?product=all-three"
@@ -178,8 +178,8 @@ export default function Home() {
             </p>
             <div className="flex items-center justify-between">
               <div>
-                <span className="text-2xl font-bold">£75</span>
-                <span className="text-white/40 text-sm ml-2 line-through">£90</span>
+                <span className="text-2xl font-bold">£55</span>
+                <span className="text-white/40 text-sm ml-2 line-through">£70</span>
               </div>
               <Link
                 href="/purchase/email?product=bundle"
