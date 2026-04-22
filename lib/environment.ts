@@ -17,3 +17,6 @@ export const STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET ?? proces
 
 // Ivorey (server-only)
 export const IVOREY_API_KEY = process.env.IVOREY_API_KEY ?? process.env.IVOREY_API_KEY;
+
+// Zapier Webhook for Ivorey integration
+export const ZAPIER_WEBHOOK_URL = process.env.ZAPIER_WEBHOOK_URL ?? process.env.ZAPIER_WEBHOOK_URL;
