@@ -23,7 +23,7 @@ export default function Home() {
         <div className="mb-10">
           <div className="rounded-2xl overflow-hidden border border-white/10">
             <Image
-              src="/cards/trust-repair/cover.png"
+              src="/cards/trust/cover.png"
               alt="Trust & Repair"
               width={1200}
               height={1600}

@@ -71,7 +71,7 @@ export const DECKS: Record<DeckType, DeckConfig> = {
     description: "Navigate the drift and return to trust together",
     price: 15,
     stripePriceId: process.env.STRIPE_TRUST_REPAIR_PRICE_ID || "",
-    coverImage: "/cards/trust-repair/cover.png",
+    coverImage: "/cards/trust/cover.png",
     sections: TRUST_REPAIR_SECTIONS,
     cards: TRUST_REPAIR_CARDS,
     totalCards: 50,

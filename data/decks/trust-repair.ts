@@ -8,28 +8,28 @@ export const TRUST_REPAIR_SECTIONS: Record<
 > = {
   WWA: {
     title: "What the World Is Asking",
-    coverImg: "/cards/trust-repair/sections/WWA_cover.png",
-    templateImg: "/cards/trust-repair/templates/WWA_template.png",
+    coverImg: "/cards/trust/sections/world.png",
+    templateImg: "/cards/trust/templates/world.png",
   },
   WH: {
     title: "What I'm Holding",
-    coverImg: "/cards/trust-repair/sections/WH_cover.png",
-    templateImg: "/cards/trust-repair/templates/WH_template.png",
+    coverImg: "/cards/trust/sections/holding.png",
+    templateImg: "/cards/trust/templates/holding.png",
   },
   TD: {
     title: "The Drift",
-    coverImg: "/cards/trust-repair/sections/TD_cover.png",
-    templateImg: "/cards/trust-repair/templates/TD_template.png",
+    coverImg: "/cards/trust/sections/drift.png",
+    templateImg: "/cards/trust/templates/drift.png",
   },
   BR: {
     title: "The Body's Record",
-    coverImg: "/cards/trust-repair/sections/BR_cover.png",
-    templateImg: "/cards/trust-repair/templates/BR_template.png",
+    coverImg: "/cards/trust/sections/record.png",
+    templateImg: "/cards/trust/templates/record.png",
   },
   RT: {
     title: "Return To Trust",
-    coverImg: "/cards/trust-repair/sections/RT_cover.png",
-    templateImg: "/cards/trust-repair/templates/RT_template.png",
+    coverImg: "/cards/trust/sections/return.png",
+    templateImg: "/cards/trust/templates/return.png",
   },
 };
 

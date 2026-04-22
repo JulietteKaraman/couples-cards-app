@@ -47,8 +47,8 @@ function DrawPageContent() {
 
   const hasDeckAccess = purchasedDecks.includes(deckType) || hasAccess;
   const instructions = [
-    "/cards/instructions/Instructions1.svg",
-    "/cards/instructions/Instructions2.svg",
+    "/cards/instructions/instructions1.png",
+    "/cards/instructions/instructions2.png",
   ];
   const isLastInstruction = currentInstruction === instructions.length - 1;
 

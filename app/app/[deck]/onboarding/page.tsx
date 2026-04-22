@@ -30,11 +30,11 @@ function OnboardingContent() {
   const deck = DECKS[deckType];
   const instructions = [
     {
-      image: `/cards/${deckType}/instructions/Instructions1.svg`,
+      image: `/cards/instructions/instructions1.png`,
       title: "Welcome",
     },
     {
-      image: `/cards/${deckType}/instructions/Instructions2.svg`,
+      image: `/cards/instructions/instructions2.png`,
       title: "Get Started",
     },
   ];
