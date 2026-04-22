@@ -44,7 +44,16 @@ function UnlockPageContent() {
 
     try {
       if (!user?.id || !user.email) {
-        router.push(`/login?redirect=/app/${deckType}/unlock`);
+        // Convert bundle products to bundle URL
+        let redirectUrl = `/app/${deckType}/unlock`;
+        if (product === "everything") {
+          redirectUrl = "/app/bundle/unlock?type=everything";
+        } else if (product === "full-core-set") {
+          redirectUrl = "/app/bundle/unlock?type=full-core-set";
+        } else if (product === "core-collection") {
+          redirectUrl = "/app/bundle/unlock?type=core-collection";
+        }
+        router.push(`/login?redirect=${encodeURIComponent(redirectUrl)}&signup=true`);
         return;
       }
 
