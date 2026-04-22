@@ -9,6 +9,7 @@ function PurchaseEmailContent() {
   const searchParams = useSearchParams();
   const product = searchParams.get("product") || "couples";
   const [email, setEmail] = useState("");
+  const [firstName, setFirstName] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -33,7 +34,7 @@ function PurchaseEmailContent() {
       const res = await fetch("/api/create-purchase-user", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, product }),
+        body: JSON.stringify({ email, firstName, product }),
       });
 
       const data = await res.json();
@@ -64,7 +65,7 @@ function PurchaseEmailContent() {
           <div className="text-center mb-8">
             <h1 className="text-2xl font-semibold mb-2">Unlock {productDetail.name}</h1>
             <p className="text-white/70">
-              Enter your email to continue to checkout
+              Enter your details to continue to checkout
             </p>
             <p className="text-white/50 text-sm mt-2">
               One-time purchase of {productDetail.price}
@@ -74,10 +75,20 @@ function PurchaseEmailContent() {
           <form onSubmit={handleSubmit} className="w-full space-y-4">
             <div>
               <input
+                type="text"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                placeholder="First name"
+                className="w-full rounded-xl bg-white/10 border border-white/20 px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-white/40"
+              />
+            </div>
+
+            <div>
+              <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="your@email.com"
+                placeholder="Email address"
                 required
                 className="w-full rounded-xl bg-white/10 border border-white/20 px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-white/40"
               />

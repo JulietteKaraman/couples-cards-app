@@ -6,7 +6,7 @@ export async function POST(req: Request) {
   console.log("========== CREATE PURCHASE USER START ==========");
   
   try {
-    const { email, name, product } = await req.json();
+    const { email, firstName, product } = await req.json();
 
     if (!email) {
       return NextResponse.json({ error: "Email is required" }, { status: 400 });
@@ -31,7 +31,7 @@ export async function POST(req: Request) {
         .insert({
           id: userId,
           email: email.toLowerCase(),
-          name: name || null,
+          name: firstName || null,
           created_at: now,
           updated_at: now,
         })
@@ -48,11 +48,9 @@ export async function POST(req: Request) {
 
     // Add to Ivorey email list
     try {
-      const parsedName = (name || "").split(" ");
       await addContactToIvorey({
         email: email.toLowerCase(),
-        firstName: parsedName[0] || undefined,
-        lastName: parsedName.slice(1).join(" ") || undefined,
+        firstName: firstName || undefined,
         tags: [`purchase-intent-${product || "unknown"}`],
       });
     } catch (ivoreyErr) {
@@ -90,7 +88,7 @@ export async function POST(req: Request) {
         .insert({
           user_id: finalUserId,
           email: email.toLowerCase(),
-          name: name || null,
+          name: firstName || null,
           form_id: "purchase_email_capture",
           product_intent: product,
           source: "purchase_intent",

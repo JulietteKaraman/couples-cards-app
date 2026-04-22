@@ -9,6 +9,7 @@ function FreeEmailContent() {
   const searchParams = useSearchParams();
   const deckType = searchParams.get("deck") || "couples";
   const [email, setEmail] = useState("");
+  const [firstName, setFirstName] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -28,7 +29,7 @@ function FreeEmailContent() {
       const res = await fetch("/api/create-free-user", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, deck: deckType }),
+        body: JSON.stringify({ email, firstName, deck: deckType }),
       });
 
       const data = await res.json();
@@ -59,17 +60,27 @@ function FreeEmailContent() {
           <div className="text-center mb-8">
             <h1 className="text-2xl font-semibold mb-2">Unlock Free Cards</h1>
             <p className="text-white/70">
-              Enter your email to access 5 free {deckName} cards
+              Enter your details to access 5 free {deckName} cards
             </p>
           </div>
 
           <form onSubmit={handleSubmit} className="w-full space-y-4">
             <div>
               <input
+                type="text"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                placeholder="First name"
+                className="w-full rounded-xl bg-white/10 border border-white/20 px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-white/40"
+              />
+            </div>
+
+            <div>
+              <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="your@email.com"
+                placeholder="Email address"
                 required
                 className="w-full rounded-xl bg-white/10 border border-white/20 px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-white/40"
               />
