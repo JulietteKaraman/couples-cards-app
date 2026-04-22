@@ -8,8 +8,8 @@ import { useAuth } from "@/components/providers/AuthProvider";
 
 const slides = [
   { src: "/cards/couples/cover.png", alt: "Cover", isSvg: false },
-  { src: "/cards/instructions/instructions1.png", alt: "Instructions 1", isSvg: false },
-  { src: "/cards/instructions/instructions2.png", alt: "Instructions 2", isSvg: false },
+  { src: "/cards/instructions/instructions1.svg", alt: "Instructions 1", isSvg: true },
+  { src: "/cards/instructions/instructions2.svg", alt: "Instructions 2", isSvg: true },
 ];
 
 function OnboardingContent() {
