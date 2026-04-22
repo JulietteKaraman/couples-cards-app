@@ -109,7 +109,7 @@ function AppHomeContent() {
                     <span className="text-white/40 text-sm ml-2 line-through">£145</span>
                   </div>
                   <Link
-                    href="/app/trust-repair/unlock"
+                    href="/app/bundle/unlock?type=everything"
                     className="rounded-xl bg-green-500 text-black px-6 py-2 font-medium"
                   >
                     View Bundle
@@ -138,7 +138,7 @@ function AppHomeContent() {
                     <span className="text-white/40 text-sm ml-2 line-through">£105</span>
                   </div>
                   <Link
-                    href="/app/touch-languages/unlock"
+                    href="/app/bundle/unlock?type=full-core-set"
                     className="rounded-xl bg-white text-black px-6 py-2 font-medium"
                   >
                     View Bundle
@@ -167,7 +167,7 @@ function AppHomeContent() {
                     <span className="text-white/40 text-sm ml-2 line-through">£70</span>
                   </div>
                   <Link
-                    href="/app/friends/unlock"
+                    href="/app/bundle/unlock?type=core-collection"
                     className="rounded-xl bg-white/10 border border-white/20 px-6 py-2 font-medium hover:bg-white/20 transition-colors"
                   >
                     View Bundle
