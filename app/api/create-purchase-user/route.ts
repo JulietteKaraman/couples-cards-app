@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase/admin";
+import { addContactToIvorey } from "@/lib/ivorey/api";
 
 export async function POST(req: Request) {
   console.log("========== CREATE PURCHASE USER START ==========");
@@ -43,6 +44,19 @@ export async function POST(req: Request) {
       }
 
       finalUserId = newUser?.id;
+    }
+
+    // Add to Ivorey email list
+    try {
+      const parsedName = (name || "").split(" ");
+      await addContactToIvorey({
+        email: email.toLowerCase(),
+        firstName: parsedName[0] || undefined,
+        lastName: parsedName.slice(1).join(" ") || undefined,
+        tags: [`purchase-intent-${product || "unknown"}`],
+      });
+    } catch (ivoreyErr) {
+      console.error("Failed to add to Ivorey:", ivoreyErr);
     }
 
     // Pre-grant access to the deck they want to buy
