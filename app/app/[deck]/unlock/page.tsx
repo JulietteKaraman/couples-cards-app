@@ -5,7 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { useAuth } from "@/components/providers/AuthProvider";
-import { getDeck, DeckType, isValidDeck, BUNDLE_CONFIG, ALL_THREE_BUNDLE_CONFIG, DECKS } from "@/data/decks";
+import { getDeck, DeckType, isValidDeck, BUNDLE_CONFIG, ALL_THREE_BUNDLE_CONFIG, DECKS, EVERYTHING_CONFIG, FULL_CORE_SET_CONFIG, CORE_COLLECTION_CONFIG } from "@/data/decks";
 
 function generateIdempotencyKey(): string {
   return `checkout-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
@@ -218,10 +218,18 @@ function UnlockPageContent() {
   }
 
   const ownedDecks = purchasedDecks;
-  const ownsAllThree = ownedDecks.includes("couples") && ownedDecks.includes("friends") && ownedDecks.includes("touch-languages");
-  const ownsCouplesAndFriends = ownedDecks.includes("couples") && ownedDecks.includes("friends");
-  const showAllThreeBundle = !ownsAllThree && !ownedDecks.includes("touch-languages");
-  const showOriginalBundle = !ownsCouplesAndFriends && !ownedDecks.includes("couples") && !ownedDecks.includes("friends");
+  const ownsCouples = ownedDecks.includes("couples");
+  const ownsFriends = ownedDecks.includes("friends");
+  const ownsTouch = ownedDecks.includes("touch-languages");
+  const ownsTrust = ownedDecks.includes("trust-repair");
+  const ownsAllFour = ownsCouples && ownsFriends && ownsTouch && ownsTrust;
+  const ownsCoreSet = ownsCouples && ownsFriends && ownsTouch;
+  const ownsCoreCollection = ownsCouples && ownsFriends;
+
+  // Show bundles user doesn't fully own yet
+  const showEverythingBundle = !ownsAllFour;
+  const showFullCoreSetBundle = !ownsCoreSet;
+  const showCoreCollectionBundle = !ownsCoreCollection;
 
   return (
     <main className="min-h-screen bg-black text-white">
@@ -279,6 +287,17 @@ function UnlockPageContent() {
               </p>
             </div>
           )}
+
+          {deckType === "trust-repair" && (
+            <div className="space-y-2">
+              <p className="text-white/80 font-medium">
+                50 prompts navigating the drift and returning to trust together
+              </p>
+              <p className="text-white/60 text-sm">
+                For couples who want to deepen their intimacy and repair trust
+              </p>
+            </div>
+          )}
           
           <p className="text-sm text-white/50">{deck.totalCards} cards</p>
 
@@ -300,47 +319,73 @@ function UnlockPageContent() {
             </p>
           </div>
 
-          {showAllThreeBundle && (
+          {/* Everything Bundle (All 4) */}
+          {showEverythingBundle && (
             <div className="border-t border-white/10 pt-6 mt-6">
-              <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+              <div className="bg-gradient-to-br from-green-500/20 to-green-500/5 rounded-xl p-4 border border-green-500/30">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-medium">Ultimate Collection</span>
+                  <span className="text-sm font-medium">Everything Bundle</span>
                   <span className="text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded">
-                    Save £15
+                    Save £60
                   </span>
                 </div>
                 <p className="text-sm text-white/60 mb-4">
-                  Get all three decks: Touch Languages, Couples, and Friends & Family
+                  All four decks: Touch Languages, Couples, Friends & Family, and Trust & Repair
                 </p>
                 <button
-                  onClick={() => startCheckout("all-three")}
+                  onClick={() => startCheckout("everything")}
                   disabled={loading}
-                  className="w-full rounded-xl bg-white/10 text-white border border-white/20 py-3 font-medium disabled:opacity-50 hover:bg-white/20 transition-colors"
+                  className="w-full rounded-xl bg-green-500 text-black py-3 font-medium disabled:opacity-50 hover:bg-green-400 transition-colors"
                 >
-                  {loading ? "Opening checkout…" : `Buy All Three £${ALL_THREE_BUNDLE_CONFIG.price}`}
+                  {loading ? "Opening checkout…" : `Unlock Everything for £${EVERYTHING_CONFIG.price}`}
                 </button>
               </div>
             </div>
           )}
 
-          {showOriginalBundle && (
+          {/* Full Core Set Bundle (3 core decks) */}
+          {showFullCoreSetBundle && (
             <div className="border-t border-white/10 pt-6 mt-6">
               <div className="bg-white/5 rounded-xl p-4 border border-white/10">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-medium">Complete Collection</span>
-                  <span className="text-xs bg-blue-500/20 text-blue-400 px-2 py-1 rounded">
-                    Save £5
+                  <span className="text-sm font-medium">Full Core Set</span>
+                  <span className="text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded">
+                    Save £30
                   </span>
                 </div>
                 <p className="text-sm text-white/60 mb-4">
-                  Get both {DECKS.couples.name} and {DECKS.friends.name}
+                  Three core decks: Touch Languages, Couples, and Friends & Family
                 </p>
                 <button
-                  onClick={() => startCheckout("bundle")}
+                  onClick={() => startCheckout("full-core-set")}
+                  disabled={loading}
+                  className="w-full rounded-xl bg-white text-black py-3 font-medium disabled:opacity-50 hover:bg-white/90 transition-colors"
+                >
+                  {loading ? "Opening checkout…" : `Unlock Core Set for £${FULL_CORE_SET_CONFIG.price}`}
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Core Collection Bundle (Couples + Friends) */}
+          {showCoreCollectionBundle && (
+            <div className="border-t border-white/10 pt-6 mt-6">
+              <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-medium">Core Collection</span>
+                  <span className="text-xs bg-blue-500/20 text-blue-400 px-2 py-1 rounded">
+                    Save £15
+                  </span>
+                </div>
+                <p className="text-sm text-white/60 mb-4">
+                  Couples and Friends & Family editions together
+                </p>
+                <button
+                  onClick={() => startCheckout("core-collection")}
                   disabled={loading}
                   className="w-full rounded-xl bg-white/10 text-white border border-white/20 py-3 font-medium disabled:opacity-50 hover:bg-white/20 transition-colors"
                 >
-                  {loading ? "Opening checkout…" : `Buy Bundle £${BUNDLE_CONFIG.price}`}
+                  {loading ? "Opening checkout…" : `Unlock Core Collection for £${CORE_COLLECTION_CONFIG.price}`}
                 </button>
               </div>
             </div>
