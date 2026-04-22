@@ -1,19 +1,31 @@
 "use client";
 
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 import AuthForm from "./ui/AuthForm";
 
-export default function LoginPage() {
+function LoginPageContent() {
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get("redirect");
+  const signup = searchParams.get("signup");
+
+  const isPurchaseFlow = redirect && redirect.includes("/unlock");
+
   return (
     <main className="min-h-screen flex items-center justify-center bg-black text-white px-4">
       <div className="w-full max-w-md rounded-2xl border border-white/10 bg-white/5 p-6">
-        <h1 className="text-xl font-semibold">Sign in</h1>
+        <h1 className="text-xl font-semibold">
+          {signup === "true" ? "Create account" : "Sign in"}
+        </h1>
         <p className="text-sm text-white/70 mt-1">
-          Access your Couples deck purchase.
+          {isPurchaseFlow
+            ? "Create an account to complete your purchase"
+            : "Access your card deck purchase."}
         </p>
 
         <div className="mt-6">
-          <AuthForm />
+          <AuthForm redirectAfterLogin={redirect || "/app"} />
         </div>
 
         <p className="text-xs text-white/50 mt-6">
@@ -25,5 +37,13 @@ export default function LoginPage() {
         </Link>
       </div>
     </main>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-black text-white flex items-center justify-center"><p className="text-white/50">Loading...</p></div>}>
+      <LoginPageContent />
+    </Suspense>
   );
 }

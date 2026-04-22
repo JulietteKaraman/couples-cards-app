@@ -57,7 +57,7 @@ function BundleUnlockContent() {
 
     try {
       if (!user?.id) {
-        router.push(`/purchase/email?product=${bundleType}`);
+        router.push(`/login?redirect=/app/bundle/unlock?type=${bundleType}`);
         return;
       }
 

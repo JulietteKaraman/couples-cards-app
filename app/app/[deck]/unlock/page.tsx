@@ -44,7 +44,8 @@ function UnlockPageContent() {
 
     try {
       if (!user?.id || !user.email) {
-        throw new Error("User not authenticated");
+        router.push(`/login?redirect=/app/${deckType}/unlock`);
+        return;
       }
 
       const idempotencyKey = generateIdempotencyKey();

@@ -3,7 +3,11 @@
 import { useState } from "react";
 import { useAuth } from "@/components/providers/AuthProvider";
 
-export default function AuthForm() {
+interface AuthFormProps {
+  redirectAfterLogin?: string;
+}
+
+export default function AuthForm({ redirectAfterLogin = "/app" }: AuthFormProps) {
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -42,7 +46,6 @@ export default function AuthForm() {
           }
         } catch (ivoreyErr) {
           console.error("Error adding to Ivorey:", ivoreyErr);
-          // Don't fail signup if Ivorey fails
         }
         
         setMsg("Account created. You can now sign in.");
@@ -52,10 +55,9 @@ export default function AuthForm() {
         setLastName("");
       } else {
         await signIn(email, password);
-        window.location.href = "/app";
+        window.location.href = redirectAfterLogin;
       }
     } catch (err: any) {
-      // Error is handled in context, but we display it here
       setMsg(authError ?? err.message ?? "Something went wrong.");
     } finally {
       setLoading(false);
