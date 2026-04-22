@@ -1,8 +1,9 @@
 import { TOUCH_LANGUAGES_CARDS, TOUCH_LANGUAGES_SECTIONS, TouchLanguagesSectionKey, TouchLanguagesCardPrompt } from "./touch-languages";
+import { TRUST_REPAIR_CARDS, TRUST_REPAIR_SECTIONS, TrustRepairSectionKey, TrustRepairCardPrompt } from "./trust-repair";
 import { COUPLES_CARDS, SECTIONS as COUPLES_SECTIONS, SectionKey as CouplesSectionKey, CardPrompt as CouplesCardPrompt } from "./couples";
 import { FRIENDS_CARDS, FRIENDS_SECTIONS, FriendsSectionKey, FriendsCardPrompt } from "./friends";
 
-export type DeckType = "couples" | "friends" | "touch-languages";
+export type DeckType = "couples" | "friends" | "touch-languages" | "trust-repair";
 
 export type SectionConfig = {
   title: string;
@@ -64,26 +65,51 @@ export const DECKS: Record<DeckType, DeckConfig> = {
     cards: TOUCH_LANGUAGES_CARDS,
     totalCards: 125,
   },
+  "trust-repair": {
+    id: "trust-repair",
+    name: "Trust & Repair",
+    description: "Navigate the drift and return to trust together",
+    price: 15,
+    stripePriceId: process.env.STRIPE_TRUST_REPAIR_PRICE_ID || "",
+    coverImage: "/cards/trust-repair/cover.png",
+    sections: TRUST_REPAIR_SECTIONS,
+    cards: TRUST_REPAIR_CARDS,
+    totalCards: 50,
+  },
 };
 
-export const BUNDLE_CONFIG = {
-  id: "bundle",
+export const CORE_COLLECTION_CONFIG = {
+  id: "core-collection",
   name: "Core Collection",
-  description: "Get both Couples and Friends & Family editions",
+  description: "Get Couples and Friends & Family editions together",
   price: 55,
-  stripePriceId: process.env.STRIPE_BUNDLE_PRICE_ID || "",
+  stripePriceId: process.env.STRIPE_CORE_COLLECTION_PRICE_ID || "",
   savings: 15,
   includes: ["couples", "friends"] as DeckType[],
 };
 
-export const ALL_THREE_BUNDLE_CONFIG = {
-  id: "all-three",
+export const BUNDLE_CONFIG = CORE_COLLECTION_CONFIG;
+
+export const FULL_CORE_SET_CONFIG = {
+  id: "full-core-set",
   name: "Full Core Set",
-  description: "Get all three decks: Touch Languages, Couples, and Friends & Family",
+  description: "Get all three core decks: Touch Languages, Couples, and Friends & Family",
   price: 75,
-  stripePriceId: process.env.STRIPE_ALL_THREE_PRICE_ID || "",
+  stripePriceId: process.env.STRIPE_FULL_CORE_SET_PRICE_ID || "",
   savings: 30,
   includes: ["couples", "friends", "touch-languages"] as DeckType[],
+};
+
+export const ALL_THREE_BUNDLE_CONFIG = FULL_CORE_SET_CONFIG;
+
+export const EVERYTHING_CONFIG = {
+  id: "everything",
+  name: "Everything",
+  description: "Get all four decks: Touch Languages, Couples, Friends & Family, and Trust & Repair",
+  price: 85,
+  stripePriceId: process.env.STRIPE_EVERYTHING_PRICE_ID || "",
+  savings: 60,
+  includes: ["couples", "friends", "touch-languages", "trust-repair"] as DeckType[],
 };
 
 export function getDeck(deckType: DeckType): DeckConfig {
@@ -95,7 +121,7 @@ export function getAllDecks(): DeckConfig[] {
 }
 
 export function isValidDeck(deckType: string): deckType is DeckType {
-  return deckType === "couples" || deckType === "friends" || deckType === "touch-languages";
+  return deckType === "couples" || deckType === "friends" || deckType === "touch-languages" || deckType === "trust-repair";
 }
 
 export type { 
@@ -105,4 +131,6 @@ export type {
   FriendsCardPrompt,
   TouchLanguagesSectionKey,
   TouchLanguagesCardPrompt,
+  TrustRepairSectionKey,
+  TrustRepairCardPrompt,
 };

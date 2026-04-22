@@ -64,10 +64,14 @@ export async function POST(req: Request) {
       decksToGrant.push("friends");
     } else if (product === "touch-languages") {
       decksToGrant.push("touch-languages");
-    } else if (product === "bundle") {
+    } else if (product === "trust-repair") {
+      decksToGrant.push("trust-repair");
+    } else if (product === "core-collection") {
       decksToGrant.push("couples", "friends");
-    } else if (product === "all-three") {
+    } else if (product === "full-core-set") {
       decksToGrant.push("couples", "friends", "touch-languages");
+    } else if (product === "everything") {
+      decksToGrant.push("couples", "friends", "touch-languages", "trust-repair");
     } else {
       console.log("Skipping - unknown product:", product);
       return NextResponse.json({ received: true });

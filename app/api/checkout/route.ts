@@ -36,7 +36,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const validProducts = ["couples", "friends", "touch-languages", "bundle", "all-three"];
+    const validProducts = ["couples", "friends", "touch-languages", "trust-repair", "core-collection", "full-core-set", "everything"];
     const productType = product || "couples";
     
     if (!validProducts.includes(productType)) {
@@ -58,11 +58,17 @@ export async function POST(req: Request) {
       case "touch-languages":
         priceId = process.env.STRIPE_TOUCH_LANGUAGES_PRICE_ID!;
         break;
-      case "bundle":
-        priceId = process.env.STRIPE_BUNDLE_PRICE_ID!;
+      case "trust-repair":
+        priceId = process.env.STRIPE_TRUST_REPAIR_PRICE_ID!;
         break;
-      case "all-three":
-        priceId = process.env.STRIPE_ALL_THREE_PRICE_ID!;
+      case "core-collection":
+        priceId = process.env.STRIPE_CORE_COLLECTION_PRICE_ID!;
+        break;
+      case "full-core-set":
+        priceId = process.env.STRIPE_FULL_CORE_SET_PRICE_ID!;
+        break;
+      case "everything":
+        priceId = process.env.STRIPE_EVERYTHING_PRICE_ID!;
         break;
       default:
         priceId = process.env.STRIPE_COUPLES_PRICE_ID!;

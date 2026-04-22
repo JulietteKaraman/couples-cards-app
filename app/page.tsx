@@ -19,6 +19,46 @@ export default function Home() {
           </Link>
         </div>
 
+        {/* Trust & Repair */}
+        <div className="mb-10">
+          <div className="rounded-2xl overflow-hidden border border-white/10">
+            <Image
+              src="/cards/trust-repair/cover.png"
+              alt="Trust & Repair"
+              width={1200}
+              height={1600}
+              className="w-full h-auto"
+              priority
+            />
+          </div>
+
+          <div className="mt-5 space-y-3">
+            <h2 className="text-xl font-semibold">Trust & Repair</h2>
+            <p className="text-white/70 text-sm">
+              50 prompts navigating the drift and returning to trust together
+            </p>
+            <p className="text-white/60 text-xs">
+              For couples who want to deepen their intimacy through the language of touch
+            </p>
+
+            <div className="pt-2 space-y-2">
+              <Link
+                href="/login"
+                className="block text-center rounded-xl bg-white text-black py-3 font-medium"
+              >
+                Sign in
+              </Link>
+
+              <Link
+                href="/purchase/email?product=trust-repair"
+                className="block text-center rounded-xl border border-white/15 py-3 font-medium hover:bg-white/5 transition-colors"
+              >
+                Unlock for £15
+              </Link>
+            </div>
+          </div>
+        </div>
+
         {/* Touch Languages Edition */}
         <div className="mb-10">
           <div className="rounded-2xl overflow-hidden border border-white/10">
@@ -28,7 +68,6 @@ export default function Home() {
               width={1200}
               height={1600}
               className="w-full h-auto"
-              priority
             />
           </div>
 
@@ -137,8 +176,35 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Full Core Set (All Three) */}
+        {/* Everything (All Four) */}
         <div className="border-t border-white/10 pt-8">
+          <div className="bg-gradient-to-br from-green-500/20 to-green-500/5 rounded-2xl p-6 border border-green-500/30">
+            <div className="flex items-center justify-between mb-3">
+              <h2 className="text-lg font-semibold">Everything</h2>
+              <span className="text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded-full">
+                Save £60
+              </span>
+            </div>
+            <p className="text-white/60 text-sm mb-4">
+              Get all four decks: Touch Languages, Couples, Friends & Family, and Trust & Repair. The complete collection for every relationship in your life.
+            </p>
+            <div className="flex items-center justify-between">
+              <div>
+                <span className="text-2xl font-bold">£85</span>
+                <span className="text-white/40 text-sm ml-2 line-through">£145</span>
+              </div>
+              <Link
+                href="/purchase/email?product=everything"
+                className="rounded-xl bg-green-500 text-black px-6 py-2 font-medium"
+              >
+                View Bundle
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        {/* Full Core Set (Three Core) */}
+        <div className="border-t border-white/10 pt-8 mt-8">
           <div className="bg-gradient-to-br from-white/10 to-white/5 rounded-2xl p-6 border border-white/10">
             <div className="flex items-center justify-between mb-3">
               <h2 className="text-lg font-semibold">Full Core Set</h2>
@@ -147,7 +213,7 @@ export default function Home() {
               </span>
             </div>
             <p className="text-white/60 text-sm mb-4">
-              Get all three decks: Touch Languages, Couples, and Friends & Family. The complete set for every relationship in your life.
+              Get all three core decks: Touch Languages, Couples, and Friends & Family.
             </p>
             <div className="flex items-center justify-between">
               <div>
@@ -155,7 +221,7 @@ export default function Home() {
                 <span className="text-white/40 text-sm ml-2 line-through">£105</span>
               </div>
               <Link
-                href="/purchase/email?product=all-three"
+                href="/purchase/email?product=full-core-set"
                 className="rounded-xl bg-white text-black px-6 py-2 font-medium"
               >
                 View Bundle
@@ -174,7 +240,7 @@ export default function Home() {
               </span>
             </div>
             <p className="text-white/60 text-sm mb-4">
-              Get Couples and Friends & Family editions together. Perfect for deepening your closest relationships.
+              Get Couples and Friends & Family editions together.
             </p>
             <div className="flex items-center justify-between">
               <div>
@@ -182,7 +248,7 @@ export default function Home() {
                 <span className="text-white/40 text-sm ml-2 line-through">£70</span>
               </div>
               <Link
-                href="/purchase/email?product=bundle"
+                href="/purchase/email?product=core-collection"
                 className="rounded-xl bg-white/10 border border-white/20 px-6 py-2 font-medium hover:bg-white/20 transition-colors"
               >
                 View Bundle
