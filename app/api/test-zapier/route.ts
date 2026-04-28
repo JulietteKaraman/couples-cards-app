@@ -22,8 +22,8 @@ export async function POST(req: Request) {
       },
       body: JSON.stringify({
         email: email?.toLowerCase(),
-        firstName,
-        lastName,
+        first_name: firstName,
+        last_name: lastName,
         tags: tags || ["test-zapier-webhook"],
       }),
     });

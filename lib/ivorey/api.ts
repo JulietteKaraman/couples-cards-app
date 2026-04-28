@@ -19,8 +19,8 @@ export async function addContactToIvorey(contact: IvoreyContact): Promise<{ succ
     if (ZAPIER_WEBHOOK_URL) {
       const webhookPayload = {
         email: contact.email.toLowerCase(),
-        firstName: contact.firstName,
-        lastName: contact.lastName,
+        first_name: contact.firstName,
+        last_name: contact.lastName,
         tags: contact.tags || ["touch-cards-signup"],
       };
 
