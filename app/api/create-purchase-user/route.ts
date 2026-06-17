@@ -59,8 +59,8 @@ export async function POST(req: Request) {
 
     // Pre-grant access to the deck they want to buy
     if (finalUserId) {
-      if (product === "all-three") {
-        const decksToGrant = ["couples", "friends", "touch-languages"];
+      if (product === "full-set") {
+        const decksToGrant = ["trust-repair", "couples", "friends"];
         for (const deckType of decksToGrant) {
           await supabaseAdmin
             .from("user_decks")

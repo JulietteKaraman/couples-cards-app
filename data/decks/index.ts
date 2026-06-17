@@ -78,38 +78,14 @@ export const DECKS: Record<DeckType, DeckConfig> = {
   },
 };
 
-export const CORE_COLLECTION_CONFIG = {
-  id: "core-collection",
-  name: "Core Collection",
-  description: "Get Couples and Friends & Family editions together",
+export const FULL_SET_CONFIG = {
+  id: "full-set",
+  name: "Full Set",
+  description: "Get all three decks: Trust & Repair, Couples, and Friends & Family",
   price: 55,
-  stripePriceId: process.env.STRIPE_CORE_COLLECTION_PRICE_ID || "",
-  savings: 15,
-  includes: ["couples", "friends"] as DeckType[],
-};
-
-export const BUNDLE_CONFIG = CORE_COLLECTION_CONFIG;
-
-export const FULL_CORE_SET_CONFIG = {
-  id: "full-core-set",
-  name: "Full Core Set",
-  description: "Get all three core decks: Touch Languages, Couples, and Friends & Family",
-  price: 75,
-  stripePriceId: process.env.STRIPE_FULL_CORE_SET_PRICE_ID || "",
+  stripePriceId: process.env.STRIPE_FULL_SET_PRICE_ID || "",
   savings: 30,
-  includes: ["couples", "friends", "touch-languages"] as DeckType[],
-};
-
-export const ALL_THREE_BUNDLE_CONFIG = FULL_CORE_SET_CONFIG;
-
-export const EVERYTHING_CONFIG = {
-  id: "everything",
-  name: "Everything",
-  description: "Get all four decks: Touch Languages, Couples, Friends & Family, and Trust & Repair",
-  price: 85,
-  stripePriceId: process.env.STRIPE_EVERYTHING_PRICE_ID || "",
-  savings: 60,
-  includes: ["couples", "friends", "touch-languages", "trust-repair"] as DeckType[],
+  includes: ["trust-repair", "couples", "friends"] as DeckType[],
 };
 
 export function getDeck(deckType: DeckType): DeckConfig {

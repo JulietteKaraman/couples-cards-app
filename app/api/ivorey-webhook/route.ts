@@ -69,10 +69,10 @@ export async function POST(req: Request) {
     }
 
     // Handle based on product type
-    if (product === "all-three" && finalUserId) {
-      console.log("Granting access to all three decks...");
+    if ((product === "all-three" || product === "full-set") && finalUserId) {
+      console.log("Granting access to Full Set decks...");
       
-      const decksToGrant = ["couples", "friends", "touch-languages"];
+      const decksToGrant = ["trust-repair", "couples", "friends"];
       
       for (const deckType of decksToGrant) {
         await supabaseAdmin

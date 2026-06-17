@@ -6,7 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { useAuth } from "@/components/providers/AuthProvider";
-import { CORE_COLLECTION_CONFIG, FULL_CORE_SET_CONFIG, EVERYTHING_CONFIG, DECKS } from "@/data/decks";
+import { FULL_SET_CONFIG, DECKS } from "@/data/decks";
 
 function generateIdempotencyKey(): string {
   return `checkout-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
@@ -15,40 +15,24 @@ function generateIdempotencyKey(): string {
 function BundleUnlockContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const bundleType = searchParams.get("type") || "everything";
+  const bundleType = searchParams.get("type") || "full-set";
   const { user, purchasedDecks } = useAuth();
   
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const bundleConfig = {
-    everything: {
-      ...EVERYTHING_CONFIG,
+    "full-set": {
+      ...FULL_SET_CONFIG,
       decks: [
-        { id: "couples", name: "Couples Edition", cover: DECKS.couples.coverImage },
-        { id: "friends", name: "Friends & Family", cover: DECKS.friends.coverImage },
-        { id: "touch-languages", name: "Touch Languages", cover: DECKS["touch-languages"].coverImage },
         { id: "trust-repair", name: "Trust & Repair", cover: DECKS["trust-repair"].coverImage },
-      ],
-    },
-    "full-core-set": {
-      ...FULL_CORE_SET_CONFIG,
-      decks: [
-        { id: "couples", name: "Couples Edition", cover: DECKS.couples.coverImage },
-        { id: "friends", name: "Friends & Family", cover: DECKS.friends.coverImage },
-        { id: "touch-languages", name: "Touch Languages", cover: DECKS["touch-languages"].coverImage },
-      ],
-    },
-    "core-collection": {
-      ...CORE_COLLECTION_CONFIG,
-      decks: [
         { id: "couples", name: "Couples Edition", cover: DECKS.couples.coverImage },
         { id: "friends", name: "Friends & Family", cover: DECKS.friends.coverImage },
       ],
     },
   };
 
-  const currentBundle = bundleConfig[bundleType as keyof typeof bundleConfig] || bundleConfig.everything;
+  const currentBundle = bundleConfig[bundleType as keyof typeof bundleConfig] || bundleConfig["full-set"];
   const totalCards = currentBundle.decks.reduce((sum, d) => sum + DECKS[d.id as keyof typeof DECKS].totalCards, 0);
 
   async function startCheckout() {

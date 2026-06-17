@@ -176,80 +176,26 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Everything (All Four) */}
+        {/* Full Set (Trust & Repair + Couples + Friends) */}
         <div className="border-t border-white/10 pt-8">
           <div className="bg-gradient-to-br from-green-500/20 to-green-500/5 rounded-2xl p-6 border border-green-500/30">
             <div className="flex items-center justify-between mb-3">
-              <h2 className="text-lg font-semibold">Everything</h2>
-              <span className="text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded-full">
-                Save £60
-              </span>
-            </div>
-            <p className="text-white/60 text-sm mb-4">
-              Get all four decks: Touch Languages, Couples, Friends & Family, and Trust & Repair. The complete collection for every relationship in your life.
-            </p>
-            <div className="flex items-center justify-between">
-              <div>
-                <span className="text-2xl font-bold">£85</span>
-                <span className="text-white/40 text-sm ml-2 line-through">£145</span>
-              </div>
-              <Link
-                href="/purchase/email?product=everything"
-                className="rounded-xl bg-green-500 text-black px-6 py-2 font-medium"
-              >
-                View Bundle
-              </Link>
-            </div>
-          </div>
-        </div>
-
-        {/* Full Core Set (Three Core) */}
-        <div className="border-t border-white/10 pt-8 mt-8">
-          <div className="bg-gradient-to-br from-white/10 to-white/5 rounded-2xl p-6 border border-white/10">
-            <div className="flex items-center justify-between mb-3">
-              <h2 className="text-lg font-semibold">Full Core Set</h2>
+              <h2 className="text-lg font-semibold">Full Set</h2>
               <span className="text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded-full">
                 Save £30
               </span>
             </div>
             <p className="text-white/60 text-sm mb-4">
-              Get all three core decks: Touch Languages, Couples, and Friends & Family.
-            </p>
-            <div className="flex items-center justify-between">
-              <div>
-                <span className="text-2xl font-bold">£75</span>
-                <span className="text-white/40 text-sm ml-2 line-through">£105</span>
-              </div>
-              <Link
-                href="/purchase/email?product=full-core-set"
-                className="rounded-xl bg-white text-black px-6 py-2 font-medium"
-              >
-                View Bundle
-              </Link>
-            </div>
-          </div>
-        </div>
-
-        {/* Core Collection (Couples + Friends) */}
-        <div className="border-t border-white/10 pt-8 mt-8">
-          <div className="bg-gradient-to-br from-white/5 to-transparent rounded-2xl p-6 border border-white/10">
-            <div className="flex items-center justify-between mb-3">
-              <h2 className="text-lg font-semibold">Core Collection</h2>
-              <span className="text-xs bg-blue-500/20 text-blue-400 px-2 py-1 rounded-full">
-                Save £15
-              </span>
-            </div>
-            <p className="text-white/60 text-sm mb-4">
-              Get Couples and Friends & Family editions together.
+              Get all three decks: Trust & Repair, Couples Edition, and Friends & Family Edition. The complete set for every relationship in your life.
             </p>
             <div className="flex items-center justify-between">
               <div>
                 <span className="text-2xl font-bold">£55</span>
-                <span className="text-white/40 text-sm ml-2 line-through">£70</span>
+                <span className="text-white/40 text-sm ml-2 line-through">£85</span>
               </div>
               <Link
-                href="/purchase/email?product=core-collection"
-                className="rounded-xl bg-white/10 border border-white/20 px-6 py-2 font-medium hover:bg-white/20 transition-colors"
+                href="/purchase/email?product=full-set"
+                className="rounded-xl bg-green-500 text-black px-6 py-2 font-medium"
               >
                 View Bundle
               </Link>
