@@ -2,13 +2,16 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { useAuth } from "@/components/providers/AuthProvider";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { getAllDecks, DECKS, FULL_SET_CONFIG } from "@/data/decks";
 
 function AppHomeContent() {
-  const { user, hasAccess, purchasedDecks, signOut, userName } = useAuth();
+  const { user, hasAccess, purchasedDecks, signOut, userName, refreshAccess } = useAuth();
   const decks = getAllDecks();
+  const [restoring, setRestoring] = useState(false);
+  const [restoreMessage, setRestoreMessage] = useState<string | null>(null);
 
   const hasCouples = purchasedDecks.includes("couples") || hasAccess;
   const hasFriends = purchasedDecks.includes("friends");
@@ -16,6 +19,39 @@ function AppHomeContent() {
   const hasFullSet = hasCouples && hasFriends && hasTrust;
 
   const showFullSet = !hasFullSet;
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("success") === "true" && user && !restoring) {
+      autoRestore();
+    }
+  }, [user]);
+
+  async function autoRestore() {
+    setRestoring(true);
+    try {
+      const res = await fetch("/api/restore-purchase", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: user?.id,
+          userEmail: user?.email,
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setRestoreMessage("Purchase restored!");
+        await refreshAccess();
+        window.history.replaceState({}, "", "/app");
+      } else {
+        console.log("Auto-restore:", data.error);
+      }
+    } catch (err) {
+      console.error("Auto-restore failed:", err);
+    } finally {
+      setRestoring(false);
+    }
+  }
 
   return (
     <main className="min-h-screen bg-black text-white">
@@ -28,6 +64,12 @@ function AppHomeContent() {
           <p className="text-white/70">
             {user?.email ? `Signed in as ${user.email}` : "Ready to connect?"}
           </p>
+          {restoring && (
+            <p className="text-yellow-400 text-sm mt-3">Restoring your purchase...</p>
+          )}
+          {restoreMessage && (
+            <p className="text-green-400 text-sm mt-3">{restoreMessage}</p>
+          )}
         </div>
 
         {/* Decks Grid */}
