@@ -23,12 +23,13 @@ function AppHomeContent() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     if (params.get("success") === "true" && user && !restoring) {
-      autoRestore();
+      handleRestorePurchase();
     }
   }, [user]);
 
-  async function autoRestore() {
+  async function handleRestorePurchase() {
     setRestoring(true);
+    setRestoreMessage(null);
     try {
       const res = await fetch("/api/restore-purchase", {
         method: "POST",
@@ -40,14 +41,15 @@ function AppHomeContent() {
       });
       const data = await res.json();
       if (data.success) {
-        setRestoreMessage("Purchase restored!");
+        setRestoreMessage("Purchase restored! Refresh to see your decks.");
         await refreshAccess();
         window.history.replaceState({}, "", "/app");
       } else {
-        console.log("Auto-restore:", data.error);
+        setRestoreMessage(data.error || "Could not restore purchase.");
       }
     } catch (err) {
-      console.error("Auto-restore failed:", err);
+      console.error("Restore failed:", err);
+      setRestoreMessage("Something went wrong. Try again later.");
     } finally {
       setRestoring(false);
     }
@@ -157,8 +159,19 @@ function AppHomeContent() {
           )}
         </div>
 
+        {/* Restore Purchase */}
+        <div className="mt-6 pt-6 border-t border-white/10 space-y-3">
+          <button
+            onClick={handleRestorePurchase}
+            disabled={restoring}
+            className="w-full rounded-xl border border-white/20 text-white/70 py-3 font-medium hover:bg-white/5 transition-colors disabled:opacity-50"
+          >
+            {restoring ? "Restoring..." : "Already purchased? Restore access"}
+          </button>
+        </div>
+
         {/* Footer */}
-        <div className="mt-12 pt-6 border-t border-white/10 space-y-3">
+        <div className="mt-6 pt-6 border-t border-white/10 space-y-3">
           <button
             onClick={signOut}
             className="w-full rounded-xl bg-red-500/20 text-red-400 py-3 font-medium hover:bg-red-500/30 transition-colors"

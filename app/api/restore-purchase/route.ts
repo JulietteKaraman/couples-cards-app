@@ -35,7 +35,7 @@ async function findUserCheckoutSession(userId: string, userEmail: string): Promi
   console.log("Searching for recent Stripe checkout sessions for:", userEmail);
 
   try {
-    const sessions = await stripe.checkout.sessions.list({ limit: 50 });
+    const sessions = await stripe.checkout.sessions.list({ limit: 100 });
 
     const paidSessions = sessions.data.filter(
       (s) => s.payment_status === "paid" && s.metadata?.user_id === userId
