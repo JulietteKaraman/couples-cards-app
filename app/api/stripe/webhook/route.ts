@@ -3,7 +3,6 @@ import Stripe from "stripe";
 import { headers } from "next/headers";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET } from "@/lib/environment";
-import { addContactToIvorey } from "@/lib/ivorey/api";
 
 const stripe = new Stripe(STRIPE_SECRET_KEY!, {
   apiVersion: "2026-01-28.clover",
@@ -214,32 +213,9 @@ export async function POST(req: Request) {
 
       console.log("All deck access granted successfully");
 
-      // Add to Ivorey with purchased tags
-      try {
-        const customerId = typeof session.customer === "string" ? session.customer : session.customer?.id;
-        const customerEmail = session.customer_details?.email || session.customer_email;
+      // Email-platform tagging for purchases happens in the feelfullyyou.com
+      // Stripe webhook (matched by price_id / amount), so no sync is needed here.
 
-        if (customerEmail) {
-          const tags = [
-            "purchased",
-            `purchased-${product}`,
-            ...decksToGrant.map(d => `owns-${d}`)
-          ];
-
-          console.log("Adding to Ivorey:", { email: customerEmail, tags });
-
-          await addContactToIvorey({
-            email: customerEmail.toLowerCase(),
-            tags,
-          });
-
-          console.log("Ivorey updated with purchase info");
-        } else {
-          console.log("No customer email found for Ivorey update");
-        }
-      } catch (ivoreyErr) {
-        console.error("Failed to update Ivorey:", ivoreyErr);
-      }
     } catch (dbError: any) {
       console.error("UNEXPECTED ERROR during entitlement creation:", dbError);
       console.error("Error stack:", dbError.stack);
