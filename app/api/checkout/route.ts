@@ -78,7 +78,16 @@ export async function POST(req: Request) {
 
     console.log("Creating Stripe checkout session for product:", productType);
     console.log("Using price ID:", priceId);
-    
+
+    // Post-purchase: deck buyers land on the completion offer (tripwire) on the
+    // main site; full-set and touch-languages owners go straight to the app.
+    let successUrl = `${SITE_URL}/app?success=true`;
+    if (productType === "trust-repair") {
+      successUrl = "https://feelfullyyou.com/cards-complete-tr";
+    } else if (productType === "couples" || productType === "friends") {
+      successUrl = "https://feelfullyyou.com/cards-complete-deck";
+    }
+
     const session = await withRetry(
       () => stripe.checkout.sessions.create(
         {
@@ -86,11 +95,12 @@ export async function POST(req: Request) {
           allow_promotion_codes: true,
           customer_email: email,
           line_items: [{ price: priceId, quantity: 1 }],
-          success_url: `${SITE_URL}/app?success=true`,
+          success_url: successUrl,
           cancel_url: `${SITE_URL}/app/unlock?canceled=true`,
           metadata: {
             product: productType,
             user_id: userId,
+            price_id: priceId,
           },
         },
         { idempotencyKey }
