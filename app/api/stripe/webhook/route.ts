@@ -3,7 +3,6 @@ import Stripe from "stripe";
 import { headers } from "next/headers";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET } from "@/lib/environment";
-import { addContactToIvorey } from "@/lib/ivorey/api";
 
 const stripe = new Stripe(STRIPE_SECRET_KEY!, {
   apiVersion: "2026-01-28.clover",
@@ -50,6 +49,61 @@ export async function POST(req: Request) {
 
     const product = session.metadata?.product;
     const userId = session.metadata?.user_id;
+
+    // "Complete the set" purchases happen on feelfullyyou.com payment links
+    // (tripwire pages and follow-up emails), so they carry no user_id. Match
+    // them by their Stripe price_id and unlock the full core set for the
+    // account with the same email. Granting all three decks is idempotent, so
+    // it is correct for both the £40/£45 (T&R owner) and £20/£25 (single-deck
+    // owner) paths.
+    const COMPLETION_PRICE_IDS = new Set([
+      "price_1Tq7PiCCw18geY15kgJMkb6E", // £40 tripwire — T&R owners
+      "price_1Tq7PpCCw18geY15ojeYpePd", // £20 tripwire — single-deck owners
+      "price_1Tq7jRCCw18geY155S5mNiMG", // £45 email offer — T&R owners
+      "price_1Tq7jUCCw18geY15Rgrwliu9", // £25 email offer — single-deck owners
+    ]);
+
+    if (!userId && session.metadata?.price_id && COMPLETION_PRICE_IDS.has(session.metadata.price_id)) {
+      const buyerEmail = (session.customer_details?.email || session.customer_email || "").toLowerCase();
+      console.log("Completion purchase detected for:", buyerEmail);
+
+      if (!buyerEmail) {
+        console.log("Completion purchase has no email - skipping");
+        return NextResponse.json({ received: true });
+      }
+
+      const { data: existingUser } = await supabaseAdmin
+        .from("users")
+        .select("id")
+        .eq("email", buyerEmail)
+        .single();
+
+      if (!existingUser) {
+        console.log("Completion purchase: no app account found for", buyerEmail, "- needs manual fulfilment via support@");
+        return NextResponse.json({ received: true });
+      }
+
+      const paymentIntentId = typeof session.payment_intent === "string" ? session.payment_intent : null;
+      for (const deckType of ["trust-repair", "couples", "friends"]) {
+        const { error } = await supabaseAdmin
+          .from("user_decks")
+          .upsert({
+            user_id: existingUser.id,
+            deck_type: deckType,
+            purchased_at: new Date().toISOString(),
+            stripe_checkout_session_id: session.id,
+            stripe_payment_intent_id: paymentIntentId,
+          }, { onConflict: "user_id,deck_type" });
+
+        if (error) {
+          console.error(`Completion grant DATABASE ERROR for ${deckType}:`, error);
+          return new NextResponse(`Database error: ${error.message}`, { status: 500 });
+        }
+      }
+
+      console.log("Completion purchase: full core set unlocked for", buyerEmail);
+      return NextResponse.json({ received: true });
+    }
 
     if (!userId) {
       console.log("Skipping - no userId in metadata");
@@ -159,32 +213,9 @@ export async function POST(req: Request) {
 
       console.log("All deck access granted successfully");
 
-      // Add to Ivorey with purchased tags
-      try {
-        const customerId = typeof session.customer === "string" ? session.customer : session.customer?.id;
-        const customerEmail = session.customer_details?.email || session.customer_email;
+      // Email-platform tagging for purchases happens in the feelfullyyou.com
+      // Stripe webhook (matched by price_id / amount), so no sync is needed here.
 
-        if (customerEmail) {
-          const tags = [
-            "purchased",
-            `purchased-${product}`,
-            ...decksToGrant.map(d => `owns-${d}`)
-          ];
-
-          console.log("Adding to Ivorey:", { email: customerEmail, tags });
-
-          await addContactToIvorey({
-            email: customerEmail.toLowerCase(),
-            tags,
-          });
-
-          console.log("Ivorey updated with purchase info");
-        } else {
-          console.log("No customer email found for Ivorey update");
-        }
-      } catch (ivoreyErr) {
-        console.error("Failed to update Ivorey:", ivoreyErr);
-      }
     } catch (dbError: any) {
       console.error("UNEXPECTED ERROR during entitlement creation:", dbError);
       console.error("Error stack:", dbError.stack);

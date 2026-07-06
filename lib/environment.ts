@@ -17,6 +17,9 @@ export const STRIPE_TRUST_REPAIR_PRICE_ID = process.env.STRIPE_TRUST_REPAIR_PRIC
 export const STRIPE_FULL_SET_PRICE_ID = process.env.STRIPE_FULL_SET_PRICE_ID ?? process.env.STRIPE_FULL_SET_PRICE_ID;
 export const STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET ?? process.env.STRIPE_WEBHOOK_SECRET;
 
+// Kit (server-only) — email platform, replaces Ivorey
+export const KIT_API_KEY = process.env.KIT_API_KEY;
+
 // Ivorey (server-only)
 export const IVOREY_API_KEY = process.env.IVOREY_API_KEY ?? process.env.IVOREY_API_KEY;
 

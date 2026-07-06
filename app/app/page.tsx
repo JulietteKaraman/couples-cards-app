@@ -145,7 +145,6 @@ function AppHomeContent() {
                 <div className="flex items-center justify-between">
                   <div>
                     <span className="text-2xl font-bold">£{FULL_SET_CONFIG.price}</span>
-                    <span className="text-white/40 text-sm ml-2 line-through">£85</span>
                   </div>
                   <Link
                     href="/app/bundle/unlock?type=full-set"

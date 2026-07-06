@@ -191,7 +191,6 @@ export default function Home() {
             <div className="flex items-center justify-between">
               <div>
                 <span className="text-2xl font-bold">£55</span>
-                <span className="text-white/40 text-sm ml-2 line-through">£85</span>
               </div>
               <Link
                 href="/purchase/email?product=full-set"

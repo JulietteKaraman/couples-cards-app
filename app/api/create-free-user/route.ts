@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase/admin";
-import { addContactToIvorey } from "@/lib/ivorey/api";
+import { addContactToKit, KIT_TAGS, KIT_SEQUENCES } from "@/lib/kit/api";
 
 export async function POST(req: Request) {
   console.log("========== CREATE FREE USER START ==========");
@@ -46,15 +46,16 @@ export async function POST(req: Request) {
       finalUserId = newUser?.id;
     }
 
-    // Add to Ivorey email list
+    // Add to Kit email list — same tag + delivery sequence as the website taster opt-in
     try {
-      await addContactToIvorey({
+      await addContactToKit({
         email: email.toLowerCase(),
         firstName: firstName || undefined,
-        tags: [`free-taster-${deck || "couples"}`],
+        tagIds: [KIT_TAGS.cardsFreeTaster],
+        sequenceId: KIT_SEQUENCES.leadMagnetDelivery,
       });
-    } catch (ivoreyErr) {
-      console.error("Failed to add to Ivorey:", ivoreyErr);
+    } catch (kitErr) {
+      console.error("Failed to add to Kit:", kitErr);
     }
 
     // Grant free access to the deck (or both decks for free taster)
