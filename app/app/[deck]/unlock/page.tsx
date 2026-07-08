@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { useAuth } from "@/components/providers/AuthProvider";
@@ -14,6 +14,8 @@ function generateIdempotencyKey(): string {
 function UnlockPageContent() {
   const params = useParams();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const promo = searchParams.get("promo");
   const { user, purchasedDecks, refreshAccess } = useAuth();
   
   const deckType = params.deck as string;
@@ -49,6 +51,9 @@ function UnlockPageContent() {
         if (product === "full-set") {
           redirectUrl = "/app/bundle/unlock?type=full-set";
         }
+        if (promo) {
+          redirectUrl += `${redirectUrl.includes("?") ? "&" : "?"}promo=${encodeURIComponent(promo)}`;
+        }
         router.push(`/login?redirect=${encodeURIComponent(redirectUrl)}&signup=true`);
         return;
       }
@@ -58,11 +63,12 @@ function UnlockPageContent() {
       const res = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
-          userId: user.id, 
+        body: JSON.stringify({
+          userId: user.id,
           email: user.email,
           idempotencyKey,
-          product
+          product,
+          promo
         }),
       });
 
@@ -160,7 +166,9 @@ function UnlockPageContent() {
             </div>
 
             <p className="text-xs text-white/40 text-center pt-4">
-              You can apply a discount code at checkout.
+              {promo
+                ? `Your ${promo.toUpperCase()} discount is applied automatically at checkout.`
+                : "You can apply a discount code at checkout."}
             </p>
           </div>
         </div>

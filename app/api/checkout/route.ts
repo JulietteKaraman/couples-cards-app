@@ -12,7 +12,7 @@ export async function POST(req: Request) {
   console.log("Timestamp:", new Date().toISOString());
   
   try {
-    const { userId, email, idempotencyKey, product } = await req.json();
+    const { userId, email, idempotencyKey, product, promo } = await req.json();
 
     console.log("Checkout request received:");
     console.log("  userId:", userId);
@@ -88,11 +88,34 @@ export async function POST(req: Request) {
       successUrl = "https://feelfullyyou.com/cards-complete-deck";
     }
 
+    // Auto-apply a promo code passed via URL (e.g. QR codes at live events).
+    // Only active codes that exist in Stripe are applied; anything else falls
+    // back to the manual promotion-code box. Stripe does not allow discounts
+    // and allow_promotion_codes on the same session.
+    let discounts: Stripe.Checkout.SessionCreateParams.Discount[] | undefined;
+    if (promo && typeof promo === "string") {
+      try {
+        const codes = await stripe.promotionCodes.list({
+          code: promo.trim(),
+          active: true,
+          limit: 1,
+        });
+        if (codes.data.length > 0) {
+          discounts = [{ promotion_code: codes.data[0].id }];
+          console.log("Auto-applying promo code:", codes.data[0].code);
+        } else {
+          console.log("Promo code not found or inactive, ignoring:", promo);
+        }
+      } catch (promoError: any) {
+        console.error("Promo lookup failed, continuing without:", promoError.message);
+      }
+    }
+
     const session = await withRetry(
       () => stripe.checkout.sessions.create(
         {
           mode: "payment",
-          allow_promotion_codes: true,
+          ...(discounts ? { discounts } : { allow_promotion_codes: true }),
           customer_email: email,
           line_items: [{ price: priceId, quantity: 1 }],
           success_url: successUrl,
