@@ -16,6 +16,7 @@ function BundleUnlockContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const bundleType = searchParams.get("type") || "full-set";
+  const promo = searchParams.get("promo");
   const { user, purchasedDecks } = useAuth();
   
   const [loading, setLoading] = useState(false);
@@ -41,7 +42,8 @@ function BundleUnlockContent() {
 
     try {
       if (!user?.id) {
-        router.push(`/login?redirect=/app/bundle/unlock?type=${bundleType}&signup=true`);
+        const redirectUrl = `/app/bundle/unlock?type=${bundleType}${promo ? `&promo=${encodeURIComponent(promo)}` : ""}`;
+        router.push(`/login?redirect=${encodeURIComponent(redirectUrl)}&signup=true`);
         return;
       }
 
@@ -53,6 +55,7 @@ function BundleUnlockContent() {
           email: user.email,
           idempotencyKey: generateIdempotencyKey(),
           product: bundleType,
+          promo,
         }),
       });
 
@@ -146,6 +149,11 @@ function BundleUnlockContent() {
           <p className="text-xs text-white/50 text-center">
             One-time purchase • Instant access • Play forever
           </p>
+          {promo && (
+            <p className="text-xs text-white/50 text-center mt-2">
+              Your {promo.toUpperCase()} discount is applied automatically at checkout.
+            </p>
+          )}
         </div>
       </div>
     </main>

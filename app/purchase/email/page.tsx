@@ -8,13 +8,15 @@ function PurchaseEmailContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const product = searchParams.get("product") || "couples";
+  const promo = searchParams.get("promo");
 
   useEffect(() => {
     // Redirect to login, which will redirect back here after login
     // Then after login, user goes to checkout
-    const redirectPath = `/app/${product}/unlock`;
+    const promoQuery = promo ? `?promo=${encodeURIComponent(promo)}` : "";
+    const redirectPath = `/app/${product}/unlock${promoQuery}`;
     router.replace(`/login?redirect=${encodeURIComponent(redirectPath)}&signup=true`);
-  }, [router, product]);
+  }, [router, product, promo]);
 
   return (
     <main className="min-h-screen bg-black text-white flex items-center justify-center">
