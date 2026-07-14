@@ -12,7 +12,7 @@ export const KIT_TAGS = {
 } as const;
 
 export const KIT_SEQUENCES = {
-  leadMagnetDelivery: 2812534, // same sequence the website taster opt-in starts
+  leadMagnetDelivery: 2825131, // "Cards Free Taster — Welcome" — same sequence the website taster page uses (repointed 14 Jul; old 2812534 was deleted in the Kit rewiring)
 } as const;
 
 export interface KitContact {
