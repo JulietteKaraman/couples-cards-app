@@ -48,7 +48,7 @@ export async function POST(req: Request) {
     console.log("User ID:", session.metadata?.user_id);
 
     const product = session.metadata?.product;
-    const userId = session.metadata?.user_id;
+    let userId = session.metadata?.user_id;
 
     // "Complete the set" purchases happen on feelfullyyou.com payment links
     // (tripwire pages and follow-up emails), so they carry no user_id. Match
@@ -106,8 +106,27 @@ export async function POST(req: Request) {
     }
 
     if (!userId) {
-      console.log("Skipping - no userId in metadata");
-      return NextResponse.json({ received: true });
+      const buyerEmail = (session.customer_details?.email || session.customer_email || "").toLowerCase();
+      console.log("No userId in metadata, falling back to email lookup:", buyerEmail);
+
+      if (!buyerEmail) {
+        console.error("No userId and no buyer email - cannot grant access. Session:", session.id);
+        return NextResponse.json({ received: true });
+      }
+
+      const { data: existingUser } = await supabaseAdmin
+        .from("users")
+        .select("id")
+        .eq("email", buyerEmail)
+        .single();
+
+      if (!existingUser) {
+        console.error("No userId in metadata and no app account found for", buyerEmail, "- needs manual fulfilment via support@. Session:", session.id);
+        return NextResponse.json({ received: true });
+      }
+
+      userId = existingUser.id;
+      console.log("Resolved userId via email fallback:", userId, "for", buyerEmail);
     }
 
     // Handle different product types
