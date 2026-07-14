@@ -363,6 +363,14 @@ function UnlockPageContent() {
             <p className="text-xs text-white/40 mt-2">
               We'll verify your payment and restore access automatically.
             </p>
+
+            <p className="text-xs text-white/40 mt-3">
+              Still stuck? Email{" "}
+              <a href="mailto:support@feelfullyyou.com" className="underline text-white/60">
+                support@feelfullyyou.com
+              </a>{" "}
+              and we'll sort it personally.
+            </p>
           </div>
 
           <p className="text-xs text-white/40 text-center pt-4">

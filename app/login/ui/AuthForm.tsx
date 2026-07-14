@@ -119,6 +119,14 @@ export default function AuthForm({ redirectAfterLogin = "/app" }: AuthFormProps)
       </button>
 
       {msg && <p className="text-sm text-white/70">{msg}</p>}
+
+      <p className="text-xs text-white/40 text-center pt-2">
+        Stuck? Email{" "}
+        <a href="mailto:support@feelfullyyou.com" className="underline text-white/60">
+          support@feelfullyyou.com
+        </a>{" "}
+        and we&apos;ll sort it.
+      </p>
     </form>
   );
 }
