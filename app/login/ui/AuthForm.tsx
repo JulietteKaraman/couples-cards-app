@@ -120,13 +120,29 @@ export default function AuthForm({ redirectAfterLogin = "/app" }: AuthFormProps)
 
       {msg && <p className="text-sm text-white/70">{msg}</p>}
 
-      <p className="text-xs text-white/40 text-center pt-2">
-        Stuck? Email{" "}
-        <a href="mailto:support@feelfullyyou.com" className="underline text-white/60">
-          support@feelfullyyou.com
-        </a>{" "}
-        and we&apos;ll sort it.
-      </p>
+      <details className="pt-2 text-xs text-white/50">
+        <summary className="cursor-pointer text-white/60 hover:text-white/80 list-none">
+          Can&apos;t log in?
+        </summary>
+        <ul className="mt-2 space-y-1.5 pl-1">
+          <li>
+            Use the exact email you paid with. If you&apos;re not sure, check your
+            Stripe or PayPal receipt.
+          </li>
+          <li>
+            First time here? Tap &ldquo;Create an account&rdquo; above and use your
+            purchase email.
+          </li>
+          <li>Forgot your password? Reset it from the login screen.</li>
+          <li>
+            Still stuck? Email{" "}
+            <a href="mailto:support@feelfullyyou.com" className="underline text-white/70">
+              support@feelfullyyou.com
+            </a>{" "}
+            and we&apos;ll unlock it for you.
+          </li>
+        </ul>
+      </details>
     </form>
   );
 }
