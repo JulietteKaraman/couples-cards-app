@@ -101,6 +101,7 @@ export const FRIENDS_CARDS: FriendsCardPrompt[] = [
   { id: 58, section: "FM", lines: [{ text: "Tell me a quality or trait you inherited from your parents or grandparents." }] },
   { id: 59, section: "FM", lines: [{ text: "Tell me what you miss about childhood." }] },
   { id: 60, section: "FM", lines: [{ text: "Tell me about a moment you felt truly supported by family." }] },
+  { id: 153, section: "FM", lines: [{ text: "Tell me one thing you are proud of." }] },
 
   // -------------------------
   // Beliefs & Emotions (61-90)
@@ -207,4 +208,4 @@ export const FRIENDS_CARDS: FriendsCardPrompt[] = [
   { id: 152, section: "SG", lines: [{ text: "Tell me about a goal, big or small, that you want to achieve in your lifetime." }, { text: "Why is it important to you?", bold: false }] },
 ];
 
-export const FRIENDS_TOTAL_CARDS = 152;
+export const FRIENDS_TOTAL_CARDS = 153;

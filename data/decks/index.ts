@@ -52,7 +52,7 @@ export const DECKS: Record<DeckType, DeckConfig> = {
     coverImage: "/cards/friends/cover.png",
     sections: FRIENDS_SECTIONS,
     cards: FRIENDS_CARDS,
-    totalCards: 152,
+    totalCards: 153,
   },
   "touch-languages": {
     id: "touch-languages",
