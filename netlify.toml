@@ -1,0 +1,5 @@
+[[redirects]]
+from = "https://couplecards.netlify.app/*"
+to = "https://cards.feelfullyyou.com/:splat"
+status = 301
+force = true
