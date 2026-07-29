@@ -121,7 +121,7 @@ function AppHomeContent() {
                       href={`/app/${deck.id}/unlock`}
                       className="block text-center rounded-xl bg-white/10 text-white border border-white/20 py-3 font-medium hover:bg-white/20 transition-colors"
                     >
-                      Unlock for £{deck.price}
+                      {deck.id === "one-touch" ? "Enter your code" : `Unlock for £${deck.price}`}
                     </Link>
                   )}
                 </div>

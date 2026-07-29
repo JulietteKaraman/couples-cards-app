@@ -2,8 +2,9 @@ import { TOUCH_LANGUAGES_CARDS, TOUCH_LANGUAGES_SECTIONS, TouchLanguagesSectionK
 import { TRUST_REPAIR_CARDS, TRUST_REPAIR_SECTIONS, TrustRepairSectionKey, TrustRepairCardPrompt } from "./trust-repair";
 import { COUPLES_CARDS, SECTIONS as COUPLES_SECTIONS, SectionKey as CouplesSectionKey, CardPrompt as CouplesCardPrompt } from "./couples";
 import { FRIENDS_CARDS, FRIENDS_SECTIONS, FriendsSectionKey, FriendsCardPrompt } from "./friends";
+import { ONE_TOUCH_CARDS, ONE_TOUCH_SECTIONS, OneTouchSectionKey, OneTouchCardPrompt } from "./one-touch";
 
-export type DeckType = "couples" | "friends" | "touch-languages" | "trust-repair";
+export type DeckType = "couples" | "friends" | "touch-languages" | "trust-repair" | "one-touch";
 
 export type SectionConfig = {
   title: string;
@@ -76,6 +77,17 @@ export const DECKS: Record<DeckType, DeckConfig> = {
     cards: TRUST_REPAIR_CARDS,
     totalCards: 50,
   },
+  "one-touch": {
+    id: "one-touch",
+    name: "One Touch",
+    description: "Part of the One Touch course. A daily prompt to meet your own body and voice.",
+    price: 0,
+    stripePriceId: "",
+    coverImage: "/cards/one-touch/cover.png",
+    sections: ONE_TOUCH_SECTIONS,
+    cards: ONE_TOUCH_CARDS,
+    totalCards: 23,
+  },
 };
 
 export const FULL_SET_CONFIG = {
@@ -97,16 +109,18 @@ export function getAllDecks(): DeckConfig[] {
 }
 
 export function isValidDeck(deckType: string): deckType is DeckType {
-  return deckType === "couples" || deckType === "friends" || deckType === "touch-languages" || deckType === "trust-repair";
+  return deckType === "couples" || deckType === "friends" || deckType === "touch-languages" || deckType === "trust-repair" || deckType === "one-touch";
 }
 
-export type { 
-  CouplesSectionKey, 
-  CouplesCardPrompt, 
-  FriendsSectionKey, 
+export type {
+  CouplesSectionKey,
+  CouplesCardPrompt,
+  FriendsSectionKey,
   FriendsCardPrompt,
   TouchLanguagesSectionKey,
   TouchLanguagesCardPrompt,
   TrustRepairSectionKey,
   TrustRepairCardPrompt,
+  OneTouchSectionKey,
+  OneTouchCardPrompt,
 };

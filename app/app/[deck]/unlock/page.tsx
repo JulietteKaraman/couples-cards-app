@@ -179,6 +179,44 @@ function UnlockPageContent() {
   const deck = getDeck(deckType as DeckType);
   const [restoreLoading, setRestoreLoading] = useState(false);
   const [restoreMessage, setRestoreMessage] = useState<string | null>(null);
+  const [code, setCode] = useState("");
+  const [redeemLoading, setRedeemLoading] = useState(false);
+  const [redeemMessage, setRedeemMessage] = useState<string | null>(null);
+
+  async function redeemCode() {
+    setRedeemLoading(true);
+    setRedeemMessage(null);
+    setError(null);
+
+    try {
+      if (!user?.id) {
+        throw new Error("Please sign in first.");
+      }
+
+      const res = await fetch("/api/redeem-code", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: user.id, code: code.trim() }),
+      });
+
+      const out = await res.json();
+
+      if (!res.ok) {
+        throw new Error(out.error || "That code didn't work.");
+      }
+
+      setRedeemMessage("Unlocked. Taking you in…");
+      await refreshAccess();
+
+      setTimeout(() => {
+        router.push(`/app/${deckType}/draw`);
+      }, 1200);
+    } catch (err: any) {
+      setError(err.message || "Unable to unlock.");
+    } finally {
+      setRedeemLoading(false);
+    }
+  }
 
   async function restorePurchase() {
     setRestoreLoading(true);
@@ -220,6 +258,73 @@ function UnlockPageContent() {
     } finally {
       setRestoreLoading(false);
     }
+  }
+
+  // One Touch is not for sale. It ships with the One Touch course and unlocks by code.
+  if (deckType === "one-touch") {
+    return (
+      <main className="min-h-screen bg-black text-white">
+        <div className="max-w-md mx-auto px-4 py-8">
+          <button
+            onClick={() => router.push("/app")}
+            className="text-sm text-white/70 hover:text-white mb-6"
+          >
+            ← Back to decks
+          </button>
+
+          <div className="rounded-2xl overflow-hidden border border-white/10 mb-6">
+            <Image
+              src={deck.coverImage}
+              alt={deck.name}
+              width={1200}
+              height={1600}
+              className="w-full h-auto"
+              priority
+            />
+          </div>
+
+          <div className="space-y-4">
+            <h1 className="text-2xl font-semibold">{deck.name}</h1>
+            <p className="text-white/80 font-medium">Part of the One Touch course.</p>
+            <p className="text-white/60 text-sm">
+              Enter your One Touch code to open the deck.
+            </p>
+
+            {error && <p className="text-sm text-red-400">{error}</p>}
+            {redeemMessage && <p className="text-sm text-green-400">{redeemMessage}</p>}
+
+            <div className="space-y-3 pt-2">
+              <input
+                value={code}
+                onChange={(e) => setCode(e.target.value)}
+                placeholder="Enter your code"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && code.trim()) redeemCode();
+                }}
+                className="w-full rounded-xl bg-white/5 border border-white/15 text-white px-4 py-3 placeholder-white/40 focus:outline-none focus:border-white/40"
+              />
+              <button
+                onClick={redeemCode}
+                disabled={redeemLoading || !code.trim()}
+                className="w-full rounded-xl bg-white text-black py-3 font-medium disabled:opacity-50"
+              >
+                {redeemLoading ? "Unlocking…" : "Unlock One Touch"}
+              </button>
+            </div>
+
+            <p className="text-xs text-white/40 pt-2">
+              Your code comes with the One Touch course.
+            </p>
+            <p className="text-xs text-white/40">
+              Trouble?{" "}
+              <a href="mailto:support@feelfullyyou.com" className="underline text-white/60">
+                support@feelfullyyou.com
+              </a>
+            </p>
+          </div>
+        </div>
+      </main>
+    );
   }
 
   const ownedDecks = purchasedDecks;
