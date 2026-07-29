@@ -311,7 +311,7 @@ function UnlockPageContent() {
                 disabled={redeemLoading || !code.trim()}
                 className="w-full rounded-xl bg-white text-black py-3 font-medium disabled:opacity-50"
               >
-                {redeemLoading ? "Unlocking…" : "Unlock One Touch"}
+                {redeemLoading ? "Unlocking…" : deckType === "repair-kit" ? "Unlock the Repair Kit" : "Unlock One Touch"}
               </button>
             </div>
 
