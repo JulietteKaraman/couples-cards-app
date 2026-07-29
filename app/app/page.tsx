@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/components/providers/AuthProvider";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
-import { getAllDecks, DECKS, FULL_SET_CONFIG } from "@/data/decks";
+import { getAllDecks, DECKS, FULL_SET_CONFIG, isSequentialDeck } from "@/data/decks";
 
 function AppHomeContent() {
   const { user, hasAccess, purchasedDecks, signOut, userName, refreshAccess } = useAuth();
@@ -111,7 +111,7 @@ function AppHomeContent() {
                   
                   {isOwned ? (
                     <Link
-                      href={`/app/${deck.id}/draw`}
+                      href={`/app/${deck.id}/${isSequentialDeck(deck.id) ? "journey" : "draw"}`}
                       className="block text-center rounded-xl bg-white text-black py-3 font-medium"
                     >
                       Start Playing
@@ -121,7 +121,7 @@ function AppHomeContent() {
                       href={`/app/${deck.id}/unlock`}
                       className="block text-center rounded-xl bg-white/10 text-white border border-white/20 py-3 font-medium hover:bg-white/20 transition-colors"
                     >
-                      {deck.id === "one-touch" ? "Enter your code" : `Unlock for £${deck.price}`}
+                      {deck.price === 0 ? "Enter your code" : `Unlock for £${deck.price}`}
                     </Link>
                   )}
                 </div>

@@ -3,8 +3,16 @@ import { TRUST_REPAIR_CARDS, TRUST_REPAIR_SECTIONS, TrustRepairSectionKey, Trust
 import { COUPLES_CARDS, SECTIONS as COUPLES_SECTIONS, SectionKey as CouplesSectionKey, CardPrompt as CouplesCardPrompt } from "./couples";
 import { FRIENDS_CARDS, FRIENDS_SECTIONS, FriendsSectionKey, FriendsCardPrompt } from "./friends";
 import { ONE_TOUCH_CARDS, ONE_TOUCH_SECTIONS, OneTouchSectionKey, OneTouchCardPrompt } from "./one-touch";
+import { REPAIR_KIT_CARDS, REPAIR_KIT_SECTIONS, REPAIR_KIT_PHASES, RepairKitSectionKey, RepairKitCardPrompt } from "./repair-kit";
 
-export type DeckType = "couples" | "friends" | "touch-languages" | "trust-repair" | "one-touch";
+export type DeckType = "couples" | "friends" | "touch-languages" | "trust-repair" | "one-touch" | "repair-kit";
+
+// Decks worked one card at a time in a fixed order (the journey player),
+// instead of the random-draw page.
+export const SEQUENTIAL_DECKS: DeckType[] = ["repair-kit"];
+export function isSequentialDeck(deckType: string): boolean {
+  return (SEQUENTIAL_DECKS as string[]).includes(deckType);
+}
 
 export type SectionConfig = {
   title: string;
@@ -88,6 +96,17 @@ export const DECKS: Record<DeckType, DeckConfig> = {
     cards: ONE_TOUCH_CARDS,
     totalCards: 23,
   },
+  "repair-kit": {
+    id: "repair-kit",
+    name: "The Romantic Relationship Repair Kit",
+    description: "31 prompts, worked in order across five modules, to move from drift back to trust.",
+    price: 0,
+    stripePriceId: "",
+    coverImage: "/cards/repair-kit/cover.png",
+    sections: REPAIR_KIT_SECTIONS,
+    cards: REPAIR_KIT_CARDS,
+    totalCards: 31,
+  },
 };
 
 export const FULL_SET_CONFIG = {
@@ -109,7 +128,7 @@ export function getAllDecks(): DeckConfig[] {
 }
 
 export function isValidDeck(deckType: string): deckType is DeckType {
-  return deckType === "couples" || deckType === "friends" || deckType === "touch-languages" || deckType === "trust-repair" || deckType === "one-touch";
+  return deckType === "couples" || deckType === "friends" || deckType === "touch-languages" || deckType === "trust-repair" || deckType === "one-touch" || deckType === "repair-kit";
 }
 
 export type {
@@ -123,4 +142,8 @@ export type {
   TrustRepairCardPrompt,
   OneTouchSectionKey,
   OneTouchCardPrompt,
+  RepairKitSectionKey,
+  RepairKitCardPrompt,
 };
+
+export { REPAIR_KIT_PHASES };

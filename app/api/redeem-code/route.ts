@@ -6,8 +6,10 @@ import { supabaseAdmin } from "@/lib/supabase/admin";
 // ONE_TOUCH_UNLOCK_CODE env var in Netlify without a code change.
 function codeToDeck(code: string): string | null {
   const oneTouchCode = (process.env.ONE_TOUCH_UNLOCK_CODE || "ONETOUCH").trim().toUpperCase();
+  const repairKitCode = (process.env.REPAIR_KIT_UNLOCK_CODE || "REPAIR2026").trim().toUpperCase();
   const map: Record<string, string> = {
     [oneTouchCode]: "one-touch",
+    [repairKitCode]: "repair-kit",
   };
   return map[code.trim().toUpperCase()] || null;
 }

@@ -5,7 +5,7 @@ import { useParams, useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { useAuth } from "@/components/providers/AuthProvider";
-import { getDeck, DeckType, isValidDeck, FULL_SET_CONFIG, DECKS } from "@/data/decks";
+import { getDeck, DeckType, isValidDeck, FULL_SET_CONFIG, DECKS, isSequentialDeck } from "@/data/decks";
 
 function generateIdempotencyKey(): string {
   return `checkout-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
@@ -208,8 +208,9 @@ function UnlockPageContent() {
       setRedeemMessage("Unlocked. Taking you in…");
       await refreshAccess();
 
+      const destination = isSequentialDeck(deckType) ? "journey" : "draw";
       setTimeout(() => {
-        router.push(`/app/${deckType}/draw`);
+        router.push(`/app/${deckType}/${destination}`);
       }, 1200);
     } catch (err: any) {
       setError(err.message || "Unable to unlock.");
@@ -260,8 +261,8 @@ function UnlockPageContent() {
     }
   }
 
-  // One Touch is not for sale. It ships with the One Touch course and unlocks by code.
-  if (deckType === "one-touch") {
+  // Course decks are not for sale. They ship with their course/kit and unlock by code.
+  if (deckType === "one-touch" || deckType === "repair-kit") {
     return (
       <main className="min-h-screen bg-black text-white">
         <div className="max-w-md mx-auto px-4 py-8">
@@ -285,9 +286,11 @@ function UnlockPageContent() {
 
           <div className="space-y-4">
             <h1 className="text-2xl font-semibold">{deck.name}</h1>
-            <p className="text-white/80 font-medium">Part of the One Touch course.</p>
+            <p className="text-white/80 font-medium">
+              {deckType === "repair-kit" ? "Part of the Romantic Relationship Repair Kit." : "Part of the One Touch course."}
+            </p>
             <p className="text-white/60 text-sm">
-              Enter your One Touch code to open the deck.
+              Enter your code to open the deck.
             </p>
 
             {error && <p className="text-sm text-red-400">{error}</p>}
