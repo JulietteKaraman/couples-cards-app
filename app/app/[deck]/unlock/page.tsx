@@ -316,8 +316,23 @@ function UnlockPageContent() {
             </div>
 
             <p className="text-xs text-white/40 pt-2">
-              Your code comes with the One Touch course.
+              {deckType === "repair-kit"
+                ? "Your code comes with the kit."
+                : "Your code comes with the One Touch course."}
             </p>
+            {deckType === "repair-kit" && (
+              <p className="text-xs text-white/50">
+                Don&apos;t have a code?{" "}
+                <a
+                  href="https://feelfullyyou.com/romantic-relationship-repair-kit"
+                  target="_blank"
+                  rel="noopener"
+                  className="underline text-white/80 hover:text-white"
+                >
+                  Get the kit for £31 →
+                </a>
+              </p>
+            )}
             <p className="text-xs text-white/40">
               Trouble?{" "}
               <a href="mailto:support@feelfullyyou.com" className="underline text-white/60">
