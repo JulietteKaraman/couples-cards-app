@@ -12,7 +12,8 @@ export const COLLECTION_DECK_TYPES: Record<string, string> = {
 // spec R4/R5). Add one line here per new product's live price ID.
 export const PRICE_ID_TO_DECK_TYPE: Record<string, string> = {
   price_1Tlpu0CCw18geY15b8J3jlBW: "ten-touch-rituals", // 10 Touch Rituals, £7
-  price_1TzO4DCCw18geY15u7X9j7iw: "unspoken-distance", // The Unspoken Distance, £77
+  price_1TzO4DCCw18geY15u7X9j7iw: "unspoken-distance", // The Unspoken Distance, £77 (current)
+  price_1TnxAqCCw18geY153w22a2Ye: "unspoken-distance", // The Unspoken Distance, £97 (old price, real buyers before 31 Jul 2026)
 };
 
 export function deckTypesForApp(): string[] {
