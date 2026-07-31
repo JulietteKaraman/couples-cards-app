@@ -1,0 +1,38 @@
+@import "tailwindcss";
+
+@theme {
+  /* Feel Fully You — four core brand colours. Do not add a fifth. */
+  --color-ffy-black: #070707;
+  --color-ffy-cream: #fefcfa;
+  --color-ffy-teal: #0d3535;
+  --color-ffy-gold: #a88538;
+
+  /* supporting palette */
+  --color-ffy-gold-deep: #99680c;
+  --color-ffy-gold-soft: #b4a074;
+  --color-ffy-gold-pale: #ddc98e;
+  --color-ffy-cream-2: #f6f4f1;
+  --color-ffy-border: #e3dccf;
+  --color-ffy-brown: #5d4a33;
+
+  --font-display: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+
+html {
+  background: var(--color-ffy-cream);
+}
+
+body {
+  background: var(--color-ffy-cream);
+  color: var(--color-ffy-black);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+.font-display {
+  font-family: var(--font-display);
+}
