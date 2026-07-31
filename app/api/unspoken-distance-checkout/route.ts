@@ -1,0 +1,51 @@
+import { NextResponse } from "next/server";
+import Stripe from "stripe";
+import { STRIPE_SECRET_KEY } from "@/lib/environment";
+
+const stripe = new Stripe(STRIPE_SECRET_KEY!, {
+  apiVersion: "2026-01-28.clover",
+});
+
+const UNSPOKEN_DISTANCE_PRICE_ID = "price_1TzO4DCCw18geY15u7X9j7iw";
+
+// Checkout for "The Unspoken Distance" (£77), no account required at
+// checkout — matches the same pattern already used for
+// touch-rituals-checkout, so the success_url can send buyers straight to
+// a real thank-you page (feelfullyyou.com/thankyou-unspoken-distance)
+// instead of Stripe's own default confirmation screen, per the-unspoken-
+// distance spec R6.
+export async function GET(req: Request) {
+  try {
+    const { searchParams } = new URL(req.url);
+    const promo = searchParams.get("promo");
+
+    let discounts: Stripe.Checkout.SessionCreateParams.Discount[] | undefined;
+    if (promo) {
+      const codes = await stripe.promotionCodes.list({
+        code: promo.trim(),
+        active: true,
+        limit: 1,
+      });
+      if (codes.data.length > 0) {
+        discounts = [{ promotion_code: codes.data[0].id }];
+      }
+    }
+
+    const session = await stripe.checkout.sessions.create({
+      mode: "payment",
+      ...(discounts ? { discounts } : { allow_promotion_codes: true }),
+      line_items: [{ price: UNSPOKEN_DISTANCE_PRICE_ID, quantity: 1 }],
+      success_url: "https://feelfullyyou.com/thankyou-unspoken-distance",
+      cancel_url: "https://feelfullyyou.com/the-unspoken-distance",
+    });
+
+    if (!session.url) {
+      return NextResponse.redirect("https://feelfullyyou.com/the-unspoken-distance");
+    }
+
+    return NextResponse.redirect(session.url);
+  } catch (error: any) {
+    console.error("Unspoken Distance checkout error:", error.message);
+    return NextResponse.redirect("https://feelfullyyou.com/the-unspoken-distance");
+  }
+}

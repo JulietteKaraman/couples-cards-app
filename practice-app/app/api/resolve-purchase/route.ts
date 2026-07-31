@@ -2,14 +2,14 @@ import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { grantEntitlement } from "@/lib/entitlements/grant";
-import { deckTypesForApp } from "@/lib/entitlements/config";
+import { deckTypesForApp, PRICE_ID_TO_DECK_TYPE } from "@/lib/entitlements/config";
 
-// Spec R5: someone who bought 10 Touch Rituals before this system existed
+// Spec R5 (Rituals) / R4 (Unspoken Distance): someone who bought a real
+// product before this system existed, or before they first signed in,
 // resolves automatically the first time they sign in with that email —
 // matched against a REAL Stripe purchase, never against Kit tags or
-// manually-granted (Pleasure Bundle / comped) access (spec R6).
+// manually-granted (Pleasure Bundle / comped) access (spec R6/R8).
 const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY;
-const TEN_TOUCH_RITUALS_PRICE_ID = "price_1Tlpu0CCw18geY15b8J3jlBW";
 
 export async function POST(req: Request) {
   try {
@@ -30,13 +30,9 @@ export async function POST(req: Request) {
       .eq("user_id", userId)
       .in("deck_type", deckTypesForApp());
 
-    if (existingDecks && existingDecks.length > 0) {
-      return NextResponse.json({
-        resolved: false,
-        already_entitled: true,
-        decks: existingDecks.map((d) => d.deck_type),
-      });
-    }
+    const alreadyEntitledDeckTypes = new Set(
+      (existingDecks ?? []).map((d) => d.deck_type)
+    );
 
     if (!STRIPE_SECRET_KEY) {
       return NextResponse.json(
@@ -49,54 +45,58 @@ export async function POST(req: Request) {
       apiVersion: "2026-02-25.clover",
     });
 
-    // Real Stripe purchases only (spec R6 — free/comped access is never
-    // matched here, since it never created a Stripe charge).
-    const sessions = await stripe.checkout.sessions.list({
-      limit: 100,
-      customer_details: { email: normalizedEmail } as never,
-    });
+    // Real Stripe purchases only (spec R6/R8 — free/comped access is never
+    // matched here, since it never created a Stripe charge). Pulls the
+    // most recent 100 checkout sessions (covers Payment Link purchases
+    // too, since Stripe creates a real Checkout Session behind every
+    // Payment Link payment) and filters client-side by email, since
+    // Stripe's list endpoint doesn't reliably filter by customer email.
+    const sessions = await stripe.checkout.sessions.list({ limit: 100 });
 
-    const paidMatch = sessions.data.find(
+    const candidates = sessions.data.filter(
       (s) =>
         s.payment_status === "paid" &&
-        s.customer_details?.email?.toLowerCase() === normalizedEmail &&
-        s.line_items?.data?.some(
-          (li) => li.price?.id === TEN_TOUCH_RITUALS_PRICE_ID
-        )
+        s.customer_details?.email?.toLowerCase() === normalizedEmail
     );
 
-    // Stripe's list API doesn't expand line_items by default; fall back to
-    // checking each candidate session's price via metadata or a direct
-    // session retrieve if the quick filter above found nothing.
-    let matchedSessionId: string | null = paidMatch?.id ?? null;
+    // Match each candidate session's line items against every known
+    // product price ID, granting every product actually paid for that
+    // this account doesn't already have — not just the first match.
+    const grantedDeckTypes: string[] = [];
 
-    if (!matchedSessionId) {
-      const candidates = sessions.data.filter(
-        (s) =>
-          s.payment_status === "paid" &&
-          s.customer_details?.email?.toLowerCase() === normalizedEmail
-      );
-      for (const candidate of candidates) {
+    for (const candidate of candidates) {
+      let priceIds: (string | null | undefined)[] = [];
+
+      if (candidate.line_items?.data) {
+        priceIds = candidate.line_items.data.map((li) => li.price?.id);
+      } else {
         const full = await stripe.checkout.sessions.retrieve(candidate.id, {
           expand: ["line_items"],
         });
-        const hasRituals = full.line_items?.data?.some(
-          (li) => li.price?.id === TEN_TOUCH_RITUALS_PRICE_ID
-        );
-        if (hasRituals) {
-          matchedSessionId = full.id;
-          break;
-        }
+        priceIds = (full.line_items?.data ?? []).map((li) => li.price?.id);
+      }
+
+      for (const priceId of priceIds) {
+        if (!priceId) continue;
+        const deckType = PRICE_ID_TO_DECK_TYPE[priceId];
+        if (!deckType) continue;
+        if (alreadyEntitledDeckTypes.has(deckType)) continue;
+        if (grantedDeckTypes.includes(deckType)) continue;
+
+        await grantEntitlement(normalizedEmail, deckType, candidate.id);
+        grantedDeckTypes.push(deckType);
       }
     }
 
-    if (!matchedSessionId) {
-      return NextResponse.json({ resolved: false, already_entitled: false });
+    if (grantedDeckTypes.length === 0) {
+      return NextResponse.json({
+        resolved: false,
+        already_entitled: alreadyEntitledDeckTypes.size > 0,
+        decks: Array.from(alreadyEntitledDeckTypes),
+      });
     }
 
-    await grantEntitlement(normalizedEmail, "ten-touch-rituals", matchedSessionId);
-
-    return NextResponse.json({ resolved: true, deck_type: "ten-touch-rituals" });
+    return NextResponse.json({ resolved: true, deck_types: grantedDeckTypes });
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : "Unknown error";
     console.error("resolve-purchase error:", message);

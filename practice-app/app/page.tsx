@@ -4,24 +4,36 @@ import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { tenTouchRituals } from "@/lib/content/ten-touch-rituals";
+import { theUnspokenDistance } from "@/lib/content/the-unspoken-distance";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { useAuth } from "@/components/providers/AuthProvider";
 import { getCompletedSlugs } from "@/lib/entitlements/progress";
+import { COLLECTION_DECK_TYPES } from "@/lib/entitlements/config";
+
+// Every collection this app can show, in display order. Adding a new
+// product means adding one line here (plus its deck_type in
+// entitlements/config.ts) — no other change to this page.
+const ALL_COLLECTIONS = [tenTouchRituals, theUnspokenDistance];
 
 function LibraryContent() {
   const { user, entitledCollections, signOut } = useAuth();
-  const [completedCount, setCompletedCount] = useState<number | null>(null);
+  const [completedCounts, setCompletedCounts] = useState<Record<string, number>>({});
 
-  const owns = entitledCollections.includes(tenTouchRituals.slug);
+  const collections = ALL_COLLECTIONS.filter((c) =>
+    entitledCollections.includes(c.slug)
+  );
 
   useEffect(() => {
-    if (!user || !owns) return;
-    getCompletedSlugs(user.id, "ten-touch-rituals").then((slugs) =>
-      setCompletedCount(slugs.length)
-    );
-  }, [user, owns]);
-
-  const collections = owns ? [tenTouchRituals] : [];
+    if (!user || collections.length === 0) return;
+    Promise.all(
+      collections.map((c) =>
+        getCompletedSlugs(user.id, COLLECTION_DECK_TYPES[c.slug]).then(
+          (slugs) => [c.slug, slugs.length] as const
+        )
+      )
+    ).then((results) => setCompletedCounts(Object.fromEntries(results)));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, entitledCollections.join(",")]);
 
   return (
     <main className="min-h-screen bg-ffy-cream">
@@ -87,7 +99,7 @@ function LibraryContent() {
                   </h2>
                   <p className="mt-1 text-sm text-ffy-brown">{c.subtitle}</p>
                   <p className="mt-2 text-xs uppercase tracking-wide text-ffy-gold-deep">
-                    {completedCount ?? 0} of {c.entries.length} done
+                    {completedCounts[c.slug] ?? 0} of {c.entries.length} done
                   </p>
                 </div>
                 <span className="text-ffy-gold">→</span>
