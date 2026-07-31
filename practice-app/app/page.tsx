@@ -1,23 +1,30 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 import { tenTouchRituals } from "@/lib/content/ten-touch-rituals";
+import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
+import { useAuth } from "@/components/providers/AuthProvider";
+import { getCompletedSlugs } from "@/lib/entitlements/progress";
 
-/**
- * LOCAL PREVIEW ONLY — this stands in for R1/R2 (real Supabase accounts +
- * an entitlement-filtered library) so the reading/watching experience can
- * be seen and approved before live accounts, Stripe entitlement sync, and
- * Supabase are wired in. Not a real login. See NOT COVERED in the build
- * coverage report.
- */
-export default function LibraryPreview() {
-  const collections = [tenTouchRituals];
+function LibraryContent() {
+  const { user, entitledCollections, signOut } = useAuth();
+  const [completedCount, setCompletedCount] = useState<number | null>(null);
+
+  const owns = entitledCollections.includes(tenTouchRituals.slug);
+
+  useEffect(() => {
+    if (!user || !owns) return;
+    getCompletedSlugs(user.id, "ten-touch-rituals").then((slugs) =>
+      setCompletedCount(slugs.length)
+    );
+  }, [user, owns]);
+
+  const collections = owns ? [tenTouchRituals] : [];
 
   return (
     <main className="min-h-screen bg-ffy-cream">
-      <div className="bg-ffy-cream-2 px-4 py-2 text-center text-xs text-ffy-brown">
-        Local preview, not yet connected to real accounts or purchases
-      </div>
-
       <section className="relative flex h-[36vh] items-end overflow-hidden md:h-[46vh]">
         <Image
           src="/rituals/hero.png"
@@ -36,36 +43,67 @@ export default function LibraryPreview() {
       </section>
 
       <div className="mx-auto max-w-3xl px-6 py-10">
-        <div className="grid gap-5">
-          {collections.map((c) => (
-            <Link
-              key={c.slug}
-              href={`/practice/${c.slug}`}
-              className="group flex items-center gap-5 overflow-hidden rounded-2xl border border-ffy-border bg-white/60 p-4 transition hover:border-ffy-gold sm:p-5"
-            >
-              <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-xl sm:h-24 sm:w-24">
-                <Image
-                  src={c.heroImage}
-                  alt={c.title}
-                  fill
-                  sizes="96px"
-                  className="object-cover"
-                />
-              </div>
-              <div className="min-w-0 flex-1">
-                <h2 className="font-display text-xl font-semibold text-ffy-black group-hover:text-ffy-teal">
-                  {c.title}
-                </h2>
-                <p className="mt-1 text-sm text-ffy-brown">{c.subtitle}</p>
-                <p className="mt-2 text-xs uppercase tracking-wide text-ffy-gold-deep">
-                  {c.entries.length} entries · browse in any order
-                </p>
-              </div>
-              <span className="text-ffy-gold">→</span>
-            </Link>
-          ))}
+        <div className="mb-6 flex items-center justify-between text-sm text-ffy-brown">
+          <span>Signed in as {user?.email}</span>
+          <button onClick={signOut} className="text-ffy-gold-deep underline">
+            Sign out
+          </button>
         </div>
+
+        {collections.length === 0 ? (
+          <div className="rounded-2xl border border-ffy-border bg-white/60 p-8 text-center">
+            <p className="font-display text-lg text-ffy-teal">
+              Nothing here yet.
+            </p>
+            <p className="mt-2 text-sm text-ffy-brown">
+              This account isn&rsquo;t showing any purchases yet. If you
+              believe that&rsquo;s wrong, email{" "}
+              <a href="mailto:support@feelfullyyou.com" className="underline">
+                support@feelfullyyou.com
+              </a>
+              .
+            </p>
+          </div>
+        ) : (
+          <div className="grid gap-5">
+            {collections.map((c) => (
+              <Link
+                key={c.slug}
+                href={`/practice/${c.slug}`}
+                className="group flex items-center gap-5 overflow-hidden rounded-2xl border border-ffy-border bg-white/60 p-4 transition hover:border-ffy-gold sm:p-5"
+              >
+                <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-xl sm:h-24 sm:w-24">
+                  <Image
+                    src={c.heroImage}
+                    alt={c.title}
+                    fill
+                    sizes="96px"
+                    className="object-cover"
+                  />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <h2 className="font-display text-xl font-semibold text-ffy-black group-hover:text-ffy-teal">
+                    {c.title}
+                  </h2>
+                  <p className="mt-1 text-sm text-ffy-brown">{c.subtitle}</p>
+                  <p className="mt-2 text-xs uppercase tracking-wide text-ffy-gold-deep">
+                    {completedCount ?? 0} of {c.entries.length} done
+                  </p>
+                </div>
+                <span className="text-ffy-gold">→</span>
+              </Link>
+            ))}
+          </div>
+        )}
       </div>
     </main>
+  );
+}
+
+export default function LibraryPage() {
+  return (
+    <ProtectedRoute>
+      <LibraryContent />
+    </ProtectedRoute>
   );
 }

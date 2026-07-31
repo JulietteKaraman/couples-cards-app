@@ -1,27 +1,69 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
-import { notFound } from "next/navigation";
+import { useParams, notFound } from "next/navigation";
+import { useEffect, useState } from "react";
 import { tenTouchRituals } from "@/lib/content/ten-touch-rituals";
 import { Blocks } from "@/components/Blocks";
+import { CollectionGate } from "@/components/auth/CollectionGate";
+import { useAuth } from "@/components/providers/AuthProvider";
+import { getCompletedSlugs, markComplete } from "@/lib/entitlements/progress";
 
-export function generateStaticParams() {
-  return tenTouchRituals.entries.map((e) => ({ slug: e.slug }));
+export default function RitualEntry() {
+  return (
+    <CollectionGate collectionSlug={tenTouchRituals.slug}>
+      <RitualEntryContent />
+    </CollectionGate>
+  );
 }
 
-export default async function RitualEntry({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
-  const { slug } = await params;
+function RitualEntryContent() {
+  const params = useParams();
+  const slug = params.slug as string;
+  const { user } = useAuth();
+  const [completed, setCompleted] = useState(false);
+
   const entries = tenTouchRituals.entries;
   const index = entries.findIndex((e) => e.slug === slug);
   const entry = entries[index];
+
+  useEffect(() => {
+    if (!user || !entry || entry.kind !== "ritual") return;
+    getCompletedSlugs(user.id, "ten-touch-rituals").then((slugs) =>
+      setCompleted(slugs.includes(entry.slug))
+    );
+  }, [user, entry]);
+
   if (!entry) notFound();
+
+  async function handleMarkComplete() {
+    if (!user || !entry) return;
+    await markComplete(user.id, "ten-touch-rituals", entry.slug);
+    setCompleted(true);
+  }
 
   const prev = entries[index - 1];
   const next = entries[index + 1];
   const imageFirst = entry.imageSide === "left";
+
+  const markCompleteBlock =
+    entry.kind === "ritual" ? (
+      <div className="mt-8">
+        {completed ? (
+          <p className="inline-flex items-center gap-2 rounded-full bg-ffy-teal px-5 py-2.5 font-display text-sm font-medium text-ffy-cream">
+            ✓ Marked done
+          </p>
+        ) : (
+          <button
+            onClick={handleMarkComplete}
+            className="rounded-full border border-ffy-gold px-5 py-2.5 font-display text-sm font-medium text-ffy-teal transition hover:bg-ffy-gold hover:text-ffy-cream"
+          >
+            Mark this one done
+          </button>
+        )}
+      </div>
+    ) : null;
 
   // "closing" pages (Cards upsell, Meet Juliette, Your Next Yes) are built
   // from several stacked photo+text moments in the deck, not one persistent
@@ -113,6 +155,7 @@ export default async function RitualEntry({
           </h1>
 
           <Blocks blocks={entry.body} />
+          {markCompleteBlock}
         </div>
       </section>
 

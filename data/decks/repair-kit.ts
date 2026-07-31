@@ -32,6 +32,18 @@ export const REPAIR_KIT_PHASES: {
   { key: "IN", name: "Integration", description: "What you take forward. What you've built.", dayRange: "Day 29–31", end: 31 },
 ];
 
+// Intro shown before card 1 (text only, no video). Explains what this is and why.
+export const REPAIR_KIT_INTRO = {
+  heading: "Before the first card",
+  paragraphs: [
+    "Most couples don't end because they stop loving each other. They end because something became unsayable.",
+    "Over the years I have helped many couples uncouple in a way that felt good, and others find their way back to each other. What they share is this: they answer these questions honestly, and then something shifts. Their attention comes off what he or she is doing, and lands back on what is happening in their own body.",
+    "That is the whole move. One card a day, in order. You say the true thing. The one listening receives it, no fixing, no defending. You go from where each of you actually is, through the guard coming down, to honest exchange, repair, and what you carry forward.",
+    "By the end you will know. Whether to stay, and how. Or whether to part, cleanly and kindly. Either way you stop living in the not-knowing.",
+    "Start when you're ready. One card at a time.",
+  ],
+};
+
 // Cards in fixed order. Module = sales-page day grouping (1–7, 8–14, 15–21, 22–28, 29–31).
 export const REPAIR_KIT_CARDS: RepairKitCardPrompt[] = [
   { id: 1, section: "IO", lines: [{ text: "Tell me what you no longer say because it feels unsafe." }] },

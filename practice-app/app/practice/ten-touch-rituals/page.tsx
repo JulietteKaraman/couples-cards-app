@@ -1,8 +1,19 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import { tenTouchRituals } from "@/lib/content/ten-touch-rituals";
+import { CollectionGate } from "@/components/auth/CollectionGate";
 
 export default function TenTouchRitualsIndex() {
+  return (
+    <CollectionGate collectionSlug={tenTouchRituals.slug}>
+      <TenTouchRitualsIndexContent />
+    </CollectionGate>
+  );
+}
+
+function TenTouchRitualsIndexContent() {
   const { title, subtitle, heroImage, entries } = tenTouchRituals;
 
   return (
