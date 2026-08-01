@@ -7,6 +7,48 @@ function driveIdFromUrl(url: string): string | null {
   return m ? m[1] : null;
 }
 
+// Lines like "Emotional: touch that carries feeling..." are a term being
+// defined, not a plain sentence. Gamma always gave the term its own bold,
+// larger, coloured treatment so it reads as a label, not flat prose. Split
+// on the first ": " when what comes before it looks like a short label
+// (not a full clause) and render it that way; otherwise leave the line as
+// plain text.
+function splitTermLine(text: string): { term: string; rest: string } | null {
+  const idx = text.indexOf(": ");
+  if (idx === -1) return null;
+  const term = text.slice(0, idx);
+  const rest = text.slice(idx + 2).trim();
+  if (!rest) return null;
+  if (term.length > 40) return null;
+  if (/[.?!]/.test(term)) return null;
+  return { term, rest };
+}
+
+function TermLine({
+  text,
+  dark,
+  bodyClassName,
+}: {
+  text: string;
+  dark: boolean;
+  bodyClassName?: string;
+}) {
+  const split = splitTermLine(text);
+  if (!split) return <p className={bodyClassName}>{text}</p>;
+  return (
+    <p className={bodyClassName}>
+      <span
+        className={`font-display text-lg font-bold sm:text-xl ${
+          dark ? "text-ffy-gold" : "text-ffy-gold-deep"
+        }`}
+      >
+        {split.term}:
+      </span>{" "}
+      <span>{split.rest}</span>
+    </p>
+  );
+}
+
 export function Blocks({ blocks, dark = false }: { blocks: ContentBlock[]; dark?: boolean }) {
   return (
     <div
@@ -48,7 +90,7 @@ export function Blocks({ blocks, dark = false }: { blocks: ContentBlock[]; dark?
             return (
               <p
                 key={i}
-                className={`font-display text-lg italic ${dark ? "text-ffy-gold-pale" : "text-ffy-teal"}`}
+                className={`font-display text-2xl font-bold not-italic leading-snug sm:text-3xl ${dark ? "text-ffy-gold" : "text-ffy-teal"}`}
               >
                 {b.text}
               </p>
@@ -60,7 +102,7 @@ export function Blocks({ blocks, dark = false }: { blocks: ContentBlock[]; dark?
                 key={i}
                 className={
                   dark
-                    ? "rounded-xl border border-ffy-gold/40 bg-white/5 px-5 py-4"
+                    ? "rounded-xl border border-ffy-gold/50 bg-ffy-gold/[0.07] px-5 py-4 shadow-[0_10px_30px_-18px_rgba(0,0,0,0.9)]"
                     : "rounded-xl border border-ffy-border bg-white/70 px-5 py-4"
                 }
               >
@@ -71,23 +113,28 @@ export function Blocks({ blocks, dark = false }: { blocks: ContentBlock[]; dark?
                 >
                   {b.label}
                 </p>
-                <div className="mt-2 flex flex-col gap-2">
-                  {b.lines.map((line, li) => (
-                    <p
-                      key={li}
-                      className={
-                        line.emphasis === "bold"
-                          ? `font-semibold ${dark ? "text-ffy-cream" : "text-ffy-black"}`
-                          : line.emphasis === "accent"
-                            ? `font-display font-semibold ${dark ? "text-ffy-gold-pale" : "text-ffy-gold-deep"}`
-                            : dark
-                              ? "text-ffy-cream/85"
-                              : undefined
-                      }
-                    >
-                      {line.text}
-                    </p>
-                  ))}
+                <div className="mt-3 flex flex-col gap-3">
+                  {b.lines.map((line, li) =>
+                    line.emphasis === "bold" ? (
+                      <p key={li} className={`font-semibold ${dark ? "text-ffy-cream" : "text-ffy-black"}`}>
+                        {line.text}
+                      </p>
+                    ) : line.emphasis === "accent" ? (
+                      <p
+                        key={li}
+                        className={`font-display font-semibold ${dark ? "text-ffy-gold-pale" : "text-ffy-gold-deep"}`}
+                      >
+                        {line.text}
+                      </p>
+                    ) : (
+                      <TermLine
+                        key={li}
+                        text={line.text}
+                        dark={dark}
+                        bodyClassName={dark ? "text-ffy-cream/85" : undefined}
+                      />
+                    )
+                  )}
                 </div>
               </div>
             );
@@ -98,22 +145,30 @@ export function Blocks({ blocks, dark = false }: { blocks: ContentBlock[]; dark?
                 key={i}
                 className={`flex flex-col gap-2 border-l-2 pl-4 ${dark ? "border-ffy-gold-pale" : "border-ffy-gold"}`}
               >
-                {b.lines.map((line, li) => (
-                  <p
-                    key={li}
-                    className={
-                      line.emphasis === "bold"
-                        ? `font-display text-base font-semibold not-italic ${dark ? "text-ffy-cream" : "text-ffy-black"}`
-                        : line.emphasis === "accent"
-                          ? `font-display text-base font-semibold not-italic ${dark ? "text-ffy-gold-pale" : "text-ffy-gold-deep"}`
-                          : dark
-                            ? "text-sm italic text-ffy-cream/70"
-                            : "text-sm italic text-ffy-brown"
-                    }
-                  >
-                    {line.text}
-                  </p>
-                ))}
+                {b.lines.map((line, li) =>
+                  line.emphasis === "bold" ? (
+                    <p
+                      key={li}
+                      className={`font-display text-base font-semibold not-italic ${dark ? "text-ffy-cream" : "text-ffy-black"}`}
+                    >
+                      {line.text}
+                    </p>
+                  ) : line.emphasis === "accent" ? (
+                    <p
+                      key={li}
+                      className={`font-display text-base font-semibold not-italic ${dark ? "text-ffy-gold-pale" : "text-ffy-gold-deep"}`}
+                    >
+                      {line.text}
+                    </p>
+                  ) : (
+                    <TermLine
+                      key={li}
+                      text={line.text}
+                      dark={dark}
+                      bodyClassName={dark ? "text-sm italic text-ffy-cream/70" : "text-sm italic text-ffy-brown"}
+                    />
+                  )
+                )}
               </div>
             );
 
@@ -121,30 +176,31 @@ export function Blocks({ blocks, dark = false }: { blocks: ContentBlock[]; dark?
             return (
               <div
                 key={i}
-                className={`rounded-xl px-5 py-5 ${dark ? "bg-white/5 border border-ffy-gold/40 text-ffy-cream" : "bg-ffy-teal text-ffy-cream"}`}
+                className={`rounded-xl px-5 py-5 ${dark ? "bg-ffy-gold/[0.08] border border-ffy-gold/50" : "bg-ffy-teal"} text-ffy-cream`}
               >
                 <p className="font-display text-xs font-semibold uppercase tracking-wide text-ffy-gold-pale">
                   Why it works
                 </p>
                 <div className="mt-3 flex flex-col gap-3">
-                  {b.lines.map((line, li) => (
-                    <p
-                      key={li}
-                      className={
-                        line.emphasis === "bold"
-                          ? "font-display text-lg font-semibold leading-snug text-ffy-cream"
-                          : line.emphasis === "accent"
-                            ? "font-display text-lg font-semibold leading-snug text-ffy-gold-pale"
-                            : "text-[0.98rem] leading-relaxed text-ffy-cream/90"
-                      }
-                    >
-                      {line.text}
-                    </p>
-                  ))}
+                  {b.lines.map((line, li) =>
+                    line.emphasis === "bold" || line.emphasis === "accent" ? (
+                      <p
+                        key={li}
+                        className={
+                          line.emphasis === "bold"
+                            ? "font-display text-lg font-semibold leading-snug text-ffy-cream"
+                            : "font-display text-lg font-semibold leading-snug text-ffy-gold-pale"
+                        }
+                      >
+                        {line.text}
+                      </p>
+                    ) : (
+                      <TermLine key={li} text={line.text} dark={dark} bodyClassName="text-[0.98rem] leading-relaxed text-ffy-cream/90" />
+                    )
+                  )}
                 </div>
               </div>
             );
-
           case "link":
             return (
               <a
