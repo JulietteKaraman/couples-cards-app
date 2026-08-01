@@ -935,6 +935,16 @@ export const theUnspokenDistance: PracticeCollection = {
       imageSide: "right",
       body: [
         { kind: "p", text: "Trust is not a decision she makes. It is a feeling she has in her body when she is with you." },
+        {
+          kind: "step",
+          label: "When She's With You",
+          lines: [
+            { text: "Calm Heartbeat — a steady, relaxed rhythm." },
+            { text: "Warmth — feeling cosy and safe." },
+            { text: "Lightness — a carefree, buoyant mood." },
+            { text: "Focused Presence — attentive and engaged." },
+          ],
+        },
         { kind: "quote", text: "What Trust Actually Is" },
         {
           kind: "step",
@@ -1013,6 +1023,7 @@ export const theUnspokenDistance: PracticeCollection = {
           ],
         },
         { kind: "quote", text: "Keep Erotic Tension Alive" },
+        { kind: "image", src: "/unspoken-distance/date-night.jpg", alt: "A couple on a date at night" },
         { kind: "p", text: "Flirt with her like you did before the relationship became a household to manage." },
         { kind: "p", text: "Send her a message in the middle of the day that has nothing to do with logistics. Plan something she doesn't know about." },
         { kind: "quote", text: "Mystery is not manipulation. It is the space between you that keeps desire alive." },
@@ -1128,6 +1139,17 @@ export const theUnspokenDistance: PracticeCollection = {
         { kind: "p", text: "One thing you cannot seem to shift no matter how much you understand it." },
         { kind: "p", text: "WhatsApp access throughout." },
         { kind: "p", text: "Not by only talking about it. By working with the body." },
+        {
+          kind: "step",
+          label: "How the Shift Happens",
+          lines: [
+            { text: "Awareness — recognise the gap between words and practice." },
+            { text: "Embodiment — engage the body to translate understanding." },
+            { text: "Integration — combine physical work with daily life." },
+            { text: "Reflection — assess changes through bodily feedback." },
+            { text: "Sustainment — maintain habits through ongoing practice." },
+          ],
+        },
         { kind: "p", text: "This is for the man who knows what is wrong and wants it handled." },
         { kind: "link", text: "Explore the Intensive →", href: "https://feelfullyyou.com/the-2-month-intensive" },
         { kind: "quote", text: "The Beginning: The Ultimate Touch Reset" },
