@@ -85,7 +85,10 @@ export async function POST(req: Request) {
         if (alreadyEntitledDeckTypes.has(deckType)) continue;
         if (grantedDeckTypes.includes(deckType)) continue;
 
-        await grantEntitlement(normalizedEmail, deckType, candidate.id);
+        // Same fix as ensure-free-access: this route already has the real
+        // authenticated userId, so pass it straight through instead of
+        // making grantEntitlement re-find it via a paginated email lookup.
+        await grantEntitlement(normalizedEmail, deckType, candidate.id, userId);
         grantedDeckTypes.push(deckType);
       }
     }

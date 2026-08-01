@@ -45,7 +45,11 @@ export async function POST(req: Request) {
     const missing = FREE_DECK_TYPES.filter((dt) => !alreadyGranted.has(dt));
 
     for (const deckType of missing) {
-      await grantEntitlement(normalizedEmail, deckType, "free-guide-auto-grant");
+      // Pass the real, already-authenticated userId straight through —
+      // this route always has one, so there's no reason to make
+      // grantEntitlement re-derive it via an email lookup (see grant.ts
+      // for why that lookup alone was silently failing for real accounts).
+      await grantEntitlement(normalizedEmail, deckType, "free-guide-auto-grant", userId);
     }
 
     return NextResponse.json({ granted: missing });

@@ -130,7 +130,7 @@ function LibraryContent() {
           alt="Juliette Karaman"
           fill
           priority
-          className="object-cover"
+          className="object-cover object-top"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-ffy-black/80 via-ffy-black/10 to-transparent" />
         <div className="relative z-10 mx-auto w-full max-w-3xl px-6 pb-8">

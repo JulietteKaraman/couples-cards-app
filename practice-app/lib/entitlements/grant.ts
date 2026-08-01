@@ -1,5 +1,24 @@
 import { supabaseAdmin } from "@/lib/supabase/admin";
 
+// listUsers() only returns ONE PAGE by default (perPage defaults to 50).
+// With more than a page of real accounts, an existing user who isn't on
+// that first page silently reads as "not found" — grantEntitlement would
+// then try to createUser for an email that already exists, which errors,
+// and the entitlement never gets granted. Found 1 Aug 2026: Juliette's
+// own account didn't get the free-guide auto-grant for exactly this
+// reason. Paginate through every page instead of trusting the default.
+async function findUserByEmail(normalizedEmail: string) {
+  let page = 1;
+  for (;;) {
+    const { data, error } = await supabaseAdmin.auth.admin.listUsers({ page, perPage: 200 });
+    if (error) throw new Error(`findUserByEmail: ${error.message}`);
+    const match = data.users.find((u) => u.email?.toLowerCase() === normalizedEmail);
+    if (match) return match.id;
+    if (data.users.length < 200) return undefined; // last page, not found
+    page++;
+  }
+}
+
 // Get-or-create a REAL Supabase Auth user for this email (no password,
 // email pre-confirmed) and grant the given deck_type against it.
 //
@@ -10,15 +29,20 @@ import { supabaseAdmin } from "@/lib/supabase/admin";
 // email later requesting a magic link logs into this exact account,
 // which already has the entitlement. Same outcome (spec R5, "resolves
 // itself the first time they show up"), simpler mechanism.
+//
+// knownUserId: pass this when the caller already has a real, authenticated
+// session's user id (e.g. ensure-free-access granting to whoever is
+// currently signed in) — skips the email lookup entirely, so there's no
+// dependency on listUsers() finding the right page at all.
 export async function grantEntitlement(
   email: string,
   deckType: string,
-  stripeCheckoutSessionId: string
+  stripeCheckoutSessionId: string,
+  knownUserId?: string
 ) {
   const normalizedEmail = email.toLowerCase().trim();
 
-  const { data: existing } = await supabaseAdmin.auth.admin.listUsers();
-  let userId = existing?.users.find((u) => u.email === normalizedEmail)?.id;
+  let userId = knownUserId ?? (await findUserByEmail(normalizedEmail));
 
   if (!userId) {
     const { data: created, error: createError } =
