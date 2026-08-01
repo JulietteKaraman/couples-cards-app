@@ -39,7 +39,7 @@ function LibraryContent() {
     <main className="min-h-screen bg-ffy-cream">
       <section className="relative flex h-[36vh] items-end overflow-hidden md:h-[46vh]">
         <Image
-          src="/unspoken-distance/juliette-karaman-portrait.jpg"
+          src="/app/hero.jpg"
           alt="Juliette Karaman"
           fill
           priority
