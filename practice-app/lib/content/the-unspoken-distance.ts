@@ -13,11 +13,17 @@
 // ("It important", a stray "<" character) are silently corrected the same
 // way; no wording, claim, or mechanic was changed or added.
 //
-// One addition beyond the deck: "The Groundedness Practice" entry carries
-// Juliette's real Vimeo embodiment video (vimeoId 1208083538), placed after
-// The Grounding Practice section. The 2-4 sentence blurb framing it as a
-// weekly return practice is new copy, written to voice-core.md + canon.md
-// (31 Jul 2026); everything else in this file is deck transcription.
+// Two additions beyond the deck, both real videos Juliette supplied
+// directly (1 Aug 2026), not deck content:
+// - "Her Withdrawal Is Not a Verdict on You." ends with a grounding
+//   moment (feet on the floor, one breath, arrive) — the "Arriving in
+//   your body" video (vimeoId 1214800042) plays right after it, as
+//   early in the guide as the grounding cue itself.
+// - "The Groundedness Practice" entry carries the "theunspokendistancemovement"
+//   embodiment video (vimeoId 1208083538), placed after The Grounding
+//   Practice section. The 2-4 sentence blurb framing it as a weekly
+//   return practice is new copy, written to voice-core.md + canon.md.
+// Everything else in this file is deck transcription.
 //
 // Images are the real photography from the deck, downloaded into
 // /public/unspoken-distance so the app doesn't depend on Gamma's CDN
@@ -105,6 +111,7 @@ export const theUnspokenDistance: PracticeCollection = {
         { kind: "p", text: "Before you read further, put both feet flat on the floor.", emphasis: "accent" },
         { kind: "p", text: "Take one full breath. Arrive in this moment.", emphasis: "accent" },
         { kind: "p", text: "This guide works differently when your body is here for it.", emphasis: "accent" },
+        { kind: "video", vimeoId: "1214800042" },
       ],
     },
     {
