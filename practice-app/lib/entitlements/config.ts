@@ -16,6 +16,16 @@ export const PRICE_ID_TO_DECK_TYPE: Record<string, string> = {
   price_1TnxAqCCw18geY153w22a2Ye: "unspoken-distance", // The Unspoken Distance, £97 (old price, real buyers before 31 Jul 2026)
 };
 
+// The Unspoken Distance sales page promises "10 Touch Rituals — included
+// from day one." That was never wired to the entitlement system — buying
+// only Distance granted only unspoken-distance, not the bundled Rituals
+// the copy promises. This maps a price ID to EXTRA deck_types to grant
+// alongside its primary one, so the code actually matches the promise.
+export const BONUS_DECK_TYPES: Record<string, string[]> = {
+  price_1TzO4DCCw18geY15u7X9j7iw: ["ten-touch-rituals"], // Distance, £77 (current)
+  price_1TnxAqCCw18geY153w22a2Ye: ["ten-touch-rituals"], // Distance, £97 (old price)
+};
+
 export function deckTypesForApp(): string[] {
   return Object.values(COLLECTION_DECK_TYPES);
 }
