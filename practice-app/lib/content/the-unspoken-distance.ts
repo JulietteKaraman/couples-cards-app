@@ -709,6 +709,14 @@ export const theUnspokenDistance: PracticeCollection = {
       imageSide: "left",
       body: [
         { kind: "image", src: "/unspoken-distance/cards-template.png", alt: "The Intimacy and Communication Cards, card template" },
+        {
+          kind: "step",
+          label: "A Gift, Reading This",
+          lines: [
+            { text: "The Couples Edition, free. The prompts below are pulled straight from that deck. You are already doing the work, so take the whole thing, on me." },
+          ],
+        },
+        { kind: "link", text: "Claim your free Couples Cards →", href: "https://cards.feelfullyyou.com/purchase/email?product=couples&promo=DISTANCECARDS" },
         { kind: "p", text: "We all want to be seen, heard, and ultimately understood." },
         { kind: "p", text: "When we listen, we often listen to interject, fix, or are already making up the response in our minds. This stops that. It brings in structure." },
         { kind: "p", text: "Set a timer for fifteen minutes. Be somewhere quiet. One of you reads the prompt out loud:" },
