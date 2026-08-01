@@ -199,6 +199,8 @@ export const whenSheGoesQuiet: PracticeCollection = {
       order: 6,
       title: "One: What Not to Do in a Text",
       kind: "ritual",
+      image: "/when-she-goes-quiet/what-not-to-do-in-a-text.png",
+      imageAlt: "A man texting on his phone at a desk",
       imageSide: "left",
       body: [
         { kind: "p", text: "When she goes quiet, the impulse is to fill the silence.", emphasis: "bold" },
@@ -424,6 +426,7 @@ export const whenSheGoesQuiet: PracticeCollection = {
       body: [
         { kind: "p", text: "If this landed, you are already more present than you were when you started reading. She will feel that before you say a word." },
         { kind: "quote", text: "The Unspoken Distance" },
+        { kind: "image", src: "/when-she-goes-quiet/distance-cover.jpeg", alt: "The Unspoken Distance" },
         { kind: "p", text: "The full paid guide: 86 pages into her body, her withdrawal, her nervous system, and what she actually needs from you to feel safe enough to open again." },
         { kind: "p", text: "If this free guide opened something, that one takes you all the way in." },
         { kind: "link", text: "Explore The Unspoken Distance →", href: "https://feelfullyyou.com/the-unspoken-distance" },
