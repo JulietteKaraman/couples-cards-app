@@ -53,7 +53,8 @@ export const theUnspokenDistance: PracticeCollection = {
       order: 0,
       title: "Before You Read This",
       kind: "essay",
-      // No photo — none exists for this section in the source deck.
+      image: "/unspoken-distance/couple-arms-crossed-beach.jpg",
+      imageAlt: "A couple standing apart, arms crossed, not reaching for each other",
       imageSide: "left",
       body: [
         { kind: "p", text: "This is written to the man whose partner has gone quiet. That is the primary voice." },
@@ -519,6 +520,8 @@ export const theUnspokenDistance: PracticeCollection = {
             { text: "That is what she is waiting to feel from you.", emphasis: "bold" },
           ],
         },
+        { kind: "p", text: "If zippers doesn't land for you, here is another way in: the 5-4-3-2-1 technique, using your five senses to bring you back into your body." },
+        { kind: "image", src: "/unspoken-distance/54321-grounding-technique.png", alt: "The 5-4-3-2-1 grounding technique: things you can see, touch, hear, smell, taste" },
         { kind: "quote", text: "Checking Capacity Before You Begin" },
         { kind: "p", text: "Timing is not about finding the right moment. It is about reading whether a moment exists at all." },
         { kind: "p", text: "Before you approach her: are you actually present, or still half in something else? Is there an outcome you are already hoping for? Is there frustration underneath the reaching?" },
@@ -556,10 +559,8 @@ export const theUnspokenDistance: PracticeCollection = {
       order: 11,
       title: "The Groundedness Practice",
       kind: "essay",
-      // No hero photo here — the video itself is the visual for this
-      // entry, not a Gamma section, and the deck's only nearby photo
-      // (feet-on-the-floor) turned out to be an unlicensed watermarked
-      // stock image, so it's out entirely rather than shown broken.
+      image: "/unspoken-distance/feet-on-leaves.jpg",
+      imageAlt: "Bare feet on the ground",
       imageSide: "right",
       body: [
         { kind: "p", text: "This is the practice underneath everything else in this guide." },
