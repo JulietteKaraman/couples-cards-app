@@ -30,6 +30,78 @@ function isFreeCollection(slug: string): boolean {
 // what's already been bought — Juliette, 1 Aug 2026).
 const ALL_COLLECTIONS = [tenTouchRituals, theUnspokenDistance, whenSheGoesQuiet, betweenTouches];
 
+// Offers that never live inside this app at all (no PracticeCollection,
+// no deck_type, nothing to unlock here) but that Juliette wants
+// discoverable from the library anyway, always shown locked, always
+// pointing at the real sales page. Not the same as a locked ALL_COLLECTIONS
+// tile, which unlocks in-app once owned — these never unlock here, the
+// product experience itself lives elsewhere (the cards app, a course).
+//
+// Repair Kit: purchaseUrl is the real sales page with checkout, NOT
+// cards.feelfullyyou.com/app/repair-kit/unlock — that second URL is the
+// POST-purchase code-redeem screen (confirmed live 1 Aug 2026, it's a
+// sign-in wall, not a way to buy), so it would dead-end anyone who
+// doesn't already own it. Juliette asked for the unlock URL specifically;
+// swapped for the real purchase path so the tile actually converts.
+const EXTERNAL_OFFERS = [
+  {
+    slug: "repair-kit",
+    title: "The Romantic Relationship Repair Kit",
+    subtitle: "31 days, one prompt a day, for couples finding their way back to each other.",
+    heroImage: "/offers/repair-kit-cover.png",
+    purchaseUrl: "https://feelfullyyou.com/romantic-relationship-repair-kit",
+  },
+  {
+    slug: "one-touch",
+    title: "One Touch",
+    subtitle: "Seven days, self-paced. The Touch Reset course.",
+    heroImage: "/offers/one-touch-hero.jpg",
+    purchaseUrl: "https://feelfullyyou.com/one-touch",
+  },
+];
+
+function LockedOfferTile({
+  title,
+  subtitle,
+  heroImage,
+  purchaseUrl,
+}: {
+  title: string;
+  subtitle: string;
+  heroImage: string;
+  purchaseUrl: string;
+}) {
+  // Shown, not hidden — this tile IS the cross-sell. Dimmed photo, lock
+  // badge, and a real link out to the sales page, never a click into
+  // content that isn't there.
+  return (
+    <a
+      href={purchaseUrl}
+      target="_blank"
+      rel="noreferrer"
+      className="group flex items-center gap-5 overflow-hidden rounded-2xl border border-ffy-border bg-white/60 p-4 opacity-80 transition hover:border-ffy-gold hover:opacity-100 sm:p-5"
+    >
+      <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-xl sm:h-24 sm:w-24">
+        <Image src={heroImage} alt={title} fill sizes="96px" className="object-cover grayscale" />
+        <div className="absolute inset-0 flex items-center justify-center bg-ffy-black/45">
+          <svg viewBox="0 0 24 24" className="h-6 w-6 text-ffy-cream" fill="none" stroke="currentColor" strokeWidth={2}>
+            <rect x="5" y="11" width="14" height="9" rx="2" />
+            <path d="M8 11V8a4 4 0 0 1 8 0v3" />
+          </svg>
+        </div>
+      </div>
+      <div className="min-w-0 flex-1">
+        <h2 className="font-display text-xl font-semibold text-ffy-black">{title}</h2>
+        <p className="mt-1 text-sm text-ffy-brown">{subtitle}</p>
+        <p className="mt-2 text-xs font-semibold uppercase tracking-wide text-ffy-gold-deep">
+          Not yet on your account · Get access
+        </p>
+      </div>
+      <span className="text-ffy-gold">→</span>
+    </a>
+  );
+}
+
 function LibraryContent() {
   const { user, entitledCollections, signOut } = useAuth();
   const [completedCounts, setCompletedCounts] = useState<Record<string, number>>({});
@@ -111,50 +183,14 @@ function LibraryContent() {
               );
             }
 
-            // Locked: not yet owned. Shown, not hidden — this tile IS the
-            // cross-sell. Dimmed photo, lock badge, and a real link out to
-            // the sales page, never a click into the actual content.
-            const purchaseUrl = PURCHASE_URLS[c.slug];
             return (
-              <a
+              <LockedOfferTile
                 key={c.slug}
-                href={purchaseUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="group flex items-center gap-5 overflow-hidden rounded-2xl border border-ffy-border bg-white/60 p-4 opacity-80 transition hover:border-ffy-gold hover:opacity-100 sm:p-5"
-              >
-                <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-xl sm:h-24 sm:w-24">
-                  <Image
-                    src={c.heroImage}
-                    alt={c.title}
-                    fill
-                    sizes="96px"
-                    className="object-cover grayscale"
-                  />
-                  <div className="absolute inset-0 flex items-center justify-center bg-ffy-black/45">
-                    <svg
-                      viewBox="0 0 24 24"
-                      className="h-6 w-6 text-ffy-cream"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth={2}
-                    >
-                      <rect x="5" y="11" width="14" height="9" rx="2" />
-                      <path d="M8 11V8a4 4 0 0 1 8 0v3" />
-                    </svg>
-                  </div>
-                </div>
-                <div className="min-w-0 flex-1">
-                  <h2 className="font-display text-xl font-semibold text-ffy-black">
-                    {c.title}
-                  </h2>
-                  <p className="mt-1 text-sm text-ffy-brown">{c.subtitle}</p>
-                  <p className="mt-2 text-xs font-semibold uppercase tracking-wide text-ffy-gold-deep">
-                    Not yet on your account · Get access
-                  </p>
-                </div>
-                <span className="text-ffy-gold">→</span>
-              </a>
+                title={c.title}
+                subtitle={c.subtitle}
+                heroImage={c.heroImage}
+                purchaseUrl={PURCHASE_URLS[c.slug]}
+              />
             );
           })}
 
@@ -184,6 +220,45 @@ function LibraryContent() {
             </div>
             <span className="text-ffy-gold">→</span>
           </Link>
+
+          {/* Touch Base® — same shape as the Cards taster tile: one free
+              standalone practice, not a PracticeCollection, its own route. */}
+          <Link
+            href="/practice/touch-base"
+            className="group flex items-center gap-5 overflow-hidden rounded-2xl border border-ffy-border bg-white/60 p-4 transition hover:border-ffy-gold sm:p-5"
+          >
+            <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-xl bg-white sm:h-24 sm:w-24">
+              <Image
+                src="/offers/touch-base-logo.png"
+                alt="Touch Base® Anchor"
+                fill
+                sizes="96px"
+                className="object-contain p-2"
+              />
+            </div>
+            <div className="min-w-0 flex-1">
+              <h2 className="font-display text-xl font-semibold text-ffy-black group-hover:text-ffy-teal">
+                Touch Base®, the Anchor
+              </h2>
+              <p className="mt-1 text-sm text-ffy-brown">Two minutes, no equipment. A way back to yourself, anywhere, any time.</p>
+              <p className="mt-2 text-xs uppercase tracking-wide text-ffy-gold-deep">Free practice</p>
+            </div>
+            <span className="text-ffy-gold">→</span>
+          </Link>
+
+          {/* Offers with no in-app content at all (Repair Kit, One Touch) —
+              always locked, always pointing out to the real sales page.
+              See EXTERNAL_OFFERS above for why each purchaseUrl is what
+              it is. */}
+          {EXTERNAL_OFFERS.map((o) => (
+            <LockedOfferTile
+              key={o.slug}
+              title={o.title}
+              subtitle={o.subtitle}
+              heroImage={o.heroImage}
+              purchaseUrl={o.purchaseUrl}
+            />
+          ))}
         </div>
       </div>
     </main>
