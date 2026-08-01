@@ -50,6 +50,12 @@ const EXTERNAL_OFFERS = [
     subtitle: "31 days, one prompt a day, for couples finding their way back to each other.",
     heroImage: "/offers/repair-kit-cover.png",
     purchaseUrl: "https://feelfullyyou.com/romantic-relationship-repair-kit",
+    // These two don't unlock in THIS app once bought — a different door
+    // (the cards app), a different mechanism (a code by email), not the
+    // "Get access" flow every other locked tile here uses. Said plainly
+    // so nobody assumes this is the same one-tap unlock as everything
+    // else on the page (Juliette, 1 Aug 2026).
+    note: "Delivered as a card deck · code by email",
   },
   {
     slug: "one-touch",
@@ -57,6 +63,7 @@ const EXTERNAL_OFFERS = [
     subtitle: "Seven days, self-paced. The Touch Reset course.",
     heroImage: "/offers/one-touch-hero.jpg",
     purchaseUrl: "https://feelfullyyou.com/one-touch",
+    note: "Includes a card deck · code by email",
   },
 ];
 
@@ -65,11 +72,13 @@ function LockedOfferTile({
   subtitle,
   heroImage,
   purchaseUrl,
+  note = "Not yet on your account · Get access",
 }: {
   title: string;
   subtitle: string;
   heroImage: string;
   purchaseUrl: string;
+  note?: string;
 }) {
   // Shown, not hidden — this tile IS the cross-sell. Dimmed photo, lock
   // badge, and a real link out to the sales page, never a click into
@@ -94,7 +103,7 @@ function LockedOfferTile({
         <h2 className="font-display text-xl font-semibold text-ffy-black">{title}</h2>
         <p className="mt-1 text-sm text-ffy-brown">{subtitle}</p>
         <p className="mt-2 text-xs font-semibold uppercase tracking-wide text-ffy-gold-deep">
-          Not yet on your account · Get access
+          {note}
         </p>
       </div>
       <span className="text-ffy-gold">→</span>
@@ -257,6 +266,7 @@ function LibraryContent() {
               subtitle={o.subtitle}
               heroImage={o.heroImage}
               purchaseUrl={o.purchaseUrl}
+              note={o.note}
             />
           ))}
         </div>
