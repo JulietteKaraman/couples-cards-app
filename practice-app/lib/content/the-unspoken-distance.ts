@@ -531,7 +531,7 @@ export const theUnspokenDistance: PracticeCollection = {
             "You'll approach her grounded and within thirty seconds start tracking: is she softer? Is she turning toward me? Is this working?",
             "That tracking is the agenda. She can feel you leave the grounding the moment you start measuring.",
             "The practice has to be the end point, not the beginning of a strategy. Ground yourself. Approach her. Let whatever happens be enough.",
-            "If you find yourself unable to stop tracking her response, that pattern is deeper than a practice can reach. That is what the 1:1 Intensive is designed for: we go directly to the pattern running underneath your reaching and we shift it. Four sessions. Six weeks. You will feel the difference immediately.",
+            "If you find yourself unable to stop tracking her response, that pattern is deeper than a practice can reach. That is what the 1:1 Intensive is designed for: we go directly to the pattern running underneath your reaching and we shift it. Four sessions. Two months. You will feel the difference immediately.",
           ],
         },
       ],
