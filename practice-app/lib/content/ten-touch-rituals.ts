@@ -797,6 +797,16 @@ export const tenTouchRituals: PracticeCollection = {
         },
         { kind: "quote", text: "How it works" },
         {
+          kind: "diagram",
+          steps: [
+            { heading: "Ask" },
+            { heading: "Answer" },
+            { heading: "Listen" },
+            { heading: "Thank" },
+            { heading: "Switch" },
+          ],
+        },
+        {
           kind: "step",
           label: "Ask",
           lines: [{ text: "One person reads the prompt." }],
