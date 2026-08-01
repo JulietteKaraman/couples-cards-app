@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { grantEntitlement } from "@/lib/entitlements/grant";
-import { deckTypesForApp, PRICE_ID_TO_DECK_TYPE, BONUS_DECK_TYPES } from "@/lib/entitlements/config";
+import { deckTypesForApp, PRICE_ID_TO_DECK_TYPE } from "@/lib/entitlements/config";
 
 // Spec R5 (Rituals) / R4 (Unspoken Distance): someone who bought a real
 // product before this system existed, or before they first signed in,
@@ -82,15 +82,11 @@ export async function POST(req: Request) {
         if (!priceId) continue;
         const deckType = PRICE_ID_TO_DECK_TYPE[priceId];
         if (!deckType) continue;
+        if (alreadyEntitledDeckTypes.has(deckType)) continue;
+        if (grantedDeckTypes.includes(deckType)) continue;
 
-        const toGrant = [deckType, ...(BONUS_DECK_TYPES[priceId] ?? [])];
-        for (const dt of toGrant) {
-          if (alreadyEntitledDeckTypes.has(dt)) continue;
-          if (grantedDeckTypes.includes(dt)) continue;
-
-          await grantEntitlement(normalizedEmail, dt, candidate.id);
-          grantedDeckTypes.push(dt);
-        }
+        await grantEntitlement(normalizedEmail, deckType, candidate.id);
+        grantedDeckTypes.push(deckType);
       }
     }
 
