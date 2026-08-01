@@ -50,14 +50,16 @@ function TenTouchRitualsIndexContent() {
               href={`/practice/ten-touch-rituals/${e.slug}`}
               className="group flex items-center gap-4 px-4 py-4 transition hover:bg-ffy-cream-2 sm:px-6"
             >
-              <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl sm:h-20 sm:w-20">
-                <Image
-                  src={e.image}
-                  alt={e.imageAlt}
-                  fill
-                  sizes="80px"
-                  className="object-cover"
-                />
+              <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-ffy-cream-2 sm:h-20 sm:w-20">
+                {e.image && (
+                  <Image
+                    src={e.image}
+                    alt={e.imageAlt ?? ""}
+                    fill
+                    sizes="80px"
+                    className="object-cover"
+                  />
+                )}
               </div>
               <div className="min-w-0 flex-1">
                 {e.eyebrow && (

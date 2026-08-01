@@ -29,8 +29,11 @@ export type PracticeEntry = {
   eyebrow?: string;
   kind: "essay" | "ritual" | "closing";
   body: ContentBlock[];
-  image: string;
-  imageAlt: string;
+  // Optional: some Gamma sections genuinely have no real photo of their
+  // own. Leave both unset rather than borrowing another entry's photo —
+  // a missing image is honest, a reused one reads as a mistake.
+  image?: string;
+  imageAlt?: string;
   imageSide: "left" | "right";
 };
 

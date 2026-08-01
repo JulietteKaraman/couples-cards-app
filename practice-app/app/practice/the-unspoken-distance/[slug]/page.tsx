@@ -100,19 +100,21 @@ function DistanceEntryContent() {
   // entries don't need a separate treatment here, they read the same way).
   return (
     <main className={dark ? "min-h-screen bg-ffy-black" : "min-h-screen bg-ffy-cream"}>
-      <div className="relative h-[42vh] w-full overflow-hidden sm:h-[56vh]">
-        <Image
-          src={entry.image}
-          alt={entry.imageAlt}
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover"
-        />
-        {dark && (
-          <div className="absolute inset-0 bg-gradient-to-t from-ffy-black via-ffy-black/10 to-transparent" />
-        )}
-      </div>
+      {entry.image && (
+        <div className="relative h-[42vh] w-full overflow-hidden sm:h-[56vh]">
+          <Image
+            src={entry.image}
+            alt={entry.imageAlt ?? ""}
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover"
+          />
+          {dark && (
+            <div className="absolute inset-0 bg-gradient-to-t from-ffy-black via-ffy-black/10 to-transparent" />
+          )}
+        </div>
+      )}
 
       <div className="mx-auto max-w-2xl px-6 pb-14 pt-10">
         <Link

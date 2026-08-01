@@ -60,15 +60,17 @@ function TheUnspokenDistanceIndexContent() {
                 dark ? "hover:bg-white/5" : "hover:bg-ffy-cream-2"
               }`}
             >
-              <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl sm:h-20 sm:w-20">
-                <Image
-                  src={e.image}
-                  alt={e.imageAlt}
-                  fill
-                  sizes="80px"
-                  className="object-cover"
-                />
-              </div>
+              {e.image && (
+                <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl sm:h-20 sm:w-20">
+                  <Image
+                    src={e.image}
+                    alt={e.imageAlt ?? ""}
+                    fill
+                    sizes="80px"
+                    className="object-cover"
+                  />
+                </div>
+              )}
               <div className="min-w-0 flex-1">
                 {e.eyebrow && (
                   <p className={`text-xs uppercase tracking-wide ${dark ? "text-ffy-gold-pale" : "text-ffy-gold-deep"}`}>

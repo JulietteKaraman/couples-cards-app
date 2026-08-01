@@ -126,16 +126,18 @@ function RitualEntryContent() {
           imageFirst ? "md:flex-row" : "md:flex-row-reverse"
         }`}
       >
-        <div className="relative h-[46vh] w-full md:h-screen md:w-1/2">
-          <Image
-            src={entry.image}
-            alt={entry.imageAlt}
-            fill
-            priority
-            sizes="(min-width: 768px) 50vw, 100vw"
-            className="object-cover"
-          />
-        </div>
+        {entry.image && (
+          <div className="relative h-[46vh] w-full md:h-screen md:w-1/2">
+            <Image
+              src={entry.image}
+              alt={entry.imageAlt ?? ""}
+              fill
+              priority
+              sizes="(min-width: 768px) 50vw, 100vw"
+              className="object-cover"
+            />
+          </div>
+        )}
 
         <div className="flex w-full flex-col justify-center px-6 py-12 md:w-1/2 md:px-14 md:py-0">
           <Link

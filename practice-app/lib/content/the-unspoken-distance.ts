@@ -43,8 +43,7 @@ export const theUnspokenDistance: PracticeCollection = {
       order: 0,
       title: "Before You Read This",
       kind: "essay",
-      image: "/unspoken-distance/hero-couple-bar.jpeg",
-      imageAlt: "A couple sitting closely together, dressed elegantly, at a bar",
+      // No photo — none exists for this section in the source deck.
       imageSide: "left",
       body: [
         { kind: "p", text: "This is written to the man whose partner has gone quiet. That is the primary voice." },
@@ -131,8 +130,7 @@ export const theUnspokenDistance: PracticeCollection = {
       order: 3,
       title: "To Feel Safe Before She Can Open",
       kind: "essay",
-      image: "/unspoken-distance/hero-couple-bar.jpeg",
-      imageAlt: "A couple close together, at ease",
+      // No photo — none exists for this section in the source deck.
       imageSide: "right",
       body: [
         { kind: "p", text: "Everything else depends on this one." },
@@ -202,8 +200,7 @@ export const theUnspokenDistance: PracticeCollection = {
       order: 4,
       title: "To Be Seen Beyond Her Roles",
       kind: "essay",
-      image: "/unspoken-distance/couple-close-portrait.jpg",
-      imageAlt: "A close, quiet portrait of a couple",
+      // No photo — none exists for this section in the source deck.
       imageSide: "left",
       body: [
         { kind: "p", text: "She is a mother, maybe. A wife, a partner, a lover. A manager of the household. A keeper of the schedule. She does it well and she does it quietly and almost nobody notices." },
@@ -289,8 +286,7 @@ export const theUnspokenDistance: PracticeCollection = {
       order: 6,
       title: "A Partner, Not Just a Provider",
       kind: "essay",
-      image: "/unspoken-distance/transmitting-on-one-channel.jpeg",
-      imageAlt: "A quiet, ordinary moment between two people",
+      // No photo — none exists for this section in the source deck.
       imageSide: "left",
       body: [
         { kind: "p", text: "She wants to feel that you are in it with her.", emphasis: "bold" },
@@ -450,8 +446,7 @@ export const theUnspokenDistance: PracticeCollection = {
       order: 9,
       title: "Reigniting Her Love",
       kind: "essay",
-      image: "/unspoken-distance/closeness-that-doesnt-lead-somewhere.jpg",
-      imageAlt: "A quiet, unhurried moment of closeness",
+      // No photo — none exists for this section in the source deck.
       imageSide: "right",
       body: [
         { kind: "p", text: "She can respect you and still feel far away. She can admire your reliability, your commitment, your presence in the family, and still struggle to feel the warmth that used to come naturally." },
