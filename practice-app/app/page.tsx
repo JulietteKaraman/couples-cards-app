@@ -39,8 +39,8 @@ function LibraryContent() {
     <main className="min-h-screen bg-ffy-cream">
       <section className="relative flex h-[36vh] items-end overflow-hidden md:h-[46vh]">
         <Image
-          src="/rituals/hero.png"
-          alt="The Feel Fully You App"
+          src="/unspoken-distance/juliette-karaman-portrait.jpg"
+          alt="Juliette Karaman"
           fill
           priority
           className="object-cover"
