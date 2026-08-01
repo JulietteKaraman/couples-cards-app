@@ -5,7 +5,7 @@
 // bold/accent line, every closing "You stop being the man who X. You become
 // the man who Y." blockquote. Nothing summarised, nothing dropped, nothing
 // paraphrased into different words, per Juliette 31 Jul 2026: the app must
-// carry the SAME depth as the £77 paid guide, nothing thinned out.
+// carry the SAME depth as the £97 paid guide, nothing thinned out.
 //
 // The deck's own H1 typo "The Intimacy and communicaton Cards" is corrected
 // to "Communication" here (a real typo, not a stylistic choice, per spec).

@@ -6,9 +6,9 @@ const stripe = new Stripe(STRIPE_SECRET_KEY!, {
   apiVersion: "2026-01-28.clover",
 });
 
-const UNSPOKEN_DISTANCE_PRICE_ID = "price_1TzO4DCCw18geY15u7X9j7iw";
+const UNSPOKEN_DISTANCE_PRICE_ID = "price_1TnxAqCCw18geY153w22a2Ye"; // £97 — the guide now includes the free Couples Cards, back to £97 (1 Aug 2026)
 
-// Checkout for "The Unspoken Distance" (£77), no account required at
+// Checkout for "The Unspoken Distance" (£97), no account required at
 // checkout — matches the same pattern already used for
 // touch-rituals-checkout, so the success_url can send buyers straight to
 // a real thank-you page (feelfullyyou.com/thankyou-unspoken-distance)
