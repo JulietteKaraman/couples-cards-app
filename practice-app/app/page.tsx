@@ -7,6 +7,7 @@ import { tenTouchRituals } from "@/lib/content/ten-touch-rituals";
 import { theUnspokenDistance } from "@/lib/content/the-unspoken-distance";
 import { whenSheGoesQuiet } from "@/lib/content/when-she-goes-quiet";
 import { betweenTouches } from "@/lib/content/between-touches";
+import { CARDS_TASTER_COVER } from "@/lib/content/cards-taster";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { useAuth } from "@/components/providers/AuthProvider";
 import { getCompletedSlugs } from "@/lib/entitlements/progress";
@@ -156,6 +157,33 @@ function LibraryContent() {
               </a>
             );
           })}
+
+          {/* The Cards taster isn't a linear guide (PracticeCollection),
+              it's a draw-one-at-a-time mini-experience, so it's not in
+              ALL_COLLECTIONS — always free, always unlocked, no progress
+              count, its own route. See lib/content/cards-taster.ts. */}
+          <Link
+            href="/practice/cards-taster"
+            className="group flex items-center gap-5 overflow-hidden rounded-2xl border border-ffy-border bg-white/60 p-4 transition hover:border-ffy-gold sm:p-5"
+          >
+            <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-xl sm:h-24 sm:w-24">
+              <Image
+                src={CARDS_TASTER_COVER}
+                alt="Intimacy and Communication Cards, Taster"
+                fill
+                sizes="96px"
+                className="object-cover"
+              />
+            </div>
+            <div className="min-w-0 flex-1">
+              <h2 className="font-display text-xl font-semibold text-ffy-black group-hover:text-ffy-teal">
+                The Intimacy and Communication Cards
+              </h2>
+              <p className="mt-1 text-sm text-ffy-brown">Five free cards from the deck. Pull one, read it aloud.</p>
+              <p className="mt-2 text-xs uppercase tracking-wide text-ffy-gold-deep">Free taster</p>
+            </div>
+            <span className="text-ffy-gold">→</span>
+          </Link>
         </div>
       </div>
     </main>
