@@ -279,24 +279,33 @@ export function Blocks({ blocks, dark = false }: { blocks: ContentBlock[]; dark?
           }
 
           case "diagram":
-            // Gamma's own numbered step-flow cards — solid gold rounded
-            // cards, matching the deck's own accent-circle diagram
-            // treatment. Real content, never dropped as decorative.
+            // Matches Gamma's own "accent circle" step-diagram treatment:
+            // soft overlapping circles behind a staggered row of gold
+            // cards, on a dark stage — not a flat row. Real content,
+            // never dropped as decorative. Editable text, not an image.
             return (
-              <div key={i} className="flex flex-wrap gap-4">
-                {b.steps.map((step, si) => (
-                  <div
-                    key={si}
-                    className="min-w-[150px] flex-1 rounded-2xl bg-ffy-gold px-5 py-4 text-ffy-black"
-                  >
-                    <p className="font-display text-base font-bold leading-snug">
-                      {step.heading}
-                    </p>
-                    {step.text && (
-                      <p className="mt-1 text-sm leading-snug text-ffy-black/80">{step.text}</p>
-                    )}
-                  </div>
-                ))}
+              <div
+                key={i}
+                className="relative overflow-hidden rounded-3xl bg-ffy-black px-6 py-10 sm:px-10 sm:py-14"
+              >
+                <div className="pointer-events-none absolute -left-10 top-1/2 h-56 w-56 -translate-y-1/2 rounded-full bg-white/10 sm:h-72 sm:w-72" />
+                <div className="pointer-events-none absolute -right-6 bottom-0 h-40 w-40 translate-y-1/3 rounded-full bg-ffy-gold/25 sm:h-52 sm:w-52" />
+                <div className="relative flex flex-wrap justify-center gap-5 sm:gap-6">
+                  {b.steps.map((step, si) => (
+                    <div
+                      key={si}
+                      style={{ marginTop: si % 2 === 1 ? "2.5rem" : 0 }}
+                      className="w-full max-w-[220px] rounded-2xl bg-ffy-gold px-5 py-4 text-ffy-black shadow-[0_18px_40px_-12px_rgba(0,0,0,0.6)] sm:w-[220px]"
+                    >
+                      <p className="font-display text-base font-bold leading-snug">
+                        {step.heading}
+                      </p>
+                      {step.text && (
+                        <p className="mt-1 text-sm leading-snug text-ffy-black/80">{step.text}</p>
+                      )}
+                    </div>
+                  ))}
+                </div>
               </div>
             );
 
