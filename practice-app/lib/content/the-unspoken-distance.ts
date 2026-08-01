@@ -702,10 +702,13 @@ export const theUnspokenDistance: PracticeCollection = {
       order: 14,
       title: "The Intimacy and Communication Cards",
       kind: "essay",
-      image: "/unspoken-distance/cards-template.png",
-      imageAlt: "The Intimacy and Communication Cards, card template",
+      // No hero: the card template photo is a tall portrait, and the
+      // full-bleed hero slot is wide and short, object-cover crops it
+      // down to a sliver. It runs uncropped as the first inline image
+      // in the body instead, where images render object-contain.
       imageSide: "left",
       body: [
+        { kind: "image", src: "/unspoken-distance/cards-template.png", alt: "The Intimacy and Communication Cards, card template" },
         { kind: "p", text: "We all want to be seen, heard, and ultimately understood." },
         { kind: "p", text: "When we listen, we often listen to interject, fix, or are already making up the response in our minds. This stops that. It brings in structure." },
         { kind: "p", text: "Set a timer for fifteen minutes. Be somewhere quiet. One of you reads the prompt out loud:" },
