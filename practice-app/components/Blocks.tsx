@@ -7,9 +7,13 @@ function driveIdFromUrl(url: string): string | null {
   return m ? m[1] : null;
 }
 
-export function Blocks({ blocks }: { blocks: ContentBlock[] }) {
+export function Blocks({ blocks, dark = false }: { blocks: ContentBlock[]; dark?: boolean }) {
   return (
-    <div className="mt-6 flex flex-col gap-5 text-[1.05rem] leading-relaxed text-ffy-black">
+    <div
+      className={`mt-6 flex flex-col gap-5 text-[1.05rem] leading-relaxed ${
+        dark ? "text-ffy-cream" : "text-ffy-black"
+      }`}
+    >
       {blocks.map((b, i) => {
         switch (b.kind) {
           case "p":
@@ -18,9 +22,9 @@ export function Blocks({ blocks }: { blocks: ContentBlock[] }) {
                 key={i}
                 className={
                   b.emphasis === "bold"
-                    ? "font-display text-lg font-semibold leading-snug text-ffy-black"
+                    ? `font-display text-lg font-semibold leading-snug ${dark ? "text-ffy-cream" : "text-ffy-black"}`
                     : b.emphasis === "accent"
-                      ? "font-display text-lg font-semibold leading-snug text-ffy-gold-deep"
+                      ? `font-display text-lg font-semibold leading-snug ${dark ? "text-ffy-gold-pale" : "text-ffy-gold-deep"}`
                       : undefined
                 }
               >
@@ -32,7 +36,9 @@ export function Blocks({ blocks }: { blocks: ContentBlock[] }) {
             return (
               <p
                 key={i}
-                className="font-display text-2xl font-semibold leading-snug text-ffy-teal sm:text-[1.75rem]"
+                className={`font-display text-2xl font-semibold leading-snug sm:text-[1.75rem] ${
+                  dark ? "text-ffy-gold-pale" : "text-ffy-teal"
+                }`}
               >
                 {b.text}
               </p>
@@ -40,7 +46,10 @@ export function Blocks({ blocks }: { blocks: ContentBlock[] }) {
 
           case "quote":
             return (
-              <p key={i} className="font-display text-lg italic text-ffy-teal">
+              <p
+                key={i}
+                className={`font-display text-lg italic ${dark ? "text-ffy-gold-pale" : "text-ffy-teal"}`}
+              >
                 {b.text}
               </p>
             );
@@ -49,9 +58,17 @@ export function Blocks({ blocks }: { blocks: ContentBlock[] }) {
             return (
               <div
                 key={i}
-                className="rounded-xl border border-ffy-border bg-white/70 px-5 py-4"
+                className={
+                  dark
+                    ? "rounded-xl border border-ffy-gold/40 bg-white/5 px-5 py-4"
+                    : "rounded-xl border border-ffy-border bg-white/70 px-5 py-4"
+                }
               >
-                <p className="font-display text-sm font-semibold uppercase tracking-wide text-ffy-gold-deep">
+                <p
+                  className={`font-display text-sm font-semibold uppercase tracking-wide ${
+                    dark ? "text-ffy-gold-pale" : "text-ffy-gold-deep"
+                  }`}
+                >
                   {b.label}
                 </p>
                 <div className="mt-2 flex flex-col gap-2">
@@ -60,10 +77,12 @@ export function Blocks({ blocks }: { blocks: ContentBlock[] }) {
                       key={li}
                       className={
                         line.emphasis === "bold"
-                          ? "font-semibold text-ffy-black"
+                          ? `font-semibold ${dark ? "text-ffy-cream" : "text-ffy-black"}`
                           : line.emphasis === "accent"
-                            ? "font-display font-semibold text-ffy-gold-deep"
-                            : undefined
+                            ? `font-display font-semibold ${dark ? "text-ffy-gold-pale" : "text-ffy-gold-deep"}`
+                            : dark
+                              ? "text-ffy-cream/85"
+                              : undefined
                       }
                     >
                       {line.text}
@@ -75,16 +94,21 @@ export function Blocks({ blocks }: { blocks: ContentBlock[] }) {
 
           case "notice":
             return (
-              <div key={i} className="flex flex-col gap-2 border-l-2 border-ffy-gold pl-4">
+              <div
+                key={i}
+                className={`flex flex-col gap-2 border-l-2 pl-4 ${dark ? "border-ffy-gold-pale" : "border-ffy-gold"}`}
+              >
                 {b.lines.map((line, li) => (
                   <p
                     key={li}
                     className={
                       line.emphasis === "bold"
-                        ? "font-display text-base font-semibold not-italic text-ffy-black"
+                        ? `font-display text-base font-semibold not-italic ${dark ? "text-ffy-cream" : "text-ffy-black"}`
                         : line.emphasis === "accent"
-                          ? "font-display text-base font-semibold not-italic text-ffy-gold-deep"
-                          : "text-sm italic text-ffy-brown"
+                          ? `font-display text-base font-semibold not-italic ${dark ? "text-ffy-gold-pale" : "text-ffy-gold-deep"}`
+                          : dark
+                            ? "text-sm italic text-ffy-cream/70"
+                            : "text-sm italic text-ffy-brown"
                     }
                   >
                     {line.text}
@@ -95,7 +119,10 @@ export function Blocks({ blocks }: { blocks: ContentBlock[] }) {
 
           case "why":
             return (
-              <div key={i} className="rounded-xl bg-ffy-teal px-5 py-5 text-ffy-cream">
+              <div
+                key={i}
+                className={`rounded-xl px-5 py-5 ${dark ? "bg-white/5 border border-ffy-gold/40 text-ffy-cream" : "bg-ffy-teal text-ffy-cream"}`}
+              >
                 <p className="font-display text-xs font-semibold uppercase tracking-wide text-ffy-gold-pale">
                   Why it works
                 </p>
@@ -125,7 +152,11 @@ export function Blocks({ blocks }: { blocks: ContentBlock[] }) {
                 href={b.href}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex w-fit items-center gap-2 rounded-full border border-ffy-gold bg-ffy-cream-2 px-5 py-2.5 font-display text-sm font-medium text-ffy-teal transition hover:bg-ffy-gold hover:text-ffy-cream"
+                className={
+                  dark
+                    ? "inline-flex w-fit items-center gap-2 rounded-full border border-ffy-gold bg-transparent px-5 py-2.5 font-display text-sm font-medium text-ffy-gold-pale transition hover:bg-ffy-gold hover:text-ffy-black"
+                    : "inline-flex w-fit items-center gap-2 rounded-full border border-ffy-gold bg-ffy-cream-2 px-5 py-2.5 font-display text-sm font-medium text-ffy-teal transition hover:bg-ffy-gold hover:text-ffy-cream"
+                }
               >
                 {b.text}
               </a>
@@ -133,7 +164,10 @@ export function Blocks({ blocks }: { blocks: ContentBlock[] }) {
 
           case "image":
             return (
-              <div key={i} className="relative w-full overflow-hidden rounded-2xl bg-ffy-cream-2">
+              <div
+                key={i}
+                className={`relative w-full overflow-hidden rounded-2xl ${dark ? "bg-white/5" : "bg-ffy-cream-2"}`}
+              >
                 <Image
                   src={b.src}
                   alt={b.alt}
@@ -169,7 +203,7 @@ export function Blocks({ blocks }: { blocks: ContentBlock[] }) {
             const id = driveIdFromUrl(b.url);
             return (
               <div key={i} className="flex flex-col gap-2">
-                <p className="text-xs uppercase tracking-wide text-ffy-gold-deep">{b.label}</p>
+                <p className={`text-xs uppercase tracking-wide ${dark ? "text-ffy-gold-pale" : "text-ffy-gold-deep"}`}>{b.label}</p>
                 {id ? (
                   <div className="aspect-video w-full overflow-hidden rounded-2xl bg-ffy-black">
                     <iframe
@@ -180,7 +214,7 @@ export function Blocks({ blocks }: { blocks: ContentBlock[] }) {
                     />
                   </div>
                 ) : (
-                  <a href={b.url} target="_blank" rel="noreferrer" className="text-ffy-gold-deep underline">
+                  <a href={b.url} target="_blank" rel="noreferrer" className={dark ? "text-ffy-gold-pale underline" : "text-ffy-gold-deep underline"}>
                     {b.label}
                   </a>
                 )}
@@ -192,9 +226,9 @@ export function Blocks({ blocks }: { blocks: ContentBlock[] }) {
             const id = driveIdFromUrl(b.url);
             return (
               <div key={i} className="flex flex-col gap-2">
-                <p className="text-xs uppercase tracking-wide text-ffy-gold-deep">{b.label}</p>
+                <p className={`text-xs uppercase tracking-wide ${dark ? "text-ffy-gold-pale" : "text-ffy-gold-deep"}`}>{b.label}</p>
                 {id ? (
-                  <div className="h-16 w-full overflow-hidden rounded-xl border border-ffy-gold/60 bg-ffy-cream-2">
+                  <div className={`h-16 w-full overflow-hidden rounded-xl border ${dark ? "border-ffy-gold/40 bg-white/5" : "border-ffy-gold/60 bg-ffy-cream-2"}`}>
                     <iframe
                       src={`https://drive.google.com/file/d/${id}/preview`}
                       className="h-full w-full"
@@ -203,7 +237,7 @@ export function Blocks({ blocks }: { blocks: ContentBlock[] }) {
                     />
                   </div>
                 ) : (
-                  <a href={b.url} target="_blank" rel="noreferrer" className="text-ffy-gold-deep underline">
+                  <a href={b.url} target="_blank" rel="noreferrer" className={dark ? "text-ffy-gold-pale underline" : "text-ffy-gold-deep underline"}>
                     {b.label}
                   </a>
                 )}
@@ -221,8 +255,15 @@ export function Blocks({ blocks }: { blocks: ContentBlock[] }) {
               blueGrey: "bg-[#d8dfe1] text-ffy-black",
               black: "bg-ffy-black text-ffy-gold-pale",
             };
+            const darkTheme: Record<string, string> = {
+              teal: "bg-white/5 border border-ffy-teal text-ffy-cream",
+              gold: "bg-ffy-gold text-ffy-black",
+              brown: "bg-white/5 border border-ffy-gold/40 text-ffy-cream",
+              blueGrey: "bg-white/10 text-ffy-cream",
+              black: "bg-black/40 border border-ffy-gold-pale/40 text-ffy-gold-pale",
+            };
             return (
-              <div key={i} className={`rounded-2xl px-6 py-6 ${theme[b.color]}`}>
+              <div key={i} className={`rounded-2xl px-6 py-6 ${dark ? darkTheme[b.color] : theme[b.color]}`}>
                 <p className="font-display text-lg font-bold uppercase tracking-wide">
                   {b.category}
                 </p>
@@ -238,25 +279,52 @@ export function Blocks({ blocks }: { blocks: ContentBlock[] }) {
           }
 
           case "diagram":
-            // Gamma's own numbered step-flow cards. Rendered as a
-            // connected row of gold-numbered steps (wrapping to a
-            // vertical stack on mobile), matching the visual weight the
-            // deck itself gives these — never dropped as decorative.
+            // Gamma's own numbered step-flow cards — solid gold rounded
+            // cards, matching the deck's own accent-circle diagram
+            // treatment. Real content, never dropped as decorative.
             return (
-              <div
-                key={i}
-                className="grid grid-cols-1 gap-4 rounded-2xl border border-ffy-gold/40 bg-ffy-cream-2 p-5 sm:grid-cols-[repeat(auto-fit,minmax(140px,1fr))] sm:gap-0 sm:divide-x sm:divide-ffy-gold/30"
-              >
+              <div key={i} className="flex flex-wrap gap-4">
                 {b.steps.map((step, si) => (
-                  <div key={si} className="flex flex-col items-start gap-2 sm:px-5 sm:first:pl-0">
-                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-ffy-gold font-display text-sm font-bold text-ffy-cream">
-                      {si + 1}
-                    </span>
-                    <p className="font-display text-base font-semibold leading-snug text-ffy-teal">
+                  <div
+                    key={si}
+                    className="min-w-[150px] flex-1 rounded-2xl bg-ffy-gold px-5 py-4 text-ffy-black"
+                  >
+                    <p className="font-display text-base font-bold leading-snug">
                       {step.heading}
                     </p>
                     {step.text && (
-                      <p className="text-sm leading-snug text-ffy-brown">{step.text}</p>
+                      <p className="mt-1 text-sm leading-snug text-ffy-black/80">{step.text}</p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            );
+
+          case "stats":
+            // Gamma's own big-number stat row ("27 / 650+ / 980"). Real
+            // proof, always carried through, never thinned to plain text.
+            return (
+              <div key={i} className="grid grid-cols-1 gap-8 py-2 sm:grid-cols-3">
+                {b.items.map((item, si) => (
+                  <div key={si} className="flex flex-col gap-1">
+                    <p
+                      className={`font-display text-5xl font-bold leading-none ${
+                        dark ? "text-ffy-cream" : "text-ffy-teal"
+                      }`}
+                    >
+                      {item.number}
+                    </p>
+                    <p
+                      className={`font-display text-xs font-semibold uppercase tracking-[0.15em] ${
+                        dark ? "text-ffy-gold-pale" : "text-ffy-gold-deep"
+                      }`}
+                    >
+                      {item.label}
+                    </p>
+                    {item.caption && (
+                      <p className={`text-sm ${dark ? "text-ffy-cream/70" : "text-ffy-brown"}`}>
+                        {item.caption}
+                      </p>
                     )}
                   </div>
                 ))}

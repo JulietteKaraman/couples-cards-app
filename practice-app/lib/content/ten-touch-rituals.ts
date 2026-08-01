@@ -42,6 +42,10 @@ export type PracticeCollection = {
   heroImage: string;
   unlockMode: "free-browse" | "sequential";
   entries: PracticeEntry[];
+  // "dark" matches a guide's own moody Gamma theme (black background,
+  // cream text, gold accents — same 4 brand colours, just inverted).
+  // Defaults to the app's usual light theme when omitted.
+  theme?: "light" | "dark";
 };
 
 export const tenTouchRituals: PracticeCollection = {

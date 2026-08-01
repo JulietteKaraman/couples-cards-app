@@ -35,6 +35,7 @@ export const theUnspokenDistance: PracticeCollection = {
   byline: "By Juliette Karaman",
   heroImage: "/unspoken-distance/hero-couple-bar.jpeg",
   unlockMode: "free-browse",
+  theme: "dark",
   entries: [
     // ------------------------------------------------------------- intro
     {
@@ -80,7 +81,14 @@ export const theUnspokenDistance: PracticeCollection = {
         { kind: "p", text: "I started this work with children who felt everything and couldn't translate it into something the world around them could receive." },
         { kind: "p", text: "That is still the work. The people are different. The tools have multiplied." },
         { kind: "p", text: "The work has never changed." },
-        { kind: "p", text: "Twenty-seven years of practice. Over 650 couples. 980 women, held, heard, and helped back into their own bodies.", emphasis: "bold" },
+        {
+          kind: "stats",
+          items: [
+            { number: "27", label: "Years of Practice", caption: "Working at the edge of intimacy, body, and connection." },
+            { number: "650+", label: "Couples", caption: "Sitting with the silence and helping it become something else." },
+            { number: "980", label: "Women", caption: "Held, heard, and helped back into their own bodies." },
+          ],
+        },
         { kind: "p", text: "What I want to give you in this guide is not a technique. It's a way of seeing." },
         { kind: "p", text: "When you see what is actually happening in her body, you stop trying to fix the wrong thing.", emphasis: "accent" },
         {

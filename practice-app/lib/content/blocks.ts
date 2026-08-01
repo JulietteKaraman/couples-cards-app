@@ -22,6 +22,11 @@ export type PromptGroupColor = "teal" | "gold" | "brown" | "blueGrey" | "black";
 // filler to skip. Every Gamma-sourced guide must carry these through.
 export type DiagramStep = { heading: string; text?: string };
 
+// A row of big standout numbers with labels underneath (Gamma's own
+// "27 / 650+ / 980" stat-card layout) — real proof, not decorative,
+// same never-skip rule as diagram.
+export type StatItem = { number: string; label: string; caption?: string };
+
 export type ContentBlock =
   | { kind: "p"; text: string; emphasis?: "bold" | "accent" }
   | { kind: "quote"; text: string }
@@ -35,4 +40,5 @@ export type ContentBlock =
   | { kind: "driveVideo"; url: string; label: string }
   | { kind: "driveAudio"; url: string; label: string }
   | { kind: "promptGroup"; category: string; color: PromptGroupColor; prompts: string[] }
-  | { kind: "diagram"; steps: DiagramStep[] };
+  | { kind: "diagram"; steps: DiagramStep[] }
+  | { kind: "stats"; items: StatItem[] };

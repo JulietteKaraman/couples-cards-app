@@ -23,6 +23,7 @@ function DistanceEntryContent() {
   const slug = params.slug as string;
   const { user } = useAuth();
   const [completed, setCompleted] = useState(false);
+  const dark = theUnspokenDistance.theme === "dark";
 
   const entries = theUnspokenDistance.entries;
   const index = entries.findIndex((e) => e.slug === slug);
@@ -45,19 +46,18 @@ function DistanceEntryContent() {
 
   const prev = entries[index - 1];
   const next = entries[index + 1];
-  const imageFirst = entry.imageSide === "left";
 
   const markCompleteBlock =
     entry.kind === "ritual" ? (
       <div className="mt-8">
         {completed ? (
-          <p className="inline-flex items-center gap-2 rounded-full bg-ffy-teal px-5 py-2.5 font-display text-sm font-medium text-ffy-cream">
+          <p className="inline-flex items-center gap-2 rounded-full bg-ffy-gold px-5 py-2.5 font-display text-sm font-medium text-ffy-black">
             ✓ Marked done
           </p>
         ) : (
           <button
             onClick={handleMarkComplete}
-            className="rounded-full border border-ffy-gold px-5 py-2.5 font-display text-sm font-medium text-ffy-teal transition hover:bg-ffy-gold hover:text-ffy-cream"
+            className="rounded-full border border-ffy-gold px-5 py-2.5 font-display text-sm font-medium text-ffy-gold-pale transition hover:bg-ffy-gold hover:text-ffy-black"
           >
             Mark this one done
           </button>
@@ -65,120 +65,81 @@ function DistanceEntryContent() {
       </div>
     ) : null;
 
-  // "closing" entries (e.g. Meet Juliette / Your Next Yes) are built from
-  // several stacked photo+text moments, not one persistent side photo — so
-  // they render as a single content column, same pattern as Rituals.
-  if (entry.kind === "closing") {
-    return (
-      <main className="min-h-screen bg-ffy-cream">
-        <div className="mx-auto max-w-2xl px-6 py-14">
-          <Link
-            href="/practice/the-unspoken-distance"
-            className="text-sm text-ffy-gold-deep hover:underline"
-          >
-            ← The Unspoken Distance
-          </Link>
+  const navRow = (
+    <div
+      className={`mx-auto mt-12 flex max-w-2xl items-center justify-between border-t px-6 py-6 text-sm ${
+        dark ? "border-ffy-gold/20" : "border-ffy-border"
+      }`}
+    >
+      {prev ? (
+        <Link
+          href={`/practice/the-unspoken-distance/${prev.slug}`}
+          className={dark ? "text-ffy-gold-pale hover:underline" : "text-ffy-gold-deep hover:underline"}
+        >
+          ← {prev.title}
+        </Link>
+      ) : (
+        <span />
+      )}
+      {next ? (
+        <Link
+          href={`/practice/the-unspoken-distance/${next.slug}`}
+          className={dark ? "text-ffy-gold-pale hover:underline" : "text-ffy-gold-deep hover:underline"}
+        >
+          {next.title} →
+        </Link>
+      ) : (
+        <span />
+      )}
+    </div>
+  );
 
-          {entry.eyebrow && (
-            <p className="mt-6 text-xs uppercase tracking-[0.15em] text-ffy-gold-deep">
-              {entry.eyebrow}
-            </p>
-          )}
-          <h1 className="mt-2 font-display text-3xl font-semibold leading-tight text-ffy-teal sm:text-4xl">
-            {entry.title}
-          </h1>
-
-          <Blocks blocks={entry.body} />
-
-          <div className="mt-12 flex items-center justify-between border-t border-ffy-border pt-6 text-sm">
-            {prev ? (
-              <Link
-                href={`/practice/the-unspoken-distance/${prev.slug}`}
-                className="text-ffy-gold-deep hover:underline"
-              >
-                ← {prev.title}
-              </Link>
-            ) : (
-              <span />
-            )}
-            {next ? (
-              <Link
-                href={`/practice/the-unspoken-distance/${next.slug}`}
-                className="text-ffy-gold-deep hover:underline"
-              >
-                {next.title} →
-              </Link>
-            ) : (
-              <span />
-            )}
-          </div>
-        </div>
-      </main>
-    );
-  }
-
+  // Editorial layout, matching the deck's own presentation: a full-width
+  // photo at the top, then one flowing column of content below — not a
+  // 50/50 split screen. Same shape for every entry kind (the "closing"
+  // entries don't need a separate treatment here, they read the same way).
   return (
-    <main className="min-h-screen bg-ffy-cream">
-      <section
-        className={`mx-auto flex max-w-5xl flex-col ${
-          imageFirst ? "md:flex-row" : "md:flex-row-reverse"
-        }`}
-      >
-        <div className="relative h-[46vh] w-full md:h-screen md:w-1/2">
-          <Image
-            src={entry.image}
-            alt={entry.imageAlt}
-            fill
-            priority
-            sizes="(min-width: 768px) 50vw, 100vw"
-            className="object-cover"
-          />
-        </div>
-
-        <div className="flex w-full flex-col justify-center px-6 py-12 md:w-1/2 md:px-14 md:py-0">
-          <Link
-            href="/practice/the-unspoken-distance"
-            className="text-sm text-ffy-gold-deep hover:underline"
-          >
-            ← The Unspoken Distance
-          </Link>
-
-          {entry.eyebrow && (
-            <p className="mt-6 text-xs uppercase tracking-[0.15em] text-ffy-gold-deep">
-              {entry.eyebrow}
-            </p>
-          )}
-          <h1 className="mt-2 font-display text-3xl font-semibold leading-tight text-ffy-teal sm:text-4xl">
-            {entry.title}
-          </h1>
-
-          <Blocks blocks={entry.body} />
-          {markCompleteBlock}
-        </div>
-      </section>
-
-      <div className="mx-auto flex max-w-5xl items-center justify-between border-t border-ffy-border px-6 py-6 text-sm md:px-14">
-        {prev ? (
-          <Link
-            href={`/practice/the-unspoken-distance/${prev.slug}`}
-            className="text-ffy-gold-deep hover:underline"
-          >
-            ← {prev.title}
-          </Link>
-        ) : (
-          <span />
-        )}
-        {next ? (
-          <Link
-            href={`/practice/the-unspoken-distance/${next.slug}`}
-            className="text-ffy-gold-deep hover:underline"
-          >
-            {next.title} →
-          </Link>
-        ) : (
-          <span />
+    <main className={dark ? "min-h-screen bg-ffy-black" : "min-h-screen bg-ffy-cream"}>
+      <div className="relative h-[42vh] w-full overflow-hidden sm:h-[56vh]">
+        <Image
+          src={entry.image}
+          alt={entry.imageAlt}
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover"
+        />
+        {dark && (
+          <div className="absolute inset-0 bg-gradient-to-t from-ffy-black via-ffy-black/10 to-transparent" />
         )}
       </div>
+
+      <div className="mx-auto max-w-2xl px-6 pb-14 pt-10">
+        <Link
+          href="/practice/the-unspoken-distance"
+          className={`text-sm hover:underline ${dark ? "text-ffy-gold-pale" : "text-ffy-gold-deep"}`}
+        >
+          ← The Unspoken Distance
+        </Link>
+
+        {entry.eyebrow && (
+          <p className={`mt-6 text-xs uppercase tracking-[0.15em] ${dark ? "text-ffy-gold-pale" : "text-ffy-gold-deep"}`}>
+            {entry.eyebrow}
+          </p>
+        )}
+        <h1
+          className={`mt-2 font-display text-3xl font-semibold leading-tight sm:text-4xl ${
+            dark ? "text-ffy-cream" : "text-ffy-teal"
+          }`}
+        >
+          {entry.title}
+        </h1>
+
+        <Blocks blocks={entry.body} dark={dark} />
+        {markCompleteBlock}
+      </div>
+
+      {navRow}
     </main>
   );
 }
