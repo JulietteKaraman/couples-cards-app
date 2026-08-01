@@ -440,6 +440,8 @@ export const theUnspokenDistance: PracticeCollection = {
             { text: "Walk in settled, not performing." },
           ],
         },
+        { kind: "audio", src: "/unspoken-distance/audio/the-restaurant-wall.m4a", label: "Listen: The Restaurant, Her Back to the Wall" },
+        { kind: "instagram", url: "https://www.instagram.com/reel/DZnQdo_oSkN/" },
         {
           kind: "promptGroup",
           category: "How This Pattern Will Show Up",

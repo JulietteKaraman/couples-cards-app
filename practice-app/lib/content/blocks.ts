@@ -39,6 +39,8 @@ export type ContentBlock =
   | { kind: "video"; vimeoId: string }
   | { kind: "driveVideo"; url: string; label: string }
   | { kind: "driveAudio"; url: string; label: string }
+  | { kind: "audio"; src: string; label: string }
+  | { kind: "instagram"; url: string }
   | { kind: "promptGroup"; category: string; color: PromptGroupColor; prompts: string[] }
   | { kind: "diagram"; steps: DiagramStep[] }
   | { kind: "stats"; items: StatItem[] };

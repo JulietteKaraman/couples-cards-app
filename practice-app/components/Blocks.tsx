@@ -7,6 +7,11 @@ function driveIdFromUrl(url: string): string | null {
   return m ? m[1] : null;
 }
 
+function instagramEmbedUrl(url: string): string | null {
+  const m = url.match(/instagram\.com\/(reel|p|tv)\/([^/?]+)/);
+  return m ? `https://www.instagram.com/${m[1]}/${m[2]}/embed` : null;
+}
+
 // Lines like "Emotional: touch that carries feeling..." are a term being
 // defined, not a plain sentence. Gamma always gave the term its own bold,
 // larger, coloured treatment so it reads as a label, not flat prose. Split
@@ -295,6 +300,39 @@ export function Blocks({ blocks, dark = false }: { blocks: ContentBlock[]; dark?
                 ) : (
                   <a href={b.url} target="_blank" rel="noreferrer" className={dark ? "text-ffy-gold-pale underline" : "text-ffy-gold-deep underline"}>
                     {b.label}
+                  </a>
+                )}
+              </div>
+            );
+          }
+
+          case "audio":
+            return (
+              <div
+                key={i}
+                className={`flex flex-col gap-2 rounded-xl border px-5 py-4 ${
+                  dark ? "border-ffy-gold/40 bg-white/5" : "border-ffy-gold/60 bg-ffy-cream-2"
+                }`}
+              >
+                <p className={`text-xs uppercase tracking-wide ${dark ? "text-ffy-gold-pale" : "text-ffy-gold-deep"}`}>{b.label}</p>
+                <audio controls className="w-full" src={b.src} />
+              </div>
+            );
+
+          case "instagram": {
+            const embedUrl = instagramEmbedUrl(b.url);
+            return (
+              <div key={i} className="mx-auto w-full max-w-sm overflow-hidden rounded-2xl bg-ffy-black">
+                {embedUrl ? (
+                  <iframe
+                    src={embedUrl}
+                    className="aspect-[9/16] w-full border-0"
+                    allow="autoplay; encrypted-media"
+                    title="Instagram reel"
+                  />
+                ) : (
+                  <a href={b.url} target="_blank" rel="noreferrer" className="block p-4 text-ffy-gold-pale underline">
+                    Watch the reel →
                   </a>
                 )}
               </div>
