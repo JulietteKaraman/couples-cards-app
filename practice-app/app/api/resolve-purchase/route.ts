@@ -102,6 +102,8 @@ export async function POST(req: Request) {
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : "Unknown error";
     console.error("resolve-purchase error:", message);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    // TEMP: surfacing the real message while diagnosing a live 500 — revert
+    // to a generic message once the underlying bug is fixed.
+    return NextResponse.json({ error: "Internal server error", detail: message }, { status: 500 });
   }
 }
