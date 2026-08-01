@@ -62,7 +62,7 @@ export const theUnspokenDistance: PracticeCollection = {
       eyebrow: "Before We Begin",
       kind: "essay",
       image: "/unspoken-distance/couple-close-portrait.jpg",
-      imageAlt: "A close, quiet portrait of a couple",
+      imageAlt: "A close, quiet portrait",
       imageSide: "right",
       body: [
         { kind: "p", text: "Read that again if you need to.", emphasis: "bold" },
@@ -540,8 +540,8 @@ export const theUnspokenDistance: PracticeCollection = {
       order: 11,
       title: "The Groundedness Practice",
       kind: "essay",
-      image: "/unspoken-distance/the-grounding-practice.png",
-      imageAlt: "A grounded, quiet moment",
+      image: "/unspoken-distance/feet-on-the-floor.jpg",
+      imageAlt: "Bare feet on the floor, grounded",
       imageSide: "right",
       body: [
         { kind: "p", text: "This is the practice underneath everything else in this guide." },
