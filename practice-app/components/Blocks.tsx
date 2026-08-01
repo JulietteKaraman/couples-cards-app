@@ -237,6 +237,32 @@ export function Blocks({ blocks }: { blocks: ContentBlock[] }) {
             );
           }
 
+          case "diagram":
+            // Gamma's own numbered step-flow cards. Rendered as a
+            // connected row of gold-numbered steps (wrapping to a
+            // vertical stack on mobile), matching the visual weight the
+            // deck itself gives these — never dropped as decorative.
+            return (
+              <div
+                key={i}
+                className="grid grid-cols-1 gap-4 rounded-2xl border border-ffy-gold/40 bg-ffy-cream-2 p-5 sm:grid-cols-[repeat(auto-fit,minmax(140px,1fr))] sm:gap-0 sm:divide-x sm:divide-ffy-gold/30"
+              >
+                {b.steps.map((step, si) => (
+                  <div key={si} className="flex flex-col items-start gap-2 sm:px-5 sm:first:pl-0">
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-ffy-gold font-display text-sm font-bold text-ffy-cream">
+                      {si + 1}
+                    </span>
+                    <p className="font-display text-base font-semibold leading-snug text-ffy-teal">
+                      {step.heading}
+                    </p>
+                    {step.text && (
+                      <p className="text-sm leading-snug text-ffy-brown">{step.text}</p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            );
+
           default:
             return null;
         }

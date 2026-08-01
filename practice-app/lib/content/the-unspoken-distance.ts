@@ -83,6 +83,14 @@ export const theUnspokenDistance: PracticeCollection = {
         { kind: "p", text: "Twenty-seven years of practice. Over 650 couples. 980 women, held, heard, and helped back into their own bodies.", emphasis: "bold" },
         { kind: "p", text: "What I want to give you in this guide is not a technique. It's a way of seeing." },
         { kind: "p", text: "When you see what is actually happening in her body, you stop trying to fix the wrong thing.", emphasis: "accent" },
+        {
+          kind: "diagram",
+          steps: [
+            { heading: "Observe Symptoms", text: "Recognise bodily signals clearly." },
+            { heading: "Understand Causes", text: "Identify the underlying drivers." },
+            { heading: "Target Interventions", text: "Apply appropriate, focused care." },
+          ],
+        },
         { kind: "quote", text: "What This Guide Is Not" },
         { kind: "p", text: "It is not a manual for getting her to want you again. It is not a list of things to say or do. It is not a guarantee." },
         { kind: "p", text: "If you read it and something opens in you, that is the point." },
@@ -128,6 +136,14 @@ export const theUnspokenDistance: PracticeCollection = {
         { kind: "p", text: "That quieting cannot be demanded." },
         { kind: "p", text: "It cannot be rushed. It arrives when the conditions are right." },
         { kind: "p", text: "You are one of those conditions." },
+        {
+          kind: "diagram",
+          steps: [
+            { heading: "Right Conditions", text: "Environment aligned for it." },
+            { heading: "Timing", text: "Act when the opportunity arises." },
+            { heading: "Preparedness", text: "Resources and capacity ready." },
+          ],
+        },
         { kind: "p", text: "Not what you say." },
         { kind: "p", text: "Not what you do." },
         { kind: "p", text: "The quality of how you are in the room with her.", emphasis: "bold" },
@@ -740,6 +756,15 @@ export const theUnspokenDistance: PracticeCollection = {
         { kind: "p", text: "Touch is not a small part of rebuilding." },
         { kind: "p", text: "It is the mechanism.", emphasis: "accent" },
         { kind: "p", text: "When her body receives safe touch, her nervous system shifts. Oxytocin rises. Cortisol drops. Her blood pressure lowers. Her vagus nerve activates, moving her from vigilance into rest." },
+        {
+          kind: "diagram",
+          steps: [
+            { heading: "Safe touch" },
+            { heading: "Oxytocin rises" },
+            { heading: "Cortisol drops" },
+            { heading: "Vagal rest" },
+          ],
+        },
         { kind: "p", text: "Research on couples shows that a partner's touch produces higher oxytocin and lower cortisol than anyone else's." },
         { kind: "p", text: "Your touch has more power to calm her nervous system than any other person on this planet." },
         { kind: "p", text: "But if the touch arrives without structure, if it has no beginning and no end, if she does not know what she is saying yes to or how long it will last, her body cannot settle into it." },
@@ -767,6 +792,14 @@ export const theUnspokenDistance: PracticeCollection = {
             { text: "When you are ready to reach for her, bring structure." },
             { text: "“I would love to hold you for three minutes. Do you have capacity for that?”" },
             { text: "Set a timer if you need to. She does not have to wonder when it ends. You do not have to guess if you are holding too long. The timer holds it for both of you." },
+          ],
+        },
+        {
+          kind: "diagram",
+          steps: [
+            { heading: "Ask for Consent", text: "Check if she agrees." },
+            { heading: "Set a Time Frame", text: "Three minutes, specified." },
+            { heading: "Respect Capacity", text: "Accept any answer." },
           ],
         },
         {
@@ -936,13 +969,12 @@ export const theUnspokenDistance: PracticeCollection = {
       body: [
         { kind: "p", text: "Trust is not a decision she makes. It is a feeling she has in her body when she is with you." },
         {
-          kind: "step",
-          label: "When She's With You",
-          lines: [
-            { text: "Calm Heartbeat — a steady, relaxed rhythm." },
-            { text: "Warmth — feeling cosy and safe." },
-            { text: "Lightness — a carefree, buoyant mood." },
-            { text: "Focused Presence — attentive and engaged." },
+          kind: "diagram",
+          steps: [
+            { heading: "Calm Heartbeat", text: "A steady, relaxed rhythm." },
+            { heading: "Warmth", text: "Feeling cosy and safe." },
+            { heading: "Lightness", text: "A carefree, buoyant mood." },
+            { heading: "Focused Presence", text: "Attentive and engaged." },
           ],
         },
         { kind: "quote", text: "What Trust Actually Is" },
@@ -1006,6 +1038,15 @@ export const theUnspokenDistance: PracticeCollection = {
       imageSide: "left",
       body: [
         { kind: "p", text: "Everything in this guide can be undone by stopping. Connection is not a destination. It is a practice." },
+        {
+          kind: "diagram",
+          steps: [
+            { heading: "Practice Daily" },
+            { heading: "Stay Present" },
+            { heading: "Embrace Reversibility" },
+            { heading: "Connection Over Destination" },
+          ],
+        },
         { kind: "quote", text: "Keep Polarity Alive" },
         { kind: "image", src: "/unspoken-distance/keep-polarity-alive.png", alt: "Yin and yang, polarity" },
         { kind: "p", text: "Stay in your own life." },
@@ -1022,6 +1063,15 @@ export const theUnspokenDistance: PracticeCollection = {
             { text: "Monthly: something new together. Novelty keeps both of you present with each other." },
           ],
         },
+        {
+          kind: "diagram",
+          steps: [
+            { heading: "Morning Anchor" },
+            { heading: "Evening Reflection" },
+            { heading: "Weekly Review" },
+            { heading: "Gratitude Practice" },
+          ],
+        },
         { kind: "quote", text: "Keep Erotic Tension Alive" },
         { kind: "image", src: "/unspoken-distance/date-night.jpg", alt: "A couple on a date at night" },
         { kind: "p", text: "Flirt with her like you did before the relationship became a household to manage." },
@@ -1034,6 +1084,15 @@ export const theUnspokenDistance: PracticeCollection = {
         { kind: "p", text: "Take care of your body: not for appearance but because a man who is in his body is easier to be close to than one who has retreated from it." },
         { kind: "p", text: "The woman beside you is also growing. The relationship needs to have room for both of you to be in motion." },
         { kind: "p", text: "Stagnation in one partner eventually contracts the other. Stay moving. Stay interested. Stay alive to what is possible." },
+        {
+          kind: "diagram",
+          steps: [
+            { heading: "Personal Goals" },
+            { heading: "Self-Challenge" },
+            { heading: "Ownership" },
+            { heading: "Growth Plan" },
+          ],
+        },
         {
           kind: "step",
           label: "The Practice",
@@ -1140,14 +1199,21 @@ export const theUnspokenDistance: PracticeCollection = {
         { kind: "p", text: "WhatsApp access throughout." },
         { kind: "p", text: "Not by only talking about it. By working with the body." },
         {
-          kind: "step",
-          label: "How the Shift Happens",
-          lines: [
-            { text: "Awareness — recognise the gap between words and practice." },
-            { text: "Embodiment — engage the body to translate understanding." },
-            { text: "Integration — combine physical work with daily life." },
-            { text: "Reflection — assess changes through bodily feedback." },
-            { text: "Sustainment — maintain habits through ongoing practice." },
+          kind: "diagram",
+          steps: [
+            { heading: "Locate the Pattern" },
+            { heading: "Move the Pattern" },
+            { heading: "Apply Directly" },
+          ],
+        },
+        {
+          kind: "diagram",
+          steps: [
+            { heading: "Awareness", text: "Recognise the gap between words and practice." },
+            { heading: "Embodiment", text: "Engage the body to translate understanding." },
+            { heading: "Integration", text: "Combine physical work with daily life." },
+            { heading: "Reflection", text: "Assess changes through bodily feedback." },
+            { heading: "Sustainment", text: "Maintain habits through ongoing practice." },
           ],
         },
         { kind: "p", text: "This is for the man who knows what is wrong and wants it handled." },
@@ -1176,11 +1242,28 @@ export const theUnspokenDistance: PracticeCollection = {
         },
         { kind: "p", text: "This is not a course you watch." },
         { kind: "p", text: "It is an experience you have." },
+        {
+          kind: "diagram",
+          steps: [
+            { heading: "Structured Communication" },
+            { heading: "Specific Touch Dates" },
+            { heading: "Clear Roles" },
+            { heading: "Individual Tools" },
+          ],
+        },
         { kind: "quote", text: "What Becomes Possible" },
         { kind: "p", text: "I have watched couples who had not touched each other with desire in years rediscover each other in this programme." },
         { kind: "p", text: "I have watched men who came in certain the pattern was their wife realise, gently, that the first shift was in them." },
         { kind: "p", text: "I have watched women who had spent years behind glass, present but not fully there, find their way back into their own bodies." },
         { kind: "quote", text: "“The work is quiet. It is not dramatic. It goes into places that most modalities never reach.”" },
+        {
+          kind: "diagram",
+          steps: [
+            { heading: "Make the Leap", text: "Decide to move from theory to experience." },
+            { heading: "Take Action", text: "Engage with practical steps now." },
+            { heading: "Feel the Change", text: "Notice real impact and growth." },
+          ],
+        },
         { kind: "p", text: "If you are ready to stop reading about this and start feeling it, this is where that happens." },
         { kind: "p", text: "This is not a course you watch. It is an experience you have.", emphasis: "accent" },
         { kind: "link", text: "Explore The Beginning →", href: "https://feelfullyyou.com/thebeginning" },

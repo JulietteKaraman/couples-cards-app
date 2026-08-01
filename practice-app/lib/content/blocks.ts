@@ -16,6 +16,12 @@ export type WhyLine = {
 // the five categories read as visibly different at a glance.
 export type PromptGroupColor = "teal" | "gold" | "brown" | "blueGrey" | "black";
 
+// Gamma's own "step diagram" cards (a numbered flow, each step a short
+// heading plus an optional line under it) — Juliette places these
+// deliberately in her decks; they are real content, never decorative
+// filler to skip. Every Gamma-sourced guide must carry these through.
+export type DiagramStep = { heading: string; text?: string };
+
 export type ContentBlock =
   | { kind: "p"; text: string; emphasis?: "bold" | "accent" }
   | { kind: "quote"; text: string }
@@ -28,4 +34,5 @@ export type ContentBlock =
   | { kind: "video"; vimeoId: string }
   | { kind: "driveVideo"; url: string; label: string }
   | { kind: "driveAudio"; url: string; label: string }
-  | { kind: "promptGroup"; category: string; color: PromptGroupColor; prompts: string[] };
+  | { kind: "promptGroup"; category: string; color: PromptGroupColor; prompts: string[] }
+  | { kind: "diagram"; steps: DiagramStep[] };
