@@ -299,7 +299,8 @@ export const theUnspokenDistance: PracticeCollection = {
       order: 6,
       title: "A Partner, Not Just a Provider",
       kind: "essay",
-      // No photo — none exists for this section in the source deck.
+      image: "/unspoken-distance/man-provider-stressed.jpg",
+      imageAlt: "A man at a laptop, head in his hands, worn down by providing",
       imageSide: "left",
       body: [
         { kind: "p", text: "She wants to feel that you are in it with her.", emphasis: "bold" },
@@ -461,7 +462,8 @@ export const theUnspokenDistance: PracticeCollection = {
       order: 9,
       title: "Reigniting Her Love",
       kind: "essay",
-      // No photo — none exists for this section in the source deck.
+      image: "/unspoken-distance/couple-slow-dance.jpg",
+      imageAlt: "An older couple slow dancing, close, tender",
       imageSide: "right",
       body: [
         { kind: "p", text: "She can respect you and still feel far away. She can admire your reliability, your commitment, your presence in the family, and still struggle to feel the warmth that used to come naturally." },
