@@ -578,6 +578,8 @@ export const betweenTouches: PracticeCollection = {
       order: 11,
       title: "Your Next Step",
       kind: "closing",
+      image: "/between-touches/your-next-step-bg.png",
+      imageAlt: "Warm gold light",
       imageSide: "right",
       body: [
         { kind: "p", text: "This wasn't just a guide.", emphasis: "bold" },
