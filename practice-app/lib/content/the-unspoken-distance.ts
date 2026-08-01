@@ -13,12 +13,16 @@
 // ("It important", a stray "<" character) are silently corrected the same
 // way; no wording, claim, or mechanic was changed or added.
 //
-// Two additions beyond the deck, both real videos Juliette supplied
+// Three additions beyond the deck, all real videos Juliette supplied
 // directly (1 Aug 2026), not deck content:
 // - "Her Withdrawal Is Not a Verdict on You." ends with a grounding
 //   moment (feet on the floor, one breath, arrive) — the "Arriving in
 //   your body" video (vimeoId 1214800042) plays right after it, as
 //   early in the guide as the grounding cue itself.
+// - "To Feel Safe Before She Can Open"'s Embodiment Exercise ends with
+//   "Now walk in." — the "Entering the Room Without an Agenda" video
+//   (vimeoId 1214803125) plays right after it, as the demonstration of
+//   that exact moment.
 // - "The Groundedness Practice" entry carries the "theunspokendistancemovement"
 //   embodiment video (vimeoId 1208083538), placed after The Grounding
 //   Practice section. The 2-4 sentence blurb framing it as a weekly
@@ -185,6 +189,7 @@ export const theUnspokenDistance: PracticeCollection = {
             { text: "Now walk in." },
           ],
         },
+        { kind: "video", vimeoId: "1214803125" },
         {
           kind: "promptGroup",
           category: "How This Pattern Will Show Up",
@@ -520,6 +525,7 @@ export const theUnspokenDistance: PracticeCollection = {
         { kind: "p", text: "Then read her." },
         { kind: "p", text: "Has she just come off a full day with the children or work? Is her body turned away, occupied, somewhere else entirely?" },
         { kind: "p", text: "Waiting for the right moment is not passive. It is one of the most respectful things you can do.", emphasis: "bold" },
+        { kind: "video", vimeoId: "1214803449" },
         {
           kind: "step",
           label: "The Practice",
