@@ -211,7 +211,8 @@ export const theUnspokenDistance: PracticeCollection = {
       order: 4,
       title: "To Be Seen Beyond Her Roles",
       kind: "essay",
-      // No photo — none exists for this section in the source deck.
+      image: "/unspoken-distance/couple-distance-profile.jpg",
+      imageAlt: "A close, quiet moment between two people, one in focus, one just out of reach",
       imageSide: "left",
       body: [
         { kind: "p", text: "She is a mother, maybe. A wife, a partner, a lover. A manager of the household. A keeper of the schedule. She does it well and she does it quietly and almost nobody notices." },
