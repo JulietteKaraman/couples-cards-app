@@ -43,4 +43,9 @@ export type ContentBlock =
   | { kind: "instagram"; url: string }
   | { kind: "promptGroup"; category: string; color: PromptGroupColor; prompts: string[] }
   | { kind: "diagram"; steps: DiagramStep[] }
-  | { kind: "stats"; items: StatItem[] };
+  | { kind: "stats"; items: StatItem[] }
+  // Juliette's recurring "What She Says / What She Really Means"
+  // translation tables (When She Goes Quiet, Between Touches, and likely
+  // future guides). Real content, same never-skip rule as diagram/stats.
+  // Rendered as stacked labelled cards, not an HTML table, phone-first.
+  | { kind: "table"; headers: string[]; rows: string[][] };

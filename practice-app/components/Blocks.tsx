@@ -403,6 +403,47 @@ export function Blocks({ blocks, dark = false }: { blocks: ContentBlock[]; dark?
               </div>
             );
 
+          case "table":
+            // "What She Says / What She Really Means" style translation
+            // tables. Stacked labelled cards, not a scrolling HTML table,
+            // so it stays readable on a phone. Real content, never
+            // thinned into plain prose.
+            return (
+              <div key={i} className="flex flex-col gap-3">
+                {b.rows.map((row, ri) => (
+                  <div
+                    key={ri}
+                    className={
+                      dark
+                        ? "rounded-xl border border-ffy-gold/40 bg-white/5 px-5 py-4"
+                        : "rounded-xl border border-ffy-border bg-white/70 px-5 py-4"
+                    }
+                  >
+                    <div className="flex flex-col gap-2.5">
+                      {row.map((cell, ci) => (
+                        <div key={ci}>
+                          <p
+                            className={`font-display text-[11px] font-semibold uppercase tracking-wide ${
+                              dark ? "text-ffy-gold-pale" : "text-ffy-gold-deep"
+                            }`}
+                          >
+                            {b.headers[ci]}
+                          </p>
+                          <p
+                            className={`mt-0.5 text-[0.98rem] leading-snug ${
+                              dark ? "text-ffy-cream/90" : "text-ffy-black"
+                            }`}
+                          >
+                            {cell}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            );
+
           case "stats":
             // Gamma's own big-number stat row ("27 / 650+ / 980"). Real
             // proof, always carried through, never thinned to plain text.

@@ -40,10 +40,38 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setEntitledCollections(slugs);
   }, []);
 
+  // Free guides (FREE_DECK_TYPES) are granted automatically to every
+  // signed-in account, no purchase, no price ever shown — see
+  // app/api/ensure-free-access. Called before loadEntitlements so a
+  // first-time visitor's free guides are already unlocked the moment the
+  // library renders, not one refresh later. Failure here (network hiccup,
+  // route down) is non-fatal — entitlements still load, the free guides
+  // just wait for the next session refresh to appear, not worth blocking
+  // sign-in over.
+  const ensureFreeAccessAndLoad = useCallback(
+    async (userId: string, email: string | undefined) => {
+      if (email) {
+        try {
+          await fetch("/api/ensure-free-access", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ userId, email }),
+          });
+        } catch (err) {
+          console.error("ensure-free-access failed:", err);
+        }
+      }
+      await loadEntitlements(userId);
+    },
+    [loadEntitlements]
+  );
+
   useEffect(() => {
     supabaseBrowser.auth.getSession().then(({ data }) => {
       setUser(data.session?.user ?? null);
-      if (data.session?.user) loadEntitlements(data.session.user.id);
+      if (data.session?.user) {
+        ensureFreeAccessAndLoad(data.session.user.id, data.session.user.email);
+      }
       setLoading(false);
     });
 
@@ -51,7 +79,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       (_event, session) => {
         setUser(session?.user ?? null);
         if (session?.user) {
-          loadEntitlements(session.user.id);
+          ensureFreeAccessAndLoad(session.user.id, session.user.email);
         } else {
           setEntitledCollections([]);
         }
@@ -59,7 +87,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     );
 
     return () => listener.subscription.unsubscribe();
-  }, [loadEntitlements]);
+  }, [ensureFreeAccessAndLoad]);
 
   async function sendMagicLink(email: string) {
     const { error } = await supabaseBrowser.auth.signInWithOtp({
