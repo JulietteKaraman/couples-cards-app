@@ -102,8 +102,7 @@ export const theUnspokenDistance: PracticeCollection = {
         { kind: "p", text: "It is not a manual for getting her to want you again. It is not a list of things to say or do. It is not a guarantee." },
         { kind: "p", text: "If you read it and something opens in you, that is the point." },
         { kind: "big", text: "Ready? Let's go in." },
-        { kind: "image", src: "/unspoken-distance/feet-on-the-floor.jpg", alt: "Bare feet on an old wooden floor" },
-        { kind: "p", text: "Before you read further — put both feet flat on the floor.", emphasis: "accent" },
+        { kind: "p", text: "Before you read further, put both feet flat on the floor.", emphasis: "accent" },
         { kind: "p", text: "Take one full breath. Arrive in this moment.", emphasis: "accent" },
         { kind: "p", text: "This guide works differently when your body is here for it.", emphasis: "accent" },
       ],
@@ -543,8 +542,10 @@ export const theUnspokenDistance: PracticeCollection = {
       order: 11,
       title: "The Groundedness Practice",
       kind: "essay",
-      image: "/unspoken-distance/feet-on-the-floor.jpg",
-      imageAlt: "Bare feet on the floor, grounded",
+      // No hero photo here — the video itself is the visual for this
+      // entry, not a Gamma section, and the deck's only nearby photo
+      // (feet-on-the-floor) turned out to be an unlicensed watermarked
+      // stock image, so it's out entirely rather than shown broken.
       imageSide: "right",
       body: [
         { kind: "p", text: "This is the practice underneath everything else in this guide." },
@@ -742,8 +743,8 @@ export const theUnspokenDistance: PracticeCollection = {
       title: "The Hidden Trauma",
       eyebrow: "Part Six",
       kind: "essay",
-      image: "/unspoken-distance/three-minute-timer.jpg",
-      imageAlt: "A three minute countdown timer",
+      // No photo — the deck's only image here was a watermarked stock
+      // clip-art timer, unusable.
       imageSide: "right",
       body: [
         { kind: "p", text: "This is the section most guides skip. It's important, yet it is uncomfortable to name." },
@@ -839,8 +840,10 @@ export const theUnspokenDistance: PracticeCollection = {
       title: "Her Love Language, Touch Language and Pleasure Language",
       eyebrow: "Part Seven",
       kind: "essay",
-      image: "/unspoken-distance/love-languages.jpeg",
-      imageAlt: "A quiet, tender moment",
+      // No hero photo — the deck's own image here was someone else's
+      // copyrighted book cover (Gary Chapman's "The 5 Love Languages"),
+      // not usable. The Touch and Pleasure Language photos further down
+      // in this entry are real and carry the visual weight instead.
       imageSide: "left",
       body: [
         { kind: "p", text: "Here is something most couples never discover. The way she experiences love, touch, and connection is completely specific to her. It operates on three layers, and most guides only cover one." },
@@ -966,8 +969,8 @@ export const theUnspokenDistance: PracticeCollection = {
       title: "Rebuilding Trust",
       eyebrow: "Part Eight",
       kind: "essay",
-      image: "/unspoken-distance/rebuilding-trust.jpg",
-      imageAlt: "Two people rebuilding closeness",
+      // No photo — the deck's own image here was unrelated, inappropriate
+      // stock content, not usable.
       imageSide: "right",
       body: [
         { kind: "p", text: "Trust is not a decision she makes. It is a feeling she has in her body when she is with you." },
