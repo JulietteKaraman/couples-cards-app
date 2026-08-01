@@ -46,16 +46,25 @@ export async function POST(req: Request) {
     });
 
     // Real Stripe purchases only (spec R6/R8 — free/comped access is never
-    // matched here, since it never created a Stripe charge). Pulls the
-    // most recent 100 checkout sessions (covers Payment Link purchases
-    // too, since Stripe creates a real Checkout Session behind every
-    // Payment Link payment) and filters client-side by email, since
-    // Stripe's list endpoint doesn't reliably filter by customer email.
-    const sessions = await stripe.checkout.sessions.list({ limit: 100 });
+    // matched here, since it never created a Stripe charge, though a 100%-
+    // off coupon still counts: Stripe marks that "no_payment_required", a
+    // real completed checkout, not "unpaid"). Pulls the most recent 100
+    // checkout sessions WITH line items expanded in the same call (covers
+    // Payment Link purchases too, since Stripe creates a real Checkout
+    // Session behind every Payment Link payment) and filters client-side
+    // by email, since Stripe's list endpoint doesn't reliably filter by
+    // customer email. Expanding line_items up front avoids one extra
+    // Stripe API round-trip per candidate session — an account with many
+    // past purchases (e.g. the business's own email, used for testing)
+    // was timing out the function doing those serially.
+    const sessions = await stripe.checkout.sessions.list({
+      limit: 100,
+      expand: ["data.line_items"],
+    });
 
     const candidates = sessions.data.filter(
       (s) =>
-        s.payment_status === "paid" &&
+        (s.payment_status === "paid" || s.payment_status === "no_payment_required") &&
         s.customer_details?.email?.toLowerCase() === normalizedEmail
     );
 
@@ -65,16 +74,9 @@ export async function POST(req: Request) {
     const grantedDeckTypes: string[] = [];
 
     for (const candidate of candidates) {
-      let priceIds: (string | null | undefined)[] = [];
-
-      if (candidate.line_items?.data) {
-        priceIds = candidate.line_items.data.map((li) => li.price?.id);
-      } else {
-        const full = await stripe.checkout.sessions.retrieve(candidate.id, {
-          expand: ["line_items"],
-        });
-        priceIds = (full.line_items?.data ?? []).map((li) => li.price?.id);
-      }
+      const priceIds = (candidate.line_items?.data ?? []).map(
+        (li) => li.price?.id
+      );
 
       for (const priceId of priceIds) {
         if (!priceId) continue;
