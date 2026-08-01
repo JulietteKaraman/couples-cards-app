@@ -118,10 +118,10 @@ function BetweenTouchesEntryContent() {
 
       <div className="mx-auto max-w-2xl px-6 pb-14 pt-10">
         <Link
-          href="/practice/between-touches"
+          href="/"
           className={`text-sm hover:underline ${dark ? "text-ffy-gold-pale" : "text-ffy-gold-deep"}`}
         >
-          ← Between Touches
+          ← Your library
         </Link>
 
         {entry.eyebrow && (

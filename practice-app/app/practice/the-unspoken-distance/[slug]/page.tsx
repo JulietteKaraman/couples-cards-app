@@ -118,10 +118,10 @@ function DistanceEntryContent() {
 
       <div className="mx-auto max-w-2xl px-6 pb-14 pt-10">
         <Link
-          href="/practice/the-unspoken-distance"
+          href="/"
           className={`text-sm hover:underline ${dark ? "text-ffy-gold-pale" : "text-ffy-gold-deep"}`}
         >
-          ← The Unspoken Distance
+          ← Your library
         </Link>
 
         {entry.eyebrow && (

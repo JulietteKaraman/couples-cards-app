@@ -75,10 +75,10 @@ function RitualEntryContent() {
       <main className="min-h-screen bg-ffy-cream">
         <div className="mx-auto max-w-2xl px-6 py-14">
           <Link
-            href="/practice/ten-touch-rituals"
+            href="/"
             className="text-sm text-ffy-gold-deep hover:underline"
           >
-            ← 10 Touch Rituals
+            ← Your library
           </Link>
 
           {entry.eyebrow && (
@@ -141,10 +141,10 @@ function RitualEntryContent() {
 
         <div className="flex w-full flex-col justify-center px-6 py-12 md:w-1/2 md:px-14 md:py-0">
           <Link
-            href="/practice/ten-touch-rituals"
+            href="/"
             className="text-sm text-ffy-gold-deep hover:underline"
           >
-            ← 10 Touch Rituals
+            ← Your library
           </Link>
 
           {entry.eyebrow && (

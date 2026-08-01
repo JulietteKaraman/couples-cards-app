@@ -39,7 +39,6 @@ export const whenSheGoesQuiet: PracticeCollection = {
   byline: "By Juliette Karaman",
   heroImage: "/when-she-goes-quiet/hero.jpg",
   unlockMode: "free-browse",
-  theme: "dark",
   entries: [
     // ------------------------------------------------------------- intro
     {
@@ -72,6 +71,8 @@ export const whenSheGoesQuiet: PracticeCollection = {
       order: 1,
       title: "What She's Not Saying",
       kind: "essay",
+      image: "/when-she-goes-quiet/whats-not-saying.png",
+      imageAlt: "A couple standing apart in a garden, her turned away",
       imageSide: "right",
       body: [
         { kind: "p", text: "Most women did not wake up one day and decide to leave.", emphasis: "bold" },
@@ -97,6 +98,8 @@ export const whenSheGoesQuiet: PracticeCollection = {
       order: 2,
       title: "The Translation",
       kind: "essay",
+      image: "/when-she-goes-quiet/the-translation.jpeg",
+      imageAlt: "Two women close together, one comforting the other",
       imageSide: "left",
       body: [
         { kind: "p", text: "Here is what she has been saying, and what she has meant. Read this slowly." },
@@ -149,6 +152,8 @@ export const whenSheGoesQuiet: PracticeCollection = {
       order: 4,
       title: "You Only Notice Now That She Is Gone",
       kind: "essay",
+      image: "/when-she-goes-quiet/you-only-notice-now.jpeg",
+      imageAlt: "A woman's silhouette walking away through a doorway",
       imageSide: "left",
       body: [
         { kind: "p", text: "The body speaks before words do. It speaks even when the person does not know what they are saying." },
@@ -274,6 +279,8 @@ export const whenSheGoesQuiet: PracticeCollection = {
       order: 8,
       title: "Three: Touch as a Question",
       kind: "ritual",
+      image: "/when-she-goes-quiet/touch-as-a-question.jpeg",
+      imageAlt: "Two hands reaching toward each other",
       imageSide: "left",
       body: [
         { kind: "p", text: "Most men have been taught, without knowing it, that touch is something you do to someone." },
@@ -306,6 +313,8 @@ export const whenSheGoesQuiet: PracticeCollection = {
       order: 9,
       title: "Four: The 3-Minute Hold",
       kind: "ritual",
+      image: "/when-she-goes-quiet/the-3-minute-hold.png",
+      imageAlt: "A silhouetted couple embracing",
       imageSide: "right",
       body: [
         { kind: "p", text: "If she is willing, try this once.", emphasis: "bold" },
@@ -337,6 +346,8 @@ export const whenSheGoesQuiet: PracticeCollection = {
       order: 10,
       title: "Five: The One Conversation",
       kind: "ritual",
+      image: "/when-she-goes-quiet/the-one-conversation.png",
+      imageAlt: "Close-up of hands holding a set of the Intimacy and Communication Cards",
       imageSide: "left",
       body: [
         { kind: "p", text: "Not a big conversation.", emphasis: "bold" },
@@ -383,6 +394,8 @@ export const whenSheGoesQuiet: PracticeCollection = {
       order: 11,
       title: "A Note on Getting Her Back",
       kind: "essay",
+      image: "/when-she-goes-quiet/getting-her-back.png",
+      imageAlt: "Two women sitting close together on a sofa",
       imageSide: "right",
       body: [
         { kind: "quote", text: "“I just want things to go back to how they were.”" },
@@ -427,6 +440,8 @@ export const whenSheGoesQuiet: PracticeCollection = {
       title: "Meet Juliette",
       eyebrow: "Intimacy and touch expert",
       kind: "closing",
+      image: "/when-she-goes-quiet/meet-juliette.png",
+      imageAlt: "Juliette Karaman",
       imageSide: "right",
       body: [
         { kind: "p", text: "Intimacy and touch expert." },
