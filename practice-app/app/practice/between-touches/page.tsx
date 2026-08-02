@@ -20,25 +20,31 @@ function BetweenTouchesIndexContent() {
 
   return (
     <main className={dark ? "min-h-screen bg-ffy-black" : "min-h-screen bg-ffy-cream"}>
-      <section className="relative flex h-[42vh] items-end overflow-hidden md:h-[52vh]">
+      {/* This cover already has the title, subtitle, and byline designed
+          into the image itself (a book-cover graphic, not a mood photo),
+          so it renders object-contain at full width instead of the
+          object-cover crop every other guide's plain background photo
+          uses — cropping this one cut the baked-in title off at both
+          edges. No separate live heading either, it would just repeat
+          what the cover already says. */}
+      <div className={`relative w-full overflow-hidden ${dark ? "bg-ffy-black" : "bg-ffy-cream"}`}>
         <Image
           src={heroImage}
-          alt="Between Touches"
-          fill
+          alt={`${title} — ${subtitle}`}
+          width={1600}
+          height={1258}
           priority
-          className="object-cover"
+          className="h-auto w-full"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-ffy-black/90 via-ffy-black/30 to-transparent" />
-        <div className="relative z-10 mx-auto w-full max-w-3xl px-6 pb-10">
-          <Link href="/" className="text-sm text-ffy-gold-pale hover:underline">
+        <div className="absolute left-0 top-0 p-4">
+          <Link
+            href="/"
+            className={`text-sm hover:underline ${dark ? "text-ffy-gold-pale" : "text-ffy-gold-deep"}`}
+          >
             ← Your library
           </Link>
-          <h1 className="mt-3 font-display text-4xl font-semibold text-ffy-cream sm:text-5xl">
-            {title}
-          </h1>
-          <p className="mt-2 max-w-lg text-ffy-gold-pale">{subtitle}</p>
         </div>
-      </section>
+      </div>
 
       <div className="mx-auto max-w-3xl px-6 py-10">
         <p className={`text-xs uppercase tracking-[0.15em] ${dark ? "text-ffy-gold-pale" : "text-ffy-gold-deep"}`}>
