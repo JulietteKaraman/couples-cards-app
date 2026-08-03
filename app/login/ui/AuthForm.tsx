@@ -77,7 +77,21 @@ export default function AuthForm({
         window.location.href = redirectAfterLogin;
       }
     } catch (err: any) {
-      setMsg(authError ?? err.message ?? "Something went wrong.");
+      const message = authError ?? err.message ?? "Something went wrong.";
+      // Supabase's raw "User already registered" told the person nothing
+      // about what to actually do next (Juliette, 3 Aug 2026, right after
+      // the mode-sync fix: she re-created an account she'd already made
+      // and got stuck on this exact dead end). Switch them straight into
+      // sign-in with a next step spelled out, instead of leaving them on
+      // the signup form with an error and no path forward.
+      if (mode === "signup" && /already registered|already exists/i.test(message)) {
+        setMode("signin");
+        setMsg(
+          "That email already has an account. Try signing in below — if you don't know the password, tap “Forgot password?” and we'll email you a reset link."
+        );
+      } else {
+        setMsg(message);
+      }
     } finally {
       setLoading(false);
     }
