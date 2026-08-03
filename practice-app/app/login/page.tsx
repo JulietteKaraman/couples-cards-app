@@ -92,8 +92,9 @@ function LoginPageContent() {
         ) : (
           <form onSubmit={handleSubmit} className="mt-6 flex flex-col gap-3">
             <p className="text-sm text-ffy-brown">
-              Enter the email you used to buy, and we&rsquo;ll send you a
-              link to open your library.
+              Enter your email and we&rsquo;ll send you a link to open your
+              library. Free practices unlock straight away, no purchase
+              needed, plus anything you&rsquo;ve already bought.
             </p>
             <input
               type="email"
