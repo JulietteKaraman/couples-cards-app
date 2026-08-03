@@ -67,6 +67,48 @@ const EXTERNAL_OFFERS = [
   },
 ];
 
+// The Touch Reset Quiz: free, but it doesn't live in this app at all, its
+// question flow, scoring, and results live on the main marketing site.
+// Same shape as Touch Base / Cards Taster (full-colour image, "Free" label,
+// always unlocked) but an external link that opens the real quiz in a new
+// tab, not an in-app route — there's no PracticeCollection or content file
+// for it here, and there doesn't need to be (Juliette, 2 Aug 2026: it
+// should sit on the app with all the free & paid resources).
+function FreeExternalTile({
+  title,
+  subtitle,
+  heroImage,
+  href,
+  note = "Free",
+}: {
+  title: string;
+  subtitle: string;
+  heroImage: string;
+  href: string;
+  note?: string;
+}) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noreferrer"
+      className="group flex items-center gap-5 overflow-hidden rounded-2xl border border-ffy-border bg-white/60 p-4 transition hover:border-ffy-gold sm:p-5"
+    >
+      <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-xl sm:h-24 sm:w-24">
+        <Image src={heroImage} alt={title} fill sizes="96px" className="object-cover" />
+      </div>
+      <div className="min-w-0 flex-1">
+        <h2 className="font-display text-xl font-semibold text-ffy-black group-hover:text-ffy-teal">
+          {title}
+        </h2>
+        <p className="mt-1 text-sm text-ffy-brown">{subtitle}</p>
+        <p className="mt-2 text-xs uppercase tracking-wide text-ffy-gold-deep">{note}</p>
+      </div>
+      <span className="text-ffy-gold">→</span>
+    </a>
+  );
+}
+
 function LockedOfferTile({
   title,
   subtitle,
@@ -254,6 +296,17 @@ function LibraryContent() {
             </div>
             <span className="text-ffy-gold">→</span>
           </Link>
+
+          {/* The Touch Reset Quiz — free, always unlocked, but the quiz
+              itself (questions, scoring, results) lives on the main site,
+              not in this app. See FreeExternalTile above. */}
+          <FreeExternalTile
+            title="The Touch Reset Quiz"
+            subtitle="Five minutes. Find your Touch Pattern and the language your body has been waiting for."
+            heroImage="/offers/touch-reset-quiz-cover.jpg"
+            href="https://feelfullyyou.com/touch-reset-quiz"
+            note="Free · 5 minutes"
+          />
 
           {/* Offers with no in-app content at all (Repair Kit, One Touch) —
               always locked, always pointing out to the real sales page.
