@@ -34,7 +34,14 @@ export async function GET(req: Request) {
       mode: "payment",
       ...(discounts ? { discounts } : { allow_promotion_codes: true }),
       line_items: [{ price: TOUCH_RITUALS_PRICE_ID, quantity: 1 }],
-      success_url: "https://feelfullyyou.com/trip-wire",
+      // Routes through rituals-success (same app, same Stripe client) so the
+      // email just typed at checkout can be looked up server-side and handed
+      // to the thank-you page — see that route for why. Without this, buyers
+      // were typing their email a second time at app.feelfullyyou.com/login,
+      // which read as a broken duplicate "sign up again" step (flagged by
+      // Juliette 1 Aug 2026).
+      success_url:
+        "https://couplecards.netlify.app/api/rituals-success?session_id={CHECKOUT_SESSION_ID}",
       cancel_url: "https://feelfullyyou.com/",
     });
 

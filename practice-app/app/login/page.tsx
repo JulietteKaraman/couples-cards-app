@@ -1,27 +1,70 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { useAuth } from "@/components/providers/AuthProvider";
 
 export default function LoginPage() {
+  return (
+    <Suspense fallback={<LoginShell />}>
+      <LoginPageContent />
+    </Suspense>
+  );
+}
+
+function LoginShell() {
+  return (
+    <main className="flex min-h-screen items-center justify-center bg-ffy-cream px-6">
+      <div className="w-full max-w-sm rounded-2xl border border-ffy-border bg-white/70 p-8 text-center">
+        <h1 className="font-display text-2xl font-semibold text-ffy-teal">
+          The Feel Fully You App
+        </h1>
+      </div>
+    </main>
+  );
+}
+
+function LoginPageContent() {
   const { sendMagicLink } = useAuth();
-  const [email, setEmail] = useState("");
+  const searchParams = useSearchParams();
+  const prefillEmail = searchParams.get("email") ?? "";
+
+  const [email, setEmail] = useState(prefillEmail);
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
     "idle"
   );
   const [errorMessage, setErrorMessage] = useState("");
+  const autoSent = useRef(false);
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    if (!email.trim()) return;
+  async function send(targetEmail: string) {
+    if (!targetEmail.trim()) return;
     setStatus("sending");
-    const { error } = await sendMagicLink(email);
+    const { error } = await sendMagicLink(targetEmail);
     if (error) {
       setErrorMessage(error);
       setStatus("error");
       return;
     }
     setStatus("sent");
+  }
+
+  // Arriving straight from the checkout thank-you page with ?email= already
+  // known (Stripe collected it moments ago via rituals-success) — skip
+  // asking again and fire the magic link immediately. This is the fix for
+  // Juliette's "sign up again with their name" complaint (1 Aug 2026): the
+  // buyer now only ever types their email once, at checkout. Ref guard
+  // stops React StrictMode's dev double-invoke from sending two emails.
+  useEffect(() => {
+    if (prefillEmail && !autoSent.current) {
+      autoSent.current = true;
+      send(prefillEmail);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [prefillEmail]);
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    await send(email);
   }
 
   return (
@@ -37,6 +80,13 @@ export default function LoginPage() {
             <p className="mt-2 text-sm text-ffy-brown">
               We sent a link to <strong>{email}</strong>. Tap it on this
               device to sign in, no password needed.
+            </p>
+          </div>
+        ) : status === "sending" && prefillEmail ? (
+          <div className="mt-6">
+            <p className="text-ffy-black">Sending your link…</p>
+            <p className="mt-2 text-sm text-ffy-brown">
+              to <strong>{prefillEmail}</strong>
             </p>
           </div>
         ) : (
