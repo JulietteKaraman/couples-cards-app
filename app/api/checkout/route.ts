@@ -93,6 +93,7 @@ export async function POST(req: Request) {
     // back to the manual promotion-code box. Stripe does not allow discounts
     // and allow_promotion_codes on the same session.
     let discounts: Stripe.Checkout.SessionCreateParams.Discount[] | undefined;
+    let promoIsFree = false;
     if (promo && typeof promo === "string") {
       try {
         const codes = await stripe.promotionCodes.list({
@@ -102,13 +103,22 @@ export async function POST(req: Request) {
         });
         if (codes.data.length > 0) {
           discounts = [{ promotion_code: codes.data[0].id }];
-          console.log("Auto-applying promo code:", codes.data[0].code);
+          promoIsFree = codes.data[0].coupon?.percent_off === 100;
+          console.log("Auto-applying promo code:", codes.data[0].code, "fully comped:", promoIsFree);
         } else {
           console.log("Promo code not found or inactive, ignoring:", promo);
         }
       } catch (promoError: any) {
         console.error("Promo lookup failed, continuing without:", promoError.message);
       }
+    }
+
+    // A fully comped purchase (e.g. CONFIDENCE for Confidence Magazine readers)
+    // skips the paid completion tripwire and goes straight into the app —
+    // someone who just claimed a deck free shouldn't immediately hit a "pay
+    // £40 more" upsell. Juliette, 3 Aug 2026.
+    if (promoIsFree) {
+      successUrl = `${SITE_URL}/app?success=true`;
     }
 
     const session = await withRetry(
