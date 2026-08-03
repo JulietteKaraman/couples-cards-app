@@ -17,6 +17,8 @@ interface AuthContextType {
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (email: string, password: string, firstName: string, lastName: string) => Promise<void>;
   signOut: () => Promise<void>;
+  resetPassword: (email: string) => Promise<void>;
+  updatePassword: (password: string) => Promise<void>;
   clearError: () => void;
   refreshAccess: () => Promise<void>;
 }
@@ -167,6 +169,41 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
+  // Sends a Supabase recovery email with a link back to /reset-password on
+  // this app. Fixes the previously-dead "Forgot your password? Reset it
+  // from the login screen" text on the login page — there was no actual
+  // mechanism behind that line, only "email support and we'll unlock it
+  // for you", which doesn't scale (Juliette, 3 Aug 2026).
+  async function resetPassword(email: string) {
+    setError(null);
+    try {
+      const { error } = await supabaseBrowser.auth.resetPasswordForEmail(email, {
+        redirectTo:
+          typeof window !== "undefined"
+            ? `${window.location.origin}/reset-password`
+            : undefined,
+      });
+      if (error) throw error;
+    } catch (err: any) {
+      setError(err.message ?? "Unable to send reset email");
+      throw err;
+    }
+  }
+
+  // Called from the /reset-password page once Supabase has exchanged the
+  // emailed recovery link for a session (supabase-js does this
+  // automatically on load via the URL's token).
+  async function updatePassword(password: string) {
+    setError(null);
+    try {
+      const { error } = await supabaseBrowser.auth.updateUser({ password });
+      if (error) throw error;
+    } catch (err: any) {
+      setError(err.message ?? "Unable to update password");
+      throw err;
+    }
+  }
+
   function clearError() {
     setError(null);
   }
@@ -184,6 +221,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         signIn,
         signUp,
         signOut,
+        resetPassword,
+        updatePassword,
         clearError,
         refreshAccess,
       }}

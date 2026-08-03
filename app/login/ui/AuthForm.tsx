@@ -8,14 +8,14 @@ interface AuthFormProps {
 }
 
 export default function AuthForm({ redirectAfterLogin = "/app" }: AuthFormProps) {
-  const [mode, setMode] = useState<"signin" | "signup">("signin");
+  const [mode, setMode] = useState<"signin" | "signup" | "forgot">("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [msg, setMsg] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const { signIn, signUp, error: authError, clearError } = useAuth();
+  const { signIn, signUp, resetPassword, error: authError, clearError } = useAuth();
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -24,7 +24,12 @@ export default function AuthForm({ redirectAfterLogin = "/app" }: AuthFormProps)
     setLoading(true);
 
     try {
-      if (mode === "signup") {
+      if (mode === "forgot") {
+        await resetPassword(email);
+        setMsg(
+          `Check ${email} for a link to set a new password. If it doesn't arrive in a few minutes, check spam.`
+        );
+      } else if (mode === "signup") {
         await signUp(email, password, firstName, lastName);
         
         // Add user to Ivorey email list
@@ -94,29 +99,64 @@ export default function AuthForm({ redirectAfterLogin = "/app" }: AuthFormProps)
         onChange={(e) => setEmail(e.target.value)}
         required
       />
-      <input
-        className="w-full rounded-xl bg-black/30 border border-white/10 px-3 py-2 outline-none"
-        placeholder="Password"
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        required
-      />
+      {mode !== "forgot" && (
+        <input
+          className="w-full rounded-xl bg-black/30 border border-white/10 px-3 py-2 outline-none"
+          placeholder="Password"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+      )}
+      {mode === "signin" && (
+        <button
+          type="button"
+          className="text-xs text-white/50 hover:text-white/80 underline -mt-1"
+          onClick={() => {
+            setMsg(null);
+            clearError();
+            setMode("forgot");
+          }}
+        >
+          Forgot password?
+        </button>
+      )}
 
       <button
         disabled={loading}
         className="w-full rounded-xl bg-white text-black py-2 font-medium disabled:opacity-60"
       >
-        {loading ? "Please wait…" : mode === "signin" ? "Sign in" : "Create account"}
+        {loading
+          ? "Please wait…"
+          : mode === "signin"
+            ? "Sign in"
+            : mode === "signup"
+              ? "Create account"
+              : "Send reset link"}
       </button>
 
-      <button
-        type="button"
-        className="w-full rounded-xl border border-white/15 py-2 text-sm text-white/80"
-        onClick={() => setMode(mode === "signin" ? "signup" : "signin")}
-      >
-        {mode === "signin" ? "Create an account" : "I already have an account"}
-      </button>
+      {mode === "forgot" ? (
+        <button
+          type="button"
+          className="w-full rounded-xl border border-white/15 py-2 text-sm text-white/80"
+          onClick={() => {
+            setMsg(null);
+            clearError();
+            setMode("signin");
+          }}
+        >
+          Back to sign in
+        </button>
+      ) : (
+        <button
+          type="button"
+          className="w-full rounded-xl border border-white/15 py-2 text-sm text-white/80"
+          onClick={() => setMode(mode === "signin" ? "signup" : "signin")}
+        >
+          {mode === "signin" ? "Create an account" : "I already have an account"}
+        </button>
+      )}
 
       {msg && <p className="text-sm text-white/70">{msg}</p>}
 
@@ -133,7 +173,10 @@ export default function AuthForm({ redirectAfterLogin = "/app" }: AuthFormProps)
             First time here? Tap &ldquo;Create an account&rdquo; above and use your
             purchase email.
           </li>
-          <li>Forgot your password? Reset it from the login screen.</li>
+          <li>
+            Forgot your password? Tap &ldquo;Forgot password?&rdquo; above the sign-in
+            button and we&apos;ll email you a reset link.
+          </li>
           <li>
             Still stuck? Email{" "}
             <a href="mailto:support@feelfullyyou.com" className="underline text-white/70">
