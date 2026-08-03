@@ -25,7 +25,10 @@ function LoginPageContent() {
         </p>
 
         <div className="mt-6">
-          <AuthForm redirectAfterLogin={redirect || "/app"} />
+          <AuthForm
+            redirectAfterLogin={redirect || "/app"}
+            initialMode={signup === "true" ? "signup" : "signin"}
+          />
         </div>
 
         <p className="text-xs text-white/50 mt-6">

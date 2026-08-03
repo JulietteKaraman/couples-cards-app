@@ -5,10 +5,24 @@ import { useAuth } from "@/components/providers/AuthProvider";
 
 interface AuthFormProps {
   redirectAfterLogin?: string;
+  initialMode?: "signin" | "signup";
 }
 
-export default function AuthForm({ redirectAfterLogin = "/app" }: AuthFormProps) {
-  const [mode, setMode] = useState<"signin" | "signup" | "forgot">("signin");
+// Bug fixed 3 Aug 2026 (Juliette, testing the CARDSVIP flow): the purchase
+// flow sends people here with ?signup=true, and page.tsx used that to show
+// a "Create account" heading — but this form always defaulted to signin
+// mode regardless, so someone reading "Create account" would type an
+// email + password they'd never used before, hit the button (labelled
+// "Sign in", easy to miss), and get Supabase's "Invalid login
+// credentials" — because signIn() was called for an account that didn't
+// exist yet. Nothing was actually broken in the create-account path
+// itself; the form just silently ignored which mode the page said it
+// was in.
+export default function AuthForm({
+  redirectAfterLogin = "/app",
+  initialMode = "signin",
+}: AuthFormProps) {
+  const [mode, setMode] = useState<"signin" | "signup" | "forgot">(initialMode);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
