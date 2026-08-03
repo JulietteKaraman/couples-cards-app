@@ -101,16 +101,20 @@ function BetweenTouchesEntryContent() {
   return (
     <main className={dark ? "min-h-screen bg-ffy-black" : "min-h-screen bg-ffy-cream"}>
       {entry.image && (
-        <div className="relative h-[42vh] w-full overflow-hidden sm:h-[56vh]">
+        <div
+          className={`relative h-[42vh] w-full overflow-hidden sm:h-[56vh] ${
+            entry.imageFocus === "top" ? (dark ? "bg-ffy-black" : "bg-ffy-cream") : ""
+          }`}
+        >
           <Image
             src={entry.image}
             alt={entry.imageAlt ?? ""}
             fill
             priority
             sizes="100vw"
-            className={entry.imageFocus === "top" ? "object-cover object-[center_20%]" : "object-cover"}
+            className={entry.imageFocus === "top" ? "object-contain" : "object-cover"}
           />
-          {dark && (
+          {dark && entry.imageFocus !== "top" && (
             <div className="absolute inset-0 bg-gradient-to-t from-ffy-black via-ffy-black/10 to-transparent" />
           )}
         </div>

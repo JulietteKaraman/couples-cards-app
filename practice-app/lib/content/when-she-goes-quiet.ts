@@ -427,7 +427,7 @@ export const whenSheGoesQuiet: PracticeCollection = {
         { kind: "p", text: "If this landed, you are already more present than you were when you started reading. She will feel that before you say a word." },
         { kind: "quote", text: "The Unspoken Distance" },
         { kind: "image", src: "/when-she-goes-quiet/distance-cover.jpeg", alt: "The Unspoken Distance" },
-        { kind: "p", text: "The full paid guide: 86 pages into her body, her withdrawal, her nervous system, and what she actually needs from you to feel safe enough to open again." },
+        { kind: "p", text: "The full paid guide, all the way into her body, her withdrawal, her nervous system, and what she actually needs from you to feel safe enough to open again." },
         { kind: "p", text: "If this free guide opened something, that one takes you all the way in." },
         { kind: "link", text: "Explore The Unspoken Distance →", href: "https://feelfullyyou.com/the-unspoken-distance" },
         { kind: "quote", text: "The Touch Reset Quiz" },
