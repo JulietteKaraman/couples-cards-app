@@ -108,7 +108,7 @@ function DistanceEntryContent() {
             fill
             priority
             sizes="100vw"
-            className="object-cover"
+            className={entry.imageFocus === "top" ? "object-cover object-[center_20%]" : "object-cover"}
           />
           {dark && (
             <div className="absolute inset-0 bg-gradient-to-t from-ffy-black via-ffy-black/10 to-transparent" />
@@ -119,7 +119,7 @@ function DistanceEntryContent() {
       <div className="mx-auto max-w-2xl px-6 pb-14 pt-10">
         <Link
           href="/"
-          className={`text-sm hover:underline ${dark ? "text-ffy-gold-pale" : "text-ffy-gold-deep"}`}
+          className={`inline-flex items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-medium transition ${dark ? "border-ffy-gold-pale/40 text-ffy-gold-pale hover:bg-white/5" : "border-ffy-gold-deep/40 text-ffy-gold-deep hover:bg-ffy-gold-deep/5"}`}
         >
           ← Your library
         </Link>

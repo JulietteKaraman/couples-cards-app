@@ -600,6 +600,7 @@ export const betweenTouches: PracticeCollection = {
           href: "https://feelfullyyou.com/10-touch-rituals",
         },
         { kind: "quote", text: "The Touch Reset Quiz" },
+        { kind: "image", src: "/offers/touch-reset-quiz-cover.jpg", alt: "A hand reaching to touch bark, sunlit" },
         {
           kind: "p",
           text: "Five minutes, not a score. Meet the pattern your body runs to keep touch safe, and the one it has been quietly starving for.",
@@ -631,6 +632,7 @@ export const betweenTouches: PracticeCollection = {
       image: "/between-touches/meet-juliette.png",
       imageAlt: "Juliette Karaman",
       imageSide: "left",
+      imageFocus: "top",
       body: [
         { kind: "p", text: "Intimacy and touch expert." },
         { kind: "p", text: "Touch Base® · The Touch Languages™ · Rapid Release Rewire and Restore®" },

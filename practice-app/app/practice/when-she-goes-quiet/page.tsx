@@ -37,7 +37,7 @@ function WhenSheGoesQuietIndexContent() {
           className="h-auto w-full"
         />
         <div className="absolute left-0 top-0 p-4">
-          <Link href="/" className="text-sm text-ffy-gold-pale hover:underline">
+          <Link href="/" className="inline-flex items-center gap-1.5 rounded-full border border-ffy-gold-pale/40 px-4 py-2 text-sm font-medium text-ffy-gold-pale transition hover:bg-white/10">
             ← Your library
           </Link>
         </div>

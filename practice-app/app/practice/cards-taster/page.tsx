@@ -125,7 +125,7 @@ export default function CardsTasterPage() {
     <main className="min-h-screen bg-black text-white">
       <div className="mx-auto max-w-md px-4 py-6">
         <div className="mb-6 flex items-center justify-between">
-          <Link href="/" className="text-sm text-white/70 hover:text-white">
+          <Link href="/" className="inline-flex items-center gap-1.5 rounded-full border border-white/20 px-4 py-2 text-sm font-medium text-white/80 transition hover:bg-white/10">
             ← Your library
           </Link>
           <span className="rounded bg-white/10 px-2 py-1 text-xs text-white/70">Cards Taster</span>

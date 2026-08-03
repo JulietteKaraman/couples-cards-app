@@ -35,6 +35,14 @@ export type PracticeEntry = {
   image?: string;
   imageAlt?: string;
   imageSide: "left" | "right";
+  // Optional: the hero band crops to a wide, short strip (object-cover),
+  // which centres by default. Fine for landscape mood photos, but a tall
+  // portrait headshot (the "Meet Juliette" entries) gets its top, her
+  // face, cropped off when centred. Set "top" for any close portrait so
+  // the crop anchors to her face instead (Juliette, 3 Aug 2026: "my head
+  // is cut off"). Omit for anything else — defaults to the existing
+  // centred behaviour, unchanged.
+  imageFocus?: "top" | "center";
 };
 
 export type PracticeCollection = {
@@ -949,8 +957,8 @@ export const tenTouchRituals: PracticeCollection = {
       image: "/rituals/meet-juliette.jpeg",
       imageAlt: "Juliette Karaman",
       imageSide: "right",
+      imageFocus: "top",
       body: [
-        { kind: "image", src: "/rituals/meet-juliette.jpeg", alt: "Juliette Karaman" },
         {
           kind: "p",
           text: "I create experiences, for the moment you understand exactly what's happening in your body, and still something tightens or fades the second closeness begins.",

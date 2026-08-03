@@ -1176,8 +1176,8 @@ export const theUnspokenDistance: PracticeCollection = {
       image: "/unspoken-distance/juliette-karaman-portrait.jpg",
       imageAlt: "Juliette Karaman",
       imageSide: "right",
+      imageFocus: "top",
       body: [
-        { kind: "image", src: "/unspoken-distance/juliette-karaman-portrait.jpg", alt: "Juliette Karaman" },
         { kind: "p", text: "Intimacy and touch expert." },
         { kind: "p", text: "Touch Base® · The Touch Languages™ · Rapid Release Rewire and Restore®" },
         { kind: "p", text: "I create experiences. Experiences for the moments when you understand what's happening in your body, and still something tightens or fades when closeness begins." },

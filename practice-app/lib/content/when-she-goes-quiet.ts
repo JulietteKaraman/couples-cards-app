@@ -446,6 +446,7 @@ export const whenSheGoesQuiet: PracticeCollection = {
       image: "/when-she-goes-quiet/meet-juliette.png",
       imageAlt: "Juliette Karaman",
       imageSide: "right",
+      imageFocus: "top",
       body: [
         { kind: "p", text: "Intimacy and touch expert." },
         { kind: "p", text: "Touch Base® · The Touch Languages™ · Rapid Release Rewire and Restore®" },

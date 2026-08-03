@@ -19,7 +19,7 @@ export default function TouchBasePage() {
   return (
     <main className="min-h-screen bg-ffy-cream">
       <div className="mx-auto max-w-2xl px-6 py-10">
-        <Link href="/" className="text-sm text-ffy-gold-deep hover:underline">
+        <Link href="/" className="inline-flex items-center gap-1.5 rounded-full border border-ffy-gold-deep/40 px-4 py-2 text-sm font-medium text-ffy-gold-deep transition hover:bg-ffy-gold-deep/5">
           ← Your library
         </Link>
 

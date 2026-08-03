@@ -76,7 +76,7 @@ function RitualEntryContent() {
         <div className="mx-auto max-w-2xl px-6 py-14">
           <Link
             href="/"
-            className="text-sm text-ffy-gold-deep hover:underline"
+            className="inline-flex items-center gap-1.5 rounded-full border border-ffy-gold-deep/40 px-4 py-2 text-sm font-medium text-ffy-gold-deep transition hover:bg-ffy-gold-deep/5"
           >
             ← Your library
           </Link>
@@ -134,7 +134,7 @@ function RitualEntryContent() {
               fill
               priority
               sizes="(min-width: 768px) 50vw, 100vw"
-              className="object-cover"
+              className={entry.imageFocus === "top" ? "object-cover object-[center_20%]" : "object-cover"}
             />
           </div>
         )}
@@ -142,7 +142,7 @@ function RitualEntryContent() {
         <div className="flex w-full flex-col justify-center px-6 py-12 md:w-1/2 md:px-14 md:py-0">
           <Link
             href="/"
-            className="text-sm text-ffy-gold-deep hover:underline"
+            className="inline-flex items-center gap-1.5 rounded-full border border-ffy-gold-deep/40 px-4 py-2 text-sm font-medium text-ffy-gold-deep transition hover:bg-ffy-gold-deep/5"
           >
             ← Your library
           </Link>
