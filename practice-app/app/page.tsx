@@ -175,7 +175,7 @@ function LibraryContent() {
 
   return (
     <main className="min-h-screen bg-ffy-cream">
-      <section className="relative flex h-[36vh] items-end overflow-hidden md:h-[46vh]">
+      <section className="relative flex h-[36vh] items-end overflow-hidden md:h-[62vh]">
         <Image
           src="/app/hero.jpg"
           alt="Juliette Karaman"
