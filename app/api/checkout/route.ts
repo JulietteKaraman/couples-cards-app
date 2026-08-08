@@ -127,6 +127,10 @@ export async function POST(req: Request) {
       () => stripe.checkout.sessions.create(
         {
           mode: "payment",
+          // Without this, Link/guest-style payments don't attach a Customer
+          // record even with customer_email set, same gap found on the two
+          // in-app checkout routes 8 Aug 2026.
+          customer_creation: "always",
           ...(discounts ? { discounts } : { allow_promotion_codes: true }),
           customer_email: email,
           line_items: [{ price: priceId, quantity: 1 }],

@@ -33,6 +33,14 @@ export async function GET(req: Request) {
 
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
+      // Without this, a buyer who pays via Link (one-tap, no card form) checks
+      // out as a guest with no Customer record attached to the payment. The
+      // charge itself is fine and the webhook still tags them off
+      // customer_details.email, but the payment then doesn't show up under
+      // their name anywhere in Stripe, and any revenue view built off
+      // Customers undercounts them. Found 8 Aug 2026 on Andrea Froli's £97,
+      // the same payment that surfaced the metadata bug above.
+      customer_creation: "always",
       ...(discounts ? { discounts } : { allow_promotion_codes: true }),
       line_items: [{ price: UNSPOKEN_DISTANCE_PRICE_ID, quantity: 1 }],
       // stripe-webhook.js identifies a purchase ONLY from metadata.price_id.
