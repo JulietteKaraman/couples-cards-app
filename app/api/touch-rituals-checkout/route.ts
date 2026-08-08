@@ -34,6 +34,10 @@ export async function GET(req: Request) {
       mode: "payment",
       ...(discounts ? { discounts } : { allow_promotion_codes: true }),
       line_items: [{ price: TOUCH_RITUALS_PRICE_ID, quantity: 1 }],
+      // stripe-webhook.js identifies a purchase ONLY from metadata.price_id.
+      // Without this the buyer falls through to the "purchased" fallback tag
+      // with no product tag and no welcome sequence. Found 8 Aug 2026.
+      metadata: { price_id: TOUCH_RITUALS_PRICE_ID },
       // Routes through rituals-success (same app, same Stripe client) so the
       // email just typed at checkout can be looked up server-side and handed
       // to the thank-you page — see that route for why. Without this, buyers

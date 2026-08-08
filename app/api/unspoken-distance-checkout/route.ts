@@ -35,6 +35,12 @@ export async function GET(req: Request) {
       mode: "payment",
       ...(discounts ? { discounts } : { allow_promotion_codes: true }),
       line_items: [{ price: UNSPOKEN_DISTANCE_PRICE_ID, quantity: 1 }],
+      // stripe-webhook.js identifies a purchase ONLY from metadata.price_id.
+      // Without this the buyer falls through to the "purchased" fallback tag
+      // with no product tag and no welcome sequence, even though app access
+      // still works (resolve-purchase reads line_items, not metadata).
+      // Found 8 Aug 2026 after Andrea Froli paid £97 and got no welcome.
+      metadata: { price_id: UNSPOKEN_DISTANCE_PRICE_ID },
       success_url: "https://feelfullyyou.com/thankyou-unspoken-distance",
       cancel_url: "https://feelfullyyou.com/the-unspoken-distance",
     });
