@@ -100,10 +100,12 @@ export async function POST(req: Request) {
           code: promo.trim(),
           active: true,
           limit: 1,
+          expand: ["data.promotion.coupon"],
         });
         if (codes.data.length > 0) {
           discounts = [{ promotion_code: codes.data[0].id }];
-          promoIsFree = codes.data[0].coupon?.percent_off === 100;
+          const coupon = codes.data[0].promotion.coupon;
+          promoIsFree = typeof coupon !== "string" && coupon?.percent_off === 100;
           console.log("Auto-applying promo code:", codes.data[0].code, "fully comped:", promoIsFree);
         } else {
           console.log("Promo code not found or inactive, ignoring:", promo);
