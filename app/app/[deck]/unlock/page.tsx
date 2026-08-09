@@ -333,6 +333,19 @@ function UnlockPageContent() {
                 </a>
               </p>
             )}
+            {deckType === "one-touch" && (
+              <p className="text-xs text-white/50">
+                Don&apos;t have a code?{" "}
+                <a
+                  href="https://feelfullyyou.com/one-touch"
+                  target="_blank"
+                  rel="noopener"
+                  className="underline text-white/80 hover:text-white"
+                >
+                  Get One Touch for £97 →
+                </a>
+              </p>
+            )}
             <p className="text-xs text-white/40">
               Trouble?{" "}
               <a href="mailto:support@feelfullyyou.com" className="underline text-white/60">
