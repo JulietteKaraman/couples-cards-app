@@ -114,22 +114,43 @@ function LockedOfferTile({
   subtitle,
   heroImage,
   purchaseUrl,
+  slug,
+  userEmail,
   note = "Not yet on your account · Get access",
 }: {
   title: string;
   subtitle: string;
   heroImage: string;
   purchaseUrl: string;
+  slug?: string;
+  userEmail?: string | null;
   note?: string;
 }) {
   // Shown, not hidden — this tile IS the cross-sell. Dimmed photo, lock
   // badge, and a real link out to the sales page, never a click into
   // content that isn't there.
+  //
+  // Added 9 Aug 2026: clicking a locked tile is a real signal someone's
+  // interested, even if they don't buy today, and until now that signal
+  // went nowhere. Fire-and-forget POST to /api/track-interest, never
+  // awaited, never blocks the actual navigation — the link opens exactly
+  // as fast whether the tag lands or not.
+  const handleClick = () => {
+    if (!slug || !userEmail) return;
+    fetch("/api/track-interest", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: userEmail, offerSlug: slug }),
+    }).catch(() => {
+      // Silent on purpose — a tracking miss is never worth surfacing here.
+    });
+  };
   return (
     <a
       href={purchaseUrl}
       target="_blank"
       rel="noreferrer"
+      onClick={handleClick}
       className="group flex items-center gap-5 overflow-hidden rounded-2xl border border-ffy-border bg-white/60 p-4 opacity-80 transition hover:border-ffy-gold hover:opacity-100 sm:p-5"
     >
       <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-xl sm:h-24 sm:w-24">
@@ -320,6 +341,8 @@ function LibraryContent() {
               heroImage={o.heroImage}
               purchaseUrl={o.purchaseUrl}
               note={o.note}
+              slug={o.slug}
+              userEmail={user?.email}
             />
           ))}
         </div>
