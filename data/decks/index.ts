@@ -4,8 +4,9 @@ import { COUPLES_CARDS, SECTIONS as COUPLES_SECTIONS, SectionKey as CouplesSecti
 import { FRIENDS_CARDS, FRIENDS_SECTIONS, FriendsSectionKey, FriendsCardPrompt } from "./friends";
 import { ONE_TOUCH_CARDS, ONE_TOUCH_SECTIONS, OneTouchSectionKey, OneTouchCardPrompt } from "./one-touch";
 import { REPAIR_KIT_CARDS, REPAIR_KIT_SECTIONS, REPAIR_KIT_PHASES, RepairKitSectionKey, RepairKitCardPrompt } from "./repair-kit";
+import { HOLIDAY_SURVIVAL_CARDS, HOLIDAY_SURVIVAL_SECTIONS, HolidaySurvivalSectionKey, HolidaySurvivalCardPrompt } from "./holiday-survival";
 
-export type DeckType = "couples" | "friends" | "touch-languages" | "trust-repair" | "one-touch" | "repair-kit";
+export type DeckType = "couples" | "friends" | "touch-languages" | "trust-repair" | "one-touch" | "repair-kit" | "holiday-survival";
 
 // Decks worked one card at a time in a fixed order (the journey player),
 // instead of the random-draw page.
@@ -107,6 +108,17 @@ export const DECKS: Record<DeckType, DeckConfig> = {
     cards: REPAIR_KIT_CARDS,
     totalCards: 31,
   },
+  "holiday-survival": {
+    id: "holiday-survival",
+    name: "The Holiday Survival Kit",
+    description: "25 prompts to move through holiday stress into real connection, rooted in the Dyad Technique.",
+    price: 0,
+    stripePriceId: "",
+    coverImage: "/cards/holiday/cover.png",
+    sections: HOLIDAY_SURVIVAL_SECTIONS,
+    cards: HOLIDAY_SURVIVAL_CARDS,
+    totalCards: 25,
+  },
 };
 
 export const FULL_SET_CONFIG = {
@@ -128,7 +140,7 @@ export function getAllDecks(): DeckConfig[] {
 }
 
 export function isValidDeck(deckType: string): deckType is DeckType {
-  return deckType === "couples" || deckType === "friends" || deckType === "touch-languages" || deckType === "trust-repair" || deckType === "one-touch" || deckType === "repair-kit";
+  return deckType === "couples" || deckType === "friends" || deckType === "touch-languages" || deckType === "trust-repair" || deckType === "one-touch" || deckType === "repair-kit" || deckType === "holiday-survival";
 }
 
 export type {
@@ -144,6 +156,8 @@ export type {
   OneTouchCardPrompt,
   RepairKitSectionKey,
   RepairKitCardPrompt,
+  HolidaySurvivalSectionKey,
+  HolidaySurvivalCardPrompt,
 };
 
 export { REPAIR_KIT_PHASES };

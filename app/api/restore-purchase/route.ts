@@ -24,7 +24,7 @@ function getDecksForProduct(product: string): string[] {
     return ["couples", "friends", "touch-languages", "trust-repair"];
   }
   // Single deck
-  const validDecks = ["couples", "friends", "touch-languages", "trust-repair"];
+  const validDecks = ["couples", "friends", "touch-languages", "trust-repair", "holiday-survival"];
   if (validDecks.includes(product)) {
     return [product];
   }

@@ -287,7 +287,9 @@ function UnlockPageContent() {
           <div className="space-y-4">
             <h1 className="text-2xl font-semibold">{deck.name}</h1>
             <p className="text-white/80 font-medium">
-              {deckType === "repair-kit" ? "Part of the Romantic Relationship Repair Kit." : "Part of the One Touch course."}
+              {deckType === "repair-kit"
+                ? "Part of the Romantic Relationship Repair Kit."
+                : "Part of the One Touch course."}
             </p>
             <p className="text-white/60 text-sm">
               Enter your code to open the deck.
@@ -311,7 +313,11 @@ function UnlockPageContent() {
                 disabled={redeemLoading || !code.trim()}
                 className="w-full rounded-xl bg-white text-black py-3 font-medium disabled:opacity-50"
               >
-                {redeemLoading ? "Unlocking…" : deckType === "repair-kit" ? "Unlock the Repair Kit" : "Unlock One Touch"}
+                {redeemLoading
+                  ? "Unlocking…"
+                  : deckType === "repair-kit"
+                  ? "Unlock the Repair Kit"
+                  : "Unlock One Touch"}
               </button>
             </div>
 
@@ -434,7 +440,18 @@ function UnlockPageContent() {
               </p>
             </div>
           )}
-          
+
+          {deckType === "holiday-survival" && (
+            <div className="space-y-2">
+              <p className="text-white/80 font-medium">
+                25 prompts to move through holiday stress into real connection
+              </p>
+              <p className="text-white/60 text-sm">
+                For the family gatherings, the quiet after, and the moments in between
+              </p>
+            </div>
+          )}
+
           <p className="text-sm text-white/50">{deck.totalCards} cards</p>
 
           {error && (

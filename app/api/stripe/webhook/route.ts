@@ -142,6 +142,8 @@ export async function POST(req: Request) {
       decksToGrant.push("trust-repair");
     } else if (product === "full-set") {
       decksToGrant.push("trust-repair", "couples", "friends");
+    } else if (product === "holiday-survival") {
+      decksToGrant.push("holiday-survival");
     } else {
       console.log("Skipping - unknown product:", product);
       return NextResponse.json({ received: true });

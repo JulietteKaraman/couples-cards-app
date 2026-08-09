@@ -36,7 +36,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const validProducts = ["couples", "friends", "touch-languages", "trust-repair", "full-set"];
+    const validProducts = ["couples", "friends", "touch-languages", "trust-repair", "full-set", "holiday-survival"];
     const productType = product || "couples";
     
     if (!validProducts.includes(productType)) {
@@ -64,6 +64,9 @@ export async function POST(req: Request) {
       case "full-set":
         priceId = process.env.STRIPE_FULL_SET_PRICE_ID!;
         break;
+      case "holiday-survival":
+        priceId = process.env.STRIPE_HOLIDAY_SURVIVAL_PRICE_ID!;
+        break;
       default:
         priceId = process.env.STRIPE_COUPLES_PRICE_ID!;
     }
@@ -84,7 +87,7 @@ export async function POST(req: Request) {
     let successUrl = `${SITE_URL}/app?success=true`;
     if (productType === "trust-repair") {
       successUrl = "https://feelfullyyou.com/cards-complete-tr";
-    } else if (productType === "couples" || productType === "friends") {
+    } else if (productType === "couples" || productType === "friends" || productType === "holiday-survival") {
       successUrl = "https://feelfullyyou.com/cards-complete-deck";
     }
 

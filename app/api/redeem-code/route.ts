@@ -7,9 +7,11 @@ import { supabaseAdmin } from "@/lib/supabase/admin";
 function codeToDeck(code: string): string | null {
   const oneTouchCode = (process.env.ONE_TOUCH_UNLOCK_CODE || "ONETOUCH").trim().toUpperCase();
   const repairKitCode = (process.env.REPAIR_KIT_UNLOCK_CODE || "REPAIR2026").trim().toUpperCase();
+  const holidayCode = (process.env.HOLIDAY_SURVIVAL_UNLOCK_CODE || "HOLIDAY2026").trim().toUpperCase();
   const map: Record<string, string> = {
     [oneTouchCode]: "one-touch",
     [repairKitCode]: "repair-kit",
+    [holidayCode]: "holiday-survival",
   };
   return map[code.trim().toUpperCase()] || null;
 }
