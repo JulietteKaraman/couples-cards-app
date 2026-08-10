@@ -6,6 +6,7 @@ export const COLLECTION_DECK_TYPES: Record<string, string> = {
   "the-unspoken-distance": "unspoken-distance",
   "when-she-goes-quiet": "when-she-goes-quiet",
   "between-touches": "between-touches",
+  "members-app": "members-app",
 };
 
 // Maps a real Stripe price ID to the deck_type it grants, so resolve-purchase
@@ -16,7 +17,18 @@ export const PRICE_ID_TO_DECK_TYPE: Record<string, string> = {
   price_1Tlpu0CCw18geY15b8J3jlBW: "ten-touch-rituals", // 10 Touch Rituals, £7
   price_1TzO4DCCw18geY15u7X9j7iw: "unspoken-distance", // The Unspoken Distance, £77 (old price, real buyers 31 Jul-1 Aug 2026)
   price_1TnxAqCCw18geY153w22a2Ye: "unspoken-distance", // The Unspoken Distance, £97 (current, back from £77 1 Aug 2026 — now includes free Couples Cards)
+  price_1U2uFbCCw18geY156WA0jb05: "members-app", // Members App, £77/month recurring — created 10 Aug 2026, spec R10
 };
+
+// Deck types that are RECURRING subscriptions rather than one-time
+// purchases. resolve-purchase only ever grants these a real expires_at
+// (see grantEntitlement) — everything else stays the permanent, one-time
+// grant the app has always used. Members App spec R13/E1/E2: on
+// cancellation or a failed renewal, access continues for 48 hours past
+// the current period end, not indefinitely, which is what a bare
+// "purchase found → grant forever" match would otherwise do.
+export const SUBSCRIPTION_DECK_TYPES: string[] = ["members-app"];
+export const SUBSCRIPTION_GRACE_PERIOD_HOURS = 48;
 
 // Free collections: granted automatically the moment someone logs into the
 // app, no Stripe purchase, no price ever shown (Juliette, 1 Aug 2026 — a
@@ -32,6 +44,12 @@ export const FREE_DECK_TYPES: string[] = ["when-she-goes-quiet", "between-touche
 export const PURCHASE_URLS: Record<string, string> = {
   "ten-touch-rituals": "https://feelfullyyou.com/10-touch-rituals",
   "the-unspoken-distance": "https://feelfullyyou.com/the-unspoken-distance",
+  // This page doesn't exist yet — same as every other product here, the
+  // checkout lives on a real marketing sales page, not inside the app.
+  // Stripe side (Product prod_V30FzZV1Wv39XG, Price price_1U2uFbCCw18geY156WA0jb05,
+  // £77/month, live) is ready; this URL needs the actual page built and a
+  // checkout button wired to that price before it's real.
+  "members-app": "https://feelfullyyou.com/members-app",
 };
 
 export function deckTypesForApp(): string[] {
