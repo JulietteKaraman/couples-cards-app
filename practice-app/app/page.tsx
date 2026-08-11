@@ -7,7 +7,12 @@ import { tenTouchRituals } from "@/lib/content/ten-touch-rituals";
 import { theUnspokenDistance } from "@/lib/content/the-unspoken-distance";
 import { whenSheGoesQuiet } from "@/lib/content/when-she-goes-quiet";
 import { betweenTouches } from "@/lib/content/between-touches";
-import { communicationRebootKit } from "@/lib/content/communication-reboot-kit";
+// communicationRebootKit intentionally NOT imported into ALL_COLLECTIONS below.
+// Juliette, 11 Aug 2026, after seeing it live: "take it off the app while you
+// fix it- I will not have such terrible things be put on the app." Pulled
+// from the home library until the redesign (real photography, dedicated
+// card UI, blush journal) is finished AND visually verified. Do not re-add
+// this import to ALL_COLLECTIONS without her sign-off on the rebuild.
 import { CARDS_TASTER_COVER } from "@/lib/content/cards-taster";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { useAuth } from "@/components/providers/AuthProvider";
@@ -29,7 +34,7 @@ function isFreeCollection(slug: string): boolean {
 // a "Get access" link out to the real sales page (spec: the library is
 // the cross-sell surface between products, not just a delivery box for
 // what's already been bought — Juliette, 1 Aug 2026).
-const ALL_COLLECTIONS = [tenTouchRituals, theUnspokenDistance, whenSheGoesQuiet, betweenTouches, communicationRebootKit];
+const ALL_COLLECTIONS = [tenTouchRituals, theUnspokenDistance, whenSheGoesQuiet, betweenTouches];
 
 // Offers that never live inside this app at all (no PracticeCollection,
 // no deck_type, nothing to unlock here) but that Juliette wants
@@ -267,42 +272,15 @@ function LibraryContent() {
             );
           })}
 
-          {/* Members App — the new subscription tier (specs/members-app.md).
-              Not a PracticeCollection (it's a personalised dashboard, not
-              a linear guide), so it's hand-wired here like every other
-              standalone tile, but it DOES use the same entitledCollections
-              unlock check as ALL_COLLECTIONS since it's a real, gated
-              product (see COLLECTION_DECK_TYPES["members-app"]). */}
-          {entitledCollections.includes("members-app") ? (
-            <Link
-              href="/practice/members-app"
-              className="group flex items-center gap-5 overflow-hidden rounded-2xl border border-ffy-border bg-white/60 p-4 transition hover:border-ffy-gold sm:p-5"
-            >
-              <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-xl bg-white sm:h-24 sm:w-24">
-                <Image
-                  src="/members/diagrams/the-stack.svg"
-                  alt="Members App"
-                  fill
-                  sizes="96px"
-                  className="object-contain p-2"
-                />
-              </div>
-              <div className="min-w-0 flex-1">
-                <h2 className="font-display text-xl font-semibold text-ffy-black group-hover:text-ffy-teal">
-                  Members App
-                </h2>
-                <p className="mt-1 text-sm text-ffy-brown">Your stack, your Touch State, your practice. £77/month.</p>
-              </div>
-              <span className="text-ffy-gold">→</span>
-            </Link>
-          ) : (
-            <LockedOfferTile
-              title="Members App"
-              subtitle="Your stack, your Touch State, your practice, updated weekly. £77/month."
-              heroImage="/members/diagrams/the-stack.svg"
-              purchaseUrl={PURCHASE_URLS["members-app"]}
-            />
-          )}
+          {/* Members App tile removed from the home library — Juliette, 11 Aug
+              2026, seeing it live: "take the members app off the home page-
+              it does not go anywhere yet so should not live on the app where
+              people get their freebies and want to upsell- if it is broken
+              or subpar- we do not put it on." Not this session's build; the
+              routes/content under specs/members-app.md are untouched, this
+              only stops it from being shown to real freebie-seekers on the
+              home screen until whoever owns it says it's ready. Restore by
+              re-adding this block once confirmed ready. */}
 
           {/* The Cards taster isn't a linear guide (PracticeCollection),
               it's a draw-one-at-a-time mini-experience, so it's not in
