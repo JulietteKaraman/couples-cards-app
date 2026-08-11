@@ -7,6 +7,7 @@ import { tenTouchRituals } from "@/lib/content/ten-touch-rituals";
 import { theUnspokenDistance } from "@/lib/content/the-unspoken-distance";
 import { whenSheGoesQuiet } from "@/lib/content/when-she-goes-quiet";
 import { betweenTouches } from "@/lib/content/between-touches";
+import { communicationRebootKit } from "@/lib/content/communication-reboot-kit";
 import { CARDS_TASTER_COVER } from "@/lib/content/cards-taster";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { useAuth } from "@/components/providers/AuthProvider";
@@ -28,7 +29,7 @@ function isFreeCollection(slug: string): boolean {
 // a "Get access" link out to the real sales page (spec: the library is
 // the cross-sell surface between products, not just a delivery box for
 // what's already been bought — Juliette, 1 Aug 2026).
-const ALL_COLLECTIONS = [tenTouchRituals, theUnspokenDistance, whenSheGoesQuiet, betweenTouches];
+const ALL_COLLECTIONS = [tenTouchRituals, theUnspokenDistance, whenSheGoesQuiet, betweenTouches, communicationRebootKit];
 
 // Offers that never live inside this app at all (no PracticeCollection,
 // no deck_type, nothing to unlock here) but that Juliette wants

@@ -6,6 +6,7 @@ export const COLLECTION_DECK_TYPES: Record<string, string> = {
   "the-unspoken-distance": "unspoken-distance",
   "when-she-goes-quiet": "when-she-goes-quiet",
   "between-touches": "between-touches",
+  "communication-reboot-kit": "communication-reboot-kit",
 };
 
 // Maps a real Stripe price ID to the deck_type it grants, so resolve-purchase
@@ -16,6 +17,7 @@ export const PRICE_ID_TO_DECK_TYPE: Record<string, string> = {
   price_1Tlpu0CCw18geY15b8J3jlBW: "ten-touch-rituals", // 10 Touch Rituals, £7
   price_1TzO4DCCw18geY15u7X9j7iw: "unspoken-distance", // The Unspoken Distance, £77 (old price, real buyers 31 Jul-1 Aug 2026)
   price_1TnxAqCCw18geY153w22a2Ye: "unspoken-distance", // The Unspoken Distance, £97 (current, back from £77 1 Aug 2026 — now includes free Couples Cards)
+  price_1TnwwmCCw18geY15egD5h7Fr: "communication-reboot-kit", // Communication Reboot Kit, £37 (live Payment Link, communication-reboot-kit.html)
 };
 
 // Free collections: granted automatically the moment someone logs into the
@@ -32,6 +34,7 @@ export const FREE_DECK_TYPES: string[] = ["when-she-goes-quiet", "between-touche
 export const PURCHASE_URLS: Record<string, string> = {
   "ten-touch-rituals": "https://feelfullyyou.com/10-touch-rituals",
   "the-unspoken-distance": "https://feelfullyyou.com/the-unspoken-distance",
+  "communication-reboot-kit": "https://feelfullyyou.com/communication-reboot-kit",
 };
 
 export function deckTypesForApp(): string[] {
