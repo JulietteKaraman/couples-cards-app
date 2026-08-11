@@ -38,7 +38,8 @@ export async function grantEntitlement(
   email: string,
   deckType: string,
   stripeCheckoutSessionId: string,
-  knownUserId?: string
+  knownUserId?: string,
+  expiresAt?: string | null
 ) {
   const normalizedEmail = email.toLowerCase().trim();
 
@@ -58,17 +59,22 @@ export async function grantEntitlement(
     userId = created.user.id;
   }
 
+  // expiresAt is only ever passed for a subscription deck_type (Members
+  // App spec R13). Omitting it (undefined) leaves expires_at untouched on
+  // an upsert conflict, which matters for the one-time-purchase callers of
+  // this function that never pass it — they must keep granting permanent
+  // access exactly as before.
+  const row: Record<string, unknown> = {
+    user_id: userId,
+    deck_type: deckType,
+    purchased_at: new Date().toISOString(),
+    stripe_checkout_session_id: stripeCheckoutSessionId,
+  };
+  if (expiresAt !== undefined) row.expires_at = expiresAt;
+
   const { error: grantError } = await supabaseAdmin
     .from("user_decks")
-    .upsert(
-      {
-        user_id: userId,
-        deck_type: deckType,
-        purchased_at: new Date().toISOString(),
-        stripe_checkout_session_id: stripeCheckoutSessionId,
-      },
-      { onConflict: "user_id,deck_type" }
-    );
+    .upsert(row, { onConflict: "user_id,deck_type" });
 
   if (grantError) {
     throw new Error(

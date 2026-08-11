@@ -22,11 +22,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [entitledCollections, setEntitledCollections] = useState<string[]>([]);
 
   const loadEntitlements = useCallback(async (userId: string) => {
+    // expires_at is null for every one-time-purchase deck_type (unchanged,
+    // permanent grant, exactly as before this column existed) and set for
+    // a subscription deck_type like "members-app" (Members App spec R13:
+    // access continues through the 48-hour grace period, then this filter
+    // is what actually stops returning it — the column alone does nothing
+    // without this check).
     const { data, error } = await supabaseBrowser
       .from("user_decks")
       .select("deck_type")
       .eq("user_id", userId)
-      .in("deck_type", deckTypesForApp());
+      .in("deck_type", deckTypesForApp())
+      .or(`expires_at.is.null,expires_at.gt.${new Date().toISOString()}`);
 
     if (error) {
       console.error("Error loading entitlements:", error);

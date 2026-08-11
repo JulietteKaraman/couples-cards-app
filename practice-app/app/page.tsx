@@ -267,6 +267,43 @@ function LibraryContent() {
             );
           })}
 
+          {/* Members App — the new subscription tier (specs/members-app.md).
+              Not a PracticeCollection (it's a personalised dashboard, not
+              a linear guide), so it's hand-wired here like every other
+              standalone tile, but it DOES use the same entitledCollections
+              unlock check as ALL_COLLECTIONS since it's a real, gated
+              product (see COLLECTION_DECK_TYPES["members-app"]). */}
+          {entitledCollections.includes("members-app") ? (
+            <Link
+              href="/practice/members-app"
+              className="group flex items-center gap-5 overflow-hidden rounded-2xl border border-ffy-border bg-white/60 p-4 transition hover:border-ffy-gold sm:p-5"
+            >
+              <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-xl bg-white sm:h-24 sm:w-24">
+                <Image
+                  src="/members/diagrams/the-stack.svg"
+                  alt="Members App"
+                  fill
+                  sizes="96px"
+                  className="object-contain p-2"
+                />
+              </div>
+              <div className="min-w-0 flex-1">
+                <h2 className="font-display text-xl font-semibold text-ffy-black group-hover:text-ffy-teal">
+                  Members App
+                </h2>
+                <p className="mt-1 text-sm text-ffy-brown">Your stack, your Touch State, your practice. £77/month.</p>
+              </div>
+              <span className="text-ffy-gold">→</span>
+            </Link>
+          ) : (
+            <LockedOfferTile
+              title="Members App"
+              subtitle="Your stack, your Touch State, your practice, updated weekly. £77/month."
+              heroImage="/members/diagrams/the-stack.svg"
+              purchaseUrl={PURCHASE_URLS["members-app"]}
+            />
+          )}
+
           {/* The Cards taster isn't a linear guide (PracticeCollection),
               it's a draw-one-at-a-time mini-experience, so it's not in
               ALL_COLLECTIONS — always free, always unlocked, no progress
