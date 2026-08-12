@@ -129,15 +129,17 @@ export function Blocks({ blocks, dark = false }: { blocks: ContentBlock[]; dark?
               <div
                 key={i}
                 className={
-                  dark
-                    ? "rounded-xl border border-ffy-gold/50 bg-ffy-gold/[0.07] px-5 py-4 shadow-[0_10px_30px_-18px_rgba(0,0,0,0.9)]"
-                    : "rounded-xl border border-ffy-border bg-white/70 px-5 py-4"
+                  b.highlight
+                    ? "rounded-xl border-2 border-ffy-gold bg-ffy-gold/15 px-5 py-5 shadow-[0_20px_45px_-25px_rgba(168,133,56,0.6)]"
+                    : dark
+                      ? "rounded-xl border border-ffy-gold/50 bg-ffy-gold/[0.07] px-5 py-4 shadow-[0_10px_30px_-18px_rgba(0,0,0,0.9)]"
+                      : "rounded-xl border border-ffy-border bg-white/70 px-5 py-4"
                 }
               >
                 <p
-                  className={`font-display text-sm font-semibold uppercase tracking-wide ${
-                    dark ? "text-ffy-gold-pale" : "text-ffy-gold-deep"
-                  }`}
+                  className={`font-display uppercase tracking-wide ${
+                    b.highlight ? "text-base font-bold text-ffy-gold-deep" : "text-sm font-semibold text-ffy-gold-deep"
+                  } ${dark && !b.highlight ? "text-ffy-gold-pale" : ""}`}
                 >
                   {b.label}
                 </p>
@@ -201,6 +203,14 @@ export function Blocks({ blocks, dark = false }: { blocks: ContentBlock[]; dark?
             );
 
           case "why":
+            // This box is ALWAYS a dark surface (solid teal in light page
+            // mode, dark gold-tinted in dark page mode) — never cream or
+            // white, regardless of the page's own light/dark setting. Text
+            // inside it must always use the light gold-pale treatment, not
+            // whatever the page-level `dark` flag says. Juliette, 12 Aug
+            // 2026, seeing the actual live result: "NEVER USE DARK OCHRE ON
+            // GREEN." That happened here — inline **bold** spans were
+            // using light-mode's darker gold on this always-teal box.
             return (
               <div
                 key={i}
@@ -220,10 +230,10 @@ export function Blocks({ blocks, dark = false }: { blocks: ContentBlock[]; dark?
                             : "font-display text-lg font-semibold leading-snug text-ffy-gold-pale"
                         }
                       >
-                        {renderInline(line.text, dark)}
+                        {renderInline(line.text, true)}
                       </p>
                     ) : (
-                      <TermLine key={li} text={line.text} dark={dark} bodyClassName="text-[0.98rem] leading-relaxed text-ffy-cream/90" />
+                      <TermLine key={li} text={line.text} dark={true} bodyClassName="text-[0.98rem] leading-relaxed text-ffy-cream/90" />
                     )
                   )}
                 </div>
@@ -243,6 +253,20 @@ export function Blocks({ blocks, dark = false }: { blocks: ContentBlock[]; dark?
                 }
               >
                 {b.text}
+              </a>
+            );
+
+          case "bigLink":
+            return (
+              <a
+                key={i}
+                href={b.href}
+                className={`flex flex-col items-center gap-1 rounded-2xl px-6 py-8 text-center shadow-[0_20px_50px_-20px_rgba(0,0,0,0.5)] transition hover:opacity-90 ${
+                  dark ? "bg-ffy-gold text-ffy-black" : "bg-ffy-black text-ffy-gold-pale"
+                }`}
+              >
+                <p className="font-display text-2xl font-bold">{b.text}</p>
+                {b.subtext && <p className={`text-sm ${dark ? "text-ffy-black/70" : "text-ffy-gold-pale/70"}`}>{b.subtext}</p>}
               </a>
             );
 
@@ -418,14 +442,35 @@ export function Blocks({ blocks, dark = false }: { blocks: ContentBlock[]; dark?
               b.color === "blush"
                 ? `font-display text-sm font-bold uppercase tracking-wide ${dark ? "text-ffy-gold-pale" : "text-ffy-gold-deep"}`
                 : "font-display text-lg font-bold uppercase tracking-wide";
+            // teal/brown/black are always a saturated dark fill with cream
+            // text regardless of page mode — any inline **bold** span in
+            // those needs the light gold-pale treatment, same fix and same
+            // reason as the "why" block above (never dark ochre on green).
+            // gold/blueGrey/blush are light fills with dark text; those
+            // stay on the page's own mode.
+            const alwaysDarkText = b.color === "teal" || b.color === "brown" || b.color === "black";
+            const promptDark = alwaysDarkText ? true : dark;
+            // Juliette, 12 Aug 2026: "all the sentences have quote marks
+            // and maybe 1,2,3 before them" — these are literal scripts to
+            // read aloud or send, a number + real quote marks makes that
+            // unmistakable instead of reading as plain body copy.
             return (
               <div key={i} className={`rounded-2xl px-6 py-6 ${dark ? darkTheme[b.color] : theme[b.color]}`}>
                 <p className={categoryClass}>{b.category}</p>
-                <div className="mt-4 flex flex-col gap-3">
+                <div className="mt-4 flex flex-col gap-4">
                   {b.prompts.map((prompt, pi) => (
-                    <p key={pi} className="text-[1.02rem] leading-relaxed">
-                      {renderInline(prompt, dark)}
-                    </p>
+                    <div key={pi} className="flex items-start gap-3">
+                      <span
+                        className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full font-display text-xs font-bold ${
+                          promptDark ? "bg-ffy-gold-pale/20 text-ffy-gold-pale" : "bg-black/10 text-current"
+                        }`}
+                      >
+                        {pi + 1}
+                      </span>
+                      <p className="text-[1.02rem] italic leading-relaxed">
+                        &ldquo;{renderInline(prompt, promptDark)}&rdquo;
+                      </p>
+                    </div>
                   ))}
                 </div>
               </div>
@@ -460,6 +505,34 @@ export function Blocks({ blocks, dark = false }: { blocks: ContentBlock[]; dark?
                     </div>
                   ))}
                 </div>
+              </div>
+            );
+
+          case "numberedSteps":
+            // Real layout, checked directly against Juliette's own PDF
+            // (12 Aug 2026): a numeral in a soft circle, heading and text
+            // beside it, plain page background, stacked straight down.
+            // Not the "diagram" treatment — that's a different real
+            // component for a different real source design.
+            return (
+              <div key={i} className="flex flex-col gap-8">
+                {b.steps.map((step, si) => (
+                  <div key={si} className="flex items-start gap-5">
+                    <div
+                      className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-full border font-display text-xl ${
+                        dark ? "border-ffy-gold-pale/50 bg-ffy-gold-pale/10 text-ffy-gold-pale" : "border-[#e3c9b6] bg-[#f3ddc9] text-ffy-brown"
+                      }`}
+                    >
+                      {si + 1}
+                    </div>
+                    <div className="flex-1 pt-1">
+                      <p className={`font-display text-lg font-bold ${dark ? "text-ffy-gold-pale" : "text-ffy-gold-deep"}`}>
+                        {step.heading}
+                      </p>
+                      <p className={`mt-1.5 leading-relaxed ${dark ? "text-ffy-cream/85" : "text-ffy-black"}`}>{step.text}</p>
+                    </div>
+                  </div>
+                ))}
               </div>
             );
 

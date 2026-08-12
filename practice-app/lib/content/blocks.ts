@@ -25,6 +25,14 @@ export type PromptGroupColor = "teal" | "gold" | "brown" | "blueGrey" | "black" 
 // filler to skip. Every Gamma-sourced guide must carry these through.
 export type DiagramStep = { heading: string; text?: string };
 
+// A different real numbered-step design, first used on the Communication
+// Reboot Kit's "Start Here" page (checked directly against Juliette's own
+// PDF, 12 Aug 2026): a plain numeral in a soft circle, heading and body
+// text beside it, stacked straight down the page, no dark box. NOT the
+// same component as `diagram` (Gamma's staggered gold-cards-on-black
+// treatment) — reusing that here was wrong, this is its own real layout.
+export type NumberedStep = { heading: string; text: string };
+
 // A row of big standout numbers with labels underneath (Gamma's own
 // "27 / 650+ / 980" stat-card layout) — real proof, not decorative,
 // same never-skip rule as diagram.
@@ -34,10 +42,20 @@ export type ContentBlock =
   | { kind: "p"; text: string; emphasis?: "bold" | "accent" }
   | { kind: "quote"; text: string }
   | { kind: "big"; text: string }
-  | { kind: "step"; label: string; lines: WhyLine[] }
+  // `highlight` is a bolder, gold-tinted card instead of the plain white
+  // one — for a step that matters but reads as skippable next to louder
+  // neighbours (a "why" box, a photo). Juliette, 12 Aug 2026, on "Before
+  // you invite them in": "it is just really bland and easy to skip over."
+  | { kind: "step"; label: string; lines: WhyLine[]; highlight?: boolean }
   | { kind: "notice"; lines: WhyLine[] }
   | { kind: "why"; lines: WhyLine[] }
   | { kind: "link"; text: string; href: string }
+  // A full-width, high-weight CTA for the one link on a page that must
+  // never be missed (e.g. the 46 cards themselves). The plain `link` pill
+  // reads as a footnote inside a page of paragraphs — Juliette, 12 Aug
+  // 2026: "the button to get to them is impossible to see." This is
+  // deliberately the loudest thing on the page.
+  | { kind: "bigLink"; text: string; subtext?: string; href: string }
   | { kind: "image"; src: string; alt: string }
   | { kind: "video"; vimeoId: string }
   | { kind: "youtube"; videoId: string; label: string }
@@ -51,6 +69,7 @@ export type ContentBlock =
   | { kind: "instagram"; url: string }
   | { kind: "promptGroup"; category: string; color: PromptGroupColor; prompts: string[] }
   | { kind: "diagram"; steps: DiagramStep[] }
+  | { kind: "numberedSteps"; steps: NumberedStep[] }
   | { kind: "stats"; items: StatItem[] }
   // Juliette's recurring "What She Says / What She Really Means"
   // translation tables (When She Goes Quiet, Between Touches, and likely

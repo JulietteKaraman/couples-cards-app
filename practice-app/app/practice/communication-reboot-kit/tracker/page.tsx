@@ -32,6 +32,8 @@ export default function TrackerPage() {
 }
 
 function TrackerPageContent() {
+  const touchBaseIndex = communicationRebootKit.entries.findIndex((e) => e.slug === "touch-base");
+  const nextEntry = touchBaseIndex === -1 ? undefined : communicationRebootKit.entries[touchBaseIndex + 1];
   const { user } = useAuth();
   const [entries, setEntries] = useState<TrackerEntry[]>([]);
   const [loading, setLoading] = useState(true);
@@ -104,6 +106,11 @@ function TrackerPageContent() {
         <p className="mt-2 text-sm text-ffy-brown">
           Twice a day, morning and afternoon or evening. Two minutes each. Rate how you feel before
           the Touch Base™ gesture, and again after.
+        </p>
+        <p className="mt-3 text-sm text-ffy-brown">
+          Pick the day, choose morning or afternoon/evening, do the gesture, then rate yourself
+          before and after, one to ten. Tap Save. Your history builds below as you go, tap any day
+          to open it again.
         </p>
 
         <div className="mt-8 rounded-2xl border border-ffy-border bg-white/70 p-5 sm:p-6">
@@ -215,6 +222,18 @@ function TrackerPageContent() {
           </div>
         )}
       </div>
+
+      {/* Juliette, 12 Aug 2026: "there is no button to get to the next
+          practice" — every entry-reading page has a prev/next footer, this
+          side-quest page didn't. Continues to whatever comes after Touch
+          Base in the real reading order, not hardcoded to one guess. */}
+      {nextEntry && (
+        <div className="mx-auto mt-4 flex max-w-xl items-center justify-end border-t border-ffy-border px-6 py-6 text-sm">
+          <Link href={`/practice/communication-reboot-kit/${nextEntry.slug}`} className="text-ffy-gold-deep hover:underline">
+            Continue to {nextEntry.title} →
+          </Link>
+        </div>
+      )}
     </main>
   );
 }

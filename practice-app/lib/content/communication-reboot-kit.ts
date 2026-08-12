@@ -161,7 +161,7 @@ const startHere: PracticeEntry = {
       // never-skip rule in this app's own CLAUDE.md, missed on the first
       // pass here the same way it was missed on 10 Touch Rituals and The
       // Unspoken Distance before it.
-      kind: "diagram",
+      kind: "numberedSteps",
       steps: [
         {
           heading: "Touch Base™ Video",
@@ -321,9 +321,14 @@ const softStart: PracticeEntry = {
     { kind: "image", src: "/reboot-kit/soft-start-shelf.jpg", alt: "A quiet bookshelf, the section break from the real kit" },
     { kind: "quote", text: "Text message swipe files. For when you want to open the door." },
     {
+      // Juliette, 12 Aug 2026: "should have different colour backgrounds"
+      // (back after the last pass made all four the same blush tone) —
+      // restored distinct colours, one per category, so they read as four
+      // separate moods at a glance, same approved palette as everywhere
+      // else in the app.
       kind: "promptGroup",
       category: "Soft and curious",
-      color: "blush",
+      color: "teal",
       prompts: [
         "Hi love, I got us this Communication & Intimacy toolkit. Would you try a few gentle prompts with me? No pressure, just a chance for us both to check in and maybe feel closer.",
         "I found something that's all about easy, honest conversations and it made me think about us. Want to try it together, just one quick card prompt?",
@@ -333,7 +338,7 @@ const softStart: PracticeEntry = {
     {
       kind: "promptGroup",
       category: "Cheeky and playful",
-      color: "blush",
+      color: "gold",
       prompts: [
         "Guess what, I bought us a \"mini game\" for relationship reconnection. Let's play a few card prompts and see what happens!",
         "I picked up something fun, think curiosity, not awkwardness. Want to test out a couple of conversation starters with me tonight?",
@@ -343,7 +348,7 @@ const softStart: PracticeEntry = {
     {
       kind: "promptGroup",
       category: "Tender and grounded",
-      color: "blush",
+      color: "brown",
       prompts: [
         "I want us to feel emotionally close again. I found a gentle kit that helps with conversation. Would you be open to trying it together?",
         "Miss our heart-to-heart talks. I got a guide that eases us into honest, safe conversation. Maybe we could try one tonight?",
@@ -355,7 +360,7 @@ const softStart: PracticeEntry = {
     {
       kind: "promptGroup",
       category: "Face to face",
-      color: "blush",
+      color: "blueGrey",
       prompts: [
         "Would you try a couple of these toolkit prompts with me? I think they're designed to help us talk, no pressure, just a gentle check-in.",
         "Found a resource that makes it easy for couples to talk about what matters, in a light way. Want to give it a try when we have a moment?",
@@ -365,6 +370,7 @@ const softStart: PracticeEntry = {
     {
       kind: "step",
       label: "Before you invite them in",
+      highlight: true,
       lines: [
         { text: "Have I tried one or two prompts myself, to feel confident?" },
         { text: "Am I regulated and calm? A breath or Touch Base™ always helps." },
@@ -375,6 +381,7 @@ const softStart: PracticeEntry = {
     {
       kind: "step",
       label: "How to set the mood",
+      highlight: true,
       lines: [
         { text: "Light a candle or set the scene, then ask: \"Want to try something gentle together?\"" },
         { text: "Leave the printed cards visible with a casual note: \"This looked fun, should we try one?\"" },
@@ -412,13 +419,12 @@ const cards: PracticeEntry = {
     { kind: "p", text: "Rooted in the powerful Dyad Technique, this is more than just conversation. **It's an experience.** A way to drop the walls, strip back the performance, and meet what's really there." },
     { kind: "p", text: "Not the polished version. Not the overthinking. Just what's true.", emphasis: "bold" },
     { kind: "quote", text: "This isn't therapy. It's not a \"fix.\" It's presence. Precision. And a whole lot of tenderness." },
-    // The 46 cards are the flagship of this entry. Juliette, 12 Aug 2026,
-    // after the first live version: "the cards aren't even on there" —
-    // they were, but only after a long scroll past the solo/couple
-    // instructions and the Mini Dyad video, easy to miss entirely. This
-    // puts a real way in right at the top; the fuller link stays below
-    // too, after the how-to-use steps, for anyone reading straight through.
-    { kind: "link", text: "Open the cards →", href: "/practice/communication-reboot-kit/cards" },
+    // The 46 cards are the flagship of this entry, and the whole kit.
+    // Juliette, 12 Aug 2026: first "the cards aren't even on there" (they
+    // were, just buried past the instructions and video), then after
+    // moving it up, "the button to get to them is impossible to see."
+    // This is now the loudest thing on the page, not a footnote link.
+    { kind: "bigLink", text: "Open the 46 cards →", subtext: "One prompt at a time, the real deck", href: "/practice/communication-reboot-kit/cards" },
     {
       kind: "step",
       label: "Solo use",

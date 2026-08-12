@@ -8,55 +8,59 @@ import { REBOOT_KIT_CARDS } from "@/lib/content/communication-reboot-kit";
 const DECK_TYPE = "communication-reboot-kit";
 
 // Spec R11 renders as a real card, one prompt at a time, matching the
-// ACTUAL printed/Canva card design pulled from the real source PDF (11 Aug
-// 2026, "Communication & Intimacy Reboot Kit (2).pdf" pages 5-13, checked
-// image by image): white card, a thin gold triangle outline top and
-// bottom, a black band with "COMMUNICATION / & INTIMACY / REBOOT" in gold
-// serif caps, then the prompt in plain black type, feelfullyyou.com under
-// the band. Juliette, 11 Aug 2026: "even the free guides are more
-// beautiful than this" — the flat promptGroup dump was the first problem;
-// this component's own black-on-gold styling (inverted from the real
-// white card) was a second one, caught only by checking the real pages.
-function GoldTriangle({ flip = false }: { flip?: boolean }) {
+// ACTUAL printed card design. Rebuilt 12 Aug 2026 against a precise crop
+// of a single real card (pulled fresh from the source PDF, not memory)
+// after Juliette said the first pass was "NOT at all what my cards look
+// like": taller card, a double-nested gold chevron (not a single thin
+// line), REBOOT visually bigger than the other two band words, and far
+// more generous, asymmetric whitespace, prompt sits upper-middle, the
+// site name sits close to the bottom ornament, not grouped together.
+function GoldChevron({ flip = false }: { flip?: boolean }) {
   return (
     <svg
-      viewBox="0 0 100 40"
-      className={`h-6 w-16 ${flip ? "rotate-180" : ""}`}
+      viewBox="0 0 200 110"
+      className={`h-14 w-32 ${flip ? "rotate-180" : ""}`}
       fill="none"
       stroke="#a88538"
-      strokeWidth={1.5}
+      strokeWidth={1.75}
     >
-      <polyline points="0,0 50,38 100,0" />
+      <polyline points="15,8 100,95 185,8" />
+      <polyline points="72,50 100,95 128,50" />
     </svg>
   );
 }
 
 function Card({ text, index, total }: { text: string; index: number; total: number }) {
   return (
-    <div className="flex aspect-[3/4] w-full max-w-xs flex-col items-center overflow-hidden rounded-2xl border border-[#a88538]/30 bg-white text-center shadow-[0_30px_70px_-30px_rgba(0,0,0,0.35)]">
-      <div className="flex w-full flex-col items-center pt-5">
-        <GoldTriangle />
+    <div className="flex aspect-[2/3] w-full max-w-xs flex-col overflow-hidden rounded-lg border border-[#a88538]/25 bg-white text-center shadow-[0_30px_70px_-30px_rgba(0,0,0,0.35)]">
+      <div className="flex w-full flex-col items-center pt-6">
+        <GoldChevron />
       </div>
-      <div className="mt-3 w-full bg-ffy-black px-4 py-3">
-        <p className="font-display text-sm font-semibold uppercase leading-tight tracking-[0.1em] text-ffy-gold-pale">
+      <div className="w-full bg-ffy-black px-4 py-4">
+        <p className="font-display text-xs font-semibold uppercase leading-tight tracking-[0.2em] text-ffy-gold-pale">
           Communication
-          <br />
+        </p>
+        <p className="font-display text-xs font-semibold uppercase leading-tight tracking-[0.2em] text-ffy-gold-pale">
           &amp; Intimacy
-          <br />
+        </p>
+        <p className="mt-1 font-display text-xl font-bold uppercase tracking-[0.15em] text-ffy-gold-pale">
           Reboot
         </p>
       </div>
-      <div className="flex flex-1 flex-col items-center justify-center gap-3 px-6">
-        <p className="font-display text-base font-semibold uppercase leading-snug text-ffy-black sm:text-lg">
+
+      <div className="flex flex-1 flex-col px-7">
+        <p className="mt-10 font-display text-lg font-semibold uppercase leading-snug text-ffy-black sm:text-xl">
           {text}
         </p>
-        <p className="text-[11px] uppercase tracking-[0.15em] text-ffy-black/50">feelfullyyou.com</p>
+        <div className="flex-1" />
+        <p className="mb-3 text-[11px] uppercase tracking-[0.15em] text-ffy-black/50">feelfullyyou.com</p>
       </div>
-      <div className="flex w-full flex-col items-center gap-2 pb-5">
+
+      <div className="flex w-full flex-col items-center gap-1 pb-6">
         <p className="text-[10px] uppercase tracking-[0.2em] text-ffy-black/40">
           {index + 1} of {total}
         </p>
-        <GoldTriangle flip />
+        <GoldChevron flip />
       </div>
     </div>
   );
