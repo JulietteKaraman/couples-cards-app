@@ -4,7 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { CollectionGate } from "@/components/auth/CollectionGate";
-import { REBOOT_KIT_CARDS } from "@/lib/content/communication-reboot-kit";
+import { REBOOT_KIT_CARDS, RebootCard } from "@/lib/content/communication-reboot-kit";
 
 const DECK_TYPE = "communication-reboot-kit";
 
@@ -14,8 +14,11 @@ const DECK_TYPE = "communication-reboot-kit";
 // area painted blank) as the card face, with the live prompt text
 // absolutely positioned on top — not a from-scratch CSS/SVG recreation.
 // Juliette, 12 Aug 2026: "these are NOT like my cards!!! Use the same code
-// from the actual cards app and integrate them."
-function Card({ text, index, total }: { text: string; index: number; total: number }) {
+// from the actual cards app and integrate them." Font sized down and
+// bold restricted to two-line cards' first line only, per her direct
+// correction: "ONLY the cards that have 2 questions are in bold."
+function Card({ card, index, total }: { card: RebootCard; index: number; total: number }) {
+  const isSplit = typeof card !== "string";
   return (
     <>
       <div className="relative w-full max-w-xs overflow-hidden rounded-lg border border-[#a88538]/25 shadow-[0_30px_70px_-30px_rgba(0,0,0,0.35)]">
@@ -27,10 +30,24 @@ function Card({ text, index, total }: { text: string; index: number; total: numb
           priority
           className="h-auto w-full"
         />
-        <div className="absolute inset-0 flex flex-col items-center justify-center px-9" style={{ top: "40%", height: "35%" }}>
-          <p className="text-center font-display text-lg font-semibold uppercase leading-snug text-ffy-black sm:text-xl">
-            {text}
-          </p>
+        <div className="absolute inset-x-0 flex flex-col items-center gap-4 px-9" style={{ top: "38%", height: "40%" }}>
+          <div className="flex flex-1 flex-col items-center justify-center gap-2.5">
+            {isSplit ? (
+              <>
+                <p className="text-center font-display text-[0.95rem] font-semibold uppercase leading-snug text-ffy-black sm:text-base">
+                  {card.main}
+                </p>
+                <p className="text-center font-display text-[0.95rem] font-normal uppercase leading-snug text-ffy-black sm:text-base">
+                  {card.secondary}
+                </p>
+              </>
+            ) : (
+              <p className="text-center font-display text-[0.95rem] font-normal uppercase leading-snug text-ffy-black sm:text-base">
+                {card}
+              </p>
+            )}
+          </div>
+          <p className="text-[10px] uppercase tracking-[0.15em] text-ffy-black/45">feelfullyyou.com</p>
         </div>
       </div>
       {/* The real card has no counter printed on it — this is an app-only
@@ -78,7 +95,7 @@ function CardsPageContent() {
       </div>
 
       <div className="mt-8 flex w-full flex-1 flex-col items-center justify-center">
-        <Card text={REBOOT_KIT_CARDS[index]} index={index} total={total} />
+        <Card card={REBOOT_KIT_CARDS[index]} index={index} total={total} />
 
         <div className="mt-8 flex items-center gap-4">
           <button

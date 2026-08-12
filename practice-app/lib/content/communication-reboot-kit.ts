@@ -38,15 +38,23 @@ const MINI_DYAD_VIDEO_URL =
 
 // Spec R11 Appendix, verbatim. Cards 16 and 46 are the couples/solo
 // phrasing of the same closing integration prompt, both included.
-export const REBOOT_KIT_CARDS: string[] = [
+// Some cards are a statement plus a separate follow-up question. Real
+// cards render that as two lines: the statement bold, the question plain
+// underneath, not run together as one sentence — Juliette, 12 Aug 2026:
+// "so how I do it in the normal cards is the first line here would be
+// bold... then the next sentence (not bold & under it)." A plain string
+// is a single-line card; {main, secondary} is the two-line kind.
+export type RebootCard = string | { main: string; secondary: string };
+
+export const REBOOT_KIT_CARDS: RebootCard[] = [
   "Tell me what intimacy feels like to you in your body.",
-  "Tell me about one moment with me that still has you smile. What do you feel in your body recalling this now?",
+  { main: "Tell me about one moment with me that still has you smile.", secondary: "What do you feel in your body recalling this now?" },
   "Tell me what I can do that helps you soften into feeling safe.",
-  "Tell me what scares you about touch, and what excites you.",
+  { main: "Tell me what scares you about touch.", secondary: "And what excites you?" },
   "Tell me the kind of touch that lingers long after it's over.",
-  "Tell me about a time that touch didn't feel right for you, and why.",
+  { main: "Tell me about a time that touch didn't feel right for you.", secondary: "And why?" },
   "Tell me what you secretly wish more of between us.",
-  "Tell me the part of your body that most wants to be celebrated and why.",
+  { main: "Tell me the part of your body that most wants to be celebrated.", secondary: "And why?" },
   "Tell me how your hands ache to explore me.",
   "Tell me something playful you've secretly wanted to try with me, but haven't said out loud yet.",
   "Tell me what you dream our intimacy could look like a year from now.",
@@ -57,7 +65,7 @@ export const REBOOT_KIT_CARDS: string[] = [
   "Tell me a win, insight or learning about doing this experience together.",
   "Tell me what intimacy with yourself looks and feels like.",
   "Tell me what touch means to you when no one else is involved.",
-  "Tell me a moment when someone's touch felt wrong, and how your body remembers it now. How can I best support you when this comes up?",
+  { main: "Tell me about a moment when someone's touch felt wrong.", secondary: "How can I best support you when this comes up?" },
   "Tell me what helps your body feel safe enough to open.",
   "Tell me how your body longs to be touched today.",
   "Tell me what you're hungry for having more of in your own life.",
@@ -67,23 +75,23 @@ export const REBOOT_KIT_CARDS: string[] = [
   "Tell me what a new self-care ritual could look like if it was all about pleasure and ease.",
   "Tell me where in your body or in your life you feel lightest right now.",
   "Tell me what you would say to your own body if you could write it a love letter today.",
-  "Tell me what you wish you could gift yourself, an experience, an insight, or simply a feeling.",
-  "Tell me how you most want to feel when you wake up tomorrow, and what might help.",
-  "Tell me something you've never said because you didn't want to change. How I, or your partner, sees you.",
+  { main: "Tell me what you wish you could gift yourself.", secondary: "An experience, an insight, or simply a feeling." },
+  { main: "Tell me how you most want to feel when you wake up tomorrow.", secondary: "What might help?" },
+  { main: "Tell me something you've never said because you didn't want to change.", secondary: "How I, or your partner, sees you." },
   "Tell me about a moment you wanted more closeness, but didn't know how to ask.",
   "Tell me what your family still doesn't quite \"get\" about who you are now.",
   "Tell me a part of you that feels most alive in this relationship, and one that feels a little forgotten.",
   "Tell me about a tradition you secretly loved, or secretly loathed, growing up.",
   "Tell me one story from your childhood that shaped how you see love.",
-  "Tell me one part of your body you're learning to love and what helps.",
-  "Tell me one part of your body you feel real pride in. How do you care for it?",
+  { main: "Tell me one part of your body you're learning to love.", secondary: "And what helps?" },
+  { main: "Tell me one part of your body you feel real pride in.", secondary: "How do you care for it?" },
   "Tell me something you used to chase that no longer feels important.",
   "Tell me what makes a day feel meaningful to you now.",
   "Tell me one way you protect your peace.",
   "Tell me how your body lets you know it feels safe with someone.",
   "Tell me something you used to hide because you thought it made you weak, but now see differently.",
   "Tell me what belief about yourself is starting to soften.",
-  "Tell me what emotion you find hardest to witness in others, and how it lands in you.",
+  { main: "Tell me what emotion you find hardest to witness in others.", secondary: "And how does it land in you?" },
   "Tell me what is a win, insight or learning you've had about this experience.",
 ];
 
