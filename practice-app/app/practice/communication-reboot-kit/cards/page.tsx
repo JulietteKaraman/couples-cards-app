@@ -17,26 +17,30 @@ const DECK_TYPE = "communication-reboot-kit";
 // from the actual cards app and integrate them."
 function Card({ text, index, total }: { text: string; index: number; total: number }) {
   return (
-    <div className="relative w-full max-w-xs overflow-hidden rounded-lg border border-[#a88538]/25 shadow-[0_30px_70px_-30px_rgba(0,0,0,0.35)]">
-      <Image
-        src="/reboot-kit/card-template.png"
-        alt="Communication & Intimacy Reboot card"
-        width={939}
-        height={1331}
-        priority
-        className="h-auto w-full"
-      />
-      <div className="absolute inset-0 flex flex-col items-center justify-center px-9" style={{ top: "40%", height: "35%" }}>
-        <p className="text-center font-display text-lg font-semibold uppercase leading-snug text-ffy-black sm:text-xl">
-          {text}
-        </p>
+    <>
+      <div className="relative w-full max-w-xs overflow-hidden rounded-lg border border-[#a88538]/25 shadow-[0_30px_70px_-30px_rgba(0,0,0,0.35)]">
+        <Image
+          src="/reboot-kit/card-template.png"
+          alt="Communication & Intimacy Reboot card"
+          width={939}
+          height={1331}
+          priority
+          className="h-auto w-full"
+        />
+        <div className="absolute inset-0 flex flex-col items-center justify-center px-9" style={{ top: "40%", height: "35%" }}>
+          <p className="text-center font-display text-lg font-semibold uppercase leading-snug text-ffy-black sm:text-xl">
+            {text}
+          </p>
+        </div>
       </div>
-      <div className="absolute inset-x-0 bottom-0 flex flex-col items-center gap-0.5 pb-[6%]">
-        <p className="text-[10px] uppercase tracking-[0.2em] text-ffy-black/40">
-          {index + 1} of {total}
-        </p>
-      </div>
-    </div>
+      {/* The real card has no counter printed on it — this is an app-only
+          navigation aid, so it lives below the card, not squeezed into
+          the tight real gap above the bottom chevron where it used to
+          overlap. */}
+      <p className="mt-3 text-[11px] uppercase tracking-[0.2em] text-ffy-black/40">
+        {index + 1} of {total}
+      </p>
+    </>
   );
 }
 
