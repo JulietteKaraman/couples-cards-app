@@ -14,7 +14,10 @@ export type WhyLine = {
 // Juliette's existing approved palette (core + supporting), never an
 // invented colour. Each is a full card, background and text together, so
 // the five categories read as visibly different at a glance.
-export type PromptGroupColor = "teal" | "gold" | "brown" | "blueGrey" | "black";
+// "blush" added 12 Aug 2026 for the Communication Reboot Kit's swipe-file
+// cards, checked directly against the real PDF: soft cream/rose card, dark
+// text, brown label, not a saturated solid-colour fill like the other five.
+export type PromptGroupColor = "teal" | "gold" | "brown" | "blueGrey" | "black" | "blush";
 
 // Gamma's own "step diagram" cards (a numbered flow, each step a short
 // heading plus an optional line under it) — Juliette places these
@@ -37,6 +40,11 @@ export type ContentBlock =
   | { kind: "link"; text: string; href: string }
   | { kind: "image"; src: string; alt: string }
   | { kind: "video"; vimeoId: string }
+  | { kind: "youtube"; videoId: string; label: string }
+  // A small, transparent, non-full-width sign-off graphic (e.g. Juliette's
+  // real gold cursive signature) — distinct from `image`, which renders
+  // full-width with a background fill, wrong for a small inline flourish.
+  | { kind: "signature"; src: string; alt: string }
   | { kind: "driveVideo"; url: string; label: string }
   | { kind: "driveAudio"; url: string; label: string }
   | { kind: "audio"; src: string; label: string }

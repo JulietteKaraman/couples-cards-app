@@ -1,14 +1,20 @@
 import { supabaseBrowser } from "@/lib/supabase/client";
 
-// Spec R7: the doc's 4 fixed reflection prompts plus one open "additional
-// reflections" space. Keys are stable strings, not the prompt text itself,
-// so the copy can be edited later without orphaning saved answers.
+// Spec R7: the doc's 4 fixed REFLECTION prompts plus its 3 named
+// ADDITIONAL REFLECTIONS questions (real source: "Communication & Intimacy
+// Reboot Kit (2).pdf", page 14 — checked directly 11 Aug 2026). The three
+// additional questions were dropped in the first build, collapsed into one
+// generic "Additional reflections" catch-all; restored verbatim here.
+// Keys are stable strings, not the prompt text itself, so the copy can be
+// edited later without orphaning saved answers.
 export const JOURNAL_PROMPTS: { key: string; label: string }[] = [
-  { key: "surprised", label: "What surprised you" },
-  { key: "felt-good-or-hard", label: "What felt good (or hard)" },
-  { key: "want-to-remember", label: "What you want to remember" },
-  { key: "what-changed", label: "What changed, even subtly" },
-  { key: "additional", label: "Additional reflections" },
+  { key: "surprised", label: "What surprised you?" },
+  { key: "felt-good-or-hard", label: "What felt good (or hard)?" },
+  { key: "want-to-remember", label: "What you want to remember?" },
+  { key: "what-changed", label: "What changed, even subtly?" },
+  { key: "felt-safe-or-open", label: "What helped you feel safe or open today?" },
+  { key: "try-next-time", label: "What would you like to try next time?" },
+  { key: "celebrate", label: "What do you most want to celebrate right now?" },
 ];
 
 export async function getJournalEntries(

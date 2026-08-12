@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Script from "next/script";
+import type { ReactNode } from "react";
 import { ContentBlock } from "@/lib/content/blocks";
 
 function driveIdFromUrl(url: string): string | null {
@@ -29,6 +30,28 @@ function splitTermLine(text: string): { term: string; rest: string } | null {
   return { term, rest };
 }
 
+// Real source pages (checked directly against Juliette's own per-tab PDF
+// exports, 12 Aug 2026) colour specific phrases inside a paragraph, not the
+// whole line, e.g. "just curiosity and a safe place to start." landing in
+// the warm brown/rose accent while the rest of the sentence stays black.
+// Content files mark that with **double asterisks**; this renders the
+// marked span as a coloured, semibold inline run and leaves everything
+// else untouched. No existing content file uses "**" today, so this is
+// purely additive — nothing already shipped changes appearance.
+function renderInline(text: string, dark: boolean): ReactNode {
+  const parts = text.split(/\*\*(.+?)\*\*/g);
+  if (parts.length === 1) return text;
+  return parts.map((part, idx) =>
+    idx % 2 === 1 ? (
+      <span key={idx} className={`font-semibold ${dark ? "text-ffy-gold-pale" : "text-ffy-gold-deep"}`}>
+        {part}
+      </span>
+    ) : (
+      <span key={idx}>{part}</span>
+    )
+  );
+}
+
 function TermLine({
   text,
   dark,
@@ -39,7 +62,7 @@ function TermLine({
   bodyClassName?: string;
 }) {
   const split = splitTermLine(text);
-  if (!split) return <p className={bodyClassName}>{text}</p>;
+  if (!split) return <p className={bodyClassName}>{renderInline(text, dark)}</p>;
   return (
     <p className={bodyClassName}>
       <span
@@ -49,7 +72,7 @@ function TermLine({
       >
         {split.term}:
       </span>{" "}
-      <span>{split.rest}</span>
+      <span>{renderInline(split.rest, dark)}</span>
     </p>
   );
 }
@@ -75,7 +98,7 @@ export function Blocks({ blocks, dark = false }: { blocks: ContentBlock[]; dark?
                       : undefined
                 }
               >
-                {b.text}
+                {renderInline(b.text, dark)}
               </p>
             );
 
@@ -87,7 +110,7 @@ export function Blocks({ blocks, dark = false }: { blocks: ContentBlock[]; dark?
                   dark ? "text-ffy-gold-pale" : "text-ffy-teal"
                 }`}
               >
-                {b.text}
+                {renderInline(b.text, dark)}
               </p>
             );
 
@@ -97,7 +120,7 @@ export function Blocks({ blocks, dark = false }: { blocks: ContentBlock[]; dark?
                 key={i}
                 className={`font-display text-2xl font-bold not-italic leading-snug sm:text-3xl ${dark ? "text-ffy-gold" : "text-ffy-teal"}`}
               >
-                {b.text}
+                {renderInline(b.text, dark)}
               </p>
             );
 
@@ -122,14 +145,14 @@ export function Blocks({ blocks, dark = false }: { blocks: ContentBlock[]; dark?
                   {b.lines.map((line, li) =>
                     line.emphasis === "bold" ? (
                       <p key={li} className={`font-semibold ${dark ? "text-ffy-cream" : "text-ffy-black"}`}>
-                        {line.text}
+                        {renderInline(line.text, dark)}
                       </p>
                     ) : line.emphasis === "accent" ? (
                       <p
                         key={li}
                         className={`font-display font-semibold ${dark ? "text-ffy-gold-pale" : "text-ffy-gold-deep"}`}
                       >
-                        {line.text}
+                        {renderInline(line.text, dark)}
                       </p>
                     ) : (
                       <TermLine
@@ -156,14 +179,14 @@ export function Blocks({ blocks, dark = false }: { blocks: ContentBlock[]; dark?
                       key={li}
                       className={`font-display text-base font-semibold not-italic ${dark ? "text-ffy-cream" : "text-ffy-black"}`}
                     >
-                      {line.text}
+                      {renderInline(line.text, dark)}
                     </p>
                   ) : line.emphasis === "accent" ? (
                     <p
                       key={li}
                       className={`font-display text-base font-semibold not-italic ${dark ? "text-ffy-gold-pale" : "text-ffy-gold-deep"}`}
                     >
-                      {line.text}
+                      {renderInline(line.text, dark)}
                     </p>
                   ) : (
                     <TermLine
@@ -197,7 +220,7 @@ export function Blocks({ blocks, dark = false }: { blocks: ContentBlock[]; dark?
                             : "font-display text-lg font-semibold leading-snug text-ffy-gold-pale"
                         }
                       >
-                        {line.text}
+                        {renderInline(line.text, dark)}
                       </p>
                     ) : (
                       <TermLine key={li} text={line.text} dark={dark} bodyClassName="text-[0.98rem] leading-relaxed text-ffy-cream/90" />
@@ -257,6 +280,36 @@ export function Blocks({ blocks, dark = false }: { blocks: ContentBlock[]; dark?
                   />
                 </div>
                 <Script src="https://player.vimeo.com/api/player.js" strategy="lazyOnload" />
+              </div>
+            );
+
+          case "youtube": {
+            // For real videos that already live on YouTube elsewhere in the
+            // app (e.g. Touch Base® — see app/practice/touch-base/page.tsx),
+            // rather than re-hosting a second copy on Drive. 16:9, matches
+            // the source embed exactly.
+            return (
+              <div key={i} className="flex flex-col gap-2">
+                <p className={`text-xs uppercase tracking-wide ${dark ? "text-ffy-gold-pale" : "text-ffy-gold-deep"}`}>{b.label}</p>
+                <div className="aspect-video w-full overflow-hidden rounded-2xl bg-ffy-black">
+                  <iframe
+                    src={`https://www.youtube.com/embed/${b.videoId}`}
+                    className="h-full w-full"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    title={b.label}
+                  />
+                </div>
+              </div>
+            );
+          }
+
+          case "signature":
+            // Small, transparent, left-aligned — never the full-width
+            // rounded-bg treatment `image` uses, wrong for a flourish.
+            return (
+              <div key={i} className="relative h-24 w-48">
+                <Image src={b.src} alt={b.alt} fill sizes="192px" className="object-contain object-left" />
               </div>
             );
 
@@ -348,6 +401,7 @@ export function Blocks({ blocks, dark = false }: { blocks: ContentBlock[]; dark?
               brown: "bg-ffy-brown text-ffy-cream",
               blueGrey: "bg-[#d8dfe1] text-ffy-black",
               black: "bg-ffy-black text-ffy-gold-pale",
+              blush: "bg-ffy-cream-2 border border-[#e3c9b6] text-ffy-black",
             };
             const darkTheme: Record<string, string> = {
               teal: "bg-white/5 border border-ffy-teal text-ffy-cream",
@@ -355,16 +409,22 @@ export function Blocks({ blocks, dark = false }: { blocks: ContentBlock[]; dark?
               brown: "bg-white/5 border border-ffy-gold/40 text-ffy-cream",
               blueGrey: "bg-white/10 text-ffy-cream",
               black: "bg-black/40 border border-ffy-gold-pale/40 text-ffy-gold-pale",
+              blush: "bg-white/5 border border-ffy-gold/30 text-ffy-cream",
             };
+            // blush's label reads as a small brown caption, not a bold
+            // white-on-colour headline — matches the real swipe-file cards
+            // (checked directly, 12 Aug 2026), the other five stay as-is.
+            const categoryClass =
+              b.color === "blush"
+                ? `font-display text-sm font-bold uppercase tracking-wide ${dark ? "text-ffy-gold-pale" : "text-ffy-gold-deep"}`
+                : "font-display text-lg font-bold uppercase tracking-wide";
             return (
               <div key={i} className={`rounded-2xl px-6 py-6 ${dark ? darkTheme[b.color] : theme[b.color]}`}>
-                <p className="font-display text-lg font-bold uppercase tracking-wide">
-                  {b.category}
-                </p>
+                <p className={categoryClass}>{b.category}</p>
                 <div className="mt-4 flex flex-col gap-3">
                   {b.prompts.map((prompt, pi) => (
                     <p key={pi} className="text-[1.02rem] leading-relaxed">
-                      {prompt}
+                      {renderInline(prompt, dark)}
                     </p>
                   ))}
                 </div>

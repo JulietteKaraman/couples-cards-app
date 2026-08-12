@@ -63,15 +63,19 @@ function JournalRow({
 
   const dirty = value !== initial;
 
+  // Matches the real doc's reflection pages exactly: a blush-pink bordered
+  // box with an italic prompt label, not a plain white card. Juliette, 11
+  // Aug 2026: "compare it page by page to the google doc/pdf" — this is
+  // that comparison, applied.
   return (
-    <div className="rounded-2xl border border-ffy-border bg-white/70 p-5 sm:p-6">
-      <p className="font-display text-lg text-ffy-teal">{label}</p>
+    <div className="rounded-lg border border-[#d9a8ac]/60 bg-[#f8f0ea] p-5 sm:p-6">
+      <p className="font-display text-lg italic text-ffy-black">{label}</p>
       <textarea
         value={value}
         onChange={(e) => setValue(e.target.value)}
         rows={4}
         placeholder="Write as much or as little as you want."
-        className="mt-3 w-full rounded-xl border border-ffy-border bg-white px-4 py-3 text-[1rem] leading-relaxed"
+        className="mt-3 w-full rounded-md border border-[#d9a8ac]/50 bg-white/70 px-4 py-3 text-[1rem] leading-relaxed placeholder:text-ffy-brown/50"
       />
       <div className="mt-3 flex items-center gap-3">
         <button

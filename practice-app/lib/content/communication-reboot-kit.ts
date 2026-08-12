@@ -26,8 +26,13 @@ export const REBOOT_PLAYLIST_URL =
 export const REBOOT_PLAYLIST_STATEMENT =
   "I came off Spotify. It doesn't pay artists fairly, and its founder is funding a company that builds weapons for genocide. I won't be associated with that. This playlist lives on Tidal instead.";
 
-const TOUCH_BASE_VIDEO_URL =
-  "https://drive.google.com/file/d/1H9glMx7rnAkzwMFMxlBE9UDEvJH2bOu7/view?usp=sharing";
+// The Drive copy this used to point at (1H9glMx7rnAkzwMFMxlBE9UDEvJH2bOu7) is
+// dead, confirmed 11 Aug 2026 (Drive returns "the file you have requested
+// does not exist"). Touch Base already has a real, working, canonical video
+// live elsewhere in this app on YouTube — app/practice/touch-base/page.tsx,
+// sourced from feelfullyyou.com/touch-base-anchor — so this points at that
+// same video instead of a second, separately-uploaded Drive copy.
+const TOUCH_BASE_YOUTUBE_ID = "qWaZ3rk0His";
 const MINI_DYAD_VIDEO_URL =
   "https://drive.google.com/file/d/1fs-hgIeJwX7NFsqxLvBYEi38i0oOhN0K/view?usp=sharing";
 
@@ -88,6 +93,8 @@ const welcome: PracticeEntry = {
   title: "Welcome to The Communication Reboot Kit",
   eyebrow: "For couples ready to gently open the conversation around intimacy",
   kind: "essay",
+  image: "/reboot-kit/hero.png",
+  imageAlt: "Communication & Intimacy Reboot, the real cover from the kit",
   imageSide: "left",
   body: [
     { kind: "p", text: "For couples ready to gently open the conversation around intimacy. Without drama, awkwardness, or therapy." },
@@ -109,28 +116,29 @@ const welcome: PracticeEntry = {
     {
       kind: "why",
       lines: [
-        { text: "You don't need a big reinvention. Just curiosity and a safe place to start.", emphasis: "bold" },
-        { text: "Each prompt, script, and tool is designed for couples who want to move past feeling distant or stuck, and try a new, honest way of reconnecting." },
-        { text: "Take it one step at a time. Pick a single prompt or script when you're ready, or just listen together." },
+        { text: "You don't need a big reinvention: **just curiosity and a safe place to start.**" },
+        { text: "Each prompt, script, and tool is designed for couples who want to move past feeling distant or stuck, and **try a new, honest way of reconnecting.**" },
+        { text: "**Take it one step at a time.** Pick a single prompt or script when you're ready, or just listen together." },
         { text: "Every \"yes\" here is an invitation, never a requirement.", emphasis: "accent" },
-        { text: "This kit is your gentle launchpad. No performance, but a safe return to what makes relationships feel real and nourishing." },
+        { text: "This kit is your gentle launchpad: no performance, but **a safe return to what makes relationships feel real and nourishing.**" },
       ],
     },
     {
       kind: "step",
       label: "Outcomes",
       lines: [
-        { text: "Discover a safe, simple way to start talking about what's missing. Without drama or difficult \"talks.\"" },
+        { text: "Discover a safe, simple way to start talking about what's missing: **without drama or difficult \"talks.\"**" },
         { text: "Begin rebuilding closeness and desire gently, with actionable prompts and quick wins." },
-        { text: "Experience how even one open moment can make it easier to reconnect. Without needing therapy or a huge transformation." },
+        { text: "Experience how even one open moment can make it easier to reconnect: without needing therapy or a huge transformation." },
       ],
     },
-    { kind: "p", text: "Pick one tool at a time. Take it slow." },
-    { kind: "p", text: "This isn't about fixing anything. It's about making space for what really matters, one small \"yes\" at a time." },
+    { kind: "quote", text: "Pick one tool at a time. Take it slow." },
+    { kind: "p", text: "This isn't about fixing anything. It's about making space for what really matters, one small **\"yes\"** at a time." },
     { kind: "quote", text: "Welcome inside. This is your first, doable step into a new kind of intimacy and real communication." },
     { kind: "p", text: "The journey doesn't begin in your head. It begins with simple communication into intimacy." },
-    { kind: "p", text: "Love always,", emphasis: "accent" },
-    { kind: "p", text: "Juliette. Host of The Scrumptious Woman® Podcast. Featured in Forbes, Cosmopolitan, The Telegraph, The Times, FOX, CBS and more." },
+    { kind: "signature", src: "/reboot-kit/signature.png", alt: "Love Always, Juliette (signature)" },
+    { kind: "p", text: "Host of The Scrumptious Woman® Podcast." },
+    { kind: "p", text: "Featured in Forbes, Cosmopolitan, The Telegraph, The Times, FOX, CBS and more." },
   ],
 };
 
@@ -140,21 +148,45 @@ const startHere: PracticeEntry = {
   title: "Start Here",
   eyebrow: "Your starting pieces",
   kind: "essay",
+  image: "/reboot-kit/start-here.png",
+  imageAlt: "Start Here: Your Communication & Intimacy Reboot Pathway, the real page from the kit",
   imageSide: "left",
   body: [
     { kind: "p", text: "These are your starting pieces. Specially designed to make opening up and reconnecting feel safe, grounded, and truly doable." },
     { kind: "p", text: "Move through them in order, or just choose the first step that feels easiest for you right now." },
     {
-      kind: "promptGroup",
-      category: "What's in the kit",
-      color: "teal",
-      prompts: [
-        "Touch Base™ Video. Begin with a simple, powerful kinesthetic gesture to ground your body in safety and presence, before any conversation or touch. This transforms nerves into calm and sets the foundation for true connection.",
-        "The Soft Start Conversation Kit. Use gentle, swipe-and-go scripts to invite your partner in, without turning it into \"a thing.\" These make it safe and easy to say, \"Can we talk?\" or \"Let's reconnect,\" no matter how long it's been.",
-        "Open the Conversation. Move beyond surface talk into deeper emotional intimacy, safety, and honesty. These conversation openers are built to gently reveal what's quietly missing or deeply wanted, without pressure or overthinking.",
-        "The Connection and Intimacy Cards. Forty-six communication and intimacy prompts to help you speak from the heart, not just the head. Let these cues guide you to the words you didn't know how to say, or to questions that create understanding in minutes.",
-        "Mini Dyad Instruction Video. A quick, supportive guide so you can feel confident using the cards and prompts, even if this is all new. No stress, just small wins.",
-        "The Touch Reconnection Playlist. Curated music to support presence, play, and connection.",
+      // Real design (checked directly against Juliette's own per-tab PDF
+      // export, 12 Aug 2026): this is a numbered circle-icon step flow,
+      // 1 through 6, not a flat card list. Matches the `diagram` block's
+      // never-skip rule in this app's own CLAUDE.md, missed on the first
+      // pass here the same way it was missed on 10 Touch Rituals and The
+      // Unspoken Distance before it.
+      kind: "diagram",
+      steps: [
+        {
+          heading: "Touch Base™ Video",
+          text: "Begin with a simple, powerful kinesthetic gesture to ground your body in safety and presence, before any conversation or touch. This transforms nerves into calm and sets the foundation for true connection.",
+        },
+        {
+          heading: "The Soft Start Conversation Kit",
+          text: "Use gentle, swipe-and-go scripts to invite your partner in, without turning it into \"a thing.\" These make it safe and easy to say, \"Can we talk?\" or \"Let's reconnect,\" no matter how long it's been.",
+        },
+        {
+          heading: "Open the Conversation",
+          text: "Move beyond surface talk into deeper emotional intimacy, safety, and honesty. These conversation openers are built to gently reveal what's quietly missing or deeply wanted, without pressure or overthinking.",
+        },
+        {
+          heading: "The Connection and Intimacy Cards",
+          text: "Forty-six communication and intimacy prompts to help you speak from the heart, not just the head. Let these cues guide you to the words you didn't know how to say, or to questions that create understanding in minutes.",
+        },
+        {
+          heading: "Mini Dyad Instruction Video",
+          text: "A quick, supportive guide so you can feel confident using the cards and prompts, even if this is all new. No stress, just small wins.",
+        },
+        {
+          heading: "The Touch Reconnection Playlist",
+          text: "Curated music to support presence, play, and connection.",
+        },
       ],
     },
     { kind: "quote", text: "Leading toward intimacy." },
@@ -168,6 +200,8 @@ const touchBase: PracticeEntry = {
   title: "The Touch Base™ Video",
   eyebrow: "A tiny gesture. A massive shift.",
   kind: "essay",
+  image: "/reboot-kit/touch-base.jpg",
+  imageAlt: "Touch Base, the real branded banner from the kit",
   imageSide: "left",
   body: [
     { kind: "p", text: "This short video introduces you to the Touch Base™ cue. A discreet, powerful physical anchor that signals to your body: \"I'm here. I'm safe. I can stay.\"" },
@@ -183,11 +217,11 @@ const touchBase: PracticeEntry = {
         { text: "So discreet you can use it in bed, at dinner, mid-argument, or before intimacy." },
       ],
     },
-    { kind: "driveVideo", url: TOUCH_BASE_VIDEO_URL, label: "Watch the Touch Base™ video" },
+    { kind: "youtube", videoId: TOUCH_BASE_YOUTUBE_ID, label: "Watch the Touch Base™ video" },
     {
       kind: "why",
       lines: [
-        { text: "Touch Base activates pressure points that, when paired with slowness, breath, and focus, downregulate the stress response." },
+        { text: "Touch Base activates pressure points that, when paired with **slowness, breath, and focus**, downregulate the stress response." },
         { text: "You're gently retraining your system to signal: \"There's no tiger. I don't have to brace. I'm safe to feel this.\"" },
         { text: "It might feel silly at first. That's totally normal. This soft, slow gesture becomes a kind of invisible safety blanket. Your partner won't even notice. But your body will.", emphasis: "accent" },
       ],
@@ -246,9 +280,11 @@ const playlist: PracticeEntry = {
   title: "The Touch Reconnection Playlist",
   eyebrow: "Music as a bridge to presence",
   kind: "essay",
+  image: "/reboot-kit/touch-playlist.png",
+  imageAlt: "The Touch Reconnection Playlist, the real banner from the kit",
   imageSide: "left",
   body: [
-    { kind: "p", text: "Music is a bridge to presence. This curated playlist supports you in softening into sensation." },
+    { kind: "p", text: "**Music is a bridge to presence**, and this curated playlist supports you in softening into sensation." },
     {
       kind: "step",
       label: "How to use it",
@@ -258,7 +294,12 @@ const playlist: PracticeEntry = {
         { text: "You don't need words. Let the music carry you into your body." },
       ],
     },
+    // The real screenshot of the actual Tidal playlist, plus a QR code
+    // generated fresh against REBOOT_PLAYLIST_URL (not a reused image of
+    // the doc's own QR, so it can never point at a stale link).
+    { kind: "image", src: "/reboot-kit/playlist-mockup.png", alt: "The real Touch Reboot Kit playlist on Tidal, 44 tracks" },
     { kind: "link", text: "Open the Touch Reboot playlist on Tidal →", href: REBOOT_PLAYLIST_URL },
+    { kind: "image", src: "/reboot-kit/playlist-qr.png", alt: "QR code to open the Touch Reconnection Playlist" },
     { kind: "notice", lines: [{ text: REBOOT_PLAYLIST_STATEMENT }] },
   ],
 };
@@ -269,17 +310,20 @@ const softStart: PracticeEntry = {
   title: "The Soft Start Conversation Kit",
   eyebrow: "For when you want to invite your partner in",
   kind: "essay",
+  image: "/reboot-kit/soft-start.jpg",
+  imageAlt: "The Soft Start Conversation Kit, the real banner from the kit",
   imageSide: "left",
   body: [
     { kind: "p", text: "For when you want to invite your partner in, without pressure, performance, or a \"talk.\"" },
     { kind: "p", text: "You've found something beautiful. A gentle way to open up conversations that matter. The hardest part is often just inviting your partner in, without making it feel like something's wrong or uncomfortable." },
     { kind: "p", text: "This is your Soft Start Conversation Kit. Gentle scripts, swipe copy, and suggested phrases to help you invite your partner into a new dialogue without turning it into \"a big thing,\" express what you're quietly longing for with no blame or pressure, and set the tone for emotional intimacy that feels open, supportive, and warm." },
     { kind: "p", text: "Use these as inspiration. Make them sound like you. The power is in being kind, honest, and clear about what you'd love to experience together." },
+    { kind: "image", src: "/reboot-kit/soft-start-shelf.jpg", alt: "A quiet bookshelf, the section break from the real kit" },
     { kind: "quote", text: "Text message swipe files. For when you want to open the door." },
     {
       kind: "promptGroup",
       category: "Soft and curious",
-      color: "blueGrey",
+      color: "blush",
       prompts: [
         "Hi love, I got us this Communication & Intimacy toolkit. Would you try a few gentle prompts with me? No pressure, just a chance for us both to check in and maybe feel closer.",
         "I found something that's all about easy, honest conversations and it made me think about us. Want to try it together, just one quick card prompt?",
@@ -289,7 +333,7 @@ const softStart: PracticeEntry = {
     {
       kind: "promptGroup",
       category: "Cheeky and playful",
-      color: "gold",
+      color: "blush",
       prompts: [
         "Guess what, I bought us a \"mini game\" for relationship reconnection. Let's play a few card prompts and see what happens!",
         "I picked up something fun, think curiosity, not awkwardness. Want to test out a couple of conversation starters with me tonight?",
@@ -299,7 +343,7 @@ const softStart: PracticeEntry = {
     {
       kind: "promptGroup",
       category: "Tender and grounded",
-      color: "brown",
+      color: "blush",
       prompts: [
         "I want us to feel emotionally close again. I found a gentle kit that helps with conversation. Would you be open to trying it together?",
         "Miss our heart-to-heart talks. I got a guide that eases us into honest, safe conversation. Maybe we could try one tonight?",
@@ -311,7 +355,7 @@ const softStart: PracticeEntry = {
     {
       kind: "promptGroup",
       category: "Face to face",
-      color: "teal",
+      color: "blush",
       prompts: [
         "Would you try a couple of these toolkit prompts with me? I think they're designed to help us talk, no pressure, just a gentle check-in.",
         "Found a resource that makes it easy for couples to talk about what matters, in a light way. Want to give it a try when we have a moment?",
@@ -358,12 +402,14 @@ const cards: PracticeEntry = {
   title: "The Communication and Intimacy Cards",
   eyebrow: "Authentic cards and prompts for deeper intimacy",
   kind: "essay",
+  image: "/reboot-kit/hero.png",
+  imageAlt: "Communication & Intimacy Reboot",
   imageSide: "left",
   body: [
     { kind: "p", text: "Solo or shared. In a world of constant distraction, real connection, both with ourselves and with those we love, has become rare. We talk. We text. We share memes. But how often do we truly feel each other?" },
-    { kind: "p", text: "Deep down, most of us are longing for something simple. To be seen. To be heard. To feel understood." },
+    { kind: "p", text: "Deep down, most of us are longing for something simple. **To be seen. To be heard. To feel understood.**" },
     { kind: "p", text: "These cards and prompts invite you back into what's real, for honest intimacy with your partner, or deeper reflection with yourself." },
-    { kind: "p", text: "Rooted in the powerful Dyad Technique, this is more than just conversation. It's an experience. A way to drop the walls, strip back the performance, and meet what's really there." },
+    { kind: "p", text: "Rooted in the powerful Dyad Technique, this is more than just conversation. **It's an experience.** A way to drop the walls, strip back the performance, and meet what's really there." },
     { kind: "p", text: "Not the polished version. Not the overthinking. Just what's true.", emphasis: "bold" },
     { kind: "quote", text: "This isn't therapy. It's not a \"fix.\" It's presence. Precision. And a whole lot of tenderness." },
     {
@@ -387,14 +433,11 @@ const cards: PracticeEntry = {
       ],
     },
     { kind: "notice", lines: [{ text: "No obligation to keep discussing. Check in: \"Would you be open to sharing more about that?\" Let every invitation be optional." }] },
+    { kind: "image", src: "/reboot-kit/juliette-video.png", alt: "Juliette introducing the Mini Dyad Instruction video" },
     { kind: "driveVideo", url: MINI_DYAD_VIDEO_URL, label: "Watch the Mini Dyad Instruction video" },
     { kind: "big", text: "The 46 prompts" },
-    {
-      kind: "promptGroup",
-      category: "Communication & Intimacy Reboot",
-      color: "black",
-      prompts: REBOOT_KIT_CARDS,
-    },
+    { kind: "p", text: "Choose one at a time, the way you would with the real deck. Not a list to scroll through, a card to sit with." },
+    { kind: "link", text: "Open the cards →", href: "/practice/communication-reboot-kit/cards" },
     {
       kind: "why",
       lines: [
@@ -419,6 +462,7 @@ const cards: PracticeEntry = {
         { text: "These aren't just conversation starters. They're connection catalysts. Perfect for couples, friends, family, or as a solo reflection tool when you want to meet yourself more deeply." },
       ],
     },
+    { kind: "image", src: "/reboot-kit/card-fan.png", alt: "The full Communication & Intimacy Prompt Card Collection, five themed decks" },
     { kind: "link", text: "See the full card collection →", href: "https://feelfullyyou.com/cards" },
   ],
 };
@@ -429,14 +473,18 @@ const finalWords: PracticeEntry = {
   title: "The Final Words, for Now",
   eyebrow: "You're in the perfect place for your next step",
   kind: "closing",
+  image: "/reboot-kit/final-words.png",
+  imageAlt: "In Touch Taster Audit, the real closing banner from the kit",
   imageSide: "left",
   body: [
-    { kind: "p", text: "Something in you knew. There has to be more than this. More warmth, presence, and honest connection." },
+    { kind: "p", text: "Something in you knew. There has to be more than this: **more warmth, presence, and honest connection.**" },
     { kind: "p", text: "You listened to that quiet instinct." },
-    { kind: "p", text: "What you've discovered here isn't just a spark to reignite. It's the foundation for recognising intimacy in everyday moments." },
-    { kind: "p", text: "You've got the tools now, inside this kit, and already within yourself. Curiosity, courage, and even the willingness to wonder \"what else is possible?\"", emphasis: "bold" },
-    { kind: "quote", text: "That alone changes everything." },
-    { kind: "p", text: "It's about learning to recognise the spark in everyday moments. A lingering touch." },
+    { kind: "p", text: "What you've discovered here isn't just a spark to reignite: **it's the foundation for recognising intimacy in everyday moments.**" },
+    { kind: "p", text: "You've got the tools now, inside this kit, and already within yourself." },
+    { kind: "p", text: "Curiosity, courage, and even the willingness to wonder \"what else is possible?\"", emphasis: "bold" },
+    { kind: "p", text: "That alone changes everything." },
+    { kind: "p", text: "If you're feeling the gentle hum, that \"yes\" to more, **you're in the perfect place for your next step.**" },
+    { kind: "p", text: "It's about learning to recognise the spark in everyday moments: a lingering touch.", emphasis: "accent" },
     {
       kind: "why",
       lines: [
@@ -452,8 +500,7 @@ const finalWords: PracticeEntry = {
     { kind: "link", text: "Book your In Touch Taster Audit →", href: "https://tidycal.com/juliette2/in-touch-audit" },
     { kind: "p", text: "If you prefer to listen, to stay in this yes frequency, tune into The Scrumptious Woman® Podcast. Stories. Secrets. Sensual truths that bring you closer to yourself." },
     { kind: "quote", text: "Your journey is just beginning. I'm excited for you." },
-    { kind: "p", text: "Love always,", emphasis: "accent" },
-    { kind: "p", text: "Juliette" },
+    { kind: "signature", src: "/reboot-kit/signature.png", alt: "Love Always, Juliette (signature)" },
   ],
 };
 
