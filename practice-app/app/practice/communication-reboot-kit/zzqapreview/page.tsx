@@ -28,11 +28,10 @@ function Card({ card, index, total }: { card: RebootCard; index: number; total: 
 }
 
 export default function QaPreviewPage() {
-  const indices = [0, 1, 18, 28, 29, 30, 37];
   return (
     <main className="flex min-h-screen flex-wrap items-start justify-center gap-10 bg-ffy-cream px-6 py-10">
-      {indices.map((i) => (
-        <Card key={i} card={REBOOT_KIT_CARDS[i]} index={i} total={REBOOT_KIT_CARDS.length} />
+      {REBOOT_KIT_CARDS.map((c, i) => (
+        <Card key={i} card={c} index={i} total={REBOOT_KIT_CARDS.length} />
       ))}
     </main>
   );
