@@ -14,8 +14,8 @@ export default function LoginPage() {
 
 function LoginShell() {
   return (
-    <main className="flex min-h-screen items-center justify-center bg-ffy-cream px-6">
-      <div className="w-full max-w-sm rounded-2xl border border-ffy-border bg-white/70 p-8 text-center">
+    <main className="flex min-h-screen items-center justify-center bg-gradient-to-b from-ffy-teal/10 to-ffy-cream px-6">
+      <div className="w-full max-w-sm rounded-2xl border-2 border-ffy-gold/30 bg-white p-8 text-center shadow-[0_25px_60px_-15px_rgba(13,53,53,0.35)]">
         <h1 className="font-display text-2xl font-semibold text-ffy-teal">
           The Feel Fully You App
         </h1>
@@ -28,6 +28,11 @@ function LoginPageContent() {
   const { sendMagicLink } = useAuth();
   const searchParams = useSearchParams();
   const prefillEmail = searchParams.get("email") ?? "";
+  // Juliette, 12 Aug 2026: "it only signs you back to the feel fully you
+  // app- where are the cards?" — ProtectedRoute now sends people here with
+  // ?next=<the page they wanted>, carried through the magic link so
+  // sign-in actually lands them back where they were headed.
+  const next = searchParams.get("next") || undefined;
 
   const [email, setEmail] = useState(prefillEmail);
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
@@ -39,7 +44,7 @@ function LoginPageContent() {
   async function send(targetEmail: string) {
     if (!targetEmail.trim()) return;
     setStatus("sending");
-    const { error } = await sendMagicLink(targetEmail);
+    const { error } = await sendMagicLink(targetEmail, next);
     if (error) {
       setErrorMessage(error);
       setStatus("error");
@@ -68,8 +73,8 @@ function LoginPageContent() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-ffy-cream px-6">
-      <div className="w-full max-w-sm rounded-2xl border border-ffy-border bg-white/70 p-8 text-center">
+    <main className="flex min-h-screen items-center justify-center bg-gradient-to-b from-ffy-teal/10 to-ffy-cream px-6">
+      <div className="w-full max-w-sm rounded-2xl border-2 border-ffy-gold/30 bg-white p-8 text-center shadow-[0_25px_60px_-15px_rgba(13,53,53,0.35)]">
         <h1 className="font-display text-2xl font-semibold text-ffy-teal">
           The Feel Fully You App
         </h1>

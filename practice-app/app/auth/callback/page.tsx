@@ -1,11 +1,30 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { Suspense, useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { supabaseBrowser } from "@/lib/supabase/client";
 
 export default function AuthCallbackPage() {
+  return (
+    <Suspense
+      fallback={
+        <main className="flex min-h-screen items-center justify-center bg-ffy-cream">
+          <p className="text-ffy-brown">Signing you in…</p>
+        </main>
+      }
+    >
+      <AuthCallbackContent />
+    </Suspense>
+  );
+}
+
+function AuthCallbackContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  // Juliette, 12 Aug 2026: "it only signs you back to the feel fully you
+  // app- where are the cards?" — always landed home before. Now returns
+  // to whatever page the sign-in was actually started from.
+  const next = searchParams.get("next") || "/";
   const [status, setStatus] = useState<"working" | "expired" | "error">(
     "working"
   );
@@ -36,10 +55,10 @@ export default function AuthCallbackPage() {
         // a retry costs nothing.
       }
 
-      router.replace("/");
+      router.replace(next);
     }
     run();
-  }, [router]);
+  }, [router, next]);
 
   if (status === "expired") {
     return (
@@ -52,7 +71,7 @@ export default function AuthCallbackPage() {
             Links are one-time and time-limited. Request a new one below.
           </p>
           <a
-            href="/login"
+            href={`/login?next=${encodeURIComponent(next)}`}
             className="mt-6 inline-block rounded-full bg-ffy-teal px-5 py-3 font-display text-sm font-medium text-ffy-cream"
           >
             Get a new link

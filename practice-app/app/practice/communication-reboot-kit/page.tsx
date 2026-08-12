@@ -22,7 +22,7 @@ function CommunicationRebootKitIndexContent() {
         <Image src={heroImage} alt={title} fill priority className="object-cover" />
         <div className="absolute inset-0 bg-gradient-to-t from-ffy-black/90 via-ffy-black/30 to-transparent" />
         <div className="relative z-10 mx-auto w-full max-w-3xl px-6 pb-10">
-          <Link href="/" className="inline-flex items-center gap-1.5 rounded-full border border-ffy-gold-pale/40 px-4 py-2 text-sm font-medium text-ffy-gold-pale transition hover:bg-white/10">
+          <Link href="/" className="inline-flex items-center gap-1.5 rounded-full border border-ffy-gold-pale/50 bg-ffy-black/50 px-4 py-2 text-sm font-medium text-ffy-gold-pale backdrop-blur-sm transition hover:bg-ffy-black/70">
             ← Your library
           </Link>
           <h1 className="mt-3 font-display text-4xl font-semibold text-ffy-cream sm:text-5xl">{title}</h1>

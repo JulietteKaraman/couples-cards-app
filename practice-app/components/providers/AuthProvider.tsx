@@ -9,7 +9,7 @@ interface AuthContextType {
   user: User | null;
   loading: boolean;
   entitledCollections: string[]; // collection slugs, not deck_type values
-  sendMagicLink: (email: string) => Promise<{ error: string | null }>;
+  sendMagicLink: (email: string, next?: string) => Promise<{ error: string | null }>;
   signOut: () => Promise<void>;
   refreshEntitlements: () => Promise<void>;
 }
@@ -96,14 +96,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => listener.subscription.unsubscribe();
   }, [ensureFreeAccessAndLoad]);
 
-  async function sendMagicLink(email: string) {
+  async function sendMagicLink(email: string, next?: string) {
+    // Juliette, 12 Aug 2026: "it only signs you back to the feel fully you
+    // app- where are the cards?" — the callback always landed on the home
+    // library, never wherever she was actually trying to reach. Carries
+    // the real destination through the email link itself so sign-in
+    // returns to that exact page, not always home.
+    const callbackUrl =
+      typeof window !== "undefined"
+        ? `${window.location.origin}/auth/callback${next ? `?next=${encodeURIComponent(next)}` : ""}`
+        : undefined;
     const { error } = await supabaseBrowser.auth.signInWithOtp({
       email: email.toLowerCase().trim(),
       options: {
-        emailRedirectTo:
-          typeof window !== "undefined"
-            ? `${window.location.origin}/auth/callback`
-            : undefined,
+        emailRedirectTo: callbackUrl,
       },
     });
     return { error: error?.message ?? null };
