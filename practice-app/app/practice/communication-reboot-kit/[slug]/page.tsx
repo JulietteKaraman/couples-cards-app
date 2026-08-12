@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useParams, notFound } from "next/navigation";
 import { communicationRebootKit } from "@/lib/content/communication-reboot-kit";
 import { Blocks } from "@/components/Blocks";
@@ -27,8 +28,21 @@ function RebootKitEntryContent() {
   const prev = entries[index - 1];
   const next = entries[index + 1];
 
+  // Editorial layout matching The Unspoken Distance's own entry template
+  // (app/practice/the-unspoken-distance/[slug]/page.tsx): a full-width
+  // photo at the top, then the content below. This was MISSING here until
+  // 12 Aug 2026 — entry.image was set on every entry but this page never
+  // rendered it, so none of the real per-page photography ever showed on
+  // the actual live page. Caught only because Juliette sent screenshots of
+  // the real, live, rendered pages and none of them had a photo on them.
   return (
     <main className="min-h-screen bg-ffy-cream">
+      {entry.image && (
+        <div className="relative h-[42vh] w-full overflow-hidden sm:h-[56vh]">
+          <Image src={entry.image} alt={entry.imageAlt ?? ""} fill priority sizes="100vw" className="object-cover" />
+        </div>
+      )}
+
       <div className="mx-auto max-w-2xl px-6 pb-14 pt-10">
         <Link
           href="/practice/communication-reboot-kit"

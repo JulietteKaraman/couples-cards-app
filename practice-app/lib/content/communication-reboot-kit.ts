@@ -412,6 +412,13 @@ const cards: PracticeEntry = {
     { kind: "p", text: "Rooted in the powerful Dyad Technique, this is more than just conversation. **It's an experience.** A way to drop the walls, strip back the performance, and meet what's really there." },
     { kind: "p", text: "Not the polished version. Not the overthinking. Just what's true.", emphasis: "bold" },
     { kind: "quote", text: "This isn't therapy. It's not a \"fix.\" It's presence. Precision. And a whole lot of tenderness." },
+    // The 46 cards are the flagship of this entry. Juliette, 12 Aug 2026,
+    // after the first live version: "the cards aren't even on there" —
+    // they were, but only after a long scroll past the solo/couple
+    // instructions and the Mini Dyad video, easy to miss entirely. This
+    // puts a real way in right at the top; the fuller link stays below
+    // too, after the how-to-use steps, for anyone reading straight through.
+    { kind: "link", text: "Open the cards →", href: "/practice/communication-reboot-kit/cards" },
     {
       kind: "step",
       label: "Solo use",
