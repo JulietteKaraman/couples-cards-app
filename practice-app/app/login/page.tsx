@@ -4,6 +4,28 @@ import { Suspense, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useAuth } from "@/components/providers/AuthProvider";
 
+// Juliette, 12 Aug 2026: "it is also clunky to be sent to a different
+// app" — this screen said nothing about what someone was actually trying
+// to open, just a generic "The Feel Fully You App" gate. Matches the
+// `next` path's collection slug to a real title so the screen names the
+// actual destination instead. Kept as a plain lookup, not a content-file
+// import, so this page stays light — add one line here per new product.
+const DESTINATION_TITLES: Record<string, string> = {
+  "ten-touch-rituals": "10 Touch Rituals",
+  "the-unspoken-distance": "The Unspoken Distance",
+  "when-she-goes-quiet": "When She Goes Quiet",
+  "between-touches": "Between Touches",
+  "communication-reboot-kit": "The Communication Reboot Kit",
+  "members-app": "Members App",
+};
+
+function destinationTitle(next: string | undefined): string | null {
+  if (!next) return null;
+  const match = next.match(/^\/practice\/([^/?]+)/);
+  if (!match) return null;
+  return DESTINATION_TITLES[match[1]] ?? null;
+}
+
 export default function LoginPage() {
   return (
     <Suspense fallback={<LoginShell />}>
@@ -33,6 +55,7 @@ function LoginPageContent() {
   // ?next=<the page they wanted>, carried through the magic link so
   // sign-in actually lands them back where they were headed.
   const next = searchParams.get("next") || undefined;
+  const destination = destinationTitle(next);
 
   const [email, setEmail] = useState(prefillEmail);
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
@@ -76,7 +99,7 @@ function LoginPageContent() {
     <main className="flex min-h-screen items-center justify-center bg-gradient-to-b from-ffy-teal/10 to-ffy-cream px-6">
       <div className="w-full max-w-sm rounded-2xl border-2 border-ffy-gold/30 bg-white p-8 text-center shadow-[0_25px_60px_-15px_rgba(13,53,53,0.35)]">
         <h1 className="font-display text-2xl font-semibold text-ffy-teal">
-          The Feel Fully You App
+          {destination ? `Open ${destination}` : "The Feel Fully You App"}
         </h1>
 
         {status === "sent" ? (
@@ -84,7 +107,7 @@ function LoginPageContent() {
             <p className="text-ffy-black">Check your email.</p>
             <p className="mt-2 text-sm text-ffy-brown">
               We sent a link to <strong>{email}</strong>. Tap it on this
-              device to sign in, no password needed.
+              device{destination ? ` to open ${destination}` : " to sign in"}, no password needed.
             </p>
           </div>
         ) : status === "sending" && prefillEmail ? (
@@ -97,8 +120,10 @@ function LoginPageContent() {
         ) : (
           <form onSubmit={handleSubmit} className="mt-6 flex flex-col gap-3">
             <p className="text-sm text-ffy-brown">
-              Enter your email and we&rsquo;ll send you a link to open your
-              library. Free practices unlock straight away, no purchase
+              {destination
+                ? `Enter your email and we'll send you a link straight to ${destination}.`
+                : "Enter your email and we’ll send you a link to open your library."}{" "}
+              Free practices unlock straight away, no purchase
               needed, plus anything you&rsquo;ve already bought.
             </p>
             <input

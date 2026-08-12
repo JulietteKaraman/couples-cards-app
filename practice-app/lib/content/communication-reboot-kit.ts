@@ -164,11 +164,18 @@ const startHere: PracticeEntry = {
     { kind: "p", text: "Move through them in order, or just choose the first step that feels easiest for you right now." },
     {
       // Real design (checked directly against Juliette's own per-tab PDF
-      // export, 12 Aug 2026): this is a numbered circle-icon step flow,
-      // 1 through 6, not a flat card list. Matches the `diagram` block's
-      // never-skip rule in this app's own CLAUDE.md, missed on the first
-      // pass here the same way it was missed on 10 Touch Rituals and The
-      // Unspoken Distance before it.
+      // export, 12 Aug 2026): a numbered circle-icon step flow, not a flat
+      // card list. Matches the `diagram` block's never-skip rule in this
+      // app's own CLAUDE.md, missed on the first pass here the same way
+      // it was missed on 10 Touch Rituals and The Unspoken Distance
+      // before it.
+      //
+      // Originally 6 steps. "Open the Conversation" was dropped 12 Aug
+      // 2026 — it promised its own piece but never had one anywhere, not
+      // in this build, not in Juliette's own source doc. Her call once
+      // she saw it named plainly: "I think there are enough examples in
+      // the kit" (the cards + Soft Start already cover it) — removed
+      // rather than left as an unfulfilled promise. Now 5 steps.
       kind: "numberedSteps",
       steps: [
         {
@@ -178,10 +185,6 @@ const startHere: PracticeEntry = {
         {
           heading: "The Soft Start Conversation Kit",
           text: "Use gentle, swipe-and-go scripts to invite your partner in, without turning it into \"a thing.\" These make it safe and easy to say, \"Can we talk?\" or \"Let's reconnect,\" no matter how long it's been.",
-        },
-        {
-          heading: "Open the Conversation",
-          text: "Move beyond surface talk into deeper emotional intimacy, safety, and honesty. These conversation openers are built to gently reveal what's quietly missing or deeply wanted, without pressure or overthinking.",
         },
         {
           heading: "The Connection and Intimacy Cards",
