@@ -37,7 +37,7 @@ export const SUBSCRIPTION_GRACE_PERIOD_HOURS = 48;
 // price only makes an edit necessary later if it changes; these guides
 // don't have a price to begin with). See app/api/ensure-free-access and
 // AuthProvider, which call it right after establishing a session.
-export const FREE_DECK_TYPES: string[] = ["when-she-goes-quiet", "between-touches"];
+export const FREE_DECK_TYPES: string[] = ["when-she-goes-quiet", "between-touches", "ten-touch-rituals"];
 
 // Where the "Get access" CTA on a locked (not-yet-owned) library tile sends
 // someone — the collection's real marketing sales page, never an in-app
