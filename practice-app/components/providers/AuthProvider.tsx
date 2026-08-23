@@ -58,15 +58,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const ensureFreeAccessAndLoad = useCallback(
     async (userId: string, email: string | undefined) => {
       if (email) {
-        try {
-          await fetch("/api/ensure-free-access", {
+        // Both fire together and neither is allowed to sink the other or the
+        // sign-in. ensure-free-access unlocks the free guides; kit-signup puts
+        // the person on Juliette's list (added 23 Aug 2026 — before it, someone
+        // could sign in, read every free guide and never reach Kit at all).
+        // allSettled, not all: a Kit hiccup must not cost them their guides.
+        const results = await Promise.allSettled([
+          fetch("/api/ensure-free-access", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ userId, email }),
-          });
-        } catch (err) {
-          console.error("ensure-free-access failed:", err);
-        }
+          }),
+          fetch("/api/kit-signup", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email }),
+          }),
+        ]);
+        const labels = ["ensure-free-access", "kit-signup"];
+        results.forEach((r, i) => {
+          if (r.status === "rejected") {
+            console.error(`${labels[i]} failed:`, r.reason);
+          }
+        });
       }
       await loadEntitlements(userId);
     },

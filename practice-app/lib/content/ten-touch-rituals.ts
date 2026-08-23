@@ -939,7 +939,7 @@ export const tenTouchRituals: PracticeCollection = {
           kind: "p",
           text: "The cards work in the same structure as The Dyad. One person picks a card and reads it out loud. The other person answers from the heart. One answer per turn. The listener responds with only three things: Thank you. Clarify that. Summarise that. Switch and go deeper with each turn.",
         },
-        { kind: "link", text: "Get the Cards →", href: "https://shop.feelfullyyou.com/cards-1" },
+        { kind: "link", text: "Get the Cards →", href: "https://feelfullyyou.com/cards" },
         { kind: "quote", text: "What the Cards Cover" },
         { kind: "p", text: "Emotional Intimacy: questions that reach beneath the surface of daily life." },
         { kind: "p", text: "Physical Sensation: prompts that reconnect you to your body and your partner's." },
