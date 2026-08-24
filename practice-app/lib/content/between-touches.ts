@@ -588,15 +588,15 @@ export const betweenTouches: PracticeCollection = {
           kind: "p",
           text: "If this guide gave you language for what's been happening between you, here's where to go next.",
         },
-        { kind: "quote", text: "10 Touch Rituals" },
-        { kind: "image", src: "/rituals/hero.png", alt: "10 Touch Rituals" },
+        { kind: "quote", text: "The Touch Rituals" },
+        { kind: "image", src: "/rituals/hero.png", alt: "The Touch Rituals" },
         {
           kind: "p",
           text: "Ten simple touch rituals, two minutes each, for couples who love each other and want to feel it again.",
         },
         {
           kind: "link",
-          text: "Explore 10 Touch Rituals →",
+          text: "Explore The Touch Rituals →",
           href: "https://feelfullyyou.com/10-touch-rituals",
         },
         { kind: "quote", text: "The Touch Reset Quiz" },

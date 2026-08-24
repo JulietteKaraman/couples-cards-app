@@ -11,7 +11,7 @@ import { useAuth } from "@/components/providers/AuthProvider";
 // actual destination instead. Kept as a plain lookup, not a content-file
 // import, so this page stays light — add one line here per new product.
 const DESTINATION_TITLES: Record<string, string> = {
-  "ten-touch-rituals": "10 Touch Rituals",
+  "ten-touch-rituals": "The Touch Rituals",
   "the-unspoken-distance": "The Unspoken Distance",
   "when-she-goes-quiet": "When She Goes Quiet",
   "between-touches": "Between Touches",
