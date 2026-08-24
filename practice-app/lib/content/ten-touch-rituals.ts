@@ -57,6 +57,40 @@
 //  4. The guide had practices but no REVIEW. The Monthly Check-In and a
 //     fourth tier, Once a year, holding The Year in the Body, are new. The
 //     cadence spine is now Daily / Weekly / Monthly / Once a year.
+//
+// THIRD PASS 24 Aug 2026, eight faults Juliette found reading the live guide:
+//  1. A retired "ten rituals" survived in Why Touch Matters. Gone. The
+//     remaining "ten"s all count other things (the taster cards, the two
+//     lists, a 1–10 scale), never the rituals.
+//  2. The second pass over-merged: The Dyad stacked four prompt collections,
+//     roughly 81 prompts on one page ("confusing"). The Dyad now holds only
+//     the opening copy, the how-it-works diagram and the ten free taster
+//     cards, then points forward. Everything else moved into a new LAST
+//     entry, The prompt bank: the five Using the Prompts groups, the fifteen
+//     TELL ME prompts, the fifteen deck-category groups and the cards
+//     section. The duplicated framing line and the stray "One prompt,
+//     fifteen minutes" sub-heading are deleted. Every prompt string still
+//     appears exactly once in this file.
+//  3. EVERYTHING leads to The Touch Reset. The "Get the full decks →" link is
+//     gone, and The Beginning link in The 3-Minute Touch Reset is now plain
+//     prose, same words, no href. Exactly one CTA remains in the whole guide,
+//     the Book a call bigLink, plus the single small One Touch line under it.
+//     The Spotify and Substack links inside her bio stay: they are follows,
+//     not offers.
+//  4. Cards app photography: cards-upsell.jpg (her own hands, the app open on
+//     cards.netlify.app) plus a clean in-app screenshot, copied into
+//     /public/rituals/cards-app-screenshot.png from the Unspoken Distance
+//     assets so this guide owns its own file.
+//  5. Date Morning's "Two lists" was vague. It is now three concrete steps:
+//     written in advance and separately, what actually goes on each list,
+//     and how they get read out. The rest of Date Morning is untouched.
+//  6. The call came after her bio. New end order: Where this stops, then
+//     Meet Juliette, then The prompt bank as reference material.
+//  7. The Touch Reset Quiz is out. The "Your Next Yes" entry existed mainly
+//     to carry it plus a One Touch push, and is deleted whole. Its two photos
+//     (your-next-yes.png, one-touch-photo.jpg) go with it.
+//  8. One Touch is one small plain link under the Book a call button, and
+//     appears nowhere else.
 
 import { ContentBlock } from "./blocks";
 
@@ -249,7 +283,7 @@ export const tenTouchRituals: PracticeCollection = {
         },
         {
           kind: "big",
-          text: "Most people think that kind of touch is luck, or chemistry. It is not. We built it. What you are watching is the result. These ten rituals are where it gets built.",
+          text: "Most people think that kind of touch is luck, or chemistry. It is not. We built it. What you are watching is the result. These rituals are where it gets built.",
         },
       ],
     },
@@ -798,9 +832,8 @@ export const tenTouchRituals: PracticeCollection = {
           ],
         },
         {
-          kind: "link",
+          kind: "p",
           text: "The full Touch Date sequence, the structured arcs from 3 to 20 minutes, is inside The Beginning, the Ultimate Touch Reset.",
-          href: "https://feelfullyyou.com/the-beginning",
         },
       ],
     },
@@ -876,62 +909,6 @@ export const tenTouchRituals: PracticeCollection = {
           label: "Switch",
           lines: [{ text: "Switch roles and go again." }],
         },
-        { kind: "quote", text: "Using the Prompts" },
-        { kind: "image", src: "/rituals/using-the-prompts.jpeg", alt: "Two people mid-conversation, one listening closely" },
-        {
-          kind: "p",
-          text: "For the Dyad, for Date Morning, for the drive home. One prompt, fifteen minutes, all the way down.",
-        },
-        {
-          kind: "promptGroup",
-          category: "Touch & Sensation",
-          color: "teal",
-          prompts: [
-            "Tell me what kind of touch makes you feel most present.",
-            "Tell me something about your body you wish I understood.",
-            "Tell me what it feels like in your body when you reach for me first.",
-          ],
-        },
-        {
-          kind: "promptGroup",
-          category: "Presence & Distance",
-          color: "gold",
-          prompts: [
-            "Tell me when you feel closest to me, without any effort.",
-            "Tell me when you feel furthest from me, even when we're in the same room.",
-            "Tell me what you need from me when you're pulling away.",
-          ],
-        },
-        {
-          kind: "promptGroup",
-          category: "Desire & Longing",
-          color: "brown",
-          prompts: [
-            "Tell me something you love about me that you haven't said recently.",
-            "Tell me something you've stopped asking for.",
-            "Tell me what you long for that we haven't found a way to have yet.",
-          ],
-        },
-        {
-          kind: "promptGroup",
-          category: "Trust & Repair",
-          color: "blueGrey",
-          prompts: [
-            "Tell me something that hasn't fully healed between us.",
-            "Tell me when you feel most trusting of me.",
-            "Tell me what repair feels like in your body when it actually happens.",
-          ],
-        },
-        {
-          kind: "promptGroup",
-          category: "Becoming",
-          color: "black",
-          prompts: [
-            "Tell me who you are right now that I may not fully know yet.",
-            "Tell me what kind of couple you want us to be.",
-            "Tell me one thing you want us to do this year that you have not spoken out loud.",
-          ],
-        },
         { kind: "quote", text: "Start with these ten" },
         {
           kind: "p",
@@ -954,213 +931,10 @@ export const tenTouchRituals: PracticeCollection = {
             "Tell me a challenge you faced that made you stronger. How did you grow because of it?",
           ],
         },
-        { kind: "quote", text: "One prompt, fifteen minutes" },
-        {
-          kind: "promptGroup",
-          category: "Touch",
-          color: "teal",
-          prompts: [
-            "TELL ME WHERE YOU’VE WANTED TO BE TOUCHED AND HAVEN’T ASKED.",
-            "TELL ME WHAT KIND OF TOUCH REACHES YOU LATELY.",
-            "TELL ME WHEN MY HANDS FEEL LIKE THEY WANT SOMETHING.",
-            "TELL ME WHAT MAKES YOU FEEL WANTED WITHOUT ANY PRESSURE IN IT.",
-            "TELL ME ABOUT A TIME MY TOUCH LANDED PERFECTLY.",
-          ],
-        },
-        {
-          kind: "promptGroup",
-          category: "Being known",
-          color: "brown",
-          prompts: [
-            "TELL ME WHICH FEELING YOU’D RATHER I NEVER SAW.",
-            "TELL ME WHAT YOU FELT TODAY AND DIDN’T SAY.",
-            "TELL ME WHAT YOU WISH I UNDERSTOOD WITHOUT YOU EXPLAINING IT.",
-            "TELL ME WHEN YOU LAST FELT COMPLETELY MET BY ME.",
-            "TELL ME WHAT YOU’VE LEARNED ABOUT YOURSELF SINCE BEING WITH ME.",
-          ],
-        },
-        {
-          kind: "promptGroup",
-          category: "Where it started",
-          color: "black",
-          prompts: [
-            "TELL ME WHAT TOUCH LOOKED LIKE IN YOUR HOUSE GROWING UP.",
-          ],
-        },
-        {
-          kind: "promptGroup",
-          category: "Forward",
-          color: "blueGrey",
-          prompts: [
-            "TELL ME WHAT YOU WANT MORE OF THAT WE ALREADY HAVE.",
-            "TELL ME WHAT YOU’RE MOST LOOKING FORWARD TO BUILDING.",
-            "TELL ME ONE THING YOU WANT ME TO KNOW RIGHT NOW.",
-            "TELL ME WHAT WOULD MAKE THIS WEEK FEEL CLOSE.",
-          ],
-        },
-        { kind: "quote", text: "From the Couples Edition" },
-        {
-          kind: "promptGroup",
-          category: "Romantic Relationships",
-          color: "blush",
-          prompts: [
-            "Tell me how you want to be loved.",
-            "Tell me a time you felt truly seen by me.",
-          ],
-        },
-        {
-          kind: "promptGroup",
-          category: "Intimacy & Repair",
-          color: "gold",
-          prompts: [
-            "Tell me a way you protect yourself emotionally, even from me.",
-            "Tell me what support looks like for you in hard moments.",
-          ],
-        },
-        {
-          kind: "promptGroup",
-          category: "Touch & Desire",
-          color: "teal",
-          prompts: [
-            "Tell me how you want to be touched.",
-            "Tell me one place you love being touched that isn’t typically erotic.",
-          ],
-        },
-        {
-          kind: "promptGroup",
-          category: "Healing & Growth",
-          color: "brown",
-          prompts: [
-            "Tell me what you were taught about sexuality growing up.",
-            "Tell me what emotional safety during sex looks like for you.",
-          ],
-        },
-        {
-          kind: "promptGroup",
-          category: "Play & Discovery",
-          color: "black",
-          prompts: [
-            "Tell me a sensual ritual you wish we did more often.",
-            "Tell me what small thing has you feel most In Touch with yourself in daily life.",
-          ],
-        },
-        { kind: "quote", text: "From the Friends & Family Edition" },
-        {
-          kind: "promptGroup",
-          category: "Stories & Growth",
-          color: "blueGrey",
-          prompts: [
-            "Tell me about a friendship or relationship that changed you for the better.",
-            "Tell me something you used to be ashamed of that now feels like a strength.",
-          ],
-        },
-        {
-          kind: "promptGroup",
-          category: "Beliefs & Emotions",
-          color: "blush",
-          prompts: [
-            "Tell me about a time you said yes but you actually wanted to say no.",
-            "Tell me about a whisper or instinct that has changed your direction in life.",
-          ],
-        },
-        {
-          kind: "promptGroup",
-          category: "Friendship & Belonging",
-          color: "gold",
-          prompts: [
-            "Tell me how you know when you're holding something in emotionally.",
-            "Tell me what makes you feel deeply supported by friends or loved ones.",
-          ],
-        },
-        {
-          kind: "promptGroup",
-          category: "Life",
-          color: "teal",
-          prompts: [
-            "Tell me when you last felt truly at ease or content in your own company.",
-            "Tell me what helps you feel most grounded when life is hectic.",
-          ],
-        },
-        {
-          kind: "promptGroup",
-          category: "Family",
-          color: "brown",
-          prompts: [
-            "Tell me about how your family showed you love. Was it in the way you needed?",
-            "Tell me one thing you loved about growing up in your family.",
-          ],
-        },
-        { kind: "quote", text: "From Trust & Repair" },
-        {
-          kind: "promptGroup",
-          category: "Return To Trust",
-          color: "black",
-          prompts: [
-            "Tell me what you want trust to feel like.",
-            "Tell me what you need right now, that isn't a solution.",
-          ],
-        },
-        {
-          kind: "promptGroup",
-          category: "The Body's Record",
-          color: "blueGrey",
-          prompts: [
-            "Tell me what your body knows that your mind doesn't want to.",
-            "Tell me where you feel safest in your body right now.",
-          ],
-        },
-        {
-          kind: "promptGroup",
-          category: "The Drift",
-          color: "blush",
-          prompts: [
-            "Tell me when you first felt this drift.",
-            "Tell me what we have not talked about that needs to be said.",
-          ],
-        },
-        {
-          kind: "promptGroup",
-          category: "What I'm Holding",
-          color: "gold",
-          prompts: [
-            "Tell me something you've been carrying alone this week.",
-            "Tell me what you've been pretending is fine.",
-          ],
-        },
-        {
-          kind: "promptGroup",
-          category: "What the World Is Asking",
-          color: "teal",
-          prompts: [
-            "Tell me what you wish men understood right now.",
-            "Tell me what feels unsafe in the world right now.",
-          ],
-        },
-        { kind: "quote", text: "The Intimacy & Communication Cards" },
-        { kind: "image", src: "/rituals/cards-upsell.jpg", alt: "The Intimacy and Communication Cards" },
         {
           kind: "p",
-          text: "Four decks: The Couples Edition, The Family and Friends Edition, The Touch Languages, and Trust & Repair, a 50-card deck for couples navigating a rupture, a distance, or a moment they can't seem to move past.",
-        },
-        {
-          kind: "p",
-          text: "Available as an app, so it lives in your pocket, always ready for a quiet evening or moment of connection, and as a physical deck.",
-        },
-        { kind: "p", text: "Every prompt is designed to open something without forcing it.", emphasis: "accent" },
-        {
-          kind: "p",
-          text: "The cards work in the same structure as The Dyad. One person picks a card and reads it out loud. The other person answers from the heart. One answer per turn. The listener responds with only three things: Thank you. Clarify that. Summarise that. Switch and go deeper with each turn.",
-        },
-        { kind: "quote", text: "What the Cards Cover" },
-        { kind: "p", text: "Emotional Intimacy: questions that reach beneath the surface of daily life." },
-        { kind: "p", text: "Physical Sensation: prompts that reconnect you to your body and your partner's." },
-        { kind: "p", text: "Desire & Play: invitations to explore what you want and what delights you." },
-        { kind: "p", text: "Trust & Repair: 50 dedicated prompts for navigating rupture and distance." },
-        { kind: "p", text: "Family & Friends: 150 prompts to get to know your family and friends in a much deeper way, and to be understood." },
-        {
-          kind: "link",
-          text: "Get the full decks →",
-          href: "https://feelfullyyou.com/cards",
+          text: "When you want more, there are hundreds. They are at the end of this guide.",
+          emphasis: "accent",
         },
       ],
     },
@@ -1200,8 +974,16 @@ export const tenTouchRituals: PracticeCollection = {
               text: "Start with fifteen minutes on one prompt, run as a Dyad. Every prompt you need is in The Dyad.",
             },
             {
-              heading: "Two lists",
-              text: "Somewhere in it, exchange two lists: ten things you used to love doing as a child, and ten things you love about the other person.",
+              heading: "Two lists, written before the morning",
+              text: "Each of you writes your own two lists in advance, on your own, not on the spot. List one: ten things you loved doing as a child. List two: ten things you love about the other person.",
+            },
+            {
+              heading: "What actually goes on them",
+              text: "Actual things, not categories. Climbing the tree at the end of the road, not “being outdoors”. On the second list, present tense, and things they do rather than things they are.",
+            },
+            {
+              heading: "Read them out on the morning",
+              text: "One item at a time, alternating. The listener says nothing except thank you. Then keep them. Next month, write them again and see what moved.",
             },
           ],
         },
@@ -1542,10 +1324,45 @@ export const tenTouchRituals: PracticeCollection = {
         },
       ],
     },
+    // ------------------------------------------------------------- the turn
+    {
+      slug: "where-this-stops",
+      order: 23,
+      title: "Where this stops",
+      eyebrow: "The turn",
+      kind: "closing",
+      imageSide: "right",
+      body: [
+        {
+          kind: "p",
+          text: "You now have every ritual I use. Nothing held back, nothing behind a price.",
+        },
+        {
+          kind: "p",
+          text: "Here is the honest part. These practices work on what happens after you decide to reach. They cannot reach the thing that fires before you decide anything: the half-second where a hand arrives and something in you closes, and you were never consulted.",
+        },
+        {
+          kind: "p",
+          text: "If your body is still doing that, no amount of ritual will land, and you will conclude you tried and it did not work.",
+        },
+        { kind: "big", text: "That is not you failing. That is the wrong order." },
+        {
+          kind: "bigLink",
+          text: "Book a call",
+          subtext: "That reflex was learned in contact, and it changes in contact, in a room with someone who can see it happening while it happens. That is what The Touch Reset is. Twelve weeks, live, with me. It starts with a call, with me and not my team, and if it is not right for you I will say so.",
+          href: "https://feelfullyyou.com/the-touch-reset",
+        },
+        {
+          kind: "link",
+          text: "Prefer to start with yourself? One Touch",
+          href: "https://feelfullyyou.com/one-touch",
+        },
+      ],
+    },
     // ------------------------------------------------------------ closing
     {
       slug: "meet-juliette",
-      order: 23,
+      order: 24,
       title: "Meet Juliette",
       eyebrow: "27 years of helping people feel, relate, and connect",
       kind: "closing",
@@ -1602,86 +1419,281 @@ export const tenTouchRituals: PracticeCollection = {
         },
       ],
     },
+    // ---------------------------------------------------------- reference
     {
-      slug: "your-next-yes",
-      order: 24,
-      title: "Your Next Yes",
+      slug: "the-prompt-bank",
+      order: 25,
+      title: "The prompt bank",
+      eyebrow: "Reference · every prompt, in one place",
       kind: "closing",
-      image: "/rituals/your-next-yes.png",
-      imageAlt: "Your next yes",
+      image: "/rituals/using-the-prompts.jpeg",
+      imageAlt: "Two people mid-conversation, one listening closely",
       imageSide: "left",
       body: [
         {
-          kind: "big",
-          text: "This wasn't just a guide. It was your first soft yes: a yes to clarity, to being heard before you speak, to the kind of touch that doesn't perform, it lands.",
-        },
-        { kind: "quote", text: "Start with the free Touch Reset Quiz" },
-        {
           kind: "p",
-          text: "If you haven't taken it yet, five minutes maps your own four-layer stack: your Touch Pattern, your Pleasure Language, your Touch Language, and whether you lead or receive.",
-        },
-        { kind: "p", text: "It's free, and it's the fastest way to see what you're actually working with.", emphasis: "accent" },
-        {
-          kind: "link",
-          text: "→ Take the Touch Reset Quiz",
-          href: "https://feelfullyyou.com/touch-reset-quiz",
-        },
-        { kind: "image", src: "/rituals/one-touch-photo.jpg", alt: "One Touch" },
-        { kind: "quote", text: "One Touch, 7 days, your own hands, entirely private" },
-        {
-          kind: "p",
-          text: "You have the rituals now. They bring touch back into the room. One Touch is where you go underneath them.",
+          text: "Come here when you want a different question. Every one of these runs on the same structure as The Dyad: one reads, one answers, the listener says thank you, then you switch.",
         },
         {
           kind: "p",
-          text: "Seven days. Your own hands. Entirely private.",
-          emphasis: "bold",
+          text: "Take one. You are not meant to get through them.",
+          emphasis: "accent",
+        },
+        { kind: "quote", text: "Using the Prompts" },
+        { kind: "image", src: "/rituals/using-the-prompts.jpeg", alt: "Two people mid-conversation, one listening closely" },
+        {
+          kind: "promptGroup",
+          category: "Touch & Sensation",
+          color: "teal",
+          prompts: [
+            "Tell me what kind of touch makes you feel most present.",
+            "Tell me something about your body you wish I understood.",
+            "Tell me what it feels like in your body when you reach for me first.",
+          ],
+        },
+        {
+          kind: "promptGroup",
+          category: "Presence & Distance",
+          color: "gold",
+          prompts: [
+            "Tell me when you feel closest to me, without any effort.",
+            "Tell me when you feel furthest from me, even when we're in the same room.",
+            "Tell me what you need from me when you're pulling away.",
+          ],
+        },
+        {
+          kind: "promptGroup",
+          category: "Desire & Longing",
+          color: "brown",
+          prompts: [
+            "Tell me something you love about me that you haven't said recently.",
+            "Tell me something you've stopped asking for.",
+            "Tell me what you long for that we haven't found a way to have yet.",
+          ],
+        },
+        {
+          kind: "promptGroup",
+          category: "Trust & Repair",
+          color: "blueGrey",
+          prompts: [
+            "Tell me something that hasn't fully healed between us.",
+            "Tell me when you feel most trusting of me.",
+            "Tell me what repair feels like in your body when it actually happens.",
+          ],
+        },
+        {
+          kind: "promptGroup",
+          category: "Becoming",
+          color: "black",
+          prompts: [
+            "Tell me who you are right now that I may not fully know yet.",
+            "Tell me what kind of couple you want us to be.",
+            "Tell me one thing you want us to do this year that you have not spoken out loud.",
+          ],
+        },
+        {
+          kind: "promptGroup",
+          category: "Touch",
+          color: "teal",
+          prompts: [
+            "TELL ME WHERE YOU’VE WANTED TO BE TOUCHED AND HAVEN’T ASKED.",
+            "TELL ME WHAT KIND OF TOUCH REACHES YOU LATELY.",
+            "TELL ME WHEN MY HANDS FEEL LIKE THEY WANT SOMETHING.",
+            "TELL ME WHAT MAKES YOU FEEL WANTED WITHOUT ANY PRESSURE IN IT.",
+            "TELL ME ABOUT A TIME MY TOUCH LANDED PERFECTLY.",
+          ],
+        },
+        {
+          kind: "promptGroup",
+          category: "Being known",
+          color: "brown",
+          prompts: [
+            "TELL ME WHICH FEELING YOU’D RATHER I NEVER SAW.",
+            "TELL ME WHAT YOU FELT TODAY AND DIDN’T SAY.",
+            "TELL ME WHAT YOU WISH I UNDERSTOOD WITHOUT YOU EXPLAINING IT.",
+            "TELL ME WHEN YOU LAST FELT COMPLETELY MET BY ME.",
+            "TELL ME WHAT YOU’VE LEARNED ABOUT YOURSELF SINCE BEING WITH ME.",
+          ],
+        },
+        {
+          kind: "promptGroup",
+          category: "Where it started",
+          color: "black",
+          prompts: [
+            "TELL ME WHAT TOUCH LOOKED LIKE IN YOUR HOUSE GROWING UP.",
+          ],
+        },
+        {
+          kind: "promptGroup",
+          category: "Forward",
+          color: "blueGrey",
+          prompts: [
+            "TELL ME WHAT YOU WANT MORE OF THAT WE ALREADY HAVE.",
+            "TELL ME WHAT YOU’RE MOST LOOKING FORWARD TO BUILDING.",
+            "TELL ME ONE THING YOU WANT ME TO KNOW RIGHT NOW.",
+            "TELL ME WHAT WOULD MAKE THIS WEEK FEEL CLOSE.",
+          ],
+        },
+        { kind: "quote", text: "From the Couples Edition" },
+        {
+          kind: "promptGroup",
+          category: "Romantic Relationships",
+          color: "blush",
+          prompts: [
+            "Tell me how you want to be loved.",
+            "Tell me a time you felt truly seen by me.",
+          ],
+        },
+        {
+          kind: "promptGroup",
+          category: "Intimacy & Repair",
+          color: "gold",
+          prompts: [
+            "Tell me a way you protect yourself emotionally, even from me.",
+            "Tell me what support looks like for you in hard moments.",
+          ],
+        },
+        {
+          kind: "promptGroup",
+          category: "Touch & Desire",
+          color: "teal",
+          prompts: [
+            "Tell me how you want to be touched.",
+            "Tell me one place you love being touched that isn’t typically erotic.",
+          ],
+        },
+        {
+          kind: "promptGroup",
+          category: "Healing & Growth",
+          color: "brown",
+          prompts: [
+            "Tell me what you were taught about sexuality growing up.",
+            "Tell me what emotional safety during sex looks like for you.",
+          ],
+        },
+        {
+          kind: "promptGroup",
+          category: "Play & Discovery",
+          color: "black",
+          prompts: [
+            "Tell me a sensual ritual you wish we did more often.",
+            "Tell me what small thing has you feel most In Touch with yourself in daily life.",
+          ],
+        },
+        { kind: "quote", text: "From the Friends & Family Edition" },
+        {
+          kind: "promptGroup",
+          category: "Stories & Growth",
+          color: "blueGrey",
+          prompts: [
+            "Tell me about a friendship or relationship that changed you for the better.",
+            "Tell me something you used to be ashamed of that now feels like a strength.",
+          ],
+        },
+        {
+          kind: "promptGroup",
+          category: "Beliefs & Emotions",
+          color: "blush",
+          prompts: [
+            "Tell me about a time you said yes but you actually wanted to say no.",
+            "Tell me about a whisper or instinct that has changed your direction in life.",
+          ],
+        },
+        {
+          kind: "promptGroup",
+          category: "Friendship & Belonging",
+          color: "gold",
+          prompts: [
+            "Tell me how you know when you're holding something in emotionally.",
+            "Tell me what makes you feel deeply supported by friends or loved ones.",
+          ],
+        },
+        {
+          kind: "promptGroup",
+          category: "Life",
+          color: "teal",
+          prompts: [
+            "Tell me when you last felt truly at ease or content in your own company.",
+            "Tell me what helps you feel most grounded when life is hectic.",
+          ],
+        },
+        {
+          kind: "promptGroup",
+          category: "Family",
+          color: "brown",
+          prompts: [
+            "Tell me about how your family showed you love. Was it in the way you needed?",
+            "Tell me one thing you loved about growing up in your family.",
+          ],
+        },
+        { kind: "quote", text: "From Trust & Repair" },
+        {
+          kind: "promptGroup",
+          category: "Return To Trust",
+          color: "black",
+          prompts: [
+            "Tell me what you want trust to feel like.",
+            "Tell me what you need right now, that isn't a solution.",
+          ],
+        },
+        {
+          kind: "promptGroup",
+          category: "The Body's Record",
+          color: "blueGrey",
+          prompts: [
+            "Tell me what your body knows that your mind doesn't want to.",
+            "Tell me where you feel safest in your body right now.",
+          ],
+        },
+        {
+          kind: "promptGroup",
+          category: "The Drift",
+          color: "blush",
+          prompts: [
+            "Tell me when you first felt this drift.",
+            "Tell me what we have not talked about that needs to be said.",
+          ],
+        },
+        {
+          kind: "promptGroup",
+          category: "What I'm Holding",
+          color: "gold",
+          prompts: [
+            "Tell me something you've been carrying alone this week.",
+            "Tell me what you've been pretending is fine.",
+          ],
+        },
+        {
+          kind: "promptGroup",
+          category: "What the World Is Asking",
+          color: "teal",
+          prompts: [
+            "Tell me what you wish men understood right now.",
+            "Tell me what feels unsafe in the world right now.",
+          ],
+        },
+        { kind: "quote", text: "The Intimacy & Communication Cards" },
+        { kind: "image", src: "/rituals/cards-upsell.jpg", alt: "The Intimacy and Communication Cards" },
+        { kind: "image", src: "/rituals/cards-app-screenshot.png", alt: "The Intimacy and Communication Cards app on a phone" },
+        {
+          kind: "p",
+          text: "Four decks: The Couples Edition, The Family and Friends Edition, The Touch Languages, and Trust & Repair, a 50-card deck for couples navigating a rupture, a distance, or a moment they can't seem to move past.",
         },
         {
           kind: "p",
-          text: "Where you learn to feel your own Touch Pattern in your body before you ask anyone else to meet it. If you cannot yet read your own body, you cannot read what is happening between you and someone else. This is where that literacy begins.",
+          text: "Available as an app, so it lives in your pocket, always ready for a quiet evening or moment of connection, and as a physical deck.",
         },
-        { kind: "p", text: "You show up for yourself first. Everything else follows.", emphasis: "accent" },
-        { kind: "link", text: "→ One Touch", href: "https://feelfullyyou.com/one-touch" },
-      ],
-    },
-    // ------------------------------------------------------------- the turn
-    {
-      slug: "where-this-stops",
-      order: 25,
-      title: "Where this stops",
-      eyebrow: "The turn",
-      kind: "closing",
-      imageSide: "right",
-      body: [
+        { kind: "p", text: "Every prompt is designed to open something without forcing it.", emphasis: "accent" },
         {
           kind: "p",
-          text: "You now have every ritual I use. Nothing held back, nothing behind a price.",
+          text: "The cards work in the same structure as The Dyad. One person picks a card and reads it out loud. The other person answers from the heart. One answer per turn. The listener responds with only three things: Thank you. Clarify that. Summarise that. Switch and go deeper with each turn.",
         },
-        {
-          kind: "p",
-          text: "Here is the honest part. These practices work on what happens after you decide to reach. They cannot reach the thing that fires before you decide anything: the half-second where a hand arrives and something in you closes, and you were never consulted.",
-        },
-        {
-          kind: "p",
-          text: "If your body is still doing that, no amount of ritual will land, and you will conclude you tried and it did not work.",
-        },
-        { kind: "big", text: "That is not you failing. That is the wrong order." },
-        {
-          kind: "bigLink",
-          text: "Book a call",
-          subtext: "That reflex was learned in contact, and it changes in contact, in a room with someone who can see it happening while it happens. That is what The Touch Reset is. Twelve weeks, live, with me. It starts with a call, with me and not my team, and if it is not right for you I will say so.",
-          href: "https://feelfullyyou.com/the-touch-reset",
-        },
-        {
-          kind: "p",
-          text: "If you would rather start on your own first, One Touch is seven days, your own hands, entirely private.",
-        },
-        {
-          kind: "link",
-          text: "Or start on your own with One Touch",
-          href: "https://feelfullyyou.com/one-touch",
-        },
+        { kind: "quote", text: "What the Cards Cover" },
+        { kind: "p", text: "Emotional Intimacy: questions that reach beneath the surface of daily life." },
+        { kind: "p", text: "Physical Sensation: prompts that reconnect you to your body and your partner's." },
+        { kind: "p", text: "Desire & Play: invitations to explore what you want and what delights you." },
+        { kind: "p", text: "Trust & Repair: 50 dedicated prompts for navigating rupture and distance." },
+        { kind: "p", text: "Family & Friends: 150 prompts to get to know your family and friends in a much deeper way, and to be understood." },
       ],
     },
   ],
