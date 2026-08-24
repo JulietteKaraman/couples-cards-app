@@ -20,6 +20,22 @@
 // per her examples, applied consistently across every ritual, not just the
 // one she flagged each time.
 
+//
+// RESTRUCTURED 24 Aug 2026: the guide is now "The Touch Rituals" (the number
+// is retired) and the entries are grouped into DAILY / WEEKLY / MONTHLY
+// cadence tiers behind short divider entries, with an "Everything, at a
+// glance" table up front and the book-a-call turn ("Where this stops") second
+// to last. The slug, deck_type and every entitlement string are untouched.
+// Every pre-existing body array is byte-for-byte what it was; only titles,
+// eyebrows and order changed, plus the Dyad's listener step, where "Clarify
+// that" and "Summarise that" now read as stepping stones to "Thank you"
+// rather than three equal options.
+//
+// New entries (Date Morning, Yes Maybe No, Where this stops) take their copy
+// from Juliette's approved touch-rituals.html. The prompts entry uses her real
+// cards: the ten free taster cards from data/taster-cards.ts, then one or two
+// per section pulled verbatim from data/decks/couples.ts and friends.ts.
+
 import { ContentBlock } from "./blocks";
 
 export type PracticeEntry = {
@@ -61,13 +77,13 @@ export type PracticeCollection = {
 
 export const tenTouchRituals: PracticeCollection = {
   slug: "ten-touch-rituals",
-  title: "10 Touch Rituals",
+  title: "The Touch Rituals",
   subtitle: "For couples who love each other and want to feel it again.",
   byline: "By Juliette Karaman, creator of The Beginning: The Ultimate Touch Reset",
   heroImage: "/rituals/hero.png",
   unlockMode: "free-browse",
   entries: [
-    // ---------------------------------------------------------------- intro
+    // ------------------------------------------------------------ opening
     {
       slug: "a-note-before-you-begin",
       order: 0,
@@ -101,8 +117,46 @@ export const tenTouchRituals: PracticeCollection = {
       ],
     },
     {
+      slug: "everything-at-a-glance",
+      order: 1,
+      title: "Everything, at a glance",
+      eyebrow: "The whole guide on one page",
+      kind: "essay",
+      imageSide: "right",
+      body: [
+        {
+          kind: "p",
+          text: "Daily, weekly, monthly. Every one of them tested in a room with real couples, and every one of them yours to keep.",
+        },
+        {
+          kind: "table",
+          headers: ["Ritual", "Cadence", "How long"],
+          rows: [
+            ["The Landing", "Daily", "90 seconds"],
+            ["Touch Base® Anchor", "Daily", "2 minutes, twice a day"],
+            ["The Name", "Daily", "10 seconds"],
+            ["The Handshake of Gratitude", "Daily", "2 minutes, before sleep"],
+            ["The Three Breath Hold", "Daily", "1 minute"],
+            ["The 60-Second Hug", "Weekly", "1 minute"],
+            ["The Trace Ritual", "Weekly", "2 minutes"],
+            ["The 3-Minute Touch Reset", "Weekly", "3 minutes"],
+            ["The Dyad", "Weekly", "15 minutes"],
+            ["Date Morning", "Weekly", "75 minutes"],
+            ["The Breath Bridge", "Monthly", "3 minutes"],
+            ["Yes, Maybe, No", "Monthly", "20 minutes"],
+            ["The Approach", "Monthly", "10 minutes"],
+          ],
+        },
+        {
+          kind: "p",
+          text: "Start anywhere. The daily ones are small enough that a hard day cannot take them from you.",
+          emphasis: "accent",
+        },
+      ],
+    },
+    {
       slug: "why-touch-matters",
-      order: 0.5,
+      order: 2,
       title: "Why Touch Matters",
       kind: "essay",
       image: "/rituals/why-touch-matters.jpeg",
@@ -145,12 +199,400 @@ export const tenTouchRituals: PracticeCollection = {
         },
       ],
     },
-    // ------------------------------------------------------------- the bonus
+    // -------------------------------------------------------------- daily
+    {
+      slug: "daily",
+      order: 3,
+      title: "Daily",
+      eyebrow: "Tier one",
+      kind: "essay",
+      image: "/rituals/hero.png",
+      imageAlt: "Two hands finding each other in warm light",
+      imageSide: "left",
+      body: [
+        { kind: "big", text: "Small enough that a hard day cannot take them from you." },
+      ],
+    },
+    {
+      slug: "the-landing",
+      order: 4,
+      title: "The Landing",
+      eyebrow: "Daily · 90 seconds",
+      kind: "ritual",
+      image: "/rituals/the-landing.jpeg",
+      imageAlt: "Two people arriving into the same quiet room",
+      imageSide: "right",
+      body: [
+        {
+          kind: "p",
+          text: "Most couples start the day already managing it. Phones, children, logistics, the mental list. The bodies in the same room never actually arrive into the same room.",
+        },
+        { kind: "big", text: "This takes 90 seconds." },
+        { kind: "p", text: "Before phones. Before speaking. Before the day begins." },
+        {
+          kind: "step",
+          label: "Find each other",
+          lines: [{ text: "Stand or sit close enough to feel each other's warmth." }],
+        },
+        {
+          kind: "step",
+          label: "Breathe together",
+          lines: [
+            { text: "Look at each other, take a breath in through your nose and exhale through your mouth." },
+            { text: "Do this 3 times together and watch what happens between you.", emphasis: "accent" },
+          ],
+        },
+        {
+          kind: "step",
+          label: "Say it",
+          lines: [{ text: "One of you says: “I'm here.” The other one receives that and says: “I feel you.”" }],
+        },
+        {
+          kind: "notice",
+          lines: [
+            { text: "Notice what happens in your bodies as you witness each other." },
+            { text: "Nothing else is required." },
+          ],
+        },
+        {
+          kind: "p",
+          text: "This is a practice of arrival, not performance.",
+          emphasis: "accent",
+        },
+      ],
+    },
+    {
+      slug: "touch-base-anchor",
+      order: 5,
+      title: "Touch Base® Anchor",
+      eyebrow: "Daily · 2 minutes, twice a day",
+      kind: "ritual",
+      image: "/rituals/touch-base-anchor.png",
+      imageAlt: "The Touch Base gesture, thumb to forefinger",
+      imageSide: "left",
+      body: [
+        {
+          kind: "p",
+          text: "I teach this to every single client. It is the foundation of everything else in this document.",
+        },
+        {
+          kind: "p",
+          text: "Your body is always scanning. All it takes is one loaded moment. A look. A brush. A hand that lingered where it shouldn't have. Your system registers it. You might not remember when. But your body does. It braces.",
+        },
+        {
+          kind: "p",
+          text: "Often, even in loving relationships, this is why touch doesn't land. Not because you don't want to receive it. Because your body is still armoured, just in case.",
+        },
+        {
+          kind: "p",
+          text: "Touch Base® interrupts that loop. Without drama. Without excavation.",
+          emphasis: "accent",
+        },
+        {
+          kind: "step",
+          label: "The gesture",
+          lines: [
+            { text: "Press your thumb to your forefinger.", emphasis: "bold" },
+            { text: "Slowly move your top finger so you can feel every single finger ridge." },
+            { text: "Slower than you think slow is. Like honey. Even slower than that.", emphasis: "accent" },
+          ],
+        },
+        {
+          kind: "step",
+          label: "The anchor line",
+          lines: [
+            { text: "Notice where you want to speed up. Notice what thoughts are coming up. Let them pass." },
+            { text: "Remind yourself: there is no tiger in the room. I am safe.", emphasis: "accent" },
+          ],
+        },
+        {
+          kind: "step",
+          label: "The dose",
+          lines: [{ text: "Do this for 2 minutes. Twice a day. Morning and evening.", emphasis: "bold" }],
+        },
+        {
+          kind: "notice",
+          lines: [
+            { text: "Before you begin, rate how you feel 1–10." },
+            { text: "After 2 minutes, rate again. What shifted?" },
+          ],
+        },
+        {
+          kind: "why",
+          lines: [
+            { text: "This gesture activates pressure points that, when paired with slowness, breath, and attention, down-regulate the stress response.", emphasis: "bold" },
+            { text: "You are gently retraining your system to associate this moment with safety." },
+            { text: "After 31 days it becomes automatic. After 90 it is muscle memory." },
+            { text: "You will find yourself doing it when a car cuts in front of you, when the children are pushing every button, when you feel yourself drifting from the present moment.", emphasis: "bold" },
+            { text: "So discreet your partner won't even notice. But your body will.", emphasis: "accent" },
+          ],
+        },
+        {
+          kind: "driveVideo",
+          url: "https://drive.google.com/file/d/1Rcta69BuEbPGS0zrwhkg2sLlayDnWrKT/view?usp=sharing",
+          label: "Watch the video",
+        },
+        {
+          kind: "driveAudio",
+          url: "https://drive.google.com/file/d/1-7kHzl2T-kBXJIae6uk-3u_KMeDV9Mks/view?usp=sharing",
+          label: "Follow along, audio",
+        },
+      ],
+    },
+    {
+      slug: "the-name",
+      order: 6,
+      title: "The Name",
+      eyebrow: "Daily · 10 seconds",
+      kind: "ritual",
+      image: "/rituals/the-name.jpeg",
+      imageAlt: "Full presence, saying the name slowly",
+      imageSide: "right",
+      body: [
+        { kind: "p", text: "Say their name. The actual name they were given.", emphasis: "bold" },
+        { kind: "p", text: "Not love, not babe, not darling. Their name, with your full attention behind it." },
+        {
+          kind: "step",
+          label: "Turn to face them",
+          lines: [{ text: "At any moment in the day, turn to face them." }],
+        },
+        {
+          kind: "step",
+          label: "Say it",
+          lines: [
+            { text: "Say their name. Once. Slowly. With presence.", emphasis: "bold" },
+            { text: "Nothing else is required.", emphasis: "accent" },
+          ],
+        },
+        {
+          kind: "notice",
+          lines: [
+            { text: "What changes in them when you do this?" },
+            { text: "What changes in you?" },
+          ],
+        },
+        {
+          kind: "p",
+          text: "When we say someone's name with presence, it lands differently. It says: I see you specifically. Not the role you are playing. Not the version of you I have grown used to. You, as you actually are, right now.",
+        },
+        { kind: "quote", text: "Extra Practice" },
+        {
+          kind: "p",
+          text: "Play with how you say each other's names: surprised, angry, playful, longingly, hesitantly.",
+        },
+        {
+          kind: "notice",
+          lines: [
+            { text: "Notice how it feels to receive this from your partner." },
+            { text: "Notice how it felt to do this exercise in all its forms." },
+            { text: "Which did you prefer?" },
+            { text: "What didn't you like?" },
+            { text: "Bringing awareness to these patterns is key.", emphasis: "accent" },
+          ],
+        },
+        {
+          kind: "driveAudio",
+          url: "https://drive.google.com/file/d/10cpRCfdR5AOlKQFVuBo5nnjf9PQj23ie/view?usp=sharing",
+          label: "Listen along as I do this exercise",
+        },
+      ],
+    },
+    {
+      slug: "the-handshake-of-gratitude",
+      order: 7,
+      title: "The Handshake of Gratitude",
+      eyebrow: "Daily · 2 minutes, before sleep",
+      kind: "ritual",
+      image: "/rituals/the-handshake-of-gratitude.jpeg",
+      imageAlt: "Before sleep, naming one moment of closeness from the day",
+      imageSide: "left",
+      body: [
+        {
+          kind: "p",
+          text: "Before sleep, each person names one physical moment from the day where they felt close.",
+        },
+        {
+          kind: "p",
+          text: "Not ‘you were kind.’ Something sensory, specific. The way they reached for your hand. The moment they turned toward you in the kitchen. The 30 seconds they stopped what they were doing and looked at you.",
+        },
+        {
+          kind: "step",
+          label: "Before sleep",
+          lines: [{ text: "Lie or sit together before sleep." }],
+        },
+        {
+          kind: "step",
+          label: "Name it",
+          lines: [{ text: "One of you names one physical moment from the day. Sensory. Specific.", emphasis: "bold" }],
+        },
+        {
+          kind: "step",
+          label: "Receive it",
+          lines: [
+            { text: "The other receives it. No response required." },
+            { text: "Just: received. Switch.", emphasis: "accent" },
+          ],
+        },
+        {
+          kind: "notice",
+          lines: [
+            { text: "What does it feel like to be named specifically?" },
+            { text: "What does it feel like to search for that moment in your own memory?" },
+          ],
+        },
+        {
+          kind: "why",
+          lines: [
+            { text: "Specificity teaches the body what to reach for more of.", emphasis: "bold" },
+            { text: "When you name a physical moment, you are training your nervous system to register closeness when it happens, not just in retrospect." },
+            { text: "Over time, you stop missing each other while you are still in the room.", emphasis: "accent" },
+          ],
+        },
+        {
+          kind: "driveAudio",
+          url: "https://drive.google.com/file/d/1KeZfIiJ_NV3idc8WTKL4f_6aecjTtgg_/view?usp=sharing",
+          label: "Follow along, audio",
+        },
+      ],
+    },
+    {
+      slug: "the-three-breath-hold",
+      order: 8,
+      title: "The Three Breath Hold",
+      eyebrow: "Daily · 1 minute",
+      kind: "ritual",
+      image: "/rituals/the-three-breath-hold.jpeg",
+      imageAlt: "Holding hands through three slow breaths",
+      imageSide: "right",
+      body: [
+        {
+          kind: "p",
+          text: "When one of you is overwhelmed, the most common response is to try to help. To fix. To say the right thing.",
+        },
+        { kind: "big", text: "Sometimes the body just needs to know it is not alone." },
+        {
+          kind: "step",
+          label: "Reach",
+          lines: [{ text: "When one of you is overwhelmed, reach for their hand. Don't speak.", emphasis: "bold" }],
+        },
+        {
+          kind: "step",
+          label: "Breathe",
+          lines: [
+            { text: "Take three slow breaths together. In through the nose, out through the mouth." },
+            { text: "That is all.", emphasis: "accent" },
+          ],
+        },
+        {
+          kind: "notice",
+          lines: [{ text: "What does it feel like to be held in silence rather than solved?" }],
+        },
+        {
+          kind: "p",
+          text: "This is presence, not a solution. It says: I am staying.",
+        },
+        {
+          kind: "p",
+          text: "That is sometimes everything.",
+          emphasis: "accent",
+        },
+      ],
+    },
+    // ------------------------------------------------------------- weekly
+    {
+      slug: "weekly",
+      order: 9,
+      title: "Weekly",
+      eyebrow: "Tier two",
+      kind: "essay",
+      image: "/rituals/the-trace-ritual.jpeg",
+      imageAlt: "A face held, unhurried",
+      imageSide: "right",
+      body: [
+        { kind: "big", text: "Longer, agreed in advance, with a clear end." },
+        {
+          kind: "p",
+          text: "The agreement is what makes them work.",
+          emphasis: "accent",
+        },
+      ],
+    },
+    {
+      slug: "the-60-second-hug",
+      order: 10,
+      title: "The 60-Second Hug",
+      eyebrow: "Weekly · 1 minute",
+      kind: "ritual",
+      image: "/rituals/the-60-second-hug.jpeg",
+      imageAlt: "A held, unhurried 60-second hug",
+      imageSide: "left",
+      body: [
+        {
+          kind: "p",
+          text: "I teach structured touch. That means time. That means agreement. That means following through. All of it creates safety.",
+        },
+        {
+          kind: "p",
+          text: "Some people think it is crazy to start with a 60-second hug. Until they do it this way.",
+        },
+        {
+          kind: "step",
+          label: "Step 1, Ask first",
+          lines: [{ text: "“Do you have the bandwidth for this?”" }],
+        },
+        {
+          kind: "step",
+          label: "Step 2, Agree the container",
+          lines: [
+            { text: "60 seconds.", emphasis: "bold" },
+            { text: "No talking. No phones. No distractions." },
+            { text: "This is not going to lead anywhere else." },
+            { text: "That last part matters." },
+            { text: "Safety means the body knows what it signed up for.", emphasis: "accent" },
+          ],
+        },
+        {
+          kind: "step",
+          label: "Step 3, Arrive",
+          lines: [
+            { text: "Look at each other's eyes as you reach for them." },
+            { text: "Let your body guide how much you want to lean in. Take one breath together, in through the nose, out through the mouth." },
+          ],
+        },
+        {
+          kind: "step",
+          label: "Step 4, Hold",
+          lines: [
+            { text: "Allow yourself to be held." },
+            { text: "Allow yourself to hold." },
+            { text: "No agenda.", emphasis: "accent" },
+          ],
+        },
+        {
+          kind: "notice",
+          lines: [
+            { text: "Is your breath starting to synchronise with theirs? Can you feel their heartbeat?" },
+            { text: "Afterwards: rate on a scale of 1–10 how connected you feel." },
+            { text: "1 is completely disconnected. 10 is fully met." },
+          ],
+        },
+        {
+          kind: "why",
+          lines: [
+            { text: "At 20 seconds oxytocin begins to release. Cortisol drops.", emphasis: "bold" },
+            { text: "The nervous system stops scanning and starts to settle." },
+            { text: "Your body registers what your mind already knows: you are safe here." },
+            { text: "The agreed time is not a limit. It is a container.", emphasis: "bold" },
+            { text: "When both bodies know when it will end, they can fully arrive into it.", emphasis: "accent" },
+          ],
+        },
+      ],
+    },
     {
       slug: "the-trace-ritual",
-      order: 1,
+      order: 11,
       title: "The Trace Ritual",
-      eyebrow: "The bonus, where it all began",
+      eyebrow: "Weekly · 2 minutes, the one people find me through",
       kind: "ritual",
       image: "/rituals/the-trace-ritual-real.jpg",
       imageAlt: "Juliette, mid-trace, the frame the video is known by",
@@ -233,361 +675,11 @@ export const tenTouchRituals: PracticeCollection = {
         },
       ],
     },
-    // ------------------------------------------------------------- rituals 1-9
-    {
-      slug: "the-landing",
-      order: 2,
-      title: "Ritual 1, The Landing",
-      kind: "ritual",
-      image: "/rituals/the-landing.jpeg",
-      imageAlt: "Two people arriving into the same quiet room",
-      imageSide: "right",
-      body: [
-        {
-          kind: "p",
-          text: "Most couples start the day already managing it. Phones, children, logistics, the mental list. The bodies in the same room never actually arrive into the same room.",
-        },
-        { kind: "big", text: "This takes 90 seconds." },
-        { kind: "p", text: "Before phones. Before speaking. Before the day begins." },
-        {
-          kind: "step",
-          label: "Find each other",
-          lines: [{ text: "Stand or sit close enough to feel each other's warmth." }],
-        },
-        {
-          kind: "step",
-          label: "Breathe together",
-          lines: [
-            { text: "Look at each other, take a breath in through your nose and exhale through your mouth." },
-            { text: "Do this 3 times together and watch what happens between you.", emphasis: "accent" },
-          ],
-        },
-        {
-          kind: "step",
-          label: "Say it",
-          lines: [{ text: "One of you says: “I'm here.” The other one receives that and says: “I feel you.”" }],
-        },
-        {
-          kind: "notice",
-          lines: [
-            { text: "Notice what happens in your bodies as you witness each other." },
-            { text: "Nothing else is required." },
-          ],
-        },
-        {
-          kind: "p",
-          text: "This is a practice of arrival, not performance.",
-          emphasis: "accent",
-        },
-      ],
-    },
-    {
-      slug: "touch-base-anchor",
-      order: 3,
-      title: "Ritual 2, Touch Base® Anchor",
-      kind: "ritual",
-      image: "/rituals/touch-base-anchor.png",
-      imageAlt: "The Touch Base gesture, thumb to forefinger",
-      imageSide: "left",
-      body: [
-        {
-          kind: "p",
-          text: "I teach this to every single client. It is the foundation of everything else in this document.",
-        },
-        {
-          kind: "p",
-          text: "Your body is always scanning. All it takes is one loaded moment. A look. A brush. A hand that lingered where it shouldn't have. Your system registers it. You might not remember when. But your body does. It braces.",
-        },
-        {
-          kind: "p",
-          text: "Often, even in loving relationships, this is why touch doesn't land. Not because you don't want to receive it. Because your body is still armoured, just in case.",
-        },
-        {
-          kind: "p",
-          text: "Touch Base® interrupts that loop. Without drama. Without excavation.",
-          emphasis: "accent",
-        },
-        {
-          kind: "step",
-          label: "The gesture",
-          lines: [
-            { text: "Press your thumb to your forefinger.", emphasis: "bold" },
-            { text: "Slowly move your top finger so you can feel every single finger ridge." },
-            { text: "Slower than you think slow is. Like honey. Even slower than that.", emphasis: "accent" },
-          ],
-        },
-        {
-          kind: "step",
-          label: "The anchor line",
-          lines: [
-            { text: "Notice where you want to speed up. Notice what thoughts are coming up. Let them pass." },
-            { text: "Remind yourself: there is no tiger in the room. I am safe.", emphasis: "accent" },
-          ],
-        },
-        {
-          kind: "step",
-          label: "The dose",
-          lines: [{ text: "Do this for 2 minutes. Twice a day. Morning and evening.", emphasis: "bold" }],
-        },
-        {
-          kind: "notice",
-          lines: [
-            { text: "Before you begin, rate how you feel 1–10." },
-            { text: "After 2 minutes, rate again. What shifted?" },
-          ],
-        },
-        {
-          kind: "why",
-          lines: [
-            { text: "This gesture activates pressure points that, when paired with slowness, breath, and attention, down-regulate the stress response.", emphasis: "bold" },
-            { text: "You are gently retraining your system to associate this moment with safety." },
-            { text: "After 31 days it becomes automatic. After 90 it is muscle memory." },
-            { text: "You will find yourself doing it when a car cuts in front of you, when the children are pushing every button, when you feel yourself drifting from the present moment.", emphasis: "bold" },
-            { text: "So discreet your partner won't even notice. But your body will.", emphasis: "accent" },
-          ],
-        },
-        {
-          kind: "driveVideo",
-          url: "https://drive.google.com/file/d/1Rcta69BuEbPGS0zrwhkg2sLlayDnWrKT/view?usp=sharing",
-          label: "Watch the video",
-        },
-        {
-          kind: "driveAudio",
-          url: "https://drive.google.com/file/d/1-7kHzl2T-kBXJIae6uk-3u_KMeDV9Mks/view?usp=sharing",
-          label: "Follow along, audio",
-        },
-      ],
-    },
-    {
-      slug: "the-name",
-      order: 4,
-      title: "Ritual 3, The Name",
-      kind: "ritual",
-      image: "/rituals/the-name.jpeg",
-      imageAlt: "Full presence, saying the name slowly",
-      imageSide: "right",
-      body: [
-        { kind: "p", text: "Say their name. The actual name they were given.", emphasis: "bold" },
-        { kind: "p", text: "Not love, not babe, not darling. Their name, with your full attention behind it." },
-        {
-          kind: "step",
-          label: "Turn to face them",
-          lines: [{ text: "At any moment in the day, turn to face them." }],
-        },
-        {
-          kind: "step",
-          label: "Say it",
-          lines: [
-            { text: "Say their name. Once. Slowly. With presence.", emphasis: "bold" },
-            { text: "Nothing else is required.", emphasis: "accent" },
-          ],
-        },
-        {
-          kind: "notice",
-          lines: [
-            { text: "What changes in them when you do this?" },
-            { text: "What changes in you?" },
-          ],
-        },
-        {
-          kind: "p",
-          text: "When we say someone's name with presence, it lands differently. It says: I see you specifically. Not the role you are playing. Not the version of you I have grown used to. You, as you actually are, right now.",
-        },
-        { kind: "quote", text: "Extra Practice" },
-        {
-          kind: "p",
-          text: "Play with how you say each other's names: surprised, angry, playful, longingly, hesitantly.",
-        },
-        {
-          kind: "notice",
-          lines: [
-            { text: "Notice how it feels to receive this from your partner." },
-            { text: "Notice how it felt to do this exercise in all its forms." },
-            { text: "Which did you prefer?" },
-            { text: "What didn't you like?" },
-            { text: "Bringing awareness to these patterns is key.", emphasis: "accent" },
-          ],
-        },
-        {
-          kind: "driveAudio",
-          url: "https://drive.google.com/file/d/10cpRCfdR5AOlKQFVuBo5nnjf9PQj23ie/view?usp=sharing",
-          label: "Listen along as I do this exercise",
-        },
-      ],
-    },
-    {
-      slug: "the-handshake-of-gratitude",
-      order: 5,
-      title: "Ritual 4, The Handshake of Gratitude",
-      kind: "ritual",
-      image: "/rituals/the-handshake-of-gratitude.jpeg",
-      imageAlt: "Before sleep, naming one moment of closeness from the day",
-      imageSide: "left",
-      body: [
-        {
-          kind: "p",
-          text: "Before sleep, each person names one physical moment from the day where they felt close.",
-        },
-        {
-          kind: "p",
-          text: "Not ‘you were kind.’ Something sensory, specific. The way they reached for your hand. The moment they turned toward you in the kitchen. The 30 seconds they stopped what they were doing and looked at you.",
-        },
-        {
-          kind: "step",
-          label: "Before sleep",
-          lines: [{ text: "Lie or sit together before sleep." }],
-        },
-        {
-          kind: "step",
-          label: "Name it",
-          lines: [{ text: "One of you names one physical moment from the day. Sensory. Specific.", emphasis: "bold" }],
-        },
-        {
-          kind: "step",
-          label: "Receive it",
-          lines: [
-            { text: "The other receives it. No response required." },
-            { text: "Just: received. Switch.", emphasis: "accent" },
-          ],
-        },
-        {
-          kind: "notice",
-          lines: [
-            { text: "What does it feel like to be named specifically?" },
-            { text: "What does it feel like to search for that moment in your own memory?" },
-          ],
-        },
-        {
-          kind: "why",
-          lines: [
-            { text: "Specificity teaches the body what to reach for more of.", emphasis: "bold" },
-            { text: "When you name a physical moment, you are training your nervous system to register closeness when it happens, not just in retrospect." },
-            { text: "Over time, you stop missing each other while you are still in the room.", emphasis: "accent" },
-          ],
-        },
-        {
-          kind: "driveAudio",
-          url: "https://drive.google.com/file/d/1KeZfIiJ_NV3idc8WTKL4f_6aecjTtgg_/view?usp=sharing",
-          label: "Follow along, audio",
-        },
-      ],
-    },
-    {
-      slug: "the-three-breath-hold",
-      order: 6,
-      title: "Ritual 5, The Three Breath Hold",
-      kind: "ritual",
-      image: "/rituals/the-three-breath-hold.jpeg",
-      imageAlt: "Holding hands through three slow breaths",
-      imageSide: "right",
-      body: [
-        {
-          kind: "p",
-          text: "When one of you is overwhelmed, the most common response is to try to help. To fix. To say the right thing.",
-        },
-        { kind: "big", text: "Sometimes the body just needs to know it is not alone." },
-        {
-          kind: "step",
-          label: "Reach",
-          lines: [{ text: "When one of you is overwhelmed, reach for their hand. Don't speak.", emphasis: "bold" }],
-        },
-        {
-          kind: "step",
-          label: "Breathe",
-          lines: [
-            { text: "Take three slow breaths together. In through the nose, out through the mouth." },
-            { text: "That is all.", emphasis: "accent" },
-          ],
-        },
-        {
-          kind: "notice",
-          lines: [{ text: "What does it feel like to be held in silence rather than solved?" }],
-        },
-        {
-          kind: "p",
-          text: "This is presence, not a solution. It says: I am staying.",
-        },
-        {
-          kind: "p",
-          text: "That is sometimes everything.",
-          emphasis: "accent",
-        },
-      ],
-    },
-    {
-      slug: "the-60-second-hug",
-      order: 7,
-      title: "Ritual 6, The 60-Second Hug",
-      kind: "ritual",
-      image: "/rituals/the-60-second-hug.jpeg",
-      imageAlt: "A held, unhurried 60-second hug",
-      imageSide: "left",
-      body: [
-        {
-          kind: "p",
-          text: "I teach structured touch. That means time. That means agreement. That means following through. All of it creates safety.",
-        },
-        {
-          kind: "p",
-          text: "Some people think it is crazy to start with a 60-second hug. Until they do it this way.",
-        },
-        {
-          kind: "step",
-          label: "Step 1, Ask first",
-          lines: [{ text: "“Do you have the bandwidth for this?”" }],
-        },
-        {
-          kind: "step",
-          label: "Step 2, Agree the container",
-          lines: [
-            { text: "60 seconds.", emphasis: "bold" },
-            { text: "No talking. No phones. No distractions." },
-            { text: "This is not going to lead anywhere else." },
-            { text: "That last part matters." },
-            { text: "Safety means the body knows what it signed up for.", emphasis: "accent" },
-          ],
-        },
-        {
-          kind: "step",
-          label: "Step 3, Arrive",
-          lines: [
-            { text: "Look at each other's eyes as you reach for them." },
-            { text: "Let your body guide how much you want to lean in. Take one breath together, in through the nose, out through the mouth." },
-          ],
-        },
-        {
-          kind: "step",
-          label: "Step 4, Hold",
-          lines: [
-            { text: "Allow yourself to be held." },
-            { text: "Allow yourself to hold." },
-            { text: "No agenda.", emphasis: "accent" },
-          ],
-        },
-        {
-          kind: "notice",
-          lines: [
-            { text: "Is your breath starting to synchronise with theirs? Can you feel their heartbeat?" },
-            { text: "Afterwards: rate on a scale of 1–10 how connected you feel." },
-            { text: "1 is completely disconnected. 10 is fully met." },
-          ],
-        },
-        {
-          kind: "why",
-          lines: [
-            { text: "At 20 seconds oxytocin begins to release. Cortisol drops.", emphasis: "bold" },
-            { text: "The nervous system stops scanning and starts to settle." },
-            { text: "Your body registers what your mind already knows: you are safe here." },
-            { text: "The agreed time is not a limit. It is a container.", emphasis: "bold" },
-            { text: "When both bodies know when it will end, they can fully arrive into it.", emphasis: "accent" },
-          ],
-        },
-      ],
-    },
     {
       slug: "the-3-minute-touch-reset",
-      order: 8,
-      title: "Ritual 7, The 3-Minute Touch Reset",
+      order: 12,
+      title: "The 3-Minute Touch Reset",
+      eyebrow: "Weekly · 3 minutes",
       kind: "ritual",
       image: "/rituals/the-3-minute-touch-reset.jpeg",
       imageAlt: "A palm resting on a hand, no movement, just presence",
@@ -650,9 +742,143 @@ export const tenTouchRituals: PracticeCollection = {
       ],
     },
     {
+      slug: "the-dyad",
+      order: 13,
+      title: "The Dyad",
+      eyebrow: "Weekly · 15 minutes, one prompt the whole time",
+      kind: "essay",
+      image: "/rituals/the-dyad.jpeg",
+      imageAlt: "Two people mid-conversation, one listening closely",
+      imageSide: "left",
+      body: [
+        {
+          kind: "p",
+          text: "For couples who want to go beyond “I'm fine.”",
+        },
+        {
+          kind: "p",
+          text: "Most couples don't struggle to talk. They struggle to listen, really listen, without preparing their response, without defending, without the conversation becoming a negotiation. The Dyad method removes that pressure.",
+        },
+        {
+          kind: "p",
+          text: "After years sitting with couples in session, I noticed that the hardest thing was rarely the touching. It was finding the words. Not because people didn't have them. Because they didn't have a structure safe enough to say them in.",
+        },
+        {
+          kind: "p",
+          text: "I created the Intimacy and Communication Cards because couples needed something they could use without me in the room. A way to keep the conversation alive between sessions, between weeks, in the ordinary moments that matter.",
+        },
+        {
+          kind: "quote",
+          text: "15 minutes of being genuinely heard and understood does more for a relationship than three hours of debate. One question at a time.",
+        },
+        { kind: "quote", text: "How it works" },
+        {
+          kind: "diagram",
+          steps: [
+            { heading: "Ask" },
+            { heading: "Answer" },
+            { heading: "Listen" },
+            { heading: "Thank" },
+            { heading: "Switch" },
+          ],
+        },
+        {
+          kind: "step",
+          label: "Ask",
+          lines: [{ text: "One person reads the prompt." }],
+        },
+        {
+          kind: "step",
+          label: "Answer",
+          lines: [{ text: "The other answers, honestly, without editing.", emphasis: "bold" }],
+        },
+        {
+          kind: "step",
+          label: "Listen",
+          lines: [{ text: "The listener stays present. No fixing, no defending, no responding.", emphasis: "accent" }],
+        },
+        {
+          kind: "step",
+          label: "Thank",
+          lines: [
+            { text: "The listener may say only three things, and two of them are on the way to the third." },
+            { text: "If you need clarity, say “Clarify that.”" },
+            { text: "If too many thoughts or too long, say “Summarise that.”" },
+            { text: "When the answer lands, say “Thank you.”", emphasis: "bold" },
+            { text: "That is the destination, and the only thing that passes the turn.", emphasis: "accent" },
+          ],
+        },
+        {
+          kind: "step",
+          label: "Switch",
+          lines: [{ text: "Switch roles and go again." }],
+        },
+      ],
+    },
+    {
+      slug: "date-morning",
+      order: 14,
+      title: "Date Morning",
+      eyebrow: "Weekly · 75 minutes",
+      kind: "ritual",
+      imageSide: "right",
+      body: [
+        {
+          kind: "p",
+          text: "Not date night, at the end of a day that already took everything. Morning, before the day gets to it.",
+        },
+        {
+          kind: "numberedSteps",
+          steps: [
+            {
+              heading: "Seventy-five minutes",
+              text: "No phones, no children, no talking about work.",
+            },
+            {
+              heading: "One of you sets it up",
+              text: "That person chooses where it happens and what kind of date it is this week: real physical touch, or a picnic somewhere, or something neither of you has done. The other does not have to think about it at all. That is the gift.",
+            },
+            {
+              heading: "Fifteen minutes on one prompt",
+              text: "Start with fifteen minutes on one prompt, run as a Dyad.",
+            },
+            {
+              heading: "Two lists",
+              text: "Somewhere in it, exchange two lists: ten things you used to love doing as a child, and ten things you love about the other person.",
+            },
+          ],
+        },
+        {
+          kind: "p",
+          text: "Intimacy, and the way you are touched by life, is structured.",
+          emphasis: "accent",
+        },
+      ],
+    },
+    // ------------------------------------------------------------ monthly
+    {
+      slug: "monthly",
+      order: 15,
+      title: "Monthly",
+      eyebrow: "Tier three",
+      kind: "essay",
+      image: "/rituals/note-before.jpeg",
+      imageAlt: "Quiet closeness, no hurry in it",
+      imageSide: "left",
+      body: [
+        { kind: "big", text: "The bigger work." },
+        {
+          kind: "p",
+          text: "Put it in the diary or it will not happen.",
+          emphasis: "accent",
+        },
+      ],
+    },
+    {
       slug: "the-breath-bridge",
-      order: 9,
-      title: "Ritual 8, The Breath Bridge",
+      order: 16,
+      title: "The Breath Bridge",
+      eyebrow: "Monthly · 3 minutes, no touch required",
       kind: "ritual",
       image: "/rituals/the-breath-bridge.jpeg",
       imageAlt: "Sitting facing each other, no touch, just breath",
@@ -709,9 +935,43 @@ export const tenTouchRituals: PracticeCollection = {
       ],
     },
     {
+      slug: "yes-maybe-no",
+      order: 17,
+      title: "Yes, Maybe, No",
+      eyebrow: "Monthly · 20 minutes",
+      kind: "ritual",
+      imageSide: "left",
+      body: [
+        {
+          kind: "p",
+          text: "Run every kind of touch you can think of past yourself first, then each other.",
+        },
+        {
+          kind: "table",
+          headers: ["The light", "What it means"],
+          rows: [
+            ["Green", "Yes, more of that."],
+            ["Amber", "Maybe, depends."],
+            ["Red", "No, not there."],
+          ],
+        },
+        { kind: "p", text: "Meh is data.", emphasis: "bold" },
+        {
+          kind: "p",
+          text: "A maybe is not a failure. It is information neither of you had, and it is often the most useful square on the page.",
+        },
+        {
+          kind: "p",
+          text: "A no given freely is what makes a yes mean anything.",
+          emphasis: "accent",
+        },
+      ],
+    },
+    {
       slug: "the-approach",
-      order: 10,
-      title: "Ritual 9, The Approach",
+      order: 18,
+      title: "The Approach",
+      eyebrow: "Monthly · 10 minutes",
       kind: "ritual",
       image: "/rituals/the-approach.jpeg",
       imageAlt: "One partner walking slowly toward the other",
@@ -779,84 +1039,12 @@ export const tenTouchRituals: PracticeCollection = {
         },
       ],
     },
-    // ------------------------------------------------------------------ dyad
-    {
-      slug: "the-dyad",
-      order: 11,
-      title: "The Dyad",
-      eyebrow: "A structured communication practice",
-      kind: "essay",
-      image: "/rituals/the-dyad.jpeg",
-      imageAlt: "Two people mid-conversation, one listening closely",
-      imageSide: "left",
-      body: [
-        {
-          kind: "p",
-          text: "For couples who want to go beyond “I'm fine.”",
-        },
-        {
-          kind: "p",
-          text: "Most couples don't struggle to talk. They struggle to listen, really listen, without preparing their response, without defending, without the conversation becoming a negotiation. The Dyad method removes that pressure.",
-        },
-        {
-          kind: "p",
-          text: "After years sitting with couples in session, I noticed that the hardest thing was rarely the touching. It was finding the words. Not because people didn't have them. Because they didn't have a structure safe enough to say them in.",
-        },
-        {
-          kind: "p",
-          text: "I created the Intimacy and Communication Cards because couples needed something they could use without me in the room. A way to keep the conversation alive between sessions, between weeks, in the ordinary moments that matter.",
-        },
-        {
-          kind: "quote",
-          text: "15 minutes of being genuinely heard and understood does more for a relationship than three hours of debate. One question at a time.",
-        },
-        { kind: "quote", text: "How it works" },
-        {
-          kind: "diagram",
-          steps: [
-            { heading: "Ask" },
-            { heading: "Answer" },
-            { heading: "Listen" },
-            { heading: "Thank" },
-            { heading: "Switch" },
-          ],
-        },
-        {
-          kind: "step",
-          label: "Ask",
-          lines: [{ text: "One person reads the prompt." }],
-        },
-        {
-          kind: "step",
-          label: "Answer",
-          lines: [{ text: "The other answers, honestly, without editing.", emphasis: "bold" }],
-        },
-        {
-          kind: "step",
-          label: "Listen",
-          lines: [{ text: "The listener stays present. No fixing, no defending, no responding.", emphasis: "accent" }],
-        },
-        {
-          kind: "step",
-          label: "Thank",
-          lines: [
-            { text: "When the answer lands, say “Thank you.”" },
-            { text: "If you need clarity, say “Clarify that.”" },
-            { text: "If too many thoughts or too long, say “Summarise that.”" },
-          ],
-        },
-        {
-          kind: "step",
-          label: "Switch",
-          lines: [{ text: "Switch roles and go again." }],
-        },
-      ],
-    },
-    // -------------------------------------------------------------- ritual 10
+    // ------------------------------------------------------------ closing
     {
       slug: "using-the-prompts",
-      order: 12,
-      title: "Ritual 10, Using the Prompts",
+      order: 19,
+      title: "Using the Prompts",
+      eyebrow: "How to run a prompt",
       kind: "ritual",
       image: "/rituals/using-the-prompts.jpeg",
       imageAlt: "Two people mid-conversation, one listening closely",
@@ -914,10 +1102,9 @@ export const tenTouchRituals: PracticeCollection = {
         },
       ],
     },
-    // -------------------------------------------------------------- closing
     {
       slug: "the-intimacy-and-communication-cards",
-      order: 13,
+      order: 20,
       title: "The Intimacy & Communication Cards",
       eyebrow: "475 prompts, one practice",
       kind: "closing",
@@ -950,7 +1137,7 @@ export const tenTouchRituals: PracticeCollection = {
     },
     {
       slug: "meet-juliette",
-      order: 14,
+      order: 21,
       title: "Meet Juliette",
       eyebrow: "27 years of helping people feel, relate, and connect",
       kind: "closing",
@@ -1009,7 +1196,7 @@ export const tenTouchRituals: PracticeCollection = {
     },
     {
       slug: "your-next-yes",
-      order: 15,
+      order: 22,
       title: "Your Next Yes",
       kind: "closing",
       image: "/rituals/your-next-yes.png",
@@ -1048,6 +1235,268 @@ export const tenTouchRituals: PracticeCollection = {
         },
         { kind: "p", text: "You show up for yourself first. Everything else follows.", emphasis: "accent" },
         { kind: "link", text: "→ One Touch", href: "https://feelfullyyou.com/one-touch" },
+      ],
+    },
+    // ------------------------------------------------- the turn, and the cards
+    {
+      slug: "where-this-stops",
+      order: 23,
+      title: "Where this stops",
+      eyebrow: "The turn",
+      kind: "closing",
+      imageSide: "right",
+      body: [
+        {
+          kind: "p",
+          text: "You now have every ritual I use. Nothing held back, nothing behind a price.",
+        },
+        {
+          kind: "p",
+          text: "Here is the honest part. These practices work on what happens after you decide to reach. They cannot reach the thing that fires before you decide anything: the half-second where a hand arrives and something in you closes, and you were never consulted.",
+        },
+        {
+          kind: "p",
+          text: "If your body is still doing that, no amount of ritual will land, and you will conclude you tried and it did not work.",
+        },
+        { kind: "big", text: "That is not you failing. That is the wrong order." },
+        {
+          kind: "bigLink",
+          text: "Book a call",
+          subtext: "That reflex was learned in contact, and it changes in contact, in a room with someone who can see it happening while it happens. That is what The Touch Reset is. Twelve weeks, live, with me. It starts with a call, with me and not my team, and if it is not right for you I will say so.",
+          href: "https://feelfullyyou.com/the-touch-reset",
+        },
+        {
+          kind: "p",
+          text: "If you would rather start on your own first, One Touch is seven days, your own hands, entirely private.",
+        },
+        {
+          kind: "link",
+          text: "Or start on your own with One Touch",
+          href: "https://feelfullyyou.com/one-touch",
+        },
+      ],
+    },
+    {
+      slug: "the-prompts",
+      order: 24,
+      title: "The prompts",
+      eyebrow: "Real cards from the decks",
+      kind: "essay",
+      imageSide: "left",
+      body: [
+        {
+          kind: "p",
+          text: "For the Dyad, for Date Morning, for the drive home. One prompt, fifteen minutes, all the way down.",
+        },
+        { kind: "quote", text: "Start with these ten" },
+        {
+          kind: "p",
+          text: "These are the ten free taster cards. Yours already, and enough to run every practice in this guide.",
+        },
+        {
+          kind: "promptGroup",
+          category: "The free taster cards",
+          color: "gold",
+          prompts: [
+            "Tell me your biggest fear and biggest desire for our relationship",
+            "Tell me about an honest conversation you wish we'd have, but haven't yet. What might make it easier?",
+            "Tell me a fantasy you've had, but never voiced",
+            "Tell me something you're still healing from sexually.",
+            "Tell me your favorite flirty memory with me.",
+            "Tell me a trait in your parents or siblings you dislike. Do you see it in yourself too?",
+            "Tell me about a risk you took that paid off or didn't. What did you learn from it?",
+            "Tell me a story that changed your perspective or deeply impacted you.",
+            "Tell me about a conversation you wish you could revisit. What would you say or do differently?",
+            "Tell me a challenge you faced that made you stronger. How did you grow because of it?",
+          ],
+        },
+        { kind: "quote", text: "One prompt, fifteen minutes" },
+        {
+          kind: "promptGroup",
+          category: "Touch",
+          color: "teal",
+          prompts: [
+            "TELL ME WHERE YOU’VE WANTED TO BE TOUCHED AND HAVEN’T ASKED.",
+            "TELL ME WHAT KIND OF TOUCH REACHES YOU LATELY.",
+            "TELL ME WHEN MY HANDS FEEL LIKE THEY WANT SOMETHING.",
+            "TELL ME WHAT MAKES YOU FEEL WANTED WITHOUT ANY PRESSURE IN IT.",
+            "TELL ME ABOUT A TIME MY TOUCH LANDED PERFECTLY.",
+          ],
+        },
+        {
+          kind: "promptGroup",
+          category: "Being known",
+          color: "brown",
+          prompts: [
+            "TELL ME WHICH FEELING YOU’D RATHER I NEVER SAW.",
+            "TELL ME WHAT YOU FELT TODAY AND DIDN’T SAY.",
+            "TELL ME WHAT YOU WISH I UNDERSTOOD WITHOUT YOU EXPLAINING IT.",
+            "TELL ME WHEN YOU LAST FELT COMPLETELY MET BY ME.",
+            "TELL ME WHAT YOU’VE LEARNED ABOUT YOURSELF SINCE BEING WITH ME.",
+          ],
+        },
+        {
+          kind: "promptGroup",
+          category: "Where it started",
+          color: "black",
+          prompts: [
+            "TELL ME WHAT TOUCH LOOKED LIKE IN YOUR HOUSE GROWING UP.",
+          ],
+        },
+        {
+          kind: "promptGroup",
+          category: "Forward",
+          color: "blueGrey",
+          prompts: [
+            "TELL ME WHAT YOU WANT MORE OF THAT WE ALREADY HAVE.",
+            "TELL ME WHAT YOU’RE MOST LOOKING FORWARD TO BUILDING.",
+            "TELL ME ONE THING YOU WANT ME TO KNOW RIGHT NOW.",
+            "TELL ME WHAT WOULD MAKE THIS WEEK FEEL CLOSE.",
+          ],
+        },
+        { kind: "quote", text: "From the Couples Edition" },
+        {
+          kind: "promptGroup",
+          category: "Romantic Relationships",
+          color: "blush",
+          prompts: [
+            "Tell me how you want to be loved.",
+            "Tell me a time you felt truly seen by me.",
+          ],
+        },
+        {
+          kind: "promptGroup",
+          category: "Intimacy & Repair",
+          color: "gold",
+          prompts: [
+            "Tell me a way you protect yourself emotionally, even from me.",
+            "Tell me what support looks like for you in hard moments.",
+          ],
+        },
+        {
+          kind: "promptGroup",
+          category: "Touch & Desire",
+          color: "teal",
+          prompts: [
+            "Tell me how you want to be touched.",
+            "Tell me one place you love being touched that isn’t typically erotic.",
+          ],
+        },
+        {
+          kind: "promptGroup",
+          category: "Healing & Growth",
+          color: "brown",
+          prompts: [
+            "Tell me what you were taught about sexuality growing up.",
+            "Tell me what emotional safety during sex looks like for you.",
+          ],
+        },
+        {
+          kind: "promptGroup",
+          category: "Play & Discovery",
+          color: "black",
+          prompts: [
+            "Tell me a sensual ritual you wish we did more often.",
+            "Tell me what small thing has you feel most In Touch with yourself in daily life.",
+          ],
+        },
+        { kind: "quote", text: "From the Friends & Family Edition" },
+        {
+          kind: "promptGroup",
+          category: "Stories & Growth",
+          color: "blueGrey",
+          prompts: [
+            "Tell me about a friendship or relationship that changed you for the better.",
+            "Tell me something you used to be ashamed of that now feels like a strength.",
+          ],
+        },
+        {
+          kind: "promptGroup",
+          category: "Beliefs & Emotions",
+          color: "blush",
+          prompts: [
+            "Tell me about a time you said yes but you actually wanted to say no.",
+            "Tell me about a whisper or instinct that has changed your direction in life.",
+          ],
+        },
+        {
+          kind: "promptGroup",
+          category: "Friendship & Belonging",
+          color: "gold",
+          prompts: [
+            "Tell me how you know when you're holding something in emotionally.",
+            "Tell me what makes you feel deeply supported by friends or loved ones.",
+          ],
+        },
+        {
+          kind: "promptGroup",
+          category: "Life",
+          color: "teal",
+          prompts: [
+            "Tell me when you last felt truly at ease or content in your own company.",
+            "Tell me what helps you feel most grounded when life is hectic.",
+          ],
+        },
+        {
+          kind: "promptGroup",
+          category: "Family",
+          color: "brown",
+          prompts: [
+            "Tell me about how your family showed you love. Was it in the way you needed?",
+            "Tell me one thing you loved about growing up in your family.",
+          ],
+        },
+        { kind: "quote", text: "From Trust & Repair" },
+        {
+          kind: "promptGroup",
+          category: "Return To Trust",
+          color: "black",
+          prompts: [
+            "Tell me what you want trust to feel like.",
+            "Tell me what you need right now, that isn't a solution.",
+          ],
+        },
+        {
+          kind: "promptGroup",
+          category: "The Body's Record",
+          color: "blueGrey",
+          prompts: [
+            "Tell me what your body knows that your mind doesn't want to.",
+            "Tell me where you feel safest in your body right now.",
+          ],
+        },
+        {
+          kind: "promptGroup",
+          category: "The Drift",
+          color: "blush",
+          prompts: [
+            "Tell me when you first felt this drift.",
+            "Tell me what we have not talked about that needs to be said.",
+          ],
+        },
+        {
+          kind: "promptGroup",
+          category: "What I'm Holding",
+          color: "gold",
+          prompts: [
+            "Tell me something you've been carrying alone this week.",
+            "Tell me what you've been pretending is fine.",
+          ],
+        },
+        {
+          kind: "promptGroup",
+          category: "What the World Is Asking",
+          color: "teal",
+          prompts: [
+            "Tell me what you wish men understood right now.",
+            "Tell me what feels unsafe in the world right now.",
+          ],
+        },
+        {
+          kind: "link",
+          text: "Get the full decks →",
+          href: "https://feelfullyyou.com/cards",
+        },
       ],
     },
   ],

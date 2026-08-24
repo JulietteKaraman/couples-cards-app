@@ -21,7 +21,7 @@ function TenTouchRitualsIndexContent() {
       <section className="relative flex h-[42vh] items-end overflow-hidden md:h-[52vh]">
         <Image
           src={heroImage}
-          alt="10 Touch Rituals"
+          alt="The Touch Rituals"
           fill
           priority
           className="object-cover"
