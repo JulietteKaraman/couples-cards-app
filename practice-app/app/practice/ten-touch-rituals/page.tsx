@@ -1,54 +1,102 @@
 "use client";
 
-import { useEffect } from "react";
-import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
+import Link from "next/link";
+import Image from "next/image";
+import { tenTouchRituals } from "@/lib/content/ten-touch-rituals";
 import { CollectionGate } from "@/components/auth/CollectionGate";
 
-// 10 Touch Rituals is its own paid product (£7, Stripe price
-// price_1Tlpu0CCw18geY15b8J3jlBW), separate from the free 20-ritual
-// course guide at feelfullyyou.com/touch-rituals.
+// 10 Touch Rituals is back to being a real £7 purchase (27 Aug 2026),
+// delivered natively in the app, not a redirect to a flat PDF.
 //
-// 27 Aug 2026, Juliette: "I do NOT want to give the touch rituals away
-// for free anymore. The html is for the course." So the 20-ritual page
-// is course content now, not this product's deliverable. This product
-// stays the original Gamma-designed 10 Touch Rituals PDF, delivered as
-// a real file, not re-typed into the app or the site. Re-typing it was
-// exactly what caused real content (Why Touch Matters, the Trace
-// Ritual's real steps) to go missing earlier the same day, twice.
-// Keeping it as the one real PDF is what stops that happening again.
+// Why not the PDF: the PDF can't play the Trace Ritual or Touch Base's
+// videos, a PDF is a static format. The real fix is this native index
+// (restored from before 24 Aug's "one hosted copy" experiment) plus the
+// per-ritual pages, which carry real Vimeo embeds.
 //
-// The entitlement still gates it: this page sits inside ProtectedRoute
-// and CollectionGate exactly as before, so the redirect only fires for
-// someone who is signed in and actually owns the collection.
-const GUIDE_URL = "https://feelfullyyou.com/downloads/10-touch-rituals.pdf";
-
-export default function TouchRitualsPage() {
+// The content below (lib/content/ten-touch-rituals.ts) is a verbatim
+// transcription of the live Gamma deck (g_ue6g0xx1slcn9ie), so what
+// someone sees here matches what Juliette built in Gamma, images and
+// all, not a re-typed or shortened version.
+export default function TenTouchRitualsIndex() {
   return (
-    <ProtectedRoute>
-      <CollectionGate collectionSlug="ten-touch-rituals">
-        <Redirector />
-      </CollectionGate>
-    </ProtectedRoute>
+    <CollectionGate collectionSlug={tenTouchRituals.slug}>
+      <TenTouchRitualsIndexContent />
+    </CollectionGate>
   );
 }
 
-function Redirector() {
-  useEffect(() => {
-    window.location.replace(GUIDE_URL);
-  }, []);
+function TenTouchRitualsIndexContent() {
+  const { title, subtitle, heroImage, entries } = tenTouchRituals;
 
   return (
-    <main className="mx-auto flex min-h-[60vh] max-w-xl flex-col items-center justify-center px-6 text-center">
-      <p className="font-display text-xl font-semibold text-ffy-black">
-        10 Touch Rituals
-      </p>
-      <p className="mt-2 text-sm text-ffy-brown">Opening your PDF.</p>
-      <a
-        href={GUIDE_URL}
-        className="mt-6 text-sm font-semibold text-ffy-gold underline"
-      >
-        Tap here if it does not open on its own
-      </a>
+    <main className="min-h-screen bg-ffy-cream">
+      <section className="relative flex h-[42vh] items-end overflow-hidden md:h-[52vh]">
+        <Image
+          src={heroImage}
+          alt={title}
+          fill
+          priority
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-ffy-black/80 via-ffy-black/20 to-transparent" />
+        <div className="relative z-10 mx-auto w-full max-w-3xl px-6 pb-10">
+          <Link href="/" className="inline-flex items-center gap-1.5 rounded-full border border-ffy-gold-pale/40 px-4 py-2 text-sm font-medium text-ffy-gold-pale transition hover:bg-white/10">
+            ← Your library
+          </Link>
+          <h1 className="mt-3 font-display text-4xl font-semibold text-ffy-cream sm:text-5xl">
+            {title}
+          </h1>
+          <p className="mt-2 max-w-lg text-ffy-gold-pale">{subtitle}</p>
+        </div>
+      </section>
+
+      <div className="mx-auto max-w-3xl px-6 py-10">
+        <p className="text-xs uppercase tracking-[0.15em] text-ffy-gold-deep">
+          Use these in any order, out of order, or one a week
+        </p>
+
+        <div className="mt-6 flex flex-col divide-y divide-ffy-border overflow-hidden rounded-2xl border border-ffy-border bg-white/60">
+          {entries.map((e) => (
+            <Link
+              key={e.slug}
+              href={`/practice/ten-touch-rituals/${e.slug}`}
+              className="group flex items-center gap-4 px-4 py-4 transition hover:bg-ffy-cream-2 sm:px-6"
+            >
+              <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-ffy-cream-2 sm:h-20 sm:w-20">
+                {e.image && (
+                  <Image
+                    src={e.image}
+                    alt={e.imageAlt ?? ""}
+                    fill
+                    sizes="80px"
+                    className="object-cover"
+                  />
+                )}
+              </div>
+              <div className="min-w-0 flex-1">
+                {e.eyebrow && (
+                  <p className="text-xs uppercase tracking-wide text-ffy-gold-deep">
+                    {e.eyebrow}
+                  </p>
+                )}
+                <p className="font-display text-lg text-ffy-black group-hover:text-ffy-teal">
+                  {e.title}
+                </p>
+              </div>
+              <span className="text-ffy-gold">→</span>
+            </Link>
+          ))}
+        </div>
+
+        <a
+          href="https://feelfullyyou.com/downloads/10-touch-rituals.pdf"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-8 inline-flex items-center gap-1.5 text-sm font-semibold text-ffy-gold-deep underline"
+        >
+          Prefer the PDF? Download your copy →
+        </a>
+      </div>
     </main>
   );
 }

@@ -133,7 +133,7 @@ export type PracticeCollection = {
 
 export const tenTouchRituals: PracticeCollection = {
   slug: "ten-touch-rituals",
-  title: "The Touch Rituals",
+  title: "10 Touch Rituals",
   subtitle: "For couples who love each other and want to feel it again.",
   byline: "By Juliette Karaman, creator of The Beginning: The Ultimate Touch Reset",
   heroImage: "/rituals/hero.png",
@@ -420,11 +420,7 @@ export const tenTouchRituals: PracticeCollection = {
             { text: "So discreet your partner won't even notice. But your body will.", emphasis: "accent" },
           ],
         },
-        {
-          kind: "driveVideo",
-          url: "https://drive.google.com/file/d/1Rcta69BuEbPGS0zrwhkg2sLlayDnWrKT/view?usp=sharing",
-          label: "Watch the video",
-        },
+        { kind: "video", vimeoId: "1219027987" },
         {
           kind: "driveAudio",
           url: "https://drive.google.com/file/d/1-7kHzl2T-kBXJIae6uk-3u_KMeDV9Mks/view?usp=sharing",
