@@ -304,30 +304,13 @@ function LibraryContent() {
             <span className="text-ffy-gold">→</span>
           </Link>
 
-          {/* Touch Base® — same shape as the Cards taster tile: one free
-              standalone practice, not a PracticeCollection, its own route. */}
-          <Link
-            href="/practice/touch-base"
-            className="group flex items-center gap-5 overflow-hidden rounded-2xl border border-ffy-border bg-white/60 p-4 transition hover:border-ffy-gold sm:p-5"
-          >
-            <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-xl bg-white sm:h-24 sm:w-24">
-              <Image
-                src="/offers/touch-base-logo.png"
-                alt="Touch Base® Anchor"
-                fill
-                sizes="96px"
-                className="object-contain p-2"
-              />
-            </div>
-            <div className="min-w-0 flex-1">
-              <h2 className="font-display text-xl font-semibold text-ffy-black group-hover:text-ffy-teal">
-                Touch Base®, the Anchor
-              </h2>
-              <p className="mt-1 text-sm text-ffy-brown">Two minutes, no equipment. A way back to yourself, anywhere, any time.</p>
-              <p className="mt-2 text-xs uppercase tracking-wide text-ffy-gold-deep">Free practice</p>
-            </div>
-            <span className="text-ffy-gold">→</span>
-          </Link>
+          {/* Touch Base® tile removed from the home library — Juliette,
+              27 Aug 2026: "take touch base off as a freebie- both on
+              website and off the app," giving away too much for free
+              right now, may become paid later. The route itself
+              (/practice/touch-base) and lib/content/touch-base.ts are
+              untouched, this only stops it being handed out on the home
+              screen. Restore by re-adding this block if she says go. */}
 
           {/* The Touch Reset Quiz — free, always unlocked, but the quiz
               itself (questions, scoring, results) lives on the main site,
