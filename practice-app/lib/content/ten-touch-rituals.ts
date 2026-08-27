@@ -843,11 +843,6 @@ export const tenTouchRituals: PracticeCollection = {
             "Tell me a challenge you faced that made you stronger. How did you grow because of it?",
           ],
         },
-        {
-          kind: "p",
-          text: "When you want more, there are hundreds. They are at the end of this guide.",
-          emphasis: "accent",
-        },
       ],
     },
     // ------------------------------------------------------------ monthly
