@@ -50,10 +50,10 @@ function DrawPageContent() {
   const instructions = [
     "/cards/instructions/why-these-cards-front.png",
     "/cards/instructions/why-these-cards-back.png",
-    "/cards/instructions/the-structure-front.png",
-    "/cards/instructions/the-structure-back.png",
     "/cards/instructions/how-to-use-front.png",
     "/cards/instructions/how-to-use-back.png",
+    "/cards/instructions/the-structure-front.png",
+    "/cards/instructions/the-structure-back.png",
   ];
   const isLastInstruction = currentInstruction === instructions.length - 1;
 

@@ -10,10 +10,10 @@ const slides = [
   { src: "/cards/couples/cover.png", alt: "Cover", isSvg: false },
   { src: "/cards/instructions/why-these-cards-front.png", alt: "Why These Cards", isSvg: false },
   { src: "/cards/instructions/why-these-cards-back.png", alt: "Why These Cards exist", isSvg: false },
-  { src: "/cards/instructions/the-structure-front.png", alt: "The Structure", isSvg: false },
-  { src: "/cards/instructions/the-structure-back.png", alt: "The Structure explained", isSvg: false },
   { src: "/cards/instructions/how-to-use-front.png", alt: "How To Use", isSvg: false },
   { src: "/cards/instructions/how-to-use-back.png", alt: "How To Use explained", isSvg: false },
+  { src: "/cards/instructions/the-structure-front.png", alt: "The Structure", isSvg: false },
+  { src: "/cards/instructions/the-structure-back.png", alt: "The Structure explained", isSvg: false },
 ];
 
 function OnboardingContent() {
