@@ -37,7 +37,13 @@ export const SUBSCRIPTION_GRACE_PERIOD_HOURS = 48;
 // price only makes an edit necessary later if it changes; these guides
 // don't have a price to begin with). See app/api/ensure-free-access and
 // AuthProvider, which call it right after establishing a session.
-export const FREE_DECK_TYPES: string[] = ["when-she-goes-quiet", "between-touches", "ten-touch-rituals"];
+//
+// ten-touch-rituals REMOVED 27 Aug 2026 (Juliette, direct: "I do NOT want
+// to give the touch rituals away for free anymore"). It was free for one
+// afternoon, 24-27 Aug 2026, then reverted. It is a real £7 purchase again,
+// gated normally through PRICE_ID_TO_DECK_TYPE below. Do not re-add it here
+// without her saying so explicitly, this has now flipped both ways once.
+export const FREE_DECK_TYPES: string[] = ["when-she-goes-quiet", "between-touches"];
 
 // Where the "Get access" CTA on a locked (not-yet-owned) library tile sends
 // someone — the collection's real marketing sales page, never an in-app
