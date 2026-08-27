@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { useAuth } from "@/components/providers/AuthProvider";
@@ -44,11 +44,16 @@ function DrawPageContent() {
   const [selected, setSelected] = useState<string[]>(allKeys);
   const [current, setCurrent] = useState<{ id: number; section: string; lines: { text: string; bold?: boolean }[] } | null>(null);
   const [flipped, setFlipped] = useState(false);
+  const cardRef = useRef<HTMLDivElement | null>(null);
 
   const hasDeckAccess = purchasedDecks.includes(deckType) || hasAccess;
   const instructions = [
-    "/cards/instructions/instructions1.svg",
-    "/cards/instructions/instructions2.svg",
+    "/cards/instructions/why-these-cards-front.png",
+    "/cards/instructions/why-these-cards-back.png",
+    "/cards/instructions/the-structure-front.png",
+    "/cards/instructions/the-structure-back.png",
+    "/cards/instructions/how-to-use-front.png",
+    "/cards/instructions/how-to-use-back.png",
   ];
   const isLastInstruction = currentInstruction === instructions.length - 1;
 
@@ -125,6 +130,13 @@ function DrawPageContent() {
     const next = pickRandom(pool);
     setCurrent(next);
     setTimeout(() => setFlipped(true), 140);
+    // The drawn card renders below the section grid and "Draw a Card" button,
+    // so on a phone it lands off-screen and people don't realise they need to
+    // scroll to see it (Juliette, 9 Aug: "you have to scroll down... that's
+    // not very clear"). Scroll it into view once it's in the DOM.
+    setTimeout(() => {
+      cardRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 60);
   }
 
   const pool = useMemo(() => {
@@ -273,7 +285,7 @@ function DrawPageContent() {
         </button>
 
         {current && template && (
-          <div className="relative rounded-2xl overflow-hidden border border-white/10">
+          <div ref={cardRef} className="relative rounded-2xl overflow-hidden border border-white/10 scroll-mt-6">
             <Image
               src={template}
               alt="Card template"

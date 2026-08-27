@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { COUPLES_CARDS, SECTIONS, SectionKey, CardPrompt } from "@/data/couples";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
@@ -21,6 +21,7 @@ function DrawPageContent() {
   const [selected, setSelected] = useState<SectionKey[]>(allKeys);
   const [current, setCurrent] = useState<CardPrompt | null>(null);
   const [flipped, setFlipped] = useState(false);
+  const cardRef = useRef<HTMLDivElement | null>(null);
 
   // Check access
   useEffect(() => {
@@ -71,6 +72,11 @@ function DrawPageContent() {
     setCurrent(next);
     // light flip reveal timing
     setTimeout(() => setFlipped(true), 140);
+    // Card renders below the fold on a phone; scroll it into view so it's
+    // obvious a card was drawn instead of requiring a manual scroll down.
+    setTimeout(() => {
+      cardRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 60);
   }
 
   const template = current ? SECTIONS[current.section].templateImg : null;
@@ -138,7 +144,7 @@ function DrawPageContent() {
 
         {/* CARD DISPLAY */}
         {current && template && (
-          <div className="relative rounded-2xl overflow-hidden border border-white/10">
+          <div ref={cardRef} className="relative rounded-2xl overflow-hidden border border-white/10 scroll-mt-6">
             <Image
               src={template}
               alt="Card template"
