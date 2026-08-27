@@ -13,7 +13,18 @@ import Link from "next/link";
 import { useState } from "react";
 import { CARDS_TASTER_CARDS } from "@/lib/content/cards-taster";
 
-const instructions = ["/cards/instructions/Instructions1.svg", "/cards/instructions/Instructions2.svg"];
+// Updated 27 Aug 2026 to the new Dyad-focused 6-card set (Juliette's Canva
+// export), matching the root Cards App exactly (app/free/couples/play in
+// the repo root) — this page is a manual port of that page and had drifted
+// onto the old, retired 2-slide Instructions1/2.svg set until now.
+const instructions = [
+  "/cards/instructions/why-these-cards-front.png",
+  "/cards/instructions/why-these-cards-back.png",
+  "/cards/instructions/how-to-use-front.png",
+  "/cards/instructions/how-to-use-back.png",
+  "/cards/instructions/the-structure-front.png",
+  "/cards/instructions/the-structure-back.png",
+];
 
 export default function CardsTasterPage() {
   const cards = CARDS_TASTER_CARDS;
