@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 import { tenTouchRituals } from "@/lib/content/ten-touch-rituals";
 import { theUnspokenDistance } from "@/lib/content/the-unspoken-distance";
 import { whenSheGoesQuiet } from "@/lib/content/when-she-goes-quiet";
-import { betweenTouches } from "@/lib/content/between-touches";
 import { communicationRebootKit } from "@/lib/content/communication-reboot-kit";
 import { CARDS_TASTER_COVER } from "@/lib/content/cards-taster";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
@@ -29,7 +28,14 @@ function isFreeCollection(slug: string): boolean {
 // a "Get access" link out to the real sales page (spec: the library is
 // the cross-sell surface between products, not just a delivery box for
 // what's already been bought — Juliette, 1 Aug 2026).
-const ALL_COLLECTIONS = [tenTouchRituals, theUnspokenDistance, whenSheGoesQuiet, betweenTouches, communicationRebootKit];
+// betweenTouches REMOVED from this list 28 Aug 2026 (Juliette: "between
+// touches is still on the app! I thought you took it off"), matching the
+// earlier removal from FREE_DECK_TYPES in entitlements/config.ts. Left out
+// entirely rather than shown as a locked tile, since it has no price or
+// sales page yet, a locked tile here would point at a dead purchase link.
+// Its content and route (/practice/between-touches, lib/content/between-
+// touches.ts) are untouched, this only stops it appearing in the library.
+const ALL_COLLECTIONS = [tenTouchRituals, theUnspokenDistance, whenSheGoesQuiet, communicationRebootKit];
 
 // Offers that never live inside this app at all (no PracticeCollection,
 // no deck_type, nothing to unlock here) but that Juliette wants

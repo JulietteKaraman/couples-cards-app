@@ -43,7 +43,15 @@ export const SUBSCRIPTION_GRACE_PERIOD_HOURS = 48;
 // afternoon, 24-27 Aug 2026, then reverted. It is a real £7 purchase again,
 // gated normally through PRICE_ID_TO_DECK_TYPE below. Do not re-add it here
 // without her saying so explicitly, this has now flipped both ways once.
-export const FREE_DECK_TYPES: string[] = ["when-she-goes-quiet", "between-touches"];
+//
+// between-touches REMOVED 28 Aug 2026. Pulled from the website's free-
+// resources listing on 27 Aug ("giving away too much for free"), but left
+// free in the app that day since she'd only said "off the website" for
+// this one. She caught it live the next day, surprised it was still free
+// in the app ("between touches is still on the app! I thought you took it
+// off"), confirming she meant the app too, not just the site. Do not
+// re-add without her explicit say, same as ten-touch-rituals above.
+export const FREE_DECK_TYPES: string[] = ["when-she-goes-quiet"];
 
 // Where the "Get access" CTA on a locked (not-yet-owned) library tile sends
 // someone — the collection's real marketing sales page, never an in-app
