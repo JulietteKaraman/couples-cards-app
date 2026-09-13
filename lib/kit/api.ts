@@ -9,6 +9,7 @@ const KIT_V4 = "https://api.kit.com/v4";
 export const KIT_TAGS = {
   cardsFreeTaster: 20896609, // "cards-free-taster" — same tag the website taster page uses
   cardsPurchaseIntent: 20922438, // "cards-purchase-intent" — started checkout in the app
+  visibilityChallenge: 23354511, // "visibility-challenge" — created 13 Sep 2026 for The Visibility Challenge signup
 } as const;
 
 export const KIT_SEQUENCES = {
