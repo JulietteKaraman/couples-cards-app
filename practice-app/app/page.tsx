@@ -310,33 +310,14 @@ function LibraryContent() {
             <span className="text-ffy-gold">→</span>
           </Link>
 
-          {/* Touch Base® — restored 28 Aug 2026. Pulled 27 Aug ("too much
-              for free"), put back the next day: "put it back on the app
-              actually... let touch base still be the normal freebie."
-              Same shape as the Cards taster tile: one free standalone
-              practice, not a PracticeCollection, its own route. */}
-          <Link
-            href="/practice/touch-base"
-            className="group flex items-center gap-5 overflow-hidden rounded-2xl border border-ffy-border bg-white/60 p-4 transition hover:border-ffy-gold sm:p-5"
-          >
-            <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-xl bg-white sm:h-24 sm:w-24">
-              <Image
-                src="/offers/touch-base-logo.png"
-                alt="Touch Base® Anchor"
-                fill
-                sizes="96px"
-                className="object-contain p-2"
-              />
-            </div>
-            <div className="min-w-0 flex-1">
-              <h2 className="font-display text-xl font-semibold text-ffy-black group-hover:text-ffy-teal">
-                Touch Base®, the Anchor
-              </h2>
-              <p className="mt-1 text-sm text-ffy-brown">Two minutes, no equipment. A way back to yourself, anywhere, any time.</p>
-              <p className="mt-2 text-xs uppercase tracking-wide text-ffy-gold-deep">Free practice</p>
-            </div>
-            <span className="text-ffy-gold">→</span>
-          </Link>
+          {/* Touch Base® tile removed from freebies 16 Sep 2026 per Juliette
+              ("take off touch base from the freebies, both on website and
+              on the app"). The standalone practice still lives at
+              /practice/touch-base, just no longer listed here. Prior
+              history: pulled 27 Aug ("too much for free"), restored 28 Aug
+              ("let touch base still be the normal freebie"), pulled again
+              16 Sep 2026. If restoring again, the removed block is in git
+              history on this file. */}
 
           {/* The Touch Reset Quiz — free, always unlocked, but the quiz
               itself (questions, scoring, results) lives on the main site,
