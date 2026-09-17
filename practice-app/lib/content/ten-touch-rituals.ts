@@ -689,8 +689,36 @@ export const tenTouchRituals: PracticeCollection = {
           text: "I created the Intimacy and Communication Cards because couples needed something they could use without me in the room. A way to keep the conversation alive between sessions, between weeks, in the ordinary moments that matter.",
         },
         {
-          kind: "quote",
-          text: "15 minutes of being genuinely heard and understood does more for a relationship than three hours of debate. One question at a time.",
+          kind: "p",
+          text: "This isn't new or untested. The structure goes back to the 1960s, and I have taught it to over a thousand couples myself.",
+          emphasis: "accent",
+        },
+        {
+          kind: "big",
+          text: "15 minutes. One card. One prompt, the whole time.",
+        },
+        {
+          kind: "p",
+          text: "No preparation. No agenda. Just a card and the willingness to be in the room with each other. You do not move to a new prompt partway through, however tempting that gets. This is not a deck of good questions. It is a structured way of communicating.",
+        },
+        {
+          kind: "p",
+          text: "The timed container, and staying with one prompt the whole way through, is what brings the connection. Not the question itself.",
+          emphasis: "bold",
+        },
+        {
+          kind: "p",
+          text: "Agree to the container before anything vulnerable gets said. Say this out loud, together, before the card is read:",
+        },
+        {
+          kind: "p",
+          text: "“For the next 15 minutes, our only aim is to understand each other. We are going to stay with one prompt. We will not interject or fix. We do not have to like or agree with what the other person communicates. We agree to stay with the structure for the full 15 minutes.”",
+          emphasis: "bold",
+        },
+        {
+          kind: "p",
+          text: "Then ask the question that makes it real: “Do I have your agreement that you are going to follow the process all the way through?”",
+          emphasis: "accent",
         },
         { kind: "quote", text: "How it works" },
         {
@@ -734,26 +762,22 @@ export const tenTouchRituals: PracticeCollection = {
           label: "Switch",
           lines: [{ text: "Switch roles and go again." }],
         },
-        { kind: "quote", text: "Start with these ten" },
         {
-          kind: "p",
-          text: "These are the ten free taster cards. Yours already, and enough to run every practice in this guide.",
+          kind: "why",
+          lines: [
+            { text: "The first answers are surface swimming.", emphasis: "bold" },
+            { text: "This is not a conventional back-and-forth discussion. Staying with the same prompt, the same card, makes enough space for communications to surface that would otherwise stay buried." },
+            { text: "Another layer appears, then another." },
+            { text: "I thought I had answered this. Oh. There is more.", emphasis: "accent" },
+          ],
         },
         {
-          kind: "promptGroup",
-          category: "The free taster cards",
-          color: "gold",
-          prompts: [
-            "Tell me your biggest fear and biggest desire for our relationship",
-            "Tell me about an honest conversation you wish we'd have, but haven't yet. What might make it easier?",
-            "Tell me a fantasy you've had, but never voiced",
-            "Tell me something you're still healing from sexually.",
-            "Tell me your favorite flirty memory with me.",
-            "Tell me a trait in your parents or siblings you dislike. Do you see it in yourself too?",
-            "Tell me about a risk you took that paid off or didn't. What did you learn from it?",
-            "Tell me a story that changed your perspective or deeply impacted you.",
-            "Tell me about a conversation you wish you could revisit. What would you say or do differently?",
-            "Tell me a challenge you faced that made you stronger. How did you grow because of it?",
+          kind: "notice",
+          lines: [
+            { text: "When the timer goes, let it settle. Do not process it.", emphasis: "bold" },
+            { text: "The person speaking finishes their one communication. The listener makes sure they have understood it and gets to Thank you. The Dyad is complete." },
+            { text: "You have added the coffee and the water and stirred everything up. The grounds are floating everywhere. You do not need to do something with them straight away. Let them settle.", emphasis: "accent" },
+            { text: "Acknowledging the experience is welcome, wow, that went deep. What does not belong here is when you said that thing about, or defending, correcting, or challenging what your partner revealed. This is the second layer of trust: what I reveal in the Dyad will not be used against me once it ends." },
           ],
         },
       ],
@@ -920,9 +944,7 @@ export const tenTouchRituals: PracticeCollection = {
           category: "Touch & Sensation",
           color: "teal",
           prompts: [
-            "Tell me what kind of touch makes you feel most present.",
             "Tell me something about your body you wish I understood.",
-            "Tell me what it feels like in your body when you reach for me first.",
           ],
         },
         {
@@ -930,9 +952,7 @@ export const tenTouchRituals: PracticeCollection = {
           category: "Presence & Distance",
           color: "gold",
           prompts: [
-            "Tell me when you feel closest to me, without any effort.",
-            "Tell me when you feel furthest from me, even when we're in the same room.",
-            "Tell me what you need from me when you're pulling away.",
+            "Tell me when you feel closest to me.",
           ],
         },
         {
@@ -940,9 +960,7 @@ export const tenTouchRituals: PracticeCollection = {
           category: "Desire & Longing",
           color: "brown",
           prompts: [
-            "Tell me something you love about me that you haven't said recently.",
-            "Tell me something you've stopped asking for.",
-            "Tell me what you long for that we haven't found a way to have yet.",
+            "Tell me something you have stopped asking for.",
           ],
         },
         {
@@ -951,8 +969,6 @@ export const tenTouchRituals: PracticeCollection = {
           color: "blueGrey",
           prompts: [
             "Tell me something that hasn't fully healed between us.",
-            "Tell me when you feel most trusting of me.",
-            "Tell me what repair feels like in your body when it actually happens.",
           ],
         },
         {
@@ -960,9 +976,7 @@ export const tenTouchRituals: PracticeCollection = {
           category: "Becoming",
           color: "black",
           prompts: [
-            "Tell me who you are right now that I may not fully know yet.",
-            "Tell me what kind of couple you want us to be.",
-            "Tell me one thing you want us to do this year that you have not spoken out loud.",
+            "Tell me one wish you have for us this year.",
           ],
         },
         { kind: "quote", text: "The Intimacy & Communication Cards" },
