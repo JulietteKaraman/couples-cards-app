@@ -1,3 +1,12 @@
+# The printed business-card QR points at /free. It now lands in the new
+# Dyad app rather than the old Taster Pack page. Listed first so the QR
+# resolves in a single hop. Everything else on this site is untouched.
+[[redirects]]
+from = "/free"
+to = "https://feelfullyyou-cards.netlify.app/free-cards/"
+status = 301
+force = true
+
 [[redirects]]
 from = "https://couplecards.netlify.app/*"
 to = "https://cards.feelfullyyou.com/:splat"
