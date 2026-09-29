@@ -899,8 +899,8 @@ export const tenTouchRituals: PracticeCollection = {
       title: "31 Days Closer",
       eyebrow: "When you want the words back",
       kind: "closing",
-      image: "/rituals/cards-app-screenshot.png",
-      imageAlt: "31 Days Closer open on a phone",
+      image: "/rituals/31-days-closer.jpg",
+      imageAlt: "31 Days Closer open on a phone at day one, beside the printed deck",
       imageSide: "left",
       body: [
         {
