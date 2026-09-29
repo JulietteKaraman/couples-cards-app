@@ -907,6 +907,7 @@ export const tenTouchRituals: PracticeCollection = {
           kind: "p",
           text: "The rituals in here bring touch back into the room. This is the other half of it.",
         },
+        { kind: "image", src: "/rituals/31-days-closer.jpg", alt: "31 Days Closer open on a phone at day one, beside the printed deck" },
         {
           kind: "p",
           text: "Touch reaches what words cannot. It also has a limit, and most couples meet it: you can be close in the body and still not have said the thing.",
