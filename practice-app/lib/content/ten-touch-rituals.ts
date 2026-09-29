@@ -62,6 +62,21 @@
 //  1. A retired "ten rituals" survived in Why Touch Matters. Gone. The
 //     remaining "ten"s all count other things (the taster cards, the two
 //     lists, a 1–10 scale), never the rituals.
+//  3. THE DYAD ENTRY WAS REMOVED ENTIRELY, 28 Sep 2026, Juliette's instruction:
+//     "can we take the dyad out and put in another ritual?" Two reasons. It was
+//     the only talking practice in a product of fourteen touch rituals, so it
+//     never belonged. And it taught the whole method for GBP 7, which undercuts
+//     The Three Answers at GBP 17, where the Dyad is the product. It also carried
+//     "over a thousand couples", contradicting her confirmed 650.
+//     Replaced by THE THINGS YOU USED TO LOVE, her own idea, given the same day:
+//     write ten things you loved doing as a child, pick one you could teach, go
+//     somewhere out of the ordinary on a MORNING with a picnic, and teach it to
+//     each other. A kite, a bag of marbles. It competes with nothing she sells.
+//     The prompt bank is down to ONE prompt from five, same reasoning: one prompt
+//     is one sitting, so five was five weeks of product inside a GBP 7 item.
+//     Three references to the removed entry were rewritten rather than left
+//     dangling: the Approach's closing line, the prompt bank intro, and the cards
+//     upsell, which now points AT the structure instead of teaching it.
 //  2. The second pass over-merged: The Dyad stacked four prompt collections,
 //     roughly 81 prompts on one page ("confusing"). The Dyad now holds only
 //     the opening copy, the how-it-works diagram and the ten free taster
@@ -663,122 +678,66 @@ export const tenTouchRituals: PracticeCollection = {
       ],
     },
     {
-      slug: "the-dyad",
+      slug: "the-things-you-used-to-love",
       order: 14,
-      title: "The Dyad",
-      eyebrow: "Weekly · 15 minutes, one prompt, all the way down",
-      kind: "essay",
-      image: "/rituals/the-dyad.jpeg",
-      imageAlt: "Two people mid-conversation, one listening closely",
+      title: "The Things You Used to Love",
+      eyebrow: "Once a month \u00b7 a morning out",
+      kind: "ritual",
       imageSide: "left",
       body: [
         {
           kind: "p",
-          text: "For couples who want to go beyond “I'm fine.”",
+          text: "This one is not touch, and it is not a conversation either. It is the third thing closeness is made of, and it is usually the first to go.",
         },
         {
           kind: "p",
-          text: "Most couples don't struggle to talk. They struggle to listen, really listen, without preparing their response, without defending, without the conversation becoming a negotiation. The Dyad method removes that pressure.",
+          text: "You know how your partner takes their coffee. You may not know what they did for hours at a time when they were seven, with nobody watching and nobody making them.",
         },
         {
           kind: "p",
-          text: "After years working with couples in session, I noticed that the hardest thing was rarely the touching. It was finding the words. Not because people didn't have them. Because they didn't have a structure safe enough to say them in.",
-        },
-        {
-          kind: "p",
-          text: "I created the Intimacy and Communication Cards because couples needed something they could use without me in the room. A way to keep the conversation alive between sessions, between weeks, in the ordinary moments that matter.",
-        },
-        {
-          kind: "p",
-          text: "This isn't new or untested. The structure goes back to the 1960s, and I have taught it to over a thousand couples myself.",
+          text: "Play is the fastest way back to someone's aliveness, and none of it asks either of you to talk about the relationship.",
           emphasis: "accent",
         },
         {
-          kind: "big",
-          text: "15 minutes. One card. One prompt, the whole time.",
-        },
-        {
-          kind: "p",
-          text: "No preparation. No agenda. Just a card and the willingness to be in the room with each other. You do not move to a new prompt partway through, however tempting that gets. This is not a deck of good questions. It is a structured way of communicating.",
-        },
-        {
-          kind: "p",
-          text: "The timed container, and staying with one prompt the whole way through, is what brings the connection. Not the question itself.",
-          emphasis: "bold",
-        },
-        {
-          kind: "p",
-          text: "Agree to the container before anything vulnerable gets said. Say this out loud, together, before the card is read:",
-        },
-        {
-          kind: "p",
-          text: "“For the next 15 minutes, our only aim is to understand each other. We are going to stay with one prompt. We will not interject or fix. We do not have to like or agree with what the other person communicates. We agree to stay with the structure for the full 15 minutes.”",
-          emphasis: "bold",
-        },
-        {
-          kind: "p",
-          text: "Then ask the question that makes it real: “Do I have your agreement that you are going to follow the process all the way through?”",
-          emphasis: "accent",
-        },
-        { kind: "quote", text: "How it works" },
-        {
-          kind: "diagram",
-          steps: [
-            { heading: "Ask" },
-            { heading: "Answer" },
-            { heading: "Listen" },
-            { heading: "Thank" },
-            { heading: "Switch" },
+          kind: "step",
+          label: "Step 1, Write your ten, on your own",
+          lines: [
+            { text: "Ten things you loved doing as a child." },
+            { text: "Not what you were good at. What you did because you wanted to." },
+            { text: "Climbing things. Making dens. Marbles. Kites. Roller skates. Collecting something nobody else thought was worth anything." },
+            { text: "Do not show each other yet.", emphasis: "accent" },
           ],
         },
         {
           kind: "step",
-          label: "Ask",
-          lines: [{ text: "One person reads the prompt." }],
-        },
-        {
-          kind: "step",
-          label: "Answer",
-          lines: [{ text: "The other answers, honestly, without editing.", emphasis: "bold" }],
-        },
-        {
-          kind: "step",
-          label: "Listen",
-          lines: [{ text: "The listener stays present. No fixing, no defending, no responding.", emphasis: "accent" }],
-        },
-        {
-          kind: "step",
-          label: "Thank",
+          label: "Step 2, Choose the one you could teach",
           lines: [
-            { text: "The listener may say only three things, and two of them are on the way to the third." },
-            { text: "If you need clarity, say “Clarify that.”" },
-            { text: "If too many thoughts or too long, say “Summarise that.”" },
-            { text: "When the answer lands, say “Thank you.”", emphasis: "bold" },
-            { text: "That is the destination, and the only thing that passes the turn.", emphasis: "accent" },
+            { text: "Pick one off your list that you could actually show somebody how to do." },
+            { text: "It has to be something you can carry, or something you can do outdoors." },
           ],
         },
         {
           kind: "step",
-          label: "Switch",
-          lines: [{ text: "Switch roles and go again." }],
+          label: "Step 3, Go somewhere out of the ordinary",
+          lines: [
+            { text: "A park, a beach, a field. Not the kitchen and not the sofa." },
+            { text: "Take a picnic. Take the thing." },
+            { text: "A morning, deliberately. This one asks for energy, and the end of a long day has none left.", emphasis: "accent" },
+          ],
         },
         {
-          kind: "why",
+          kind: "step",
+          label: "Step 4, Teach each other",
           lines: [
-            { text: "The first answers are surface swimming.", emphasis: "bold" },
-            { text: "This is not a conventional back-and-forth discussion. Staying with the same prompt, the same card, makes enough space for communications to surface that would otherwise stay buried." },
-            { text: "Another layer appears, then another." },
-            { text: "I thought I had answered this. Oh. There is more.", emphasis: "accent" },
+            { text: "One of you is the expert. The other one is genuinely learning." },
+            { text: "Show them the grip on the marble. How to run backwards to get a kite up. Where to put their feet." },
+            { text: "Take it seriously enough to actually teach it." },
+            { text: "Being a beginner in front of each other is the part that does the work.", emphasis: "accent" },
           ],
         },
         {
           kind: "notice",
-          lines: [
-            { text: "When the timer goes, let it settle. Do not process it.", emphasis: "bold" },
-            { text: "The person speaking finishes their one communication. The listener makes sure they have understood it and gets to Thank you. The Dyad is complete." },
-            { text: "You have added the coffee and the water and stirred everything up. The grounds are floating everywhere. You do not need to do something with them straight away. Let them settle.", emphasis: "accent" },
-            { text: "Acknowledging the experience is welcome, wow, that went deep. What does not belong here is when you said that thing about, or defending, correcting, or challenging what your partner revealed. This is the second layer of trust: what I reveal in the Dyad will not be used against me once it ends." },
-          ],
+          lines: [{ text: "There is nothing to say afterwards. You will have laughed, or you will have been useless at it in front of each other, or both. That is the whole of it. Do not turn it into a conversation about the relationship." }],
         },
       ],
     },
@@ -844,74 +803,86 @@ export const tenTouchRituals: PracticeCollection = {
       ],
     },
     {
-      slug: "the-approach",
+      slug: "elbow-to-armpit",
       order: 20,
-      title: "The Approach",
-      eyebrow: "Monthly · 10 minutes",
+      title: "Elbow to Armpit",
+      eyebrow: "Weekly \u00b7 10 minutes, one gives and one receives",
       kind: "ritual",
-      image: "/rituals/the-approach.jpeg",
-      imageAlt: "One partner walking slowly toward the other",
       imageSide: "right",
       body: [
         {
           kind: "p",
-          text: "Do this when the distance has grown without either of you naming it. Or once a year as a reset.",
+          text: "The soft inside of the elbow is somewhere almost nobody has paid attention to. That is exactly why it is useful. There is no script for it, no habit attached, and nothing either of you is expecting.",
         },
         {
           kind: "p",
-          text: "This practice reveals something most couples have never consciously noticed: what happens in your body when the person you love actually moves toward you.",
+          text: "Three touches, in order. Each one asks a different question. Then you change places and do it again.",
         },
         {
           kind: "p",
-          text: "Do you open? Do you brace? Do you lean in, or hold back without realising it?",
+          text: "What you are learning is the difference between where a body says yes, and where it says I will allow it.",
           emphasis: "accent",
         },
         {
           kind: "step",
-          label: "Step 1, Agree the container",
+          label: "Set up",
           lines: [
-            { text: "“I am going to walk toward you slowly." },
-            { text: "You tell me when to stop, when the distance feels right to you." },
-            { text: "There is no wrong answer.”", emphasis: "accent" },
+            { text: "Decide who gives first and who receives first." },
+            { text: "The receiver opens their arm and lets the elbow rest on something. A sofa, the back of an armchair, a bed, a desk, a table." },
+            { text: "The giver sits or kneels where they can reach it without leaning across." },
+            { text: "Both of you speak during this, one after the other. The giver has sensation in their fingertips too.", emphasis: "accent" },
           ],
         },
         {
           kind: "step",
-          label: "Step 2, Partner A stands still",
+          label: "Touch one, hover",
           lines: [
-            { text: "Feet grounded. Eyes open." },
-            { text: "Notice what arises as they approach." },
-            { text: "You do not need to do anything except feel.", emphasis: "accent" },
+            { text: "Giver: bring your fingertips just above the soft part of their elbow. Do not land yet." },
+            { text: "Can you sense temperature, tingling, or a subtle shift?" },
+            { text: "Both of you say out loud where you can feel it. Receiver first, then giver." },
+            { text: "Receiver: does your body lean into this zone, or does it hold back?" },
+            { text: "What did this zone communicate to you?", emphasis: "accent" },
           ],
         },
         {
           kind: "step",
-          label: "Step 3, Partner B walks toward them",
+          label: "Touch two, land",
           lines: [
-            { text: "One slow step at a time. Pause between each step." },
-            { text: "Let the space between you change gradually.", emphasis: "accent" },
+            { text: "Giver: now gently land the touch. Landing means barely brushing the skin." },
+            { text: "If there is hair there, your fingers stroke the very top of it, and the hair almost rises to meet them." },
+            { text: "Receiver: was there a noticeable change the moment their fingers made contact? Did it increase the sensation, or decrease it?" },
+            { text: "Did your body open, or tense slightly?" },
+            { text: "There is no wrong here and there is no right. All of it is beautiful information.", emphasis: "accent" },
           ],
         },
         {
           kind: "step",
-          label: "Step 4, Partner A signals stop",
+          label: "Touch three, trace",
           lines: [
-            { text: "A raised hand. A word." },
-            { text: "When the distance feels right, not too close, not too far, exactly as your body wants it.", emphasis: "accent" },
+            { text: "Giver: trace your fingertips slowly from the inner elbow up towards the armpit." },
+            { text: "Receiver: every time you feel the stroke, say yes out loud. Yes. Yes. Yes." },
+            { text: "Every time you do not feel it, say nothing." },
+            { text: "That is not politeness and it is not encouragement. You are training your body to notice, and the silences tell you as much as the yeses do." },
+            { text: "Your yes IS the practice.", emphasis: "accent" },
+            { text: "Giver: do not chase the yeses and do not slow down to fish for one. Keep your pace. The map you are being handed is worth more than a good score." },
+            { text: "Receiver: did the sensation build, fade, or stay steady? Was there a moment where it felt like enough? Did you want it to stop, or to go further?" },
+            { text: "What do you tend to do when sensation builds? Do you stay, do you pause, or do you rush through it?", emphasis: "accent" },
           ],
         },
         {
           kind: "step",
-          label: "Step 5, Both notice",
+          label: "Then change places",
           lines: [
-            { text: "What happened in your body as they approached?" },
-            { text: "Was there a moment you wanted to open toward them? A moment you wanted them to pause?" },
-            { text: "Where did you feel it? Switch roles. Repeat." },
+            { text: "Run all three touches again the other way round." },
+            { text: "Do not compare the two halves out loud. They were never going to match, and saying so turns it into a score." },
           ],
         },
         {
           kind: "notice",
-          lines: [{ text: "Afterwards, one prompt each using the Dyad: Tell me what happened in your body as I moved toward you." }],
+          lines: [
+            { text: "Another time, run it with your non-dominant sides. The giver gives with the hand they do not write with. The receiver offers the elbow on their non-dominant arm." },
+            { text: "Was the sensation different? Was there an emotional response neither of you expected?" },
+          ],
         },
       ],
     },
@@ -919,88 +890,52 @@ export const tenTouchRituals: PracticeCollection = {
     // ------------------------------------------------------------- the turn
     // ------------------------------------------------------------ closing
     {
-      slug: "the-prompt-bank",
+      slug: "31-days-closer",
       order: 25,
-      title: "The prompt bank",
-      eyebrow: "Reference · every prompt, in one place",
+      title: "31 Days Closer",
+      eyebrow: "When you want the words back",
       kind: "closing",
-      image: "/rituals/using-the-prompts.jpeg",
-      imageAlt: "Two people mid-conversation, one listening closely",
+      image: "/rituals/cards-app-screenshot.png",
+      imageAlt: "31 Days Closer open on a phone",
       imageSide: "left",
       body: [
         {
           kind: "p",
-          text: "Come here when you want a different question. Every one of these runs on the same structure as The Dyad: one reads, one answers, the listener says thank you, then you switch.",
+          text: "The rituals in here bring touch back into the room. This is the other half of it.",
         },
         {
           kind: "p",
-          text: "Take one. You are not meant to get through them.",
+          text: "Touch reaches what words cannot. It also has a limit, and most couples meet it: you can be close in the body and still not have said the thing.",
+        },
+        {
+          kind: "p",
+          text: "One prompt a day, for thirty one days. Fifteen minutes each.",
           emphasis: "accent",
         },
-        { kind: "quote", text: "Using the Prompts" },
-        { kind: "image", src: "/rituals/using-the-prompts.jpeg", alt: "Two people mid-conversation, one listening closely" },
-        {
-          kind: "promptGroup",
-          category: "Touch & Sensation",
-          color: "teal",
-          prompts: [
-            "Tell me something about your body you wish I understood.",
-          ],
-        },
-        {
-          kind: "promptGroup",
-          category: "Presence & Distance",
-          color: "gold",
-          prompts: [
-            "Tell me when you feel closest to me.",
-          ],
-        },
-        {
-          kind: "promptGroup",
-          category: "Desire & Longing",
-          color: "brown",
-          prompts: [
-            "Tell me something you have stopped asking for.",
-          ],
-        },
-        {
-          kind: "promptGroup",
-          category: "Trust & Repair",
-          color: "blueGrey",
-          prompts: [
-            "Tell me something that hasn't fully healed between us.",
-          ],
-        },
-        {
-          kind: "promptGroup",
-          category: "Becoming",
-          color: "black",
-          prompts: [
-            "Tell me one wish you have for us this year.",
-          ],
-        },
-        { kind: "quote", text: "The Intimacy & Communication Cards" },
-        { kind: "image", src: "/rituals/cards-upsell.jpg", alt: "The Intimacy and Communication Cards" },
-        { kind: "image", src: "/rituals/cards-app-screenshot.png", alt: "The Intimacy and Communication Cards app on a phone" },
         {
           kind: "p",
-          text: "Four decks: The Couples Edition, The Family and Friends Edition, The Touch Languages, and Trust & Repair, a 50-card deck for couples navigating a rupture, a distance, or a moment they can't seem to move past.",
+          text: "The single reason a practice like this dies is that on day two nobody knows which question to pick. One of you wants the easy one, the other wants the real one, and the fifteen minutes goes on choosing instead of talking. This takes the choosing away. You open it, today's prompt is there, and that is the only decision made for you.",
         },
         {
           kind: "p",
-          text: "Available as an app, so it lives in your pocket, always ready for a quiet evening or moment of connection, and as a physical deck.",
+          text: "It cannot be raced through either. The next one opens the following morning whatever you do, so a keen week cannot empty it and a quiet week cannot put you behind.",
         },
-        { kind: "p", text: "Every prompt is designed to open something without forcing it.", emphasis: "accent" },
+        { kind: "quote", text: "The order is doing something" },
+        { kind: "p", text: "Seven days on what you notice, and what you have stopped noticing." },
+        { kind: "p", text: "Seven on what is actually going on in the other one." },
+        { kind: "p", text: "Seven on the part most couples have quietly taken off the list." },
+        { kind: "p", text: "Seven on what has been left unsaid, once you have had three weeks of practice at being heard." },
+        { kind: "p", text: "Three at the end, on what you are both saying yes to." },
         {
           kind: "p",
-          text: "The cards work in the same structure as The Dyad. One person picks a card and reads it out loud. The other person answers from the heart. One answer per turn. The listener responds with only three things: Thank you. Clarify that. Summarise that. Switch and go deeper with each turn.",
+          text: "Nobody could do week four on day one. By the time you arrive there you have had three weeks of being received without being answered, and that is what makes the harder ones answerable.",
         },
-        { kind: "quote", text: "What the Cards Cover" },
-        { kind: "p", text: "Emotional Intimacy: questions that reach beneath the surface of daily life." },
-        { kind: "p", text: "Physical Sensation: prompts that reconnect you to your body and your partner's." },
-        { kind: "p", text: "Desire & Play: invitations to explore what you want and what delights you." },
-        { kind: "p", text: "Trust & Repair: 50 dedicated prompts for navigating rupture and distance." },
-        { kind: "p", text: "Family & Friends: 150 prompts to get to know your family and friends in a much deeper way, and to be understood." },
+        {
+          kind: "p",
+          text: "\u00a317. It opens on any phone, no account and no password, and the first card is waiting when you open it.",
+          emphasis: "accent",
+        },
+        { kind: "p", text: "feelfullyyou.com/31-days-closer" },
       ],
     },
     // ---------------------------------------------------------- reference
@@ -1060,45 +995,6 @@ export const tenTouchRituals: PracticeCollection = {
           kind: "link",
           text: "Follow here",
           href: "https://substack.com/@juliettekaraman",
-        },
-      ],
-    },
-    {
-      slug: "your-next-yes",
-      order: 26,
-      title: "Your Next Yes",
-      eyebrow: "Where you go from here",
-      kind: "closing",
-      image: "/rituals/your-next-yes.png",
-      imageAlt: "Your Next Yes",
-      imageSide: "right",
-      body: [
-        {
-          kind: "p",
-          text: "This wasn't just a guide. It was your first soft yes: a yes to clarity, to being heard before you speak, to the kind of touch that doesn't perform.",
-        },
-        { kind: "p", text: "It lands.", emphasis: "bold" },
-        { kind: "quote", text: "One Touch" },
-        { kind: "image", src: "/rituals/one-touch-photo.jpg", alt: "One Touch" },
-        { kind: "p", text: "7 days. Your own hands. Entirely private.", emphasis: "bold" },
-        {
-          kind: "p",
-          text: "You have the ten rituals now. They bring touch back into the room. One Touch is where you go underneath them.",
-        },
-        {
-          kind: "p",
-          text: "Where you learn to feel your own Touch Pattern in your body before you ask anyone else to meet it. If you cannot yet read your own body, you cannot read what is happening between you and someone else. This is where that literacy begins.",
-        },
-        {
-          kind: "p",
-          text: "You show up for yourself first. Everything else follows.",
-          emphasis: "accent",
-        },
-        {
-          kind: "bigLink",
-          text: "One Touch",
-          subtext: "7 days. Your own hands. Entirely private.",
-          href: "https://feelfullyyou.com/one-touch",
         },
       ],
     },
