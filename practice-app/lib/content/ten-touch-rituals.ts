@@ -684,7 +684,7 @@ export const tenTouchRituals: PracticeCollection = {
       eyebrow: "Once a month \u00b7 a morning out",
       kind: "ritual",
       image: "/rituals/the-things-you-used-to-love.jpeg",
-      imageAlt: "Two people laughing together, mid-conversation",
+      imageAlt: "A picnic blanket on the grass with a kite and a spilled bag of marbles",
       imageSide: "left",
       body: [
         {
