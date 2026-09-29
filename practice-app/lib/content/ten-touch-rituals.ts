@@ -683,6 +683,8 @@ export const tenTouchRituals: PracticeCollection = {
       title: "The Things You Used to Love",
       eyebrow: "Once a month \u00b7 a morning out",
       kind: "ritual",
+      image: "/rituals/the-things-you-used-to-love.jpeg",
+      imageAlt: "Two people laughing together, mid-conversation",
       imageSide: "left",
       body: [
         {
@@ -808,6 +810,8 @@ export const tenTouchRituals: PracticeCollection = {
       title: "Elbow to Armpit",
       eyebrow: "Weekly \u00b7 10 minutes, one gives and one receives",
       kind: "ritual",
+      image: "/rituals/elbow-to-armpit.jpeg",
+      imageAlt: "One hand resting along the inside of another person\u2019s forearm",
       imageSide: "right",
       body: [
         {

@@ -7,7 +7,6 @@ import { tenTouchRituals } from "@/lib/content/ten-touch-rituals";
 import { theUnspokenDistance } from "@/lib/content/the-unspoken-distance";
 import { whenSheGoesQuiet } from "@/lib/content/when-she-goes-quiet";
 import { communicationRebootKit } from "@/lib/content/communication-reboot-kit";
-import { CARDS_TASTER_COVER } from "@/lib/content/cards-taster";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { useAuth } from "@/components/providers/AuthProvider";
 import { getCompletedSlugs } from "@/lib/entitlements/progress";
@@ -283,32 +282,16 @@ function LibraryContent() {
               home screen until whoever owns it says it's ready. Restore by
               re-adding this block once confirmed ready. */}
 
-          {/* The Cards taster isn't a linear guide (PracticeCollection),
-              it's a draw-one-at-a-time mini-experience, so it's not in
-              ALL_COLLECTIONS — always free, always unlocked, no progress
-              count, its own route. See lib/content/cards-taster.ts. */}
-          <Link
-            href="/practice/cards-taster"
-            className="group flex items-center gap-5 overflow-hidden rounded-2xl border border-ffy-border bg-white/60 p-4 transition hover:border-ffy-gold sm:p-5"
-          >
-            <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-xl sm:h-24 sm:w-24">
-              <Image
-                src={CARDS_TASTER_COVER}
-                alt="Intimacy and Communication Cards, Taster"
-                fill
-                sizes="96px"
-                className="object-cover"
-              />
-            </div>
-            <div className="min-w-0 flex-1">
-              <h2 className="font-display text-xl font-semibold text-ffy-black group-hover:text-ffy-teal">
-                The Intimacy and Communication Cards
-              </h2>
-              <p className="mt-1 text-sm text-ffy-brown">Five free cards from the deck. Pull one, read it aloud.</p>
-              <p className="mt-2 text-xs uppercase tracking-wide text-ffy-gold-deep">Free taster</p>
-            </div>
-            <span className="text-ffy-gold">→</span>
-          </Link>
+          {/* The Cards taster tile was REMOVED 28 Sep 2026 at Juliette's
+              instruction. Two faults, not one. It offered FIVE free cards
+              while the real cards app now gives ONE per deck, so the two
+              free routes disagreed with each other. And its buttons pointed
+              at cards.feelfullyyou.com, the address retired when the app
+              moved to feelfullyyou.com/my-cards. The free cards live in one
+              place now: the cards app, which has the timer, the Dyad
+              teaching and a single upsell. The route and
+              lib/content/cards-taster.ts go with it. In git history if it
+              is ever wanted back. */}
 
           {/* Touch Base® tile removed from freebies 16 Sep 2026 per Juliette
               ("take off touch base from the freebies, both on website and
