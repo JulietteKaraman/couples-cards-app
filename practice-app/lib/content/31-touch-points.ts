@@ -652,7 +652,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
     {
       slug: "day-7-your-second-date",
       order: 9,
-      image: "/unspoken-distance/date-night.jpg",
+      image: "/31-touch-points/juliette-and-alex-garden.jpg",
       title: "Day 7. Your Second Date",
       eyebrow: "Pick one, book it, and learn the close",
       kind: "ritual",
@@ -1311,6 +1311,15 @@ export const thirtyOneTouchPoints: PracticeCollection = {
           ],
         },
         { kind: "timer", minutes: [3], label: "Three minutes, no hands" },
+        {
+          kind: "notice",
+          lines: [
+            { text: "Then swap, and do not skip it", emphasis: "bold" },
+            { text: "Same instruction, the other way round. The short ones are exactly the ones people do once and call done." },
+            { text: "Was it easier to receive that, or to be the one working out what to do without your hands?" },
+            { text: "Which half left you wanting to stop sooner, and can you say why?", emphasis: "accent" },
+          ],
+        },
       ],
     },
     {
@@ -1453,6 +1462,15 @@ export const thirtyOneTouchPoints: PracticeCollection = {
           ],
         },
         { kind: "notice", lines: [{ text: "Notice both sides. What it was like to receive slower touch, and what it was like to be the one slowing it down that much." }] },
+        {
+          kind: "notice",
+          lines: [
+            { text: "Then swap", emphasis: "bold" },
+            { text: "The giver becomes the receiver. It is a different exercise from the other side, and most people find one half far harder than the other." },
+            { text: "Was it easier to receive slow touch, or to be the one slowing it down?" },
+            { text: "Where did you want to speed up, and what happened in you when you did not?", emphasis: "accent" },
+          ],
+        },
       ],
     },
     {
@@ -1490,6 +1508,15 @@ export const thirtyOneTouchPoints: PracticeCollection = {
         },
         { kind: "why", lines: [{ text: "Saying it out loud is not a formality. The body has spent years assuming every touch is a down payment. Naming that this one is not is what lets it stop calculating.", emphasis: "accent" }] },
         { kind: "timer", minutes: [5], label: "Five minutes, going nowhere" },
+        {
+          kind: "notice",
+          lines: [
+            { text: "Then swap", emphasis: "bold" },
+            { text: "Five minutes the other way round, with the same thing said out loud before you start." },
+            { text: "Was it easier to give touch that was going nowhere, or to receive it?" },
+            { text: "Did either of you catch yourself trying to make it good, rather than simply doing it?", emphasis: "accent" },
+          ],
+        },
       ],
     },
     {
@@ -1564,6 +1591,16 @@ export const thirtyOneTouchPoints: PracticeCollection = {
           ],
         },
         { kind: "timer", minutes: [3], label: "Three minutes. You run it." },
+        {
+          kind: "notice",
+          lines: [
+            { text: "Then swap, and this is the half that teaches the most", emphasis: "bold" },
+            { text: "Three minutes the other way round. Whoever was following now asks." },
+            { text: "What did it feel like to be adjusted?" },
+            { text: "And what did it feel like to adjust your partner, knowing they would do exactly as asked?" },
+            { text: "Was it easier to receive the touch, or to lead it?", emphasis: "accent" },
+          ],
+        },
       ],
     },
     {
@@ -1587,6 +1624,15 @@ export const thirtyOneTouchPoints: PracticeCollection = {
         },
         { kind: "why", lines: [{ text: "Three structured minutes beats an hour that both of you spent wondering where it was going.", emphasis: "accent" }] },
         { kind: "timer", minutes: [3], label: "Three minutes, agreed out loud first" },
+        {
+          kind: "notice",
+          lines: [
+            { text: "Then swap, today or tomorrow", emphasis: "bold" },
+            { text: "Three minutes the other way round, asked in the same words." },
+            { text: "Was it easier to be the one asking for three minutes, or the one being asked?" },
+            { text: "Did giving it feel like a chore, a relief, or something else entirely?", emphasis: "accent" },
+          ],
+        },
       ],
     },
     {
@@ -1784,6 +1830,15 @@ export const thirtyOneTouchPoints: PracticeCollection = {
           lines: [
             { text: "What shifts when touch is offered like a ceremony, layer by layer?", emphasis: "bold" },
             { text: "Every other day this month has been an exchange. This one is one sided on purpose. Receiving with nothing asked back is the hardest position in a relationship and it is the one nobody practises.", emphasis: "accent" },
+          ],
+        },
+        {
+          kind: "notice",
+          lines: [
+            { text: "Then swap, and give it the same care", emphasis: "bold" },
+            { text: "The one who received becomes the one who gives. Every layer again, in the same order." },
+            { text: "Was it easier to receive all of that, or to offer it with nothing coming back?" },
+            { text: "This is the last practice of the month. Whichever half was harder is the one worth knowing about.", emphasis: "accent" },
           ],
         },
       ],
