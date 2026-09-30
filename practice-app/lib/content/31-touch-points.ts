@@ -650,29 +650,40 @@ export const thirtyOneTouchPoints: PracticeCollection = {
       ],
     },
     {
-      slug: "day-7-your-date",
+      slug: "day-7-the-close",
       order: 9,
-      title: "Day 7. Your Date",
       image: "/unspoken-distance/date-night.jpg",
-      eyebrow: "The one you booked on day 1",
+      title: "Day 7. The Close",
+      eyebrow: "Three things, and they work on every date you ever have",
       kind: "ritual",
       imageSide: "right",
+      // REWRITTEN 30 Sep. It used to say "today is the date you chose on
+      // day 1", which was true when there was one date in the whole month.
+      // There are four now, one a week, opened on days 1, 8, 15 and 22, and
+      // each one happens whenever that week suits. So day 7 stops being the
+      // date day and becomes the thing you do at the END of any of them.
       body: [
-        { kind: "p", text: "Today is the date you chose on day 1.", emphasis: "bold" },
-        { kind: "p", text: "If it already happened earlier in the week, good. Read the close below and make sure you did that part, because that part is the practice." },
-        { kind: "p", text: "If it has not happened, today is the day. Move something." },
+        { kind: "p", text: "Your first date has happened by now, or it is in the diary for the next day or two. Either is fine." },
+        { kind: "p", text: "This is the part almost everybody skips, and it is the part that turns an afternoon into something you still have in ten years.", emphasis: "bold" },
         {
           kind: "numberedSteps",
           steps: [
-            { heading: "Name the story out loud before you go home", text: "Not a verdict on the date. The bit you will still be telling each other about in five years. Say it while you are both still in it." },
+            { heading: "Name the story out loud before you go home", text: "Not a verdict on the date. Not was that nice. The bit you will still be telling each other about in five years. Say it while you are both still in it." },
             { heading: "A twenty second hug", text: "Five seconds is barely contact. Twenty is where it lands in the body. It will feel far too long, and most couples have never once held on that long standing in their own kitchen." },
-            { heading: "One appreciation each, out loud", text: "Before the day closes." },
+            { heading: "One appreciation each, out loud", text: "Before the day closes. One thing, said plainly, with nothing attached to it." },
           ],
         },
         {
           kind: "notice",
           lines: [
-            { text: "You have just done a week." },
+            { text: "Do this at the end of all four of them.", emphasis: "bold" },
+            { text: "There is a date every week in here. The close is the same every time, and it is what makes them stack into a month rather than four nice afternoons you forget." },
+          ],
+        },
+        {
+          kind: "why",
+          lines: [
+            { text: "You have just done a week.", emphasis: "bold" },
             { text: "Almost none of it asked anything of your body. That was on purpose. From here it starts to.", emphasis: "accent" },
           ],
         },
