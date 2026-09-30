@@ -361,31 +361,76 @@ export function Blocks({ blocks, dark = false }: { blocks: ContentBlock[]; dark?
             );
           }
 
+          // Juliette, 30 Sep: "the audio boxes need to be much more important,
+          // at the moment they look like afterthoughts and do not do anything
+          // justice." She is right. Twenty of the thirty four pages of 31 Touch
+          // Points ARE the audio, and it was rendering as a 64px grey strip
+          // under a caption in 12px caps. This is now the loudest thing on any
+          // page that has one.
           case "driveAudio": {
             const id = driveIdFromUrl(b.url);
+            const missing = !id;
             return (
-              <div key={i} className="flex flex-col gap-2">
-                <p className={`text-xs uppercase tracking-wide ${dark ? "text-ffy-gold-pale" : "text-ffy-gold-deep"}`}>{b.label}</p>
-                {id ? (
-                  <div className={`h-16 w-full overflow-hidden rounded-xl border ${dark ? "border-ffy-gold/40 bg-white/5" : "border-ffy-gold/60 bg-ffy-cream-2"}`}>
-                    <iframe
-                      src={`https://drive.google.com/file/d/${id}/preview`}
-                      className="h-full w-full"
-                      allow="autoplay"
-                      title={b.label}
-                    />
+              <div
+                key={i}
+                className={`my-2 overflow-hidden rounded-2xl border-2 shadow-sm ${
+                  dark
+                    ? "border-ffy-gold/60 bg-white/[0.07]"
+                    : "border-ffy-gold bg-gradient-to-br from-ffy-cream-2 to-ffy-gold-soft/25"
+                }`}
+              >
+                <div className="flex items-start gap-4 px-5 pt-5 sm:px-7 sm:pt-6">
+                  <span
+                    aria-hidden
+                    className="mt-0.5 flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-ffy-gold text-white shadow"
+                  >
+                    <svg viewBox="0 0 24 24" className="h-5 w-5 translate-x-[1px]" fill="currentColor">
+                      <path d="M8 5v14l11-7z" />
+                    </svg>
+                  </span>
+                  <div className="min-w-0">
+                    <p
+                      className={`text-[11px] font-semibold uppercase tracking-[0.18em] ${
+                        dark ? "text-ffy-gold-pale" : "text-ffy-gold-deep"
+                      }`}
+                    >
+                      In Juliette's voice
+                    </p>
+                    <p
+                      className={`mt-1 font-display text-lg font-semibold leading-snug sm:text-xl ${
+                        dark ? "text-white" : "text-ffy-teal"
+                      }`}
+                    >
+                      {b.label}
+                    </p>
                   </div>
+                </div>
+                {missing ? (
+                  <p className={`px-5 pb-5 pt-3 text-sm sm:px-7 ${dark ? "text-white/70" : "text-ffy-black/60"}`}>
+                    This recording is on its way.
+                  </p>
                 ) : (
-                  <a href={b.url} target="_blank" rel="noreferrer" className={dark ? "text-ffy-gold-pale underline" : "text-ffy-gold-deep underline"}>
-                    {b.label}
-                  </a>
+                  <div className="px-5 pb-5 pt-4 sm:px-7 sm:pb-6">
+                    <div
+                      className={`h-[72px] w-full overflow-hidden rounded-xl border ${
+                        dark ? "border-white/20 bg-black/20" : "border-ffy-gold/40 bg-white"
+                      }`}
+                    >
+                      <iframe
+                        src={`https://drive.google.com/file/d/${id}/preview`}
+                        className="h-full w-full"
+                        allow="autoplay"
+                        title={b.label}
+                      />
+                    </div>
+                    <p className={`mt-3 text-xs ${dark ? "text-white/60" : "text-ffy-black/55"}`}>
+                      Press play and follow along together. Put it on speaker.
+                    </p>
+                  </div>
                 )}
               </div>
             );
           }
-
-          case "timer":
-            return <PracticeTimer key={i} minutes={b.minutes} label={b.label} dark={dark} />;
 
           case "audio":
             return (

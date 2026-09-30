@@ -1,0 +1,1439 @@
+// 31 TOUCH POINTS
+// ---------------------------------------------------------------------------
+// Built 30 Sep 2026. This product RETIRES the £7 Ten Touch Rituals and the
+// £27 31 Daily Touch Points PDF into one month that lives in this app.
+//
+// WHAT IT IS, in her words: "a 31-day exploration of what it is to bring touch
+// points of feeling touched in your relationship again. It doesn't need to be
+// intimate touch. It doesn't need to be physical touch. It could be fun."
+//
+// A TOUCH POINT IS ANY MOMENT THE BODY REGISTERS THAT IT WAS MET. That is the
+// whole reframe and it is why this is not "31 touches". Roughly a third of the
+// month asks for no physical contact at all.
+//
+// THE SHAPE OF A DAY, her words: "You have a timed container, you have the
+// questions that you do every day, and then you do one little touch point
+// every day." The CARDS (31 Days Closer, feelfullyyou.com/my-cards) carry the
+// container and the question. THIS carries the touch point. Sold together they
+// are the 31 Days Intimacy Kit.
+//
+// SEQUENTIAL ON PURPOSE. Three reasons, in order of importance: it protects the
+// order, which is doing real work; it builds the return, so they come back 31
+// times; and it stops overwhelm. Day 1 carries the whole date menu because that
+// date has to be planned ahead.
+//
+// WHAT CAME OUT, and never put it back:
+//   THE DYAD. It is the cards. Someone holding the kit runs it every day on the
+//   other track. A cheap product must never teach what an expensive one sells.
+//   THE TRACE. It is the £17 hero (Miles's bite 1). The jaw trace is also
+//   therefore BANNED from the Playful Moments Menu, even though it and the neck
+//   kiss are a pair in her videos.
+//   EYES DOWN. "Good girl / good boy" has no day in this arc. Further up only.
+//
+// AUDIO. Every Drive id below is real, pulled from Drive, never guessed.
+// Sharing CHECKED 30 Sep: all six return reader/anyone. The one exception is
+// the welcome recording on Meet Juliette, which was still private when checked
+// and needs setting to anyone-with-the-link before launch.
+//
+// Sources, all hers, all read directly:
+//   reference_touch_base_full_spoken_script_verbatim_30sep2026.md
+//   reference_three_date_ideas_before_the_touch_date_29sep2026.md
+//   reference_31_daily_touch_points.md
+//   project_ten_touch_rituals_rebuilt_28sep2026.md
+//   project_31_days_intimacy_kit_30sep2026.md
+
+import { ContentBlock } from "./blocks";
+import { PracticeCollection } from "./ten-touch-rituals";
+
+export const thirtyOneTouchPoints: PracticeCollection = {
+  slug: "31-touch-points",
+  title: "31 Touch Points",
+  subtitle: "A month of feeling touched again. Not all of it is physical.",
+  byline: "By Juliette Karaman, creator of The Beginning: The Ultimate Touch Reset",
+  // TODO needs its own hero. Borrowing the rituals one for now, flagged to her.
+  heroImage: "/rituals/hero.png",
+  unlockMode: "sequential",
+  entries: [
+    // ---------------------------------------------------------------- opening
+    {
+      slug: "what-counts-as-a-touch-point",
+      order: 0,
+      title: "What Counts as a Touch Point",
+      eyebrow: "Start here",
+      kind: "essay",
+      imageSide: "left",
+      body: [
+        { kind: "p", text: "Most couples don't fall out of love.", emphasis: "bold" },
+        { kind: "p", text: "They fall out of touch.", emphasis: "accent" },
+        {
+          kind: "p",
+          text: "Not just physical touch, though that too. They lose the habit of landing in each other's presence. The body forgets what it felt like to be reached for, to be held without agenda, to feel genuinely met.",
+        },
+        {
+          kind: "p",
+          text: "So before anything else, I want to widen what the word means. Because if you have picked this up thinking it is thirty one days of putting your hands on each other, you will brace on day one, and bracing is the thing we are undoing.",
+        },
+        { kind: "big", text: "A touch point is any moment your body registers that it was met." },
+        { kind: "p", text: "A hand on skin is one. It is not the only one, and it is often not the first one that lands." },
+        {
+          kind: "step",
+          label: "The ones nobody counts",
+          highlight: true,
+          lines: [
+            { text: "Being seen is a touch point.", emphasis: "bold" },
+            { text: "Somebody noticing you went quiet, and saying so, and not asking you to explain it." },
+            { text: "Being played with is a touch point.", emphasis: "bold" },
+            { text: "Somebody making you laugh who knows exactly how to do it, because they have known you for years." },
+            { text: "Being chosen is a touch point.", emphasis: "bold" },
+            { text: "Somebody picking the thing you would have picked, without being told." },
+            { text: "Being told the truth is a touch point.", emphasis: "bold" },
+            { text: "One honest sentence, with nothing attached to it and nothing wanted back." },
+          ],
+        },
+        {
+          kind: "step",
+          label: "Your own hand counts",
+          lines: [
+            { text: "Two minutes of your own thumb on your own finger is a touch point, and for a lot of people it is the safest one in the month." },
+            { text: "You do not need anybody else in the room to begin.", emphasis: "accent" },
+          ],
+        },
+        {
+          kind: "step",
+          label: "And some have no contact in them at all",
+          lines: [
+            { text: "There is a practice in here where one of you holds a hand five inches above the other's wrist and never lands it." },
+            { text: "Most people feel something. Heat, a buzz, a pull towards it, or a pull away." },
+            { text: "That is your body answering. Nothing touched it.", emphasis: "accent" },
+          ],
+        },
+        { kind: "quote", text: "Why this matters more than it sounds" },
+        { kind: "p", text: "A body that has stopped receiving physical touch will very often receive play long before it receives a hand." },
+        {
+          kind: "p",
+          text: "That is not a consolation prize. It is the order things actually come back in. Laughing together is not a smaller version of being touched, it is a door into the same room, and it is a door most people can still get through when the other one has swollen shut.",
+        },
+        { kind: "p", text: "So this month opens with a date rather than with a hand. Roughly a third of what follows asks for no physical touch at all.", emphasis: "bold" },
+        { kind: "quote", text: "What all of them have in common" },
+        { kind: "p", text: "One thing only. You felt it land.", emphasis: "bold" },
+        {
+          kind: "p",
+          text: "Not that it was done well. Not that you enjoyed it. Not that it went anywhere afterwards. Only that something arrived and some part of you registered it.",
+        },
+        { kind: "p", text: "That is the whole measure, and it is why there is no way to be bad at this.", emphasis: "accent" },
+        {
+          kind: "why",
+          lines: [
+            { text: "Before you start", emphasis: "bold" },
+            { text: "Nothing in these thirty one days has to be intimate. Nothing has to be sexual. You are not behind if the physical part takes three weeks to arrive, and for plenty of couples it should." },
+            { text: "One a day, in the order they come. The order is doing something. The first week asks almost nothing of the other person, and every part after it only works because the one before it happened." },
+            { text: "Miss a day. Do not start over. Pick it up where you left it." },
+            { text: "What matters is this: you turn up, you slow down, and you let yourself be felt.", emphasis: "accent" },
+          ],
+        },
+      ],
+    },
+    {
+      slug: "why-touch-matters",
+      order: 1,
+      title: "Why Touch Matters",
+      kind: "essay",
+      imageSide: "right",
+      body: [
+        {
+          kind: "p",
+          text: "The skin is the largest organ in your body. It contains more nerve endings than anything else. Before you had words, before you could recognise faces, touch was how you knew you were safe.",
+        },
+        { kind: "p", text: "It is the first language you ever learned.", emphasis: "accent" },
+        {
+          kind: "p",
+          text: "When physical touch is absent, the nervous system registers it. Through the slow drift of busy lives, through bodies that forget to reach. The nervous system starts to call the distance normal.",
+        },
+        { kind: "p", text: "Gradually, the body stops expecting to be met. That is what I call going quiet." },
+        { kind: "p", text: "Touch regulates the nervous system. It releases oxytocin, serotonin, dopamine. It reduces cortisol." },
+        { kind: "p", text: "It tells your body: you are not alone. You are not a threat to each other. You can soften here.", emphasis: "bold" },
+        {
+          kind: "stats",
+          items: [
+            { number: "15", label: "years", caption: "working with couples" },
+            { number: "650+", label: "couples", caption: "and thousands of clients" },
+            { number: "1000+", label: "people", caption: "taught Touch Base alone" },
+          ],
+        },
+        {
+          kind: "p",
+          text: "In 15 years working with over 650 couples, what I see most is this: their bodies have stopped speaking to each other.",
+        },
+        { kind: "quote", text: "Why everything in here has a time on it" },
+        {
+          kind: "p",
+          text: "You will notice that almost every one of these days tells you how long it lasts. Two minutes. Three. Fifteen. That is not me being tidy.",
+        },
+        {
+          kind: "p",
+          text: "Your vigilance centre never stops scanning. It is doing it right now, while you read this. It is asking what is coming next, and whether you will need to be ready for it.",
+          emphasis: "bold",
+        },
+        {
+          kind: "p",
+          text: "A container with edges you can see is the one thing that lets it stand down. When your body knows this lasts three minutes, and it knows nothing follows it, it stops watching the door and goes into what is actually happening instead.",
+        },
+        {
+          kind: "step",
+          label: "So every practice here tells you two things before it starts",
+          highlight: true,
+          lines: [
+            { text: "How long it lasts.", emphasis: "bold" },
+            { text: "And that it is not leading anywhere else.", emphasis: "bold" },
+            { text: "Both of those are load bearing. Take either one away and the body goes back to calculating." },
+          ],
+        },
+        {
+          kind: "p",
+          text: "This matters more than it sounds, because for a lot of couples what actually went missing is trust. Not the dramatic kind. A no that was not really heard. A touch that kept going when it should have stopped. Something that was supposed to be one thing and turned into another.",
+        },
+        {
+          kind: "p",
+          text: "Nobody needed to have done anything terrible. The body simply learned that it cannot be sure, and once it has learned that, it braces first and asks later.",
+        },
+        { kind: "p", text: "A timed container is how you teach it otherwise. Not by promising. By doing the same small thing, the same short way, over and over, until the body has evidence.", emphasis: "accent" },
+        { kind: "quote", text: "Which is also why these are so short" },
+        {
+          kind: "p",
+          text: "Nobody walks into a gym and does three hours on the first day. You would injure yourself, and you would never go back.",
+        },
+        {
+          kind: "p",
+          text: "You start with something almost embarrassingly small, you do it often, and the muscle builds without you watching it happen. Nobody argues with that. It is just how bodies work.",
+        },
+        { kind: "big", text: "This is exactly the same thing. Ninety seconds at a front door is not a small version of the work. It is the work." },
+        { kind: "quote", text: "The thing couples ask me for, and why I say no" },
+        {
+          kind: "p",
+          text: "People come to me who have not been intimate in nine months. In five years. In twenty three years. And almost every one of them wants to book a five hour session.",
+        },
+        {
+          kind: "p",
+          text: "I say no, and they think I am being difficult. Their nervous system cannot hold five hours. Their subconscious has spent years keeping them safe from exactly that, and it is very good at its job. Put them in a room for five hours and the body will do what it has always done, which is leave.",
+          emphasis: "bold",
+        },
+        { kind: "p", text: "So we do this instead. Thirty one small doses, each one finished on time, each one leading nowhere. That is how a body changes its mind about touch." },
+        {
+          kind: "p",
+          text: "By the end of the month there are ten minute practices in here, and they will feel easy. They would not have been on day one.",
+        },
+        { kind: "p", text: "These 31 days are a way back into the conversation your bodies stopped having.", emphasis: "bold" },
+      ],
+    },
+    {
+      slug: "meet-juliette",
+      order: 2,
+      title: "I'm Juliette",
+      eyebrow: "Before you start",
+      kind: "essay",
+      imageSide: "left",
+      imageFocus: "top",
+      body: [
+        // Recorded by her 30 Sep 2026. The written version below follows the
+        // audio line for line so the two cannot drift. If she changes one,
+        // change the other. Transcribed, not paraphrased.
+        {
+          kind: "driveAudio",
+          url: "https://drive.google.com/file/d/1vOBlcZbFpt0XxO9MYuSzbxxaWvWWBzzu/view?usp=sharing",
+          label: "Listen: I'm Juliette, 2 minutes",
+        },
+        { kind: "p", text: "Welcome, loves.", emphasis: "bold" },
+        {
+          kind: "p",
+          text: "I am going to be in this room with you for the next 31 days, so I think it is only fair that you know who I am.",
+        },
+        {
+          kind: "p",
+          text: "My name is Juliette Karaman. I have lived in the UK for over 27 years and I am the mother of four young adults.",
+        },
+        // TRAUMA LINE. Kept at exactly the level she said it in the audio, one
+        // sentence, non-graphic. FLAGGED TO HER: existing rule says long-form
+        // trauma disclosure belongs in long-form, not cold contexts. This is a
+        // paid product a buyer has chosen to open, which is arguably the right
+        // container, and she put it in the recording herself. Hers to cut.
+        {
+          kind: "p",
+          text: "I learned that touch had a very hidden meaning for me. My subconscious hid it from me for years. A date rape really affected how I responded to touch, and how I was touched by life.",
+        },
+        {
+          kind: "p",
+          text: "So for the next 31 days, I want to help you get back in touch with each other, and back in touch with physical touch.",
+        },
+        { kind: "big", text: "Non sexual touch. We are not going there in these 31 days." },
+        { kind: "quote", text: "What I actually hear couples say" },
+        {
+          kind: "step",
+          label: "In their own words",
+          highlight: true,
+          lines: [
+            { text: "\u201cWe have become too busy.\u201d" },
+            { text: "\u201cWe do not have time for fun any more.\u201d" },
+            { text: "\u201cWe are just not that into each other any more.\u201d" },
+            { text: "\u201cHow do we get out of this slump?\u201d", emphasis: "accent" },
+          ],
+        },
+        { kind: "quote", text: "How the 31 days work" },
+        {
+          kind: "p",
+          text: "Every day, a new practice opens. Some of them are very short. Some of them you will wonder what the point is.",
+        },
+        { kind: "p", text: "They build on each other. That is why they come one at a time.", emphasis: "bold" },
+        {
+          kind: "p",
+          text: "And after 31 days you have a library of touch points to come back to, for whenever the two of you drift again.",
+        },
+        { kind: "p", text: "Have the best time reconnecting.", emphasis: "accent" },
+        { kind: "p", text: "Much love." },
+      ],
+    },
+    // ============================================================ PHASE ONE
+    // Landing in your own body. Almost nothing is asked of the other person.
+    {
+      slug: "day-1-the-menu",
+      order: 3,
+      title: "Day 1. The Menu",
+      eyebrow: "Choose it today, do it this week",
+      kind: "ritual",
+      imageSide: "right",
+      body: [
+        { kind: "p", text: "The month opens with a date. Not with a hand, and not with breathing.", emphasis: "bold" },
+        {
+          kind: "p",
+          text: "Play is the way in. A body that has stopped receiving touch will nearly always receive fun first, and there is no bracing to undo when nobody is going to touch anybody.",
+        },
+        {
+          kind: "p",
+          text: "A real date needs forty five minutes to an hour and a half, so today is not the day you do it. Today you choose it and you put it in the diary.",
+        },
+        {
+          kind: "why",
+          lines: [
+            { text: "The set-up, and it matters as much as what you pick", emphasis: "bold" },
+            { text: "Forty five minutes to an hour and a half. Uninterrupted." },
+            { text: "No kids. No phones." },
+            { text: "Get ready properly. Shower, put something on you feel good in. You are going on a date, you are just doing it differently." },
+            { text: "A morning, rather than the end of a long day. You will be tired, and tired is not the state for this.", emphasis: "accent" },
+          ],
+        },
+        { kind: "quote", text: "Choose one from each" },
+        {
+          kind: "step",
+          label: "Starters",
+          lines: [
+            { text: "The tenner.", emphasis: "bold" },
+            { text: "Ten pounds each, the charity shop. Pick each other one item of clothing, and the other one wears it for the rest of the date." },
+            { text: "Move the furniture.", emphasis: "bold" },
+            { text: "Rearrange one small corner of your home together, just because you can. The sofa, the plants, fairy lights, a new candle. Put a dance list on that makes you both feel alive while you do it." },
+          ],
+        },
+        {
+          kind: "step",
+          label: "Mains",
+          highlight: true,
+          lines: [
+            { text: "The things you used to love.", emphasis: "bold" },
+            { text: "Write down ten things you loved doing as a child. Separately, and do not show each other. Pick the one you could teach. Then go somewhere out of the ordinary, take a picnic, take the thing, and teach each other. A kite. A bag of marbles." },
+            { text: "Cook the one neither of you has made.", emphasis: "bold" },
+            { text: "Find a recipe neither of you has cooked and make it together. Or open the fridge and see what the two of you can build out of it." },
+          ],
+        },
+        {
+          kind: "step",
+          label: "Puddings",
+          lines: [
+            { text: "The blindfolded pick.", emphasis: "bold" },
+            { text: "Go to the cinema, stand at the kiosk, one of you blindfolded points at the board, and you watch whatever the finger lands on." },
+            { text: "Kitchen dancing.", emphasis: "bold" },
+            { text: "One song each, chosen for the other, played loud." },
+          ],
+        },
+        { kind: "quote", text: "Then the close, and this part never changes" },
+        {
+          kind: "numberedSteps",
+          steps: [
+            { heading: "One thing you took away", text: "From a day with no outcome and nothing expected of either of you." },
+            { heading: "A twenty second hug", text: "Five seconds is barely contact. Twenty is where it actually lands in the body." },
+            { heading: "One appreciation each, out loud", text: "Before the day closes." },
+          ],
+        },
+        {
+          kind: "notice",
+          lines: [
+            { text: "The through-line, and it is why any of it works", emphasis: "bold" },
+            { text: "Whatever you pick, it is something neither of you has done before." },
+            { text: "Not a nice day. A new one. There is nothing to perform and no previous version of it to live up to, so nobody can get it wrong." },
+            { text: "You are making a memory rather than repeating one.", emphasis: "accent" },
+          ],
+        },
+        { kind: "p", text: "Choose the three now. Put the date in the diary now. Then come back tomorrow.", emphasis: "bold" },
+      ],
+    },
+    {
+      slug: "day-2-the-threshold",
+      order: 4,
+      title: "Day 2. The Threshold",
+      eyebrow: "90 seconds, on your own",
+      kind: "ritual",
+      imageSide: "left",
+      body: [
+        { kind: "p", text: "Before your hand touches the front door, stop." },
+        {
+          kind: "numberedSteps",
+          steps: [
+            { heading: "Palm flat on your own chest", text: "Standing outside, before you go in." },
+            { heading: "Three slow breaths", text: "The out-breath longer than the in-breath, every time." },
+            { heading: "On the third, let your shoulders drop", text: "Then go in." },
+          ],
+        },
+        {
+          kind: "why",
+          lines: [
+            { text: "Why this one is first", emphasis: "bold" },
+            { text: "You bring the whole day through that door with you, and whoever is on the other side gets all of it before you have said a word." },
+            { text: "Ninety seconds is the difference between arriving home and merely turning up at the address." },
+          ],
+        },
+        { kind: "notice", lines: [{ text: "Do not announce it. Nobody needs to know you are doing this." }] },
+      ],
+    },
+    {
+      slug: "day-3-touch-base",
+      order: 5,
+      title: "Day 3. Touch Base®",
+      eyebrow: "2 minutes, twice a day, from here on",
+      kind: "ritual",
+      imageSide: "right",
+      body: [
+        {
+          kind: "p",
+          text: "This is a short kinesthetic anchor that has you feel safe. It trains your nervous system to notice what is happening in your body, and to bring it down.",
+        },
+        { kind: "p", text: "It is the one practice everything else in this month sits on top of, which is why it arrives on day 3 and not later.", emphasis: "bold" },
+        { kind: "video", vimeoId: "1223329859" },
+        {
+          kind: "driveAudio",
+          url: "https://drive.google.com/file/d/1-7kHzl2T-kBXJIae6uk-3u_KMeDV9Mks/view?usp=sharing",
+          label: "Listen: Touch Base®, guided",
+        },
+        {
+          kind: "step",
+          label: "First, put yourself somewhere physically safe",
+          highlight: true,
+          lines: [
+            { text: "This sounds like an odd instruction and it is the reason the whole thing works." },
+            { text: "Nobody behind you. No tiger waiting in the room.", emphasis: "bold" },
+            { text: "I often tell people to do this in the car, or sitting with their back against a wall, so the body knows nothing can come at it from behind. No one can jump out and hurt you." },
+            { text: "Your body will not let go while part of it is still watching the door.", emphasis: "accent" },
+          ],
+        },
+        {
+          kind: "step",
+          label: "Give it a number",
+          lines: [
+            { text: "Breathe in through your nose and out through your mouth, and notice what is happening in your body." },
+            { text: "Then rate it, one to ten. How present are you?", emphasis: "bold" },
+            { text: "One is not very. Ten is hyper aware of everything happening in your body. Write the number down." },
+          ],
+        },
+        {
+          kind: "numberedSteps",
+          steps: [
+            { heading: "Look at the gap", text: "Thumb and pointer finger, held apart. Look at the distance between them, or close your eyes and just listen. Your breath will start to slow on its own as your attention narrows." },
+            { heading: "Notice what arrives in the gap", text: "A slight buzzing. Heat. Something else somewhere else in your body. Bring it back to the fingers." },
+            { heading: "Come to half a centimetre, then land", text: "Let that top finger land onto your thumb. Take a breath there, in through the nose, out through the mouth." },
+            { heading: "Ask yourself the question", text: "What does it feel like in your thumb to receive the touch from your top finger?" },
+            { heading: "Move, slower than you want to", text: "The top finger, left and right, slowly enough to feel every single finger ridge. This is the point where almost everyone speeds up. Slow down instead." },
+            { heading: "Say it out loud", text: "I am safe. Keep the finger moving. I am safe." },
+          ],
+        },
+        {
+          kind: "notice",
+          lines: [
+            { text: "What your body may do, all of it fine", emphasis: "bold" },
+            { text: "Your breath may slow. Your stomach may gurgle. You may yawn." },
+            { text: "None of that is a distraction from the practice. It is the practice working." },
+          ],
+        },
+        {
+          kind: "why",
+          lines: [
+            { text: "Rate yourself again, one to ten. That is how you get proof rather than a feeling." },
+            { text: "Two minutes, twice a day, is what rewires it. Not once. Not occasionally.", emphasis: "bold" },
+            { text: "Do it enough and something useful happens. Just tapping your fingers together sends your body into that state, because it recognises the signal. It stops needing to be on the whole time." },
+            { text: "I have used this with over a thousand people. When they are anxious. When they are up in their heads. Road rage. Somebody taking their parking space.", emphasis: "accent" },
+          ],
+        },
+      ],
+    },
+    {
+      slug: "day-4-feet-on-the-floor",
+      order: 6,
+      title: "Day 4. Feet on the Floor",
+      eyebrow: "60 seconds, on your own",
+      kind: "ritual",
+      imageSide: "left",
+      body: [
+        { kind: "p", text: "Put your attention in the soles of your feet." },
+        { kind: "p", text: "Feel the floor pressing up. Let your weight go back into your heels. Sixty seconds." },
+        {
+          kind: "why",
+          lines: [
+            { text: "Most of us live from the neck up, and a head cannot receive anything." },
+            { text: "This is the cheapest way back down there, and you can do it standing at the kettle with somebody talking to you.", emphasis: "accent" },
+          ],
+        },
+        { kind: "notice", lines: [{ text: "Do not announce this one either." }] },
+      ],
+    },
+    {
+      slug: "day-5-the-landing",
+      order: 7,
+      title: "Day 5. The Landing, Together",
+      eyebrow: "2 minutes, the first one you do together",
+      kind: "ritual",
+      imageSide: "right",
+      body: [
+        { kind: "p", text: "The first four days were yours. This one has two people in it, and it is deliberately small." },
+        {
+          kind: "numberedSteps",
+          steps: [
+            { heading: "Before phones, before anything else", text: "When one of you comes in, or when you first find each other in the day." },
+            { heading: "Stand close enough to feel their warmth", text: "Not touching. Close enough that the air between you is warm." },
+            { heading: "One of you says: I'm here", text: "The other says: I feel you. That is all of it." },
+          ],
+        },
+        {
+          kind: "notice",
+          lines: [
+            { text: "Let it be awkward the first few times.", emphasis: "bold" },
+            { text: "It will be. Two people standing still saying four words to each other is strange until it is not, and it usually stops being strange somewhere around the fourth go." },
+          ],
+        },
+      ],
+    },
+    {
+      slug: "day-6-name-what-you-carried-in",
+      order: 8,
+      title: "Day 6. Name What You Carried In",
+      eyebrow: "One sentence",
+      kind: "ritual",
+      imageSide: "left",
+      body: [
+        {
+          kind: "driveAudio",
+          url: "https://drive.google.com/file/d/1rxaVukGXnP14ZTfpUCdEHrdkpCxQLtJY/view?usp=sharing",
+          label: "Listen first: the thank you, and why it is the whole thing",
+        },
+        { kind: "p", text: "One true sentence, out loud, before you reach for each other." },
+        { kind: "p", text: "Not a summary of your day. The thing you are actually still carrying.", emphasis: "bold" },
+        {
+          kind: "step",
+          label: "It sounds like",
+          lines: [
+            { text: "“I am still in that meeting.”" },
+            { text: "“I have got nothing left today.”" },
+            { text: "“I am fine and I do not want to talk.”" },
+          ],
+        },
+        {
+          kind: "why",
+          lines: [
+            { text: "The other one says only this: thank you for telling me.", emphasis: "bold" },
+            { text: "No questions. No fixing. No following it up later." },
+            { text: "You are not opening a conversation. You are putting down the thing you walked in holding, so it stops standing between you without either of you knowing it is there." },
+          ],
+        },
+      ],
+    },
+    {
+      slug: "day-7-your-date",
+      order: 9,
+      title: "Day 7. Your Date",
+      eyebrow: "The one you booked on day 1",
+      kind: "ritual",
+      imageSide: "right",
+      body: [
+        { kind: "p", text: "Today is the date you chose on day 1.", emphasis: "bold" },
+        { kind: "p", text: "If it already happened earlier in the week, good. Read the close below and make sure you did that part, because that part is the practice." },
+        { kind: "p", text: "If it has not happened, today is the day. Move something." },
+        {
+          kind: "why",
+          lines: [
+            { text: "The close, and it is the part people skip", emphasis: "bold" },
+            { text: "One thing you took away. From a day with no outcome and nothing expected." },
+            { text: "A twenty second hug. Five seconds is barely contact. Twenty is where it lands." },
+            { text: "One appreciation each, out loud, before the day closes." },
+          ],
+        },
+        {
+          kind: "notice",
+          lines: [
+            { text: "You have just done a week." },
+            { text: "Almost none of it asked anything of your body. That was on purpose. From here it starts to.", emphasis: "accent" },
+          ],
+        },
+      ],
+    },
+
+    // ============================================================ PHASE TWO
+    // Noticing. Reading each other without doing anything about it yet.
+    {
+      slug: "day-8-look-at-me",
+      order: 10,
+      title: "Day 8. Look at Me",
+      eyebrow: "3 minutes, standing, no touch",
+      kind: "ritual",
+      imageSide: "left",
+      body: [
+        {
+          kind: "driveAudio",
+          url: "LINK NEEDED. Day 8 Look at Me, about 3 minutes.",
+          label: "Listen first: I set this one up for you",
+        },
+        { kind: "p", text: "Stand across from each other. Not close. Far enough that you can see the whole of their face." },
+        { kind: "p", text: "Before you start, say this out loud. Both of you." },
+        { kind: "big", text: "“Look at me as my own person with choice.”" },
+        { kind: "p", text: "Say it, do not think it. This is not a staring contest and it is not a love in. You are looking at an adult who is choosing to stand there." },
+        {
+          kind: "step",
+          label: "Then three minutes of looking",
+          highlight: true,
+          lines: [
+            { text: "Somewhere in those three minutes something will happen in one of you. A thought. A memory. You will go somewhere else entirely." },
+            { text: "The other one will see it cross your face. That is the part nobody expects." },
+            { text: "Whoever sees it says four words.", emphasis: "bold" },
+          ],
+        },
+        { kind: "big", text: "“Stop. What happened?”" },
+        {
+          kind: "notice",
+          lines: [
+            { text: "They answer honestly, and briefly. It might be small. I went into my head. That is a real answer and a common one." },
+            { text: "Then you say thank you. Not tell me more. Not anything else. Thank you.", emphasis: "bold" },
+            { text: "Then you start again, and keep going until the timer ends." },
+          ],
+        },
+        {
+          kind: "step",
+          label: "Two rules, and they matter",
+          lines: [
+            { text: "Either of you can stop the whole thing at any point. That means finished, not paused, and no explaining why." },
+            { text: "Do not talk about it afterwards. Not that day. What was said was said. Going back over it is how you take it away from each other." },
+          ],
+        },
+        {
+          kind: "why",
+          lines: [
+            { text: "This is the one day in the month that shows you what you are actually dealing with.", emphasis: "bold" },
+            { text: "Most couples find out inside the first ninety seconds. Being looked at while nothing at all is wanted from you is the thing the body has no file for.", emphasis: "accent" },
+          ],
+        },
+      ],
+    },
+
+    {
+      slug: "day-9-track-the-brace",
+      order: 11,
+      title: "Day 9. Track the Brace",
+      eyebrow: "The half-second before contact",
+      kind: "ritual",
+      imageSide: "right",
+      body: [
+        { kind: "p", text: "Today you change nothing. You only locate something." },
+        { kind: "p", text: "In the half-second before you are touched, your body prepares. Find where.", emphasis: "bold" },
+        {
+          kind: "step",
+          label: "It is usually one of these",
+          lines: [
+            { text: "The breath catches or shortens." },
+            { text: "The shoulders creep towards the ears." },
+            { text: "The jaw sets." },
+            { text: "Attention leaves the body and goes up into the head." },
+            { text: "Or the opposite. Going still, flat, absent, waiting for it to be over." },
+          ],
+        },
+        {
+          kind: "why",
+          lines: [
+            { text: "Your amygdala can fire and start bracing before you are consciously aware of what set it off. Faster than thought." },
+            { text: "That is why it feels involuntary. It is.", emphasis: "bold" },
+            { text: "You are not looking for a reason today. Naming it as a real, physical, locatable thing is the entire win, and most people have never been told it is one." },
+          ],
+        },
+      ],
+    },
+    {
+      slug: "day-10-would-you-like",
+      order: 12,
+      title: "Day 10. Would You Like",
+      eyebrow: "Three rounds of 3 minutes",
+      kind: "ritual",
+      imageSide: "right",
+      body: [
+        {
+          kind: "driveAudio",
+          url: "LINK NEEDED. Day 10 Would You Like, three rounds of three minutes.",
+          label: "Listen first: I set up all three rounds",
+        },
+        { kind: "p", text: "You are not asking each other for things. You are offering.", emphasis: "bold" },
+        {
+          kind: "step",
+          label: "Like this",
+          highlight: true,
+          lines: [
+            { text: "“Would you like a cup of tea?”" },
+            { text: "“Would you like me to massage your feet?”" },
+            { text: "“Would you like to go out for dinner?”" },
+            { text: "Small, then touch, then a whole evening. Work up." },
+          ],
+        },
+        {
+          kind: "numberedSteps",
+          steps: [
+            { heading: "Round one. Three minutes, every answer is no", text: "Offer each other things, back and forth. It does not matter what is offered. The answer is no every time. Both of you find out that a no can arrive and nothing breaks." },
+            { heading: "Round two. Three minutes, every answer is yes", text: "Offer again. Every answer is yes." },
+            { heading: "Round three. Three minutes, and now you answer honestly", text: "Same offers, one more time. This round you say what is actually true in your body. Not what you should say, not what keeps the peace. What is there." },
+          ],
+        },
+        {
+          kind: "p",
+          text: "Nothing is ever followed through, in any of the three rounds. No tea gets made, no feet get massaged, nobody goes out.",
+          emphasis: "bold",
+        },
+        {
+          kind: "step",
+          label: "Before the last round, find where your yes and your no actually live",
+          highlight: true,
+          lines: [
+            { text: "Stand up. Feet under your hips, knees soft, eyes closed if you like." },
+            { text: "Say something out loud that is plainly true. Your own name. Then notice which way your body went." },
+            { text: "Now say something plainly untrue. A different name. Notice again." },
+            { text: "Most bodies lean forward on a yes and back on a no. Some go light and heavy instead, or warm and cool. Yours will have its own two.", emphasis: "bold" },
+            { text: "That is your instrument. It was working the whole time. Nobody taught you to read it." },
+          ],
+        },
+        {
+          kind: "notice",
+          lines: [
+            { text: "Why offers and not requests", emphasis: "bold" },
+            { text: "Saying no to “can you pass me that” is easy. Saying no to “would you like me to massage your feet” is not." },
+            { text: "You are declining care, which is the one most people genuinely cannot do. Somebody who cannot receive cannot turn down a kindness either, and it is the same muscle.", emphasis: "accent" },
+          ],
+        },
+        {
+          kind: "why",
+          lines: [
+            { text: "What to feel for, because it is not the asking", emphasis: "bold" },
+            { text: "When you hear a no, does something in you move forward, or back? It is quick." },
+            { text: "What does a no actually feel like? Not what you think about it. Where does it land, and what does it do when it gets there?" },
+            { text: "What does a yes feel like? Most people find out it is not where they expected." },
+            { text: "And the real one. How hard is it to say no to something you want to say yes to?", emphasis: "bold" },
+            { text: "Because if you cannot say no when you mean it, nobody can trust your yes. Not them, and not you.", emphasis: "accent" },
+          ],
+        },
+        {
+          kind: "why",
+          lines: [
+            { text: "Today is the day the whole month turns on, and it looks like the smallest one.", emphasis: "bold" },
+            { text: "Round one takes the sting out of a no by making it meaningless. Round two builds yearning, which is what most long relationships have quietly lost. Round three is where you find out you can tell the truth in your own kitchen." },
+            { text: "All of it is teaching you the felt sense of yes, no and maybe, so that on day 14, when it is actual hands on actual skin, you already know which one you are in.", emphasis: "accent" },
+          ],
+        },
+      ],
+    },
+
+    {
+      slug: "day-11-the-weather-word",
+      order: 13,
+      title: "Day 11. The Weather Word",
+      eyebrow: "One word each",
+      kind: "ritual",
+      imageSide: "left",
+      body: [
+        { kind: "p", text: "One word for how your body feels. Not how your day was." },
+        {
+          kind: "step",
+          label: "Words that work",
+          lines: [
+            { text: "Tight. Heavy. Buzzy. Soft. Wired. Tender. Foggy. Flat. Warm." },
+          ],
+        },
+        { kind: "p", text: "No story after it. No explaining. One word, and the other one says thank you." },
+        {
+          kind: "why",
+          lines: [
+            { text: "I'm fine is where intimacy goes to die.", emphasis: "accent" },
+            { text: "It is not a lie, it is a door closing politely. A weather word keeps the door on the latch and costs nobody anything." },
+          ],
+        },
+      ],
+    },    {
+      slug: "day-12-watch-the-breath",
+      order: 14,
+      title: "Day 12. Watch the Breath",
+      eyebrow: "While you are already touching them",
+      kind: "ritual",
+      imageSide: "right",
+      body: [
+        { kind: "p", text: "Next time you touch them, in any ordinary way, watch their breath instead of looking away." },
+        { kind: "p", text: "Does it catch. Does it hold. Does it drop." },
+        { kind: "p", text: "Say nothing.", emphasis: "bold" },
+        {
+          kind: "why",
+          lines: [
+            { text: "Most of us look away at the moment of contact, and we have done it for so long we do not know we do it." },
+            { text: "The breath is the most honest thing in the room and it is free to read.", emphasis: "accent" },
+          ],
+        },
+      ],
+    },
+    {
+      slug: "day-13-hover-before-you-land",
+      order: 15,
+      title: "Day 13. Hover Before You Land",
+      eyebrow: "5 minutes, guided",
+      kind: "ritual",
+      imageSide: "left",
+      body: [
+        { kind: "p", text: "This is the one with no contact in it at all, and it is the one that surprises people." },
+        {
+          kind: "driveAudio",
+          url: "https://drive.google.com/file/d/1BcgMGBCB-fCKmOAfopwOMAxK1X7iDzgw/view?usp=sharing",
+          label: "Listen: Energetic Non Touch, guided",
+        },
+        {
+          kind: "numberedSteps",
+          steps: [
+            { heading: "Hold a hand five inches above their wrist", text: "About ten to twelve centimetres. No contact. Take a breath there." },
+            { heading: "Ask what is there", text: "Heat. Tingling. Subtle pressure. Does the body want to lean in, or pull away?" },
+            { heading: "Close the distance, millimetre by millimetre", text: "As the hand gets closer, is there more sensation or less? Anticipation, discomfort, curiosity?" },
+            { heading: "Find the point where it wants to land", text: "Or find that it does not want to land at all. Both are real answers." },
+          ],
+        },
+        {
+          kind: "notice",
+          lines: [
+            { text: "Then run it again with your eyes closed.", emphasis: "bold" },
+            { text: "More sensation, or fewer? More thoughts? Which felt safer, open or closed?" },
+            { text: "It works on your own wrist too, if the other person is not up for it today." },
+          ],
+        },
+        { kind: "why", lines: [{ text: "A predicted touch is a safe touch. This is why hovering for a second before you land changes how the same hand is received.", emphasis: "accent" }] },
+      ],
+    },
+    {
+      slug: "day-14-yes-no-maybe",
+      order: 16,
+      title: "Day 14. Yes, No, Maybe",
+      eyebrow: "About 8 minutes, and I hold the whole thing with you",
+      kind: "ritual",
+      imageSide: "left",
+      // Written from her recording, 30 Sep, transcribed not paraphrased.
+      // If the audio changes, change this. They must not drift.
+      body: [
+        {
+          kind: "driveAudio",
+          url: "https://drive.google.com/file/d/1AGKYoksO3qGYID0yMKbN-OSVzd4GnBRV/view?usp=sharing",
+          label: "Press play and follow along. I take you both through it, 8 minutes",
+        },
+        { kind: "p", text: "Sit across from each other. On day 10 you did this in words, with nothing ever acted on. Today it is actual touch, and it is non sexual touch. We are not going there." },
+        { kind: "p", text: "One of you offers. You say the touch out loud before you do it. The other answers out loud.", emphasis: "bold" },
+        { kind: "quote", text: "Use the stoplight" },
+        {
+          kind: "step",
+          label: "Green, orange, red",
+          highlight: true,
+          lines: [
+            { text: "Yes is green. You like it. The touch happens.", emphasis: "bold" },
+            { text: "Maybe is orange. Start it, and watch your partner. The second they say stop, you stop." },
+            { text: "No is red. Hands come off immediately. No follow up question.", emphasis: "bold" },
+            { text: "You can just say yes, no, maybe. The colours are there because they are quicker than words when something needs to stop." },
+          ],
+        },
+        {
+          kind: "p",
+          text: "A no is not a rejection. You say thank you, and you move on to the next touch you wanted to give.",
+        },
+        {
+          kind: "step",
+          label: "The five, in this order",
+          highlight: true,
+          lines: [
+            { text: "A hand stroking slowly from the inside of the wrist to the inner elbow." },
+            { text: "Fingers stroking through the hair, along the scalp." },
+            { text: "A flat, still palm between the shoulder blades." },
+            { text: "A thumb tracing slow circles on the back of the hand." },
+            { text: "A light hold, with the fingers, at the nape of the neck." },
+          ],
+        },
+        { kind: "p", text: "Answer each one before it happens. Where it is a yes, let the touch happen. Take a breath in and out together between them." },
+        {
+          kind: "notice",
+          lines: [
+            { text: "Then swap, and run the same five backwards", emphasis: "bold" },
+            { text: "The receiver becomes the giver, and you start at the nape of the neck and work back to the wrist." },
+            { text: "You will want to speed up in the second round. I keep it slow on purpose." },
+          ],
+        },
+        {
+          kind: "step",
+          label: "Two things to hold to",
+          lines: [
+            { text: "Keep the whole thing under eight or nine minutes. You can pause and take longer in one place, so long as the whole of it stays inside the container.", emphasis: "bold" },
+            { text: "You will want to start adding touches of your own. Stay with these five today." },
+          ],
+        },
+        { kind: "p", text: "Close it with a breath together, in through the nose and out through the mouth. Then thank each other." },
+        {
+          kind: "why",
+          lines: [
+            { text: "Nobody can want something they are not allowed to decline. Today is where the yes starts being worth having.", emphasis: "bold" },
+            { text: "That was one way to touch each other for eight minutes, leading nowhere at all, purely for connection. Notice which one you said no to, and notice whether it was actually a no or whether it was a habit.", emphasis: "accent" },
+          ],
+        },
+      ],
+    },
+
+    {
+      slug: "day-15-the-60-second-hug",
+      order: 17,
+      title: "Day 15. The 60-Second Hug",
+      eyebrow: "1 minute, and I hold it for you",
+      kind: "ritual",
+      imageSide: "right",
+      body: [
+        {
+          kind: "driveAudio",
+          url: "https://drive.google.com/file/d/10JkmLg-WOZtQo86U9qtxjlO9yX-LS3_4/view?usp=sharing",
+          label: "Press play and follow along, 2.5 minutes",
+        },
+        {
+          kind: "numberedSteps",
+          steps: [
+            { heading: "Ask", text: "“Can I have a minute?” Then agree it out loud. Sixty seconds, and this hug is going nowhere." },
+            { heading: "Two breaths together first", text: "In through the nose, out through the mouth. Twice, before anything settles." },
+            { heading: "Then hold, and stay past the first exhale", text: "Most hugs end there, and that is the pat. Let go completely when you are ready, not before." },
+          ],
+        },
+        {
+          kind: "notice",
+          lines: [
+            { text: "Even if you do want this to lead somewhere one day, not today.", emphasis: "bold" },
+            { text: "We are teaching the body that it is safe to be held, and that being held is not a down payment on anything. It only learns that by being held and having nothing follow." },
+          ],
+        },
+        {
+          kind: "why",
+          lines: [
+            { text: "Five seconds is barely contact. Twenty is where the body starts to believe it.", emphasis: "bold" },
+            { text: "Sixty is where the person who finds holding hardest stops managing it. Usually somewhere around the forty second mark, something drops." },
+            { text: "When you come out of it, notice what has arrived in your body. Those are the connection chemicals, and you just made them out of nothing but time.", emphasis: "accent" },
+          ],
+        },
+      ],
+    },
+
+    {
+      slug: "day-16-the-small-bid",
+      order: 18,
+      title: "Day 16. The Small Bid",
+      eyebrow: "Two seconds, any time",
+      kind: "ritual",
+      imageSide: "left",
+      body: [
+        { kind: "p", text: "Reach with nowhere to go." },
+        {
+          kind: "step",
+          label: "Five that cost nothing",
+          lines: [
+            { text: "A hand on the shoulder passing behind them." },
+            { text: "A palm flat between the shoulder blades." },
+            { text: "Fingers brushing theirs handing something over." },
+            { text: "A hand on the small of the back in the kitchen." },
+            { text: "A squeeze of the knee under the table." },
+          ],
+        },
+        {
+          kind: "why",
+          lines: [
+            { text: "Relationships do not usually end in the argument. They end in the pass in the kitchen that stopped happening.", emphasis: "bold" },
+            { text: "A bid with no destination is the cheapest repair there is, and you can make four of them before breakfast." },
+          ],
+        },
+      ],
+    },
+    {
+      slug: "day-17-your-choice",
+      order: 19,
+      title: "Day 17. Your Choice",
+      eyebrow: "Open the Playful Moments Menu",
+      kind: "ritual",
+      imageSide: "right",
+      body: [
+        { kind: "p", text: "No instruction today. You pick.", emphasis: "bold" },
+        { kind: "p", text: "Choosing is the practice. A couple who can pick something playful for each other have got something back that nobody can teach them." },
+        { kind: "quote", text: "The mechanic, and it is the one that makes all of this light" },
+        { kind: "big", text: "“May I?”  “You may.”" },
+        {
+          kind: "why",
+          lines: [
+            { text: "It makes the ask light.", emphasis: "bold" },
+            { text: "Can we talk about our intimacy is a heavy sentence. May I is a game. Same permission, none of the weight." },
+            { text: "It makes the no real.", emphasis: "bold" },
+            { text: "If you may is a genuine answer, so is not now. A no that is allowed is what makes the yes worth having." },
+            { text: "And it takes the guessing out.", emphasis: "bold" },
+            { text: "Nobody has to read anybody. The reach is announced, so the body is not braced for a surprise." },
+            { text: "A no is not a rejection and gets no follow up question. You say thank you and carry on with your day.", emphasis: "accent" },
+          ],
+        },
+        {
+          kind: "step",
+          label: "Passing through",
+          lines: [
+            { text: "The hand on the small of the back as you pass behind them in the kitchen." },
+            { text: "Fingers brushing theirs as you hand something over." },
+            { text: "A flat, still palm between the shoulder blades. No rubbing, no pat." },
+            { text: "A squeeze of the knee under the table, with other people at it." },
+          ],
+        },
+        {
+          kind: "step",
+          label: "The bigger ones",
+          highlight: true,
+          lines: [
+            { text: "The kitchen spin.", emphasis: "bold" },
+            { text: "Come up behind them, take their waist, and turn them round to face you. Nothing after it." },
+            { text: "The neck kiss.", emphasis: "bold" },
+            { text: "Ask. Then one kiss, on the side of the neck, and stop there." },
+            { text: "Fingers through the hair, along the scalp. Slower than feels natural." },
+            { text: "A light hold at the nape of the neck. Held, not stroked." },
+            { text: "Thumb tracing slow circles on the back of their hand, while you are both watching something else." },
+          ],
+        },
+        {
+          kind: "step",
+          label: "The ones with no touch in them at all",
+          lines: [
+            { text: "Catching their eye across a room and holding it a second past comfortable." },
+            { text: "Standing closer than the task needs." },
+            { text: "Saying the thing you noticed, out loud, with nothing attached to it." },
+          ],
+        },
+        { kind: "notice", lines: [{ text: "Ten seconds is a real touch point. There is no version of this that is too small." }] },
+      ],
+    },
+    {
+      slug: "day-18-stay-one-breath-longer",
+      order: 20,
+      title: "Day 18. Stay One Breath Longer",
+      eyebrow: "Wherever you would normally let go",
+      kind: "ritual",
+      imageSide: "left",
+      body: [
+        { kind: "p", text: "Find the moment you would usually let go. Stay one breath past it." },
+        {
+          kind: "step",
+          label: "Five places it lives",
+          lines: [
+            { text: "In a hug, past the pat." },
+            { text: "Holding hands, a beat longer." },
+            { text: "A hand on the back, resting rather than lifting." },
+            { text: "A goodbye kiss, lingering one breath." },
+            { text: "Staying tangled a moment before rolling apart." },
+          ],
+        },
+        { kind: "why", lines: [{ text: "Almost every couple lets go at exactly the same moment, and neither of them chose it. One breath past is where the thing you both wanted actually was.", emphasis: "accent" }] },
+      ],
+    },
+    {
+      slug: "day-19-name-the-quiet",
+      order: 21,
+      title: "Day 19. Name the Quiet",
+      eyebrow: "One sentence, in the moment",
+      kind: "ritual",
+      imageSide: "right",
+      body: [
+        { kind: "p", text: "When you drift off inside, say it out loud, at the time." },
+        { kind: "big", text: "“I just left. Give me a second. I am coming back.”" },
+        {
+          kind: "why",
+          lines: [
+            { text: "Leaving is not the injury. Leaving without saying so is.", emphasis: "bold" },
+            { text: "The other person feels the absence either way. Naming it turns it from a rejection into a weather report, and it lets them stay where they are instead of following you out." },
+          ],
+        },
+      ],
+    },
+
+    {
+      slug: "day-20-the-hardest-question",
+      order: 22,
+      title: "Day 20. The Hardest Question",
+      eyebrow: "Asked once",
+      kind: "ritual",
+      imageSide: "left",
+      body: [
+        { kind: "big", text: "“What do you want?”" },
+        { kind: "p", text: "Ask it once today. Not about dinner." },
+        {
+          kind: "why",
+          lines: [
+            { text: "I don't know yet is a real answer.", emphasis: "bold" },
+            { text: "Take it. Do not help them find a better one. A person who has spent years not being asked needs the question to sit there for a while before anything comes back." },
+          ],
+        },
+        { kind: "notice", lines: [{ text: "If you are the one being asked, resist answering with what you think they would like to hear. That is the pattern, not the answer." }] },
+      ],
+    },
+    {
+      slug: "day-21-the-re-reach",
+      order: 23,
+      title: "Day 21. The Re-Reach",
+      eyebrow: "Within the hour",
+      kind: "ritual",
+      imageSide: "right",
+      body: [
+        { kind: "p", text: "When a reach does not land, reach again, gently, within the hour." },
+        {
+          kind: "step",
+          label: "Five ways to do it without making it a thing",
+          lines: [
+            { text: "A hand on the back passing behind." },
+            { text: "Refilling their tea with a touch to the shoulder." },
+            { text: "Catching their eye and holding it with a small smile." },
+            { text: "Sitting closer than you need to." },
+            { text: "A quiet “I am still here”, said with the body rather than the words." },
+          ],
+        },
+        {
+          kind: "why",
+          lines: [
+            { text: "One reach that does not land is nothing. It is the not reaching again that teaches both of you the lesson.", emphasis: "bold" },
+            { text: "Within the hour matters. By tomorrow it has become a story about what it meant." },
+          ],
+        },
+        {
+          kind: "notice",
+          lines: [
+            { text: "And the other half of the same skill", emphasis: "bold" },
+            { text: "When you catch a small spark, name it at the moment it arrives. “I just felt that.” “I love watching you do that.” “Come here, I need to touch you.”" },
+            { text: "What gets witnessed, grows." },
+          ],
+        },
+      ],
+    },
+
+    // ============================================================ PHASE FOUR
+    // Opening. Touch with nowhere to go.
+    {
+      slug: "day-22-slow-it-by-half",
+      order: 24,
+      title: "Day 22. Slow It By Half",
+      eyebrow: "3 minutes",
+      kind: "ritual",
+      imageSide: "left",
+      body: [
+        { kind: "p", text: "Set three minutes. Touch them however you normally would, then halve your pace. Then halve it again." },
+        {
+          kind: "step",
+          label: "Five that take the slowing well",
+          lines: [
+            { text: "A hand travelling slowly up the forearm." },
+            { text: "One fingertip tracing the collarbone." },
+            { text: "Stroking hair back from the face." },
+            { text: "A palm gliding down the spine, one vertebra at a time." },
+            { text: "Slow circles inside the wrist." },
+          ],
+        },
+        { kind: "why", lines: [{ text: "Speed is how a body avoids sensation without anybody noticing. Halve it twice and there is nowhere left to hide, which is the point and also why it is uncomfortable.", emphasis: "accent" }] },
+      ],
+    },
+    {
+      slug: "day-23-the-non-goal-touch",
+      order: 25,
+      title: "Day 23. The Non-Goal Touch",
+      eyebrow: "5 minutes, guided if you want it",
+      kind: "ritual",
+      imageSide: "right",
+      body: [
+        { kind: "p", text: "Say it out loud before you start: this is going nowhere.", emphasis: "bold" },
+        { kind: "p", text: "Five minutes. One gives, one receives." },
+        {
+          kind: "driveAudio",
+          url: "https://drive.google.com/file/d/1WsROpJzedUlKTAwUzpQMDIFaaU-TSAFl/view?usp=sharing",
+          label: "Listen: Melting Touch, guided",
+        },
+        {
+          kind: "step",
+          label: "Five shapes it can take",
+          lines: [
+            { text: "Slow shapes across the back." },
+            { text: "Playing with hair, ears, the nape." },
+            { text: "Exploring each finger, the palm, the wrist." },
+            { text: "A hand resting on the chest, feeling it rise and fall." },
+            { text: "Drifting wherever the hand wants to go." },
+          ],
+        },
+        {
+          kind: "notice",
+          lines: [
+            { text: "Say one word as it lands. Soften, or tense. That is all the feedback needed and it is better than a conversation." },
+          ],
+        },
+        { kind: "why", lines: [{ text: "Saying it out loud is not a formality. The body has spent years assuming every touch is a down payment. Naming that this one is not is what lets it stop calculating.", emphasis: "accent" }] },
+      ],
+    },
+    {
+      slug: "day-24-map-one-inch",
+      order: 26,
+      title: "Day 24. Map One Inch",
+      eyebrow: "3 minutes, one small place",
+      kind: "ritual",
+      imageSide: "left",
+      body: [
+        { kind: "p", text: "Pick one small area. A forearm. The jaw. The back of a hand. The nape." },
+        { kind: "p", text: "Explore it as though you have never touched it before." },
+        {
+          kind: "why",
+          lines: [
+            { text: "Curiosity, not technique.", emphasis: "bold" },
+            { text: "You are not trying to do it well. You are finding out what is actually there, on a piece of a person you stopped looking at years ago because you assumed you already knew it." },
+          ],
+        },
+      ],
+    },
+    {
+      slug: "day-25-receive-and-adjust",
+      order: 27,
+      title: "Day 25. Receive and Adjust",
+      eyebrow: "3 minutes, out loud",
+      kind: "ritual",
+      imageSide: "right",
+      body: [
+        {
+          kind: "driveAudio",
+          url: "LINK NEEDED. Day 25 Receive and Adjust, about 90 seconds, instructions only.",
+          label: "Listen first, then run your own three minutes",
+        },
+        { kind: "p", text: "Three minutes. One gives. The receiver adjusts out loud, in real time." },
+        {
+          kind: "step",
+          label: "Out loud, as it happens",
+          highlight: true,
+          lines: [
+            { text: "“Slower.”" },
+            { text: "“Firmer.”" },
+            { text: "“A little higher.”" },
+            { text: "“Stay there.”" },
+            { text: "“Lighter.”" },
+            { text: "“Yes, like that.”" },
+          ],
+        },
+        { kind: "p", text: "The giver just follows. No opinions, no adjusting back, and no asking whether that is better.", emphasis: "bold" },
+        { kind: "p", text: "The moment the giver asks, the receiver goes back to managing them instead of feeling her own arm." },
+        {
+          kind: "why",
+          lines: [
+            { text: "This is the hardest one in the month for most women, and it is the one that changes the most.", emphasis: "bold" },
+            { text: "Asking for the exact thing you want, while somebody is already doing something for you, is the skill underneath everything else in here. If you can do it with a hand on your arm, you can do it anywhere." },
+          ],
+        },
+        // ---------------------------------------------------------------
+        // THE OFFER FIRES HERE, day 25, NOT day 31.
+        // In a gated month almost nobody reaches the end. Her own 31 Days
+        // Closer welcome sequence offers at day 25 for the same reason, and
+        // the cards app fires at the chime rather than the last card.
+        // Day 25 is also the point the physical part has landed, which is
+        // the only honest moment to offer anything.
+        //
+        // WHICH OFFER IS STILL HERS TO CALL. She named BOTH One Touch £97 and
+        // the £197 Touch Map in the same breath. Built as the Touch Map,
+        // because after a month of doing it themselves the unmet want is
+        // being HELD, and One Touch is more self-serve, which is a lateral
+        // step. One Touch fits better as the offer to someone who did not
+        // finish. SWAP IF SHE SAYS OTHERWISE.
+        //
+        // LINK NEEDED. The £197 Touch Map is not built yet and has no live
+        // URL. Deliberately NOT inventing one. This stays a `notice` until
+        // she has the real link, then it becomes a `bigLink`.
+        // ---------------------------------------------------------------
+        {
+          kind: "notice",
+          lines: [
+            { text: "Twenty five days in", emphasis: "bold" },
+            { text: "You have run a container. You have asked and been answered. You have played, you have had a date, and by now something physical has landed." },
+            { text: "And every single bit of it, you did on your own." },
+            { text: "There is one thing this month cannot give you, which is somebody else holding it. Fifteen minutes, built for the two of you from what your own answers say, one of you leading and one receiving. That is what comes next when you want it.", emphasis: "accent" },
+          ],
+        },
+      ],
+    },
+    {
+      slug: "day-26-the-3-minute-touch-reset",
+      order: 28,
+      title: "Day 26. The 3-Minute Touch Reset",
+      eyebrow: "3 minutes, agreed first",
+      kind: "ritual",
+      imageSide: "left",
+      body: [
+        { kind: "p", text: "A touch date does not need to be an hour. It needs to be present." },
+        { kind: "big", text: "“Do you have three minutes? No agenda. Nothing needs to happen after this.”" },
+        {
+          kind: "numberedSteps",
+          steps: [
+            { heading: "Ask, in those words", text: "The agreement is half of what makes it work." },
+            { heading: "Set three minutes", text: "A timer, visible to both of you." },
+            { heading: "One gives, one receives", text: "Anywhere that is a yes. Nothing is being built towards." },
+          ],
+        },
+        { kind: "why", lines: [{ text: "Three structured minutes beats an hour that both of you spent wondering where it was going.", emphasis: "accent" }] },
+      ],
+    },
+    {
+      slug: "day-27-your-choice",
+      order: 29,
+      title: "Day 27. Your Choice",
+      eyebrow: "Open the menu again",
+      kind: "ritual",
+      imageSide: "right",
+      body: [
+        { kind: "p", text: "Your pick again. Same menu as day 17, same mechanic.", emphasis: "bold" },
+        { kind: "big", text: "“May I?”  “You may.”" },
+        {
+          kind: "notice",
+          lines: [
+            { text: "Notice what you reach for this time.", emphasis: "bold" },
+            { text: "Ten days ago most people pick the smallest thing on the list. If you find yourself reaching for something bigger without deciding to, that is the month working, and it is worth saying out loud to each other." },
+          ],
+        },
+      ],
+    },
+    {
+      slug: "day-28-the-handshake-of-gratitude",
+      order: 30,
+      title: "Day 28. The Handshake of Gratitude",
+      eyebrow: "2 minutes",
+      kind: "ritual",
+      imageSide: "left",
+      body: [
+        { kind: "p", text: "Hands held, and one thing each, said plainly." },
+        {
+          kind: "driveAudio",
+          url: "https://drive.google.com/file/d/1KeZfIiJ_NV3idc8WTKL4f_6aecjTtgg_/view?usp=sharing",
+          label: "Listen: The Handshake of Gratitude",
+        },
+        {
+          kind: "why",
+          lines: [
+            { text: "Appreciation given while you are touching lands somewhere different from appreciation called across a room.", emphasis: "bold" },
+            { text: "The body files it as evidence rather than as manners." },
+          ],
+        },
+      ],
+    },
+
+    // ============================================================ PHASE FIVE
+    {
+      slug: "day-29-the-breath-bridge",
+      order: 31,
+      title: "Day 29. The Breath Bridge",
+      eyebrow: "3 minutes, no touch required",
+      kind: "ritual",
+      imageSide: "right",
+      body: [
+        { kind: "big", text: "“Can we do 3 minutes together? Just breathing. Nothing else.”" },
+        {
+          kind: "numberedSteps",
+          steps: [
+            { heading: "Sit facing each other", text: "Close, not touching." },
+            { heading: "In for four, out for six", text: "Three minutes. Let it become rhythmic." },
+            { heading: "Do not force the match", text: "You are not trying to breathe in unison. It arrives on its own or it does not, and both are fine." },
+            { heading: "Open your eyes softly at some point", text: "Not the whole time. Once." },
+          ],
+        },
+        { kind: "why", lines: [{ text: "Twenty nine days in, this is the one that shows you how far you have come. Three minutes of nothing, facing somebody, used to be unbearable.", emphasis: "accent" }] },
+      ],
+    },
+    {
+      slug: "day-30-elbow-to-armpit",
+      order: 32,
+      title: "Day 30. Elbow to Armpit",
+      eyebrow: "10 minutes, one gives and one receives",
+      kind: "ritual",
+      imageSide: "left",
+      body: [
+        { kind: "p", text: "The longest one in the month, and the last real practice. Five minutes each way." },
+        {
+          kind: "driveAudio",
+          url: "https://drive.google.com/file/d/13tKa_R4LyGEba1sJz08VV0fwL0d8lXZP/view?usp=sharing",
+          label: "Listen: Elbow to Armpit, guided",
+        },
+        {
+          kind: "numberedSteps",
+          steps: [
+            { heading: "Hover", text: "A hand above the inner arm, not landing yet. Let them feel it before it arrives." },
+            { heading: "Land", text: "Fingertips, inner elbow." },
+            { heading: "Trace, slowly, to the armpit", text: "Slower than you think. Every pass." },
+          ],
+        },
+        {
+          kind: "step",
+          label: "And the receiver has a job",
+          highlight: true,
+          lines: [
+            { text: "Every time you feel the stroke, say yes out loud. Yes. Yes. Yes.", emphasis: "bold" },
+            { text: "Every time you do not feel it, say nothing." },
+            { text: "Because you are training your body to feel the sensations." },
+            { text: "Your yes IS the practice.", emphasis: "accent" },
+          ],
+        },
+        { kind: "p", text: "Then change places. The giver has sensation in their fingertips too, and they will be surprised by it." },
+        { kind: "notice", lines: [{ text: "The silence matters as much as the yes. Saying nothing where you feel nothing is honest, and honest is what is being trained." }] },
+      ],
+    },
+    {
+      slug: "day-31-the-next-reach",
+      order: 33,
+      title: "Day 31. The Next Reach",
+      eyebrow: "The last one",
+      kind: "closing",
+      imageSide: "right",
+      body: [
+        {
+          kind: "numberedSteps",
+          steps: [
+            { heading: "A hand over each other's heart", text: "Both of you. Breathe there." },
+            { heading: "One thing the body knows now that it did not on day 1", text: "Each of you, out loud." },
+            { heading: "Name the next piece of closeness", text: "Then take one step towards it today. Not a plan. One step." },
+          ],
+        },
+        { kind: "quote", text: "What you actually did" },
+        {
+          kind: "p",
+          text: "Thirty one days ago, reaching for each other had quietly stopped and neither of you could point at when.",
+        },
+        {
+          kind: "p",
+          text: "You did not fix that with a conversation about your relationship. You did it with ninety seconds at a front door, a tenner in a charity shop, a hand held five inches above a wrist, and somebody saying yes out loud every time they felt something.",
+        },
+        { kind: "big", text: "None of it was dramatic. That is exactly why it worked." },
+        {
+          kind: "why",
+          lines: [
+            { text: "Keep three of them", emphasis: "bold" },
+            { text: "Touch Base, twice a day, for you." },
+            { text: "One small bid a day, for them." },
+            { text: "And a date in the diary, booked before the last one finishes." },
+            { text: "Everything else you now know how to find when you need it.", emphasis: "accent" },
+          ],
+        },
+        { kind: "p", text: "Connection is not something you tick off. When you notice you have slipped back into logistics, screens, work and coexisting, put thirty one days in the diary and come back. Your answers will not be the same ones.", emphasis: "bold" },
+      ],
+    },
+  ],
+};

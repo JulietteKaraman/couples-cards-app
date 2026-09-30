@@ -8,7 +8,7 @@ import { thirtyOneTouchPoints } from "@/lib/content/31-touch-points";
 import { Blocks } from "@/components/Blocks";
 import { CollectionGate } from "@/components/auth/CollectionGate";
 import { useAuth } from "@/components/providers/AuthProvider";
-import { getCompletedSlugs, markComplete } from "@/lib/entitlements/progress";
+import { getCompletedWithTimes, markComplete } from "@/lib/entitlements/progress";
 
 export default function TouchPointEntry() {
   return (
@@ -58,6 +58,7 @@ function TouchPointEntryContent() {
   const { user } = useAuth();
   const [completed, setCompleted] = useState(false);
   const [doneSlugs, setDoneSlugs] = useState<string[] | null>(null);
+  const [lastDone, setLastDone] = useState<number | null>(null);
   const [now, setNow] = useState(() => Date.now());
 
   // Re-check the clock every minute so a day that comes due while the page is
@@ -73,9 +74,13 @@ function TouchPointEntryContent() {
 
   useEffect(() => {
     if (!user || !entry) return;
-    getCompletedSlugs(user.id, "31-touch-points").then((slugs) => {
+    getCompletedWithTimes(user.id, "31-touch-points").then((rows) => {
+      const slugs = rows.map((r) => r.slug);
       setDoneSlugs(slugs);
       setCompleted(slugs.includes(entry.slug));
+      // Only DAY completions move the clock. Reading an essay does not.
+      const times = rows.filter((r) => dayOf(r.slug) > 0 && r.at).map((r) => r.at as number);
+      setLastDone(times.length ? Math.max(...times) : null);
     });
   }, [user, entry]);
 
@@ -120,7 +125,10 @@ function TouchPointEntryContent() {
   //
   // Juliette, 30 Sep: "it still opens immediately once they press they have
   // done it". Pressing done starts the clock. It does not open tomorrow.
-  const lastAdv = parseInt(lsGet(ADV_KEY) ?? "0", 10) || 0;
+  // The database timestamp is the authority, because it is the same on every
+  // device and it survives a cleared browser. localStorage is only the fallback.
+  const localAdv = parseInt(lsGet(ADV_KEY) ?? "0", 10) || 0;
+  const lastAdv = Math.max(lastDone ?? 0, localAdv);
   const dueAt = lastAdv ? Math.max(lastAdv + TWELVE_H, nextDayStart(lastAdv)) : 0;
   const clockPassed = !lastAdv || now >= dueAt;
   const unlockedThrough = consecutive === 0 ? 1 : clockPassed ? consecutive + 1 : consecutive;
