@@ -8,7 +8,6 @@ import { thirtyOneTouchPoints } from "@/lib/content/31-touch-points";
 import { theUnspokenDistance } from "@/lib/content/the-unspoken-distance";
 import { whenSheGoesQuiet } from "@/lib/content/when-she-goes-quiet";
 import { communicationRebootKit } from "@/lib/content/communication-reboot-kit";
-import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { useAuth } from "@/components/providers/AuthProvider";
 import { getCompletedSlugs } from "@/lib/entitlements/progress";
 import { COLLECTION_DECK_TYPES, PURCHASE_URLS, FREE_DECK_TYPES } from "@/lib/entitlements/config";
@@ -230,7 +229,24 @@ function LibraryContent() {
       </section>
 
       <div className="mx-auto max-w-3xl px-6 py-10">
-        <div className="mb-6 flex items-center justify-between text-sm text-ffy-brown">
+        {!user && (
+          <div className="mb-6 rounded-2xl border border-ffy-gold/50 bg-white/70 p-5">
+            <p className="font-display text-lg font-semibold text-ffy-teal">
+              Start with the quiz. It is free and it takes five minutes.
+            </p>
+            <p className="mt-1 text-sm text-ffy-brown">
+              Everything below is yours to look through. Some of it is free, some of it you buy
+              once and keep.
+            </p>
+            <Link
+              href="/login"
+              className="mt-3 inline-block text-sm font-medium text-ffy-gold-deep underline"
+            >
+              Already bought something? Sign in to open it.
+            </Link>
+          </div>
+        )}
+        <div className={`mb-6 flex items-center justify-between text-sm text-ffy-brown ${user ? "" : "hidden"}`}>
           <span>Signed in as {user?.email}</span>
           <button onClick={signOut} className="text-ffy-gold-deep underline">
             Sign out
@@ -239,7 +255,26 @@ function LibraryContent() {
 
         <div className="grid gap-5">
           {ALL_COLLECTIONS.map((c) => {
-            const unlocked = entitledCollections.includes(c.slug) || isFreeCollection(c.slug);
+            // Signed out, nothing is "unlocked": a free guide still needs an
+            // account so the entitlement can be granted, and a paid one still
+            // needs buying. Both get a tile that says what it is and how to
+            // get in, rather than being hidden behind a login screen.
+            const unlocked =
+              !!user && (entitledCollections.includes(c.slug) || isFreeCollection(c.slug));
+
+            if (!user) {
+              const free = isFreeCollection(c.slug);
+              return (
+                <LockedOfferTile
+                  key={c.slug}
+                  title={c.title}
+                  subtitle={c.subtitle}
+                  heroImage={c.heroImage}
+                  purchaseUrl={free ? "/login" : PURCHASE_URLS[c.slug]}
+                  note={free ? "Free \u00b7 sign in to open" : "Buy once, keep it \u00b7 See what is inside"}
+                />
+              );
+            }
 
             if (unlocked) {
               return (
@@ -349,10 +384,22 @@ function LibraryContent() {
   );
 }
 
+// THE FRONT DOOR, 30 Sep 2026.
+//
+// Juliette: "I would love the quiz to be there in that app because at one
+// point I want to just put the app on my links so that people can go there
+// for their freebies. Then all of a sudden they see, oh, these things are
+// for sale there."
+//
+// Until now this page was wrapped in ProtectedRoute, so a stranger arriving
+// from her link in bio was bounced straight to /login and saw nothing at all.
+// Nothing to browse, no quiz, no sense that anything was for sale. It could
+// never have worked as a links destination.
+//
+// The shelf is public now. Signed out you see everything: the quiz, the free
+// guides, and the paid ones with their price and a way in. Signing in is only
+// needed to OPEN something, which is still gated per collection by
+// CollectionGate and by entitlements, so nothing paid leaks.
 export default function LibraryPage() {
-  return (
-    <ProtectedRoute>
-      <LibraryContent />
-    </ProtectedRoute>
-  );
+  return <LibraryContent />;
 }
