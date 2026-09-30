@@ -1256,19 +1256,29 @@ export const thirtyOneTouchPoints: PracticeCollection = {
         { kind: "p", text: "No instruction today. You pick.", emphasis: "bold" },
         { kind: "p", text: "Choosing is the practice. A couple who can pick something playful for each other have got something back that nobody can teach them." },
         { kind: "quote", text: "The mechanic, and it is the one that makes all of this light" },
-        { kind: "big", text: "“May I?”  “You may.”" },
+        { kind: "big", text: "“You may.”" },
+        // HER ACTUAL VERSION, given direct 30 Sep 2026. What was here before was
+        // the generic one-way consent check, "May I?" / "You may." Hers runs the
+        // OTHER way: the person who wants to be touched does the offering, and the
+        // live question stops being am I allowed and becomes will you actually
+        // reach for me. See memory
+        // reference_you_may_but_will_you_exact_mechanic_30sep2026.md. Three layers
+        // and all three have to be said: play, consent, and the training.
+        { kind: "p", text: "This is how Alex and I do it. I stop him, I offer him my neck or my cheek, and I say you may. He laughs and says I know I may. Then I say: but will you?" },
         {
           kind: "why",
           lines: [
-            { text: "It makes the ask light.", emphasis: "bold" },
-            { text: "Can we talk about our intimacy is a heavy sentence. May I is a game. Same permission, none of the weight." },
-            { text: "It makes the no real.", emphasis: "bold" },
-            { text: "If you may is a genuine answer, so is not now. A no that is allowed is what makes the yes worth having." },
-            { text: "And it takes the guessing out.", emphasis: "bold" },
-            { text: "Nobody has to read anybody. The reach is announced, so the body is not braced for a surprise." },
-            { text: "A no is not a rejection and gets no follow up question. You say thank you and carry on with your day.", emphasis: "accent" },
+            { text: "The laugh is doing the work.", emphasis: "bold" },
+            { text: "Can we talk about our intimacy is a heavy sentence. You may is a game. Same permission, none of the weight." },
+            { text: "Permission was never the thing that stopped.", emphasis: "bold" },
+            { text: "He knows he may. He has always known. What went quiet between you is the reaching, and but will you says that out loud while keeping it light enough to survive being said." },
+            { text: "Every yes teaches your body something.", emphasis: "bold" },
+            { text: "Because you only offer a touch you actually want, your body learns that yes reliably means a touch it likes. Yes stops being compliance and starts being information." },
+            { text: "A no has to be real, or none of this works.", emphasis: "bold" },
+            { text: "If you may is a genuine answer, so is not now. A no that is allowed is what makes the yes worth having, and it gets no follow up question. You say thank you and carry on with your day.", emphasis: "accent" },
           ],
         },
+        { kind: "p", text: "It runs both directions. You can offer, the way I do, or you can ask, which is the same four words the other way round: may I? Either one announces the reach, so nobody is braced for a surprise." },
         {
           kind: "step",
           label: "Passing through",
