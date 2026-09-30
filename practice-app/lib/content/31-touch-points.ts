@@ -1309,7 +1309,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
       slug: "day-18-as-if-i-am-held",
       order: 22,
       title: "Day 18. As If I Am Held",
-      image: "/between-touches/one-real-moment.jpeg",
+      image: "/31-touch-points/hand-over-heart.jpg",
       eyebrow: "Five ways, and the giver never gets to ask",
       kind: "ritual",
       imageSide: "left",
