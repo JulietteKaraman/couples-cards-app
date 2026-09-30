@@ -1342,7 +1342,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
       slug: "day-20-taking-for-your-pleasure",
       order: 24,
       title: "Day 20. Taking For Your Pleasure",
-      image: "/31-touch-points/juliette-laughing.jpg",
+      image: "/31-touch-points/bowl-over-body.jpg",
       eyebrow: "3 minutes, and it is the hardest one in here",
       kind: "ritual",
       imageSide: "left",
