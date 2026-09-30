@@ -23,16 +23,18 @@ function TouchPointEntryContent() {
   const slug = params.slug as string;
   const { user } = useAuth();
   const [completed, setCompleted] = useState(false);
+  const [doneSlugs, setDoneSlugs] = useState<string[] | null>(null);
 
   const entries = thirtyOneTouchPoints.entries;
   const index = entries.findIndex((e) => e.slug === slug);
   const entry = entries[index];
 
   useEffect(() => {
-    if (!user || !entry || entry.kind !== "ritual") return;
-    getCompletedSlugs(user.id, "31-touch-points").then((slugs) =>
-      setCompleted(slugs.includes(entry.slug))
-    );
+    if (!user || !entry) return;
+    getCompletedSlugs(user.id, "31-touch-points").then((slugs) => {
+      setDoneSlugs(slugs);
+      setCompleted(slugs.includes(entry.slug));
+    });
   }, [user, entry]);
 
   if (!entry) notFound();
@@ -41,10 +43,63 @@ function TouchPointEntryContent() {
     if (!user || !entry) return;
     await markComplete(user.id, "31-touch-points", entry.slug);
     setCompleted(true);
+    setDoneSlugs((prev) => (prev && prev.includes(entry.slug) ? prev : [...(prev ?? []), entry.slug]));
   }
 
+  // ONE DAY AT A TIME. Juliette, 30 Sep: "we had decided that it would only
+  // open day by day". `unlockMode: "sequential"` on the collection is only a
+  // string and nothing in the app ever read it, so every day was reachable
+  // by prev/next or by typing the URL. This is the real gate.
+  //
+  // The three essays are always open, and so is day 1. Day N opens once day
+  // N-1 has been marked done. That matches what she says in The Container
+  // recording: "if you skip a day, it doesn't matter, it will be there for
+  // you the next time you come back to the app."
+  const dayOf = (sl: string) => {
+    const m = sl.match(/^day-(\d+)/);
+    return m ? parseInt(m[1], 10) : 0;
+  };
+  const done = doneSlugs ?? [];
+  let unlockedThrough = 1;
+  while (unlockedThrough <= 31) {
+    const e = entries.find((x) => dayOf(x.slug) === unlockedThrough);
+    if (e && done.includes(e.slug)) unlockedThrough += 1;
+    else break;
+  }
+  const thisDay = dayOf(entry.slug);
+  // doneSlugs === null means progress has not loaded yet: never flash a lock.
+  const locked = doneSlugs !== null && thisDay > unlockedThrough;
+  const lastOpen = entries.find((x) => dayOf(x.slug) === unlockedThrough);
+
   const prev = entries[index - 1];
-  const next = entries[index + 1];
+  const nextRaw = entries[index + 1];
+  const next = nextRaw && dayOf(nextRaw.slug) > unlockedThrough ? undefined : nextRaw;
+
+  if (locked) {
+    return (
+      <main className="mx-auto max-w-2xl px-6 py-24 text-center">
+        <p className="text-xs uppercase tracking-[0.15em] text-ffy-gold-deep">Not yet</p>
+        <h1 className="mt-3 font-display text-3xl font-semibold text-ffy-teal">
+          {entry.title} opens after day {thisDay - 1}
+        </h1>
+        <p className="mt-5 text-ffy-black/70">
+          One day at a time, on purpose. A month you can finish teaches your body far more than a
+          month you read in one sitting.
+        </p>
+        <p className="mt-3 text-ffy-black/70">
+          Nothing is lost if you miss a day. It waits for you.
+        </p>
+        {lastOpen && (
+          <Link
+            href={`/practice/31-touch-points/${lastOpen.slug}`}
+            className="mt-8 inline-block rounded-full bg-ffy-gold px-6 py-3 font-display text-sm font-medium text-white transition hover:opacity-90"
+          >
+            Go to {lastOpen.title}
+          </Link>
+        )}
+      </main>
+    );
+  }
   const imageFirst = entry.imageSide === "left";
 
   const markCompleteBlock =
