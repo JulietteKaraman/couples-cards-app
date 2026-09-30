@@ -309,7 +309,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
       slug: "day-1-the-menu",
       order: 3,
       title: "Day 1. The Menu",
-      image: "/rituals/the-things-you-used-to-love.jpeg",
+      image: "/31-touch-points/hands-held.jpg",
       eyebrow: "Ten minutes today, and a date booked for this week",
       kind: "ritual",
       imageSide: "right",
@@ -339,7 +339,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
         { kind: "quote", text: "One date a week. Three to choose from. Pick one." },
         {
           kind: "step",
-          label: "Week one",
+          label: "Your date this week. Week one.",
           highlight: true,
           lines: [
             { text: "Make each other a playlist. Ten songs each.", emphasis: "bold" },
@@ -650,21 +650,30 @@ export const thirtyOneTouchPoints: PracticeCollection = {
       ],
     },
     {
-      slug: "day-7-the-close",
+      slug: "day-7-your-second-date",
       order: 9,
       image: "/unspoken-distance/date-night.jpg",
-      title: "Day 7. The Close",
-      eyebrow: "Three things, and they work on every date you ever have",
+      title: "Day 7. Your Second Date",
+      eyebrow: "Pick one, book it, and learn the close",
       kind: "ritual",
       imageSide: "right",
-      // REWRITTEN 30 Sep. It used to say "today is the date you chose on
-      // day 1", which was true when there was one date in the whole month.
-      // There are four now, one a week, opened on days 1, 8, 15 and 22, and
-      // each one happens whenever that week suits. So day 7 stops being the
-      // date day and becomes the thing you do at the END of any of them.
       body: [
-        { kind: "p", text: "Your first date has happened by now, or it is in the diary for the next day or two. Either is fine." },
-        { kind: "p", text: "This is the part almost everybody skips, and it is the part that turns an afternoon into something you still have in ten years.", emphasis: "bold" },
+        { kind: "p", text: "Your first one has happened by now, or it is in the diary. Here is the next one, and it is nothing like the first.", emphasis: "bold" },
+        {
+          kind: "step",
+          label: "Pick one",
+          highlight: true,
+          lines: [
+            { text: "Bake something sweet you have never made.", emphasis: "bold" },
+            { text: "Open a baking book and pick something neither of you has attempted. For the harder version, read the recipe once, close the book, and see how much of it you can remember between you." },
+            { text: "Open Google Maps, point, and drive there.", emphasis: "bold" },
+            { text: "Wherever the finger lands. No looking it up first, no checking whether it is worth going to." },
+            { text: "The things you used to love.", emphasis: "bold" },
+            { text: "Ten things you each loved doing as a child. Written separately, not shown to each other. Then pick the one you could teach, and go somewhere out of the ordinary and teach it. A kite. A bag of marbles." },
+          ],
+        },
+        { kind: "quote", text: "And this week you learn the close" },
+        { kind: "p", text: "Three things at the end of any date. This is the part almost everybody skips, and it is the part that turns an afternoon into something you still have in ten years." },
         {
           kind: "numberedSteps",
           steps: [
@@ -676,8 +685,8 @@ export const thirtyOneTouchPoints: PracticeCollection = {
         {
           kind: "notice",
           lines: [
-            { text: "Do this at the end of all four of them.", emphasis: "bold" },
-            { text: "There is a date every week in here. The close is the same every time, and it is what makes them stack into a month rather than four nice afternoons you forget." },
+            { text: "Do the close at the end of all four dates.", emphasis: "bold" },
+            { text: "It is the same three things every time, and it is what makes four afternoons stack into a month instead of staying four nice afternoons you forget." },
           ],
         },
         {
@@ -700,22 +709,6 @@ export const thirtyOneTouchPoints: PracticeCollection = {
       kind: "ritual",
       imageSide: "left",
       body: [
-        // Her structure, 30 Sep: "each week we give them a fun date, and only
-        // give them 3 things for that date each week." The month is gated, so
-        // week two's three only appear when they reach day 8.
-        {
-          kind: "step",
-          label: "Your date this week. Week two.",
-          lines: [
-            { text: "Bake something sweet you have never made.", emphasis: "bold" },
-            { text: "Open a baking book and pick something neither of you has attempted. For the harder version, read the recipe once, close the book, and see how much of it you can remember between you." },
-            { text: "Open Google Maps, point, and drive there.", emphasis: "bold" },
-            { text: "Wherever the finger lands. No looking it up first." },
-            { text: "The things you used to love.", emphasis: "bold" },
-            { text: "Ten things you each loved doing as a child. Written separately, not shown to each other. Then pick the one you could teach, and go somewhere out of the ordinary and teach it. A kite. A bag of marbles." },
-            { text: "Book it now. Then come back and do today's, which takes three minutes." },
-          ],
-        },
         {
           kind: "driveAudio",
           url: "https://drive.google.com/file/d/1NBGgj5bJQeQMM_Gw6nA-dTlMd3UU2Snc/view?usp=sharing",
@@ -773,52 +766,48 @@ export const thirtyOneTouchPoints: PracticeCollection = {
       ],
     },
     {
-      slug: "day-9-the-magnetic-approach",
+      slug: "day-9-mirror-and-melt",
       order: 11,
-      title: "Day 9. The Magnetic Approach",
-      image: "/unspoken-distance/couple-distance-profile.jpg",
-      eyebrow: "About 6 minutes, standing, no contact at all",
+      image: "/31-touch-points/arms-from-behind.jpg",
+      title: "Day 9. Mirror and Melt",
+      eyebrow: "About 4 minutes, fully clothed, in front of a mirror",
       kind: "ritual",
       imageSide: "left",
+      // The Magnetic Approach was here and came OUT on 30 Sep. Her catch: "the
+      // magnetic approach needs to be taken out, we sell that on its own as
+      // per miles." It is The Approach Ritual, bump 2 of Miles bite 3, £17.
+      // Her own rule from that build: a cheap product must never teach what an
+      // expensive one sells. Replaced with another of her Touch Menu pieces
+      // that is not sold anywhere.
       body: [
-        { kind: "p", text: "One of you stands still. The other starts a long way off and walks towards them, one step at a time." },
-        { kind: "p", text: "Say it out loud before you start: I am going to walk toward you slowly. You tell me when to stop, when the distance feels right to you. There is no wrong answer." },
+        { kind: "p", text: "Stand in front of a mirror together, both of you facing it. Clothes on." },
         {
           kind: "driveAudio",
-          url: "https://drive.google.com/file/d/1rSV4hdnfb5_WDmpXVQy9WuSz6OcSiTZj/view?usp=sharing",
-          label: "Press play and follow along. The Magnetic Approach, 6 minutes",
+          url: "https://drive.google.com/file/d/1k3mYH255_J5QQ5CFpPBoDzL6zLa84wVa/view?usp=sharing",
+          label: "Press play and follow along. Mirror and Melt, 4 minutes",
         },
         {
           kind: "numberedSteps",
           steps: [
-            { heading: "They walk in, slowly", text: "Can you feel the sensation change before they reach you? Warmer, more alert, slightly on edge? Watch for the moment something in you wants them to stop." },
-            { heading: "Put your hand up when it is close enough", text: "No words. A hand. Did you know clearly when you wanted to stop them, or did you talk yourself past it?" },
-            { heading: "Then ask them to step back, one step at a time", text: "Relief, disappointment, or nothing much? Was it easy to send them further away, or did that feel rude?" },
-            { heading: "Then swap", text: "The one who was standing still does the walking." },
+            { heading: "Look at your own reflection first", text: "What is the first thing you notice about yourself? Answer it out loud, in colour. Red, orange or green." },
+            { heading: "One hand on your chest, one on your belly", text: "Slowly. In through the nose, out through the mouth. Looking at yourself, then at them, in the mirror." },
+            { heading: "Then one of you steps behind the other", text: "Hands hovering near the hips or the waist, about two centimetres off the skin. Can you sense them before they touch you? What is it like to watch that happen in the mirror?" },
+            { heading: "Then slow strokes, over the clothes", text: "Down the arms. Unhurried. With one instruction whispered: look at yourself." },
+            { heading: "Then swap and begin again", text: "It is a completely different exercise from the other side." },
           ],
         },
         {
           kind: "notice",
           lines: [
-            { text: "Somewhere on their way toward you, your body answers before you have decided anything.", emphasis: "bold" },
-            { text: "A tightening. A held breath. A small pull backwards you did not authorise. That is the moment. Stop them there." },
-            { text: "Say it out loud if the words come. Put your hand out. Tell them with your eyes. All three at once if that is what it takes, because the point is that they stop in the place your body chose rather than the place you thought you should manage.", emphasis: "accent" },
-          ],
-        },
-        {
-          kind: "notice",
-          lines: [
-            { text: "Then ask them to take a step back, and feel whether that is better.", emphasis: "bold" },
-            { text: "It usually is, and that is the part that catches people out. You may need far more space than you have ever given yourself." },
-            { text: "Most of us have never once been asked. So we stand where we are put, we call it fine, and we wonder later why our shoulders live around our ears." },
-            { text: "There is no right distance, and you are not being tested on how close you can bear to let them come.", emphasis: "accent" },
+            { text: "Is it easier to connect inwards, or outwards?", emphasis: "bold" },
+            { text: "Watch your own face while it happens. Does seeing your own pleasure increase it, or does it make you want to look away?" },
           ],
         },
         {
           kind: "why",
           lines: [
-            { text: "What distance felt safest, and what surprised you about that?", emphasis: "bold" },
-            { text: "Nobody touched anybody today, and you both still found out exactly where your yes stops. That is what you are going to need on day 14, when there are hands involved.", emphasis: "accent" },
+            { text: "What do you see in yourself when you are willing to be witnessed?", emphasis: "bold" },
+            { text: "Every other day this month has you looking at them. Today you have to watch yourself being touched, and that is a far harder ask than it sounds.", emphasis: "accent" },
           ],
         },
       ],
@@ -909,7 +898,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
       slug: "day-11-the-fabric-tease",
       order: 13,
       title: "Day 11. The Fabric Tease",
-      image: "/unspoken-distance/couple-arms-crossed-beach.jpg",
+      image: "/31-touch-points/feather-on-forearm.jpg",
       eyebrow: "About 2 minutes, and not skin on skin yet",
       kind: "ritual",
       imageSide: "left",
@@ -1018,7 +1007,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
       slug: "day-14-yes-no-maybe",
       order: 16,
       title: "Day 14. Yes, No, Maybe",
-      image: "/unspoken-distance/pleasure-languages.jpg",
+      image: "/31-touch-points/hand-along-jaw.jpg",
       eyebrow: "About 8 minutes, and I hold the whole thing with you",
       kind: "ritual",
       imageSide: "left",
@@ -1142,7 +1131,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
       slug: "day-16-the-small-bid",
       order: 18,
       title: "Day 16. The Small Bid",
-      image: "/unspoken-distance/where-it-went.jpg",
+      image: "/31-touch-points/flat-still-palms.jpg",
       eyebrow: "Two seconds at a time, all day",
       kind: "ritual",
       imageSide: "left",
@@ -1383,7 +1372,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
       slug: "day-21-my-body-is-an-instrument",
       order: 23,
       title: "Day 21. My Body Is An Instrument",
-      image: "/rituals/the-trace-ritual.jpeg",
+      image: "/31-touch-points/juliette-laughing.jpg",
       eyebrow: "3 minutes, and the only feedback is sound",
       kind: "ritual",
       imageSide: "right",
@@ -1415,7 +1404,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
       slug: "day-22-slow-it-by-half",
       order: 24,
       title: "Day 22. Slow It By Half",
-      image: "/rituals/the-trace-ritual-real.jpg",
+      image: "/31-touch-points/bowl-over-body.jpg",
       eyebrow: "About 4 minutes, and I hold it with you",
       kind: "ritual",
       imageSide: "left",
@@ -1528,7 +1517,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
       slug: "day-25-receive-and-adjust",
       order: 27,
       title: "Day 25. Receive and Adjust",
-      image: "/between-touches/what-happens-between-touches.png",
+      image: "/unspoken-distance/closeness-that-doesnt-lead-somewhere.jpg",
       eyebrow: "3 minutes, out loud, and you run the timer",
       kind: "ritual",
       imageSide: "right",
@@ -1647,7 +1636,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
       slug: "day-28-skin-to-skin",
       order: 30,
       title: "Day 28. Skin to Skin",
-      image: "/when-she-goes-quiet/getting-her-back.png",
+      image: "/31-touch-points/arms-from-behind.jpg",
       eyebrow: "About 5.5 minutes, back to back, and I hold all of it",
       kind: "ritual",
       imageSide: "left",
@@ -1761,7 +1750,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
       slug: "day-30-the-receiving-ritual",
       order: 32,
       title: "Day 30. The Receiving Ritual",
-      image: "/between-touches/when-touch-misses.png",
+      image: "/31-touch-points/laughing-hands-on-chest.jpg",
       eyebrow: "About 4.5 minutes, one receives, and I run all of it",
       kind: "ritual",
       imageSide: "right",
