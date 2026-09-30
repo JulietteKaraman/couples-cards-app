@@ -230,7 +230,18 @@ function TouchPointEntryContent() {
               fill
               priority
               sizes="(min-width: 768px) 50vw, 100vw"
-              className={entry.imageFocus === "top" ? "object-cover object-[center_20%]" : "object-cover"}
+              className="object-cover"
+              // The hero is half width and full height, so object-cover crops hard
+              // and centring loses heads on a portrait. imageFocus is now a real
+              // object-position per photo. "top" keeps its old meaning.
+              style={{
+                objectPosition:
+                  entry.imageFocus === "top"
+                    ? "center 20%"
+                    : entry.imageFocus && entry.imageFocus !== "center"
+                      ? entry.imageFocus
+                      : "center",
+              }}
             />
           </div>
         )}

@@ -1384,9 +1384,10 @@ export const thirtyOneTouchPoints: PracticeCollection = {
       slug: "day-19-dont-use-your-hands",
       order: 23,
       title: "Day 19. Don't Use Your Hands",
-      image: "/31-touch-points/juliette-alex-field.jpg",
+      image: "/31-touch-points/bowl-over-body.jpg",
       eyebrow: "3 minutes, and your hands stay out of it",
       kind: "ritual",
+      imageFocus: "center 45%",
       imageSide: "right",
       body: [
         { kind: "p", text: "Same giver and receiver as you like. One instruction again." },
@@ -1431,6 +1432,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
       image: "/31-touch-points/dimple.jpg",
       eyebrow: "3 minutes, and it is the hardest one in here",
       kind: "ritual",
+      imageFocus: "center 30%",
       imageSide: "left",
       // Her own ritual, from feelfullyyou.com/touch-rituals, 30 Sep. Absorbs
       // The Hardest Question, which was one line and is far stronger asked
@@ -1486,6 +1488,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
       image: "/31-touch-points/my-body-is-an-instrument.jpg",
       eyebrow: "3 minutes, and the only feedback is sound",
       kind: "ritual",
+      imageFocus: "center 22%",
       imageSide: "right",
       body: [
         { kind: "big", text: "“My body is an instrument. Touch me like you are playing it.”" },
@@ -1518,6 +1521,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
       image: "/31-touch-points/slow-it-by-half.jpg",
       eyebrow: "About 4 minutes, and I hold it with you",
       kind: "ritual",
+      imageFocus: "center 30%",
       imageSide: "left",
       body: [
         {
@@ -1582,6 +1586,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
       image: "/31-touch-points/non-goal-touch.jpg",
       eyebrow: "5 minutes, guided if you want it",
       kind: "ritual",
+      imageFocus: "center 25%",
       imageSide: "right",
       body: [
         { kind: "p", text: "Say it out loud before you start: this is going nowhere.", emphasis: "bold" },
@@ -1628,6 +1633,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
       image: "/rituals/the-handshake-of-gratitude.jpeg",
       eyebrow: "3 minutes, one small place",
       kind: "ritual",
+      imageFocus: "center 40%",
       imageSide: "left",
       body: [
         { kind: "p", text: "Pick one small area. A forearm. The jaw. The back of a hand. The nape." },
@@ -1949,9 +1955,10 @@ export const thirtyOneTouchPoints: PracticeCollection = {
       slug: "day-31-the-next-reach",
       order: 35,
       title: "Day 31. The Next Reach",
-      image: "/31-touch-points/one-touch.jpg",
+      image: "/31-touch-points/juliette-alex-field.jpg",
       eyebrow: "The last one",
       kind: "closing",
+      imageFocus: "center 45%",
       imageSide: "right",
       body: [
         {
@@ -1991,23 +1998,30 @@ export const thirtyOneTouchPoints: PracticeCollection = {
         {
           kind: "why",
           lines: [
-            { text: "And if you keep only three", emphasis: "bold" },
+            { text: "If you keep only three", emphasis: "bold" },
             { text: "Touch Base, twice a day, for you." },
             { text: "One small bid a day, for them." },
-            { text: "And a date in the diary, booked before the last one finishes." },
+            { text: "A date in the diary, booked before the last one finishes." },
             { text: "Everything else you now know how to find when you need it.", emphasis: "accent" },
           ],
         },
         { kind: "p", text: "Connection is not something you tick off. When you notice you have slipped back into logistics, screens, work and coexisting, come back and pick one. Your answers will not be the same ones.", emphasis: "bold" },
-        { kind: "quote", text: "And if you want to go further than a month can take you" },
+        { kind: "quote", text: "If you want to go further than a month can take you" },
+        // The One Touch graphic moved OFF the hero and down here, where it
+        // belongs, 30 Sep 2026. Juliette: "the next reach prob also needs a
+        // photo on top". A product graphic was standing in for the day's own
+        // photograph, and it is landscape, so the half-width hero cropped it
+        // to a strip. The day now opens on her and Alex reaching across a
+        // field, and the graphic sits with the offer it belongs to.
+        { kind: "image", src: "/31-touch-points/one-touch.jpg", alt: "One Touch" },
         {
           kind: "p",
-          text: "You did all thirty one of these on your own, which is the point and also the limit. The one thing a month of practices cannot give you is somebody else holding it while you find out what your body actually wants.",
+          text: "This month was the two of you. There is one thing a partnered month cannot give you, which is a week with nobody to attend to. Seven days of your own hands on your own body, with no one to read and nothing to give back.",
         },
         {
           kind: "bigLink",
           text: "One Touch, \u00a397",
-          subtext: "One experience, built around what you have just learned about yourselves. Yours to keep.",
+          subtext: "Seven days, on your own. Your own hands, your own body, your own pace, finding out what you actually feel rather than what you have learned to say. One purchase, yours to keep.",
           href: "https://buy.stripe.com/8x2dR8bCj4KQ2Lr8mV0co0O",
         },
         {

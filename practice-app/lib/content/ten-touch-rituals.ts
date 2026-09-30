@@ -158,7 +158,12 @@ export type PracticeEntry = {
   // the crop anchors to her face instead (Juliette, 3 Aug 2026: "my head
   // is cut off"). Omit for anything else — defaults to the existing
   // centred behaviour, unchanged.
-  imageFocus?: "top" | "center";
+  // 30 Sep 2026: widened from "top" | "center" to any CSS object-position
+  // value, because a half-width full-height hero crops hard and "top" was
+  // too blunt. Juliette: "some of the pictures in the app cut off".
+  // "top" still means what it always meant. Anything else is passed to the
+  // browser verbatim, e.g. "center 22%".
+  imageFocus?: "top" | "center" | (string & {});
 };
 
 export type PracticeCollection = {
