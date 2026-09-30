@@ -8,6 +8,7 @@ import { thirtyOneTouchPoints } from "@/lib/content/31-touch-points";
 import { Blocks } from "@/components/Blocks";
 import { CollectionGate } from "@/components/auth/CollectionGate";
 import { useAuth } from "@/components/providers/AuthProvider";
+import { ADMIN_EMAIL } from "@/lib/entitlements/admin";
 import { getCompletedWithTimes, markComplete } from "@/lib/entitlements/progress";
 
 export default function TouchPointEntry() {
@@ -134,12 +135,16 @@ function TouchPointEntryContent() {
   const unlockedThrough = consecutive === 0 ? 1 : clockPassed ? consecutive + 1 : consecutive;
   const thisDay = dayOf(entry.slug);
   // doneSlugs === null means progress has not loaded yet: never flash a lock.
-  const locked = doneSlugs !== null && thisDay > unlockedThrough;
+  // Juliette sees the whole month. She has to be able to read day 24 to tell
+  // me what is wrong with day 24, and buying her own product to review it is
+  // absurd. Same single address /admin already gates on.
+  const isAdmin = user?.email?.toLowerCase() === ADMIN_EMAIL;
+  const locked = !isAdmin && doneSlugs !== null && thisDay > unlockedThrough;
   const lastOpen = entries.find((x) => dayOf(x.slug) === unlockedThrough);
 
   const prev = entries[index - 1];
   const nextRaw = entries[index + 1];
-  const next = nextRaw && dayOf(nextRaw.slug) > unlockedThrough ? undefined : nextRaw;
+  const next = !isAdmin && nextRaw && dayOf(nextRaw.slug) > unlockedThrough ? undefined : nextRaw;
 
   if (locked) {
     return (

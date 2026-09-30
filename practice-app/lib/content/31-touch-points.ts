@@ -63,7 +63,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
       slug: "what-counts-as-a-touch-point",
       order: 0,
       title: "What Counts as a Touch Point",
-      image: "/rituals/note-before.jpeg",
+      image: "/31-touch-points/hero.jpg",
       eyebrow: "Start here",
       kind: "essay",
       imageSide: "left",
@@ -112,7 +112,17 @@ export const thirtyOneTouchPoints: PracticeCollection = {
             { text: "That is your body answering. Nothing touched it.", emphasis: "accent" },
           ],
         },
-        { kind: "quote", text: "Why this matters more than it sounds" },
+      ],
+    },
+    {
+      slug: "why-this-matters",
+      order: 1,
+      image: "/31-touch-points/hands-held.jpg",
+      title: "Why This Matters More Than You Can Count",
+      eyebrow: "Keep reading, it is two minutes",
+      kind: "essay",
+      imageSide: "left",
+      body: [
         { kind: "p", text: "A body that has stopped receiving physical touch will very often receive play long before it receives a hand." },
         {
           kind: "p",
@@ -140,7 +150,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
     },
     {
       slug: "why-touch-matters",
-      order: 1,
+      order: 2,
       title: "Why Touch Matters",
       image: "/rituals/why-touch-matters.jpeg",
       kind: "essay",
@@ -170,7 +180,17 @@ export const thirtyOneTouchPoints: PracticeCollection = {
           kind: "p",
           text: "In 15 years working with over 650 couples, what I see most is this: their bodies have stopped speaking to each other.",
         },
-        { kind: "quote", text: "Why everything in here has a time on it" },
+      ],
+    },
+    {
+      slug: "the-container",
+      order: 3,
+      image: "/unspoken-distance/the-grounding-practice.png",
+      title: "Why Everything Here Has a Time On It",
+      eyebrow: "The Container. Listen to this one.",
+      kind: "essay",
+      imageSide: "left",
+      body: [
         {
           kind: "driveAudio",
           url: "https://drive.google.com/file/d/1t9hImvVQB1uehBWt8YYB-CPaR9Npi-ai/view?usp=sharing",
@@ -238,7 +258,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
     },
     {
       slug: "meet-juliette",
-      order: 2,
+      order: 4,
       title: "I'm Juliette",
       image: "/rituals/meet-juliette.jpeg",
       eyebrow: "Before you start",
@@ -307,7 +327,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
     // Landing in your own body. Almost nothing is asked of the other person.
     {
       slug: "day-1-the-menu",
-      order: 3,
+      order: 5,
       title: "Day 1. The Menu",
       image: "/31-touch-points/juliette-and-alex.jpg",
       eyebrow: "Ten minutes today, and a date booked for this week",
@@ -388,7 +408,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
     },
     {
       slug: "day-2-the-threshold",
-      order: 4,
+      order: 6,
       title: "Day 2. The Threshold",
       image: "/rituals/the-approach.jpeg",
       eyebrow: "90 seconds at the door, then six seconds in their arms",
@@ -445,7 +465,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
     },
     {
       slug: "day-3-touch-base",
-      order: 5,
+      order: 7,
       title: "Day 3. Touch Base®",
       image: "/rituals/touch-base-anchor.png",
       eyebrow: "2 minutes, twice a day, from here on",
@@ -516,9 +536,9 @@ export const thirtyOneTouchPoints: PracticeCollection = {
     },
     {
       slug: "day-4-the-heart-hug",
-      order: 6,
+      order: 8,
       title: "Day 4. The Heart Hug",
-      image: "/unspoken-distance/the-grounding-practice.png",
+      image: "/unspoken-distance/couple-arms-crossed-beach.jpg",
       eyebrow: "About 5 minutes. Two on yourself, then one of them is theirs",
       kind: "ritual",
       imageSide: "left",
@@ -571,7 +591,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
     },
     {
       slug: "day-5-the-landing",
-      order: 7,
+      order: 9,
       title: "Day 5. The Landing, Together",
       image: "/rituals/the-landing.jpeg",
       eyebrow: "2 minutes, the first one you do together",
@@ -599,7 +619,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
     },
     {
       slug: "day-6-name-what-you-carried-in",
-      order: 8,
+      order: 10,
       title: "Day 6. Name What You Carried In",
       image: "/rituals/the-three-breath-hold.jpeg",
       eyebrow: "One sentence",
@@ -651,7 +671,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
     },
     {
       slug: "day-7-your-second-date",
-      order: 9,
+      order: 11,
       image: "/31-touch-points/juliette-and-alex-garden.jpg",
       title: "Day 7. Your Second Date",
       eyebrow: "Pick one, book it, and learn the close",
@@ -702,7 +722,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
     // Noticing. Reading each other without doing anything about it yet.
     {
       slug: "day-8-look-at-me",
-      order: 10,
+      order: 12,
       title: "Day 8. Look at Me",
       image: "/rituals/the-name.jpeg",
       eyebrow: "3 minutes, standing, no touch",
@@ -767,7 +787,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
     },
     {
       slug: "day-9-mirror-and-melt",
-      order: 11,
+      order: 13,
       image: "/31-touch-points/arms-from-behind.jpg",
       title: "Day 9. Mirror and Melt",
       eyebrow: "About 4 minutes, fully clothed, in front of a mirror",
@@ -814,7 +834,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
     },
     {
       slug: "day-10-would-you-like",
-      order: 12,
+      order: 14,
       title: "Day 10. Would You Like",
       image: "/when-she-goes-quiet/touch-as-a-question.jpeg",
       eyebrow: "Two rounds of 3 minutes, and a bonus third",
@@ -896,7 +916,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
     },
     {
       slug: "day-11-the-fabric-tease",
-      order: 13,
+      order: 15,
       title: "Day 11. The Fabric Tease",
       image: "/31-touch-points/feather-on-forearm.jpg",
       eyebrow: "About 2 minutes, and not skin on skin yet",
@@ -929,7 +949,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
     },
     {
       slug: "day-12-breathe-together",
-      order: 14,
+      order: 16,
       title: "Day 12. Breathe Together",
       image: "/rituals/the-breath-bridge.jpeg",
       eyebrow: "About 4 minutes, close, not touching",
@@ -970,7 +990,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
     },
     {
       slug: "day-13-hover-before-you-land",
-      order: 15,
+      order: 17,
       title: "Day 13. Hover Before You Land",
       image: "/between-touches/touch-and-intimacy.jpeg",
       eyebrow: "5 minutes, guided",
@@ -1005,7 +1025,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
     },
     {
       slug: "day-14-yes-no-maybe",
-      order: 16,
+      order: 18,
       title: "Day 14. Yes, No, Maybe",
       image: "/31-touch-points/hand-along-jaw.jpg",
       eyebrow: "About 8 minutes, and I hold the whole thing with you",
@@ -1079,7 +1099,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
 
     {
       slug: "day-15-the-60-second-hug",
-      order: 17,
+      order: 19,
       title: "Day 15. The 60-Second Hug",
       image: "/rituals/the-60-second-hug.jpeg",
       eyebrow: "1 minute, and I hold it for you",
@@ -1129,7 +1149,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
 
     {
       slug: "day-16-the-small-bid",
-      order: 18,
+      order: 20,
       title: "Day 16. The Small Bid",
       image: "/31-touch-points/flat-still-palms.jpg",
       eyebrow: "Two seconds at a time, all day",
@@ -1179,7 +1199,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
     },
     {
       slug: "day-17-your-choice",
-      order: 19,
+      order: 21,
       title: "Day 17. Your Choice",
       image: "/rituals/using-the-prompts.jpeg",
       eyebrow: "Open the Playful Moments Menu",
@@ -1240,7 +1260,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
     },
     {
       slug: "day-18-as-if-i-am-held",
-      order: 20,
+      order: 22,
       title: "Day 18. As If I Am Held",
       image: "/between-touches/one-real-moment.jpeg",
       eyebrow: "Five ways, and the giver never gets to ask",
@@ -1280,7 +1300,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
     },
     {
       slug: "day-19-dont-use-your-hands",
-      order: 21,
+      order: 23,
       title: "Day 19. Don't Use Your Hands",
       image: "/unspoken-distance/couple-close-portrait.jpg",
       eyebrow: "3 minutes, and your hands stay out of it",
@@ -1324,7 +1344,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
     },
     {
       slug: "day-20-taking-for-your-pleasure",
-      order: 22,
+      order: 24,
       title: "Day 20. Taking For Your Pleasure",
       image: "/unspoken-distance/closeness-that-doesnt-lead-somewhere.jpg",
       eyebrow: "3 minutes, and it is the hardest one in here",
@@ -1379,7 +1399,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
     },
     {
       slug: "day-21-my-body-is-an-instrument",
-      order: 23,
+      order: 25,
       title: "Day 21. My Body Is An Instrument",
       image: "/31-touch-points/juliette-laughing.jpg",
       eyebrow: "3 minutes, and the only feedback is sound",
@@ -1411,7 +1431,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
     // Opening. Touch with nowhere to go.
     {
       slug: "day-22-slow-it-by-half",
-      order: 24,
+      order: 26,
       title: "Day 22. Slow It By Half",
       image: "/unspoken-distance/transmitting-on-one-channel.jpeg",
       eyebrow: "About 4 minutes, and I hold it with you",
@@ -1475,7 +1495,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
     },
     {
       slug: "day-23-the-non-goal-touch",
-      order: 25,
+      order: 27,
       title: "Day 23. The Non-Goal Touch",
       image: "/when-she-goes-quiet/the-3-minute-hold.png",
       eyebrow: "5 minutes, guided if you want it",
@@ -1521,7 +1541,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
     },
     {
       slug: "day-24-map-one-inch",
-      order: 26,
+      order: 28,
       title: "Day 24. Map One Inch",
       image: "/unspoken-distance/feet-on-leaves.jpg",
       eyebrow: "3 minutes, one small place",
@@ -1542,7 +1562,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
     },
     {
       slug: "day-25-receive-and-adjust",
-      order: 27,
+      order: 29,
       title: "Day 25. Receive and Adjust",
       image: "/31-touch-points/bowl-over-body.jpg",
       eyebrow: "3 minutes, out loud, and you run the timer",
@@ -1605,7 +1625,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
     },
     {
       slug: "day-26-the-3-minute-touch-reset",
-      order: 28,
+      order: 30,
       title: "Day 26. The 3-Minute Touch Reset",
       image: "/rituals/the-3-minute-touch-reset.jpeg",
       eyebrow: "3 minutes, agreed first",
@@ -1637,7 +1657,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
     },
     {
       slug: "day-27-the-sensual-dance",
-      order: 29,
+      order: 31,
       title: "Day 27. The Sensual Dance",
       image: "/unspoken-distance/couple-slow-dance.jpg",
       eyebrow: "About 6 minutes, and I take you through all of it",
@@ -1680,7 +1700,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
     },
     {
       slug: "day-28-skin-to-skin",
-      order: 30,
+      order: 32,
       title: "Day 28. Skin to Skin",
       image: "/31-touch-points/hand-on-draped-fabric.jpg",
       eyebrow: "About 5.5 minutes, back to back, and I hold all of it",
@@ -1743,7 +1763,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
     // ============================================================ PHASE FIVE
     {
       slug: "day-29-elbow-to-armpit",
-      order: 31,
+      order: 33,
       title: "Day 29. Elbow to Armpit",
       image: "/rituals/elbow-to-armpit.jpeg",
       eyebrow: "About 4.5 minutes, one small zone, three touches",
@@ -1794,7 +1814,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
     },
     {
       slug: "day-30-the-receiving-ritual",
-      order: 32,
+      order: 34,
       title: "Day 30. The Receiving Ritual",
       image: "/31-touch-points/laughing-hands-on-chest.jpg",
       eyebrow: "About 4.5 minutes, one receives, and I run all of it",
@@ -1845,7 +1865,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
     },
     {
       slug: "day-31-the-next-reach",
-      order: 33,
+      order: 35,
       title: "Day 31. The Next Reach",
       image: "/rituals/the-handshake-of-gratitude.jpeg",
       eyebrow: "The last one",

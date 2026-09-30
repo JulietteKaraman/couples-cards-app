@@ -316,8 +316,12 @@ function LibraryContent() {
               itself (questions, scoring, results) lives on the main site,
               not in this app. See FreeExternalTile above. */}
           <FreeExternalTile
-            title="The Touch Reset Quiz"
-            subtitle="Five minutes. Find your Touch Pattern and the language your body has been waiting for."
+            title="Where Did The Touch Go?"
+            // Words and cover taken from the live quiz page, 30 Sep 2026. The
+            // old subtitle promised a "Touch Pattern" and "the language your
+            // body has been waiting for", which the rebuilt quiz no longer
+            // says, and the cover was a hand on tree bark. Both wrong.
+            subtitle="Being touched is not the same as feeling it. Five minutes, and you find out where the touch actually went, and what has been holding it there."
             heroImage="/offers/touch-reset-quiz-cover.jpg"
             href="https://feelfullyyou.com/touch-reset-quiz"
             note="Free · 5 minutes"
