@@ -1247,7 +1247,10 @@ export const thirtyOneTouchPoints: PracticeCollection = {
     {
       slug: "day-17-your-choice",
       order: 21,
-      title: "Day 17. Your Choice",
+      // Renamed 30 Sep 2026. Juliette: "I would call it YOU May". It was
+      // "Your Choice", which hid her most commented mechanic behind a generic
+      // title, so nobody scanning the Month screen knew it was in there.
+      title: "Day 17. You May",
       image: "/31-touch-points/neck-kiss.jpg",
       eyebrow: "Open the Playful Moments Menu",
       kind: "ritual",
