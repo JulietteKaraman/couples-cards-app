@@ -261,66 +261,62 @@ export const thirtyOneTouchPoints: PracticeCollection = {
       order: 4,
       title: "I'm Juliette",
       image: "/rituals/meet-juliette.jpeg",
-      eyebrow: "Before you start",
+      imageAlt: "Juliette Karaman",
+      eyebrow: "27 years of helping people feel, relate, and connect",
       kind: "essay",
       imageSide: "left",
       imageFocus: "top",
+      // Juliette, 30 Sep 2026: "I do not want the I am Juliette to say exactly
+      // the same as the audio. What you had before was much better, so put
+      // that back. The audio is just a little hello from me."
+      // So this is the EXCEPTION to the match-the-audio rule that governs
+      // every practice page in here. On a bio page the recording is a hello
+      // and the writing is the real introduction. Restored from the version
+      // that ran in 10 Touch Rituals.
       body: [
-        // Recorded by her 30 Sep 2026. The written version below follows the
-        // audio line for line so the two cannot drift. If she changes one,
-        // change the other. Transcribed, not paraphrased.
         {
           kind: "driveAudio",
           url: "https://drive.google.com/file/d/1vOBlcZbFpt0XxO9MYuSzbxxaWvWWBzzu/view?usp=sharing",
-          label: "Listen: I'm Juliette, 2 minutes",
-        },
-        { kind: "p", text: "Welcome, loves.", emphasis: "bold" },
-        {
-          kind: "p",
-          text: "I am going to be in this room with you for the next 31 days, so I think it is only fair that you know who I am.",
+          label: "A hello from me, before you start. 2 minutes",
         },
         {
           kind: "p",
-          text: "My name is Juliette Karaman. I have lived in the UK for over 27 years and I am the mother of four young adults.",
-        },
-        // TRAUMA LINE. Kept at exactly the level she said it in the audio, one
-        // sentence, non-graphic. FLAGGED TO HER: existing rule says long-form
-        // trauma disclosure belongs in long-form, not cold contexts. This is a
-        // paid product a buyer has chosen to open, which is arguably the right
-        // container, and she put it in the recording herself. Hers to cut.
-        {
-          kind: "p",
-          text: "I learned that touch had a very hidden meaning for me. My subconscious hid it from me for years. A date rape really affected how I responded to touch, and how I was touched by life.",
+          text: "I create experiences, for the moment you understand exactly what is happening in your body, and still something tightens or fades the second closeness begins.",
         },
         {
           kind: "p",
-          text: "So for the next 31 days, I want to help you get back in touch with each other, and back in touch with physical touch.",
+          text: "For over 27 years I have worked with how people feel, relate, and connect, across mind, nervous system, body, and relationship.",
         },
-        { kind: "big", text: "Non sexual touch. We are not going there in these 31 days." },
-        { kind: "quote", text: "What I actually hear couples say" },
-        {
-          kind: "step",
-          label: "In their own words",
-          highlight: true,
-          lines: [
-            { text: "“We have become too busy.”" },
-            { text: "“We do not have time for fun any more.”" },
-            { text: "“We are just not that into each other any more.”" },
-            { text: "“How do we get out of this slump?”", emphasis: "accent" },
-          ],
-        },
-        { kind: "quote", text: "How the 31 days work" },
         {
           kind: "p",
-          text: "Every day, a new practice opens. Some of them are very short. Some of them you will wonder what the point is.",
+          text: "It began with children on the autism spectrum, helping them trust sensation before they had words for it. For the last fifteen, I have worked with thousands of individuals and 650 couples who love each other, live full lives, and still lose connection the moment touch begins.",
         },
-        { kind: "p", text: "They build on each other. That is why they come one at a time.", emphasis: "bold" },
+        { kind: "p", text: "Insight alone does not change intimacy. Touch alone does not either.", emphasis: "bold" },
+        { kind: "p", text: "Change happens through experiences the body can stay present with.", emphasis: "accent" },
         {
           kind: "p",
-          text: "And after 31 days you have a library of touch points to come back to, for whenever the two of you drift again.",
+          text: "The couples I work with do not just understand themselves better. They feel different, they touch differently, and they stay in connection.",
         },
-        { kind: "p", text: "Have the best time reconnecting.", emphasis: "accent" },
-        { kind: "p", text: "Much love." },
+        { kind: "image", src: "/rituals/podcast-cover.jpg", alt: "The Scrumptious Woman podcast" },
+        { kind: "quote", text: "The Scrumptious Woman podcast, top 2.5% worldwide" },
+        {
+          kind: "link",
+          text: "Listen here",
+          href: "https://open.spotify.com/show/50jFN83FxoNm0UXiryqkJW",
+        },
+        { kind: "p", text: "Every moment of presence is a new chance to come In Touch.", emphasis: "accent" },
+        { kind: "image", src: "/rituals/substack-cta.png", alt: "What The Body Knows, Juliette's Substack" },
+        { kind: "quote", text: "Substack" },
+        {
+          kind: "p",
+          text: "I write more deeply on Substack. Why these processes work, what I have seen, and how I got here.",
+        },
+        { kind: "p", text: "If that interests you, follow me there." },
+        {
+          kind: "link",
+          text: "Follow here",
+          href: "https://substack.com/@juliettekaraman",
+        },
       ],
     },
     // ============================================================ PHASE ONE
