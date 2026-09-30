@@ -10,6 +10,14 @@ import { CollectionGate } from "@/components/auth/CollectionGate";
 import { useAuth } from "@/components/providers/AuthProvider";
 import { ADMIN_EMAIL } from "@/lib/entitlements/admin";
 import { getCompletedWithTimes, markComplete } from "@/lib/entitlements/progress";
+import {
+  ADV_KEY,
+  adminBypassActive,
+  computeDrip,
+  dayOf,
+  lsSet,
+  whenItOpens,
+} from "@/lib/content/31-touch-points-drip";
 
 export default function TouchPointEntry() {
   return (
@@ -19,39 +27,9 @@ export default function TouchPointEntry() {
   );
 }
 
-const dayOf = (sl: string) => {
-  const m = sl.match(/^day-(\d+)/);
-  return m ? parseInt(m[1], 10) : 0;
-};
-const ADV_KEY = "ffy.31tp.lastadvance";
-const TWELVE_H = 12 * 60 * 60 * 1000;
-
-function lsGet(k: string) {
-  try {
-    return localStorage.getItem(k);
-  } catch {
-    return null;
-  }
-}
-function lsSet(k: string, v: string) {
-  try {
-    localStorage.setItem(k, v);
-  } catch {
-    /* private window, or storage full. The gate then falls open, which is the
-       kinder failure: never lock a paying buyer out over a storage quirk. */
-  }
-}
-function nextDayStart(ts: number) {
-  const d = new Date(ts);
-  d.setHours(0, 0, 0, 0);
-  return d.getTime() + 86400000;
-}
-function whenItOpens(dueAt: number) {
-  const hrs = Math.max(1, Math.round((dueAt - Date.now()) / 3600000));
-  if (hrs <= 1) return "in about an hour";
-  if (hrs < 20) return `in about ${hrs} hours`;
-  return "tomorrow";
-}
+// The drip rule and its helpers moved into lib/content/31-touch-points-drip.ts
+// on 30 Sep 2026, when the Month screen was built. Two copies of a rule this
+// fiddly would have drifted apart within a week.
 
 function TouchPointEntryContent() {
   const params = useParams();
@@ -110,35 +88,20 @@ function TouchPointEntryContent() {
   // you the next time you come back to the app."
   const done = doneSlugs ?? [];
 
-  // How many days in a row have actually been done, from day 1.
-  let consecutive = 0;
-  while (consecutive < 31) {
-    const e = entries.find((x) => dayOf(x.slug) === consecutive + 1);
-    if (e && done.includes(e.slug)) consecutive += 1;
-    else break;
-  }
-
-  // THE DRIP, ported from the cards app so the two never behave differently.
-  // The next day opens at whichever is LATER: twelve hours after you marked
-  // the last one done, or the start of the next calendar day. Counting from
-  // the last advance rather than from first ever open means time away never
-  // piles up into a backlog of days to catch up on.
-  //
-  // Juliette, 30 Sep: "it still opens immediately once they press they have
-  // done it". Pressing done starts the clock. It does not open tomorrow.
-  // The database timestamp is the authority, because it is the same on every
-  // device and it survives a cleared browser. localStorage is only the fallback.
-  const localAdv = parseInt(lsGet(ADV_KEY) ?? "0", 10) || 0;
-  const lastAdv = Math.max(lastDone ?? 0, localAdv);
-  const dueAt = lastAdv ? Math.max(lastAdv + TWELVE_H, nextDayStart(lastAdv)) : 0;
-  const clockPassed = !lastAdv || now >= dueAt;
-  const unlockedThrough = consecutive === 0 ? 1 : clockPassed ? consecutive + 1 : consecutive;
+  const { consecutive, unlockedThrough, dueAt } = computeDrip({
+    entries,
+    doneSlugs: done,
+    lastDone,
+    now,
+  });
   const thisDay = dayOf(entry.slug);
   // doneSlugs === null means progress has not loaded yet: never flash a lock.
   // Juliette sees the whole month. She has to be able to read day 24 to tell
   // me what is wrong with day 24, and buying her own product to review it is
-  // absurd. Same single address /admin already gates on.
-  const isAdmin = user?.email?.toLowerCase() === ADMIN_EMAIL;
+  // absurd. Same single address /admin already gates on. The Month screen's
+  // "Show me what a buyer sees" link turns that bypass off when she wants to
+  // walk the product the way a buyer meets it.
+  const isAdmin = adminBypassActive(user?.email, ADMIN_EMAIL);
   const locked = !isAdmin && doneSlugs !== null && thisDay > unlockedThrough;
   const lastOpen = entries.find((x) => dayOf(x.slug) === unlockedThrough);
 
@@ -170,6 +133,11 @@ function TouchPointEntryContent() {
             Go to {lastOpen.title}
           </Link>
         )}
+        <p className="mt-6">
+          <Link href="/practice/31-touch-points" className="text-sm text-ffy-gold-deep underline">
+            See the whole month
+          </Link>
+        </p>
       </main>
     );
   }
@@ -203,10 +171,10 @@ function TouchPointEntryContent() {
       <main className="min-h-screen bg-ffy-cream">
         <div className="mx-auto max-w-2xl px-6 py-14">
           <Link
-            href="/"
+            href="/practice/31-touch-points"
             className="inline-flex items-center gap-1.5 rounded-full border border-ffy-gold-deep/40 px-4 py-2 text-sm font-medium text-ffy-gold-deep transition hover:bg-ffy-gold-deep/5"
           >
-            ← Your library
+            ← The month
           </Link>
 
           {entry.eyebrow && (
@@ -269,10 +237,10 @@ function TouchPointEntryContent() {
 
         <div className="flex w-full flex-col justify-center px-6 py-12 md:w-1/2 md:px-14 md:py-0">
           <Link
-            href="/"
+            href="/practice/31-touch-points"
             className="inline-flex items-center gap-1.5 rounded-full border border-ffy-gold-deep/40 px-4 py-2 text-sm font-medium text-ffy-gold-deep transition hover:bg-ffy-gold-deep/5"
           >
-            ← Your library
+            ← The month
           </Link>
 
           {entry.eyebrow && (
