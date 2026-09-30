@@ -1281,7 +1281,23 @@ export const thirtyOneTouchPoints: PracticeCollection = {
             { text: "If you may is a genuine answer, so is not now. A no that is allowed is what makes the yes worth having, and it gets no follow up question. You say thank you and carry on with your day.", emphasis: "accent" },
           ],
         },
-        { kind: "p", text: "It runs both directions. You can offer, the way I do, or you can ask, which is the same four words the other way round: may I? Either one announces the reach, so nobody is braced for a surprise." },
+        { kind: "p", text: "It runs both directions. You can offer, the way I do, or you can ask, which is the same words the other way round: may I? Either one announces the reach, so nobody is braced for a surprise." },
+        // HER OWN OVERLAY LINES, read to me off her existing reel, 30 Sep 2026.
+        // Verbatim. This is the physiological payload and it is what ties this
+        // day to the thesis of the whole month: a braced body cannot feel.
+        // NOTE: "Your yes is not a word. It's your whole body." trips the
+        // "Not X. It's Y." voice-guard rule. It stays because it is her line,
+        // not mine. Logged in memory.
+        { kind: "quote", text: "Your yes is not a word. It\u2019s your whole body." },
+        {
+          kind: "why",
+          lines: [
+            { text: "When I say yes, my whole body says yes.", emphasis: "bold" },
+            { text: "No brace before his hands land, so the touch lands." },
+            { text: "That is the difference between being touched and feeling touch. A body braced for a hand absorbs it in the flinch, and almost nothing reaches you." },
+            { text: "Your yes builds capacity for sensation.", emphasis: "accent" },
+          ],
+        },
         {
           kind: "step",
           label: "Passing through",
