@@ -1268,6 +1268,12 @@ export const thirtyOneTouchPoints: PracticeCollection = {
         // reference_you_may_but_will_you_exact_mechanic_30sep2026.md. Three layers
         // and all three have to be said: play, consent, and the training.
         { kind: "p", text: "This is how Alex and I do it. I stop him, I offer him my neck or my cheek, and I say you may. He laughs and says I know I may. Then I say: but will you?" },
+        // Her own clean cut, no overlays, uploaded 30 Sep 2026. She says you may,
+        // he says may I, he touches her. The OVERLAY version of this stays on
+        // Instagram and points at the product, because burnt in social text
+        // inside a paid product reads as recycled. The page does the teaching,
+        // the film only has to show it, and the laugh is the part prose cannot carry.
+        { kind: "video", vimeoId: "1231833028" },
         {
           kind: "why",
           lines: [
