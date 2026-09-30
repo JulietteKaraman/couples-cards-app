@@ -3,7 +3,8 @@
 import { createContext, useContext, useEffect, useState, useCallback } from "react";
 import { User } from "@supabase/supabase-js";
 import { supabaseBrowser } from "@/lib/supabase/client";
-import { deckTypesForApp, collectionSlugForDeckType } from "@/lib/entitlements/config";
+import { deckTypesForApp, collectionSlugForDeckType, COLLECTION_DECK_TYPES } from "@/lib/entitlements/config";
+import { ADMIN_EMAIL } from "@/lib/entitlements/admin";
 
 interface AuthContextType {
   user: User | null;
@@ -21,7 +22,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [entitledCollections, setEntitledCollections] = useState<string[]>([]);
 
-  const loadEntitlements = useCallback(async (userId: string) => {
+  const loadEntitlements = useCallback(async (userId: string, email?: string) => {
+    // Juliette sees everything. She owns all of it, and being locked out of
+    // her own library while reviewing a new product is nonsense: the
+    // alternative was buying her own £27 product to look at it. Added
+    // 30 Sep 2026. ADMIN_EMAIL is the same single address the /admin page
+    // already gates on, so this grants nothing new to anybody else.
+    if (email && email.toLowerCase() === ADMIN_EMAIL) {
+      setEntitledCollections(Object.keys(COLLECTION_DECK_TYPES));
+      return;
+    }
+
     // expires_at is null for every one-time-purchase deck_type (unchanged,
     // permanent grant, exactly as before this column existed) and set for
     // a subscription deck_type like "members-app" (Members App spec R13:
@@ -82,7 +93,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           }
         });
       }
-      await loadEntitlements(userId);
+      await loadEntitlements(userId, email);
     },
     [loadEntitlements]
   );
@@ -136,7 +147,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   async function refreshEntitlements() {
-    if (user?.id) await loadEntitlements(user.id);
+    if (user?.id) await loadEntitlements(user.id, user.email ?? undefined);
   }
 
   return (

@@ -25,7 +25,13 @@ export const PRICE_ID_TO_DECK_TYPE: Record<string, string> = {
   // 01 Site & Dev/feelfullyyou-site/netlify/functions/stripe-webhook.js.
   price_1TqqjCCCw18geY15dCXrlEjD: "31-touch-points", // £31 full price, "a pound a day". Payment link https://buy.stripe.com/00waEW0XFfpu85LfPn0co1w
   price_1TiBhLCCw18geY15dLECqNFr: "31-touch-points", // £27 standalone, earlier price
-  price_1TlpvDCCw18geY15wlpzVg4f: "31-touch-points", // £19, Between Touches upsell only, never standalone
+  price_1TlpvDCCw18geY15wlpzVg4f: "31-touch-points", // £19, Between Touches upsell only
+  // 31 Day Connection Kit, £35, 30 Sep 2026. Both 31s together: the 31 Days
+  // Closer cards AND 31 Touch Points. The cards half is granted by the cards
+  // app; this line is the app half. Payment link
+  // https://buy.stripe.com/fZu5kC0XFfpuadT32B0co2p, plink_1ULQHUCCw18geY15FZP1jMYR.
+  // Matched by payment link in the site webhook, since the bundle price id
+  // is not known here., never standalone
   price_1Tlpu0CCw18geY15b8J3jlBW: "ten-touch-rituals", // 10 Touch Rituals, £7
   price_1TzO4DCCw18geY15u7X9j7iw: "unspoken-distance", // The Unspoken Distance, £77 (old price, real buyers 31 Jul-1 Aug 2026)
   price_1TnxAqCCw18geY153w22a2Ye: "unspoken-distance", // The Unspoken Distance, £97 (current, back from £77 1 Aug 2026 — now includes free Couples Cards)
