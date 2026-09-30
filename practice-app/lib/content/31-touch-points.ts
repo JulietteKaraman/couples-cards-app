@@ -63,7 +63,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
       slug: "what-counts-as-a-touch-point",
       order: 0,
       title: "What Counts as a Touch Point",
-      image: "/31-touch-points/hero.jpg",
+      image: "/31-touch-points/juliette-alex-embrace-bw.jpg",
       eyebrow: "Start here",
       kind: "essay",
       imageSide: "left",
