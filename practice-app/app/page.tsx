@@ -68,7 +68,12 @@ const CARDS_COMPANION = {
     "The other half of the month. Thirty one conversation prompts, one a day, fifteen minutes each. Touch reopens the door, words are how you walk back through it.",
   heroImage: "/offers/31-days-closer-cover.jpg",
   purchaseUrl: "https://feelfullyyou.com/31-days-closer",
-  note: "Lives in the cards app \u00b7 \u00a317, or \u00a335 with this",
+  // The \u00a335 bundle price came OFF on 30 Sep 2026 (Juliette: "take off the
+  // \u00a335 with this"). Everyone who can see this tile has ALREADY bought 31
+  // Touch Points, so quoting them the both-products bundle is quoting a price
+  // for something they own half of. \u00a317 is the only number that means
+  // anything here. No other tile on this shelf carries a price at all.
+  note: "Lives in the cards app \u00b7 \u00a317",
 };
 
 const EXTERNAL_OFFERS = [
