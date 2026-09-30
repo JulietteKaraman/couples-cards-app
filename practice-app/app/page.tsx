@@ -2,8 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect, useState } from "react";
-import { tenTouchRituals } from "@/lib/content/ten-touch-rituals";
+import { Fragment, useEffect, useState } from "react";
 import { thirtyOneTouchPoints } from "@/lib/content/31-touch-points";
 import { theUnspokenDistance } from "@/lib/content/the-unspoken-distance";
 import { whenSheGoesQuiet } from "@/lib/content/when-she-goes-quiet";
@@ -58,6 +57,20 @@ const ALL_COLLECTIONS = [thirtyOneTouchPoints, theUnspokenDistance, whenSheGoesQ
 // sign-in wall, not a way to buy), so it would dead-end anyone who
 // doesn't already own it. Juliette asked for the unlock URL specifically;
 // swapped for the real purchase path so the tile actually converts.
+// 31 Days Closer lives in the CARDS app, not this one, so it can never be a
+// normal collection tile here. It is pinned directly under 31 Touch Points
+// because the two are the pair: a month of touch and a month of conversation.
+// Juliette, 30 Sep 2026: "if it is public-facing, then the 31 Days Closer
+// cards need to come right under the 31 Touch Points."
+const CARDS_COMPANION = {
+  title: "31 Days Closer",
+  subtitle:
+    "The other half of the month. Thirty one conversation prompts, one a day, fifteen minutes each. Touch reopens the door, words are how you walk back through it.",
+  heroImage: "/offers/31-days-closer-cover.jpg",
+  purchaseUrl: "https://feelfullyyou.com/31-days-closer",
+  note: "Lives in the cards app \u00b7 \u00a317, or \u00a335 with this",
+};
+
 const EXTERNAL_OFFERS = [
   {
     slug: "repair-kit",
@@ -262,24 +275,38 @@ function LibraryContent() {
             const unlocked =
               !!user && (entitledCollections.includes(c.slug) || isFreeCollection(c.slug));
 
+            const companion =
+              c.slug === "31-touch-points" ? (
+                <LockedOfferTile
+                  key="31-days-closer-companion"
+                  title={CARDS_COMPANION.title}
+                  subtitle={CARDS_COMPANION.subtitle}
+                  heroImage={CARDS_COMPANION.heroImage}
+                  purchaseUrl={CARDS_COMPANION.purchaseUrl}
+                  note={CARDS_COMPANION.note}
+                />
+              ) : null;
+
             if (!user) {
               const free = isFreeCollection(c.slug);
               return (
+                <Fragment key={c.slug}>
                 <LockedOfferTile
-                  key={c.slug}
                   title={c.title}
                   subtitle={c.subtitle}
                   heroImage={c.heroImage}
                   purchaseUrl={free ? "/login" : PURCHASE_URLS[c.slug]}
                   note={free ? "Free \u00b7 sign in to open" : "Buy once, keep it \u00b7 See what is inside"}
                 />
+                {companion}
+                </Fragment>
               );
             }
 
             if (unlocked) {
               return (
+                <Fragment key={c.slug}>
                 <Link
-                  key={c.slug}
                   href={`/practice/${c.slug}`}
                   className="group flex items-center gap-5 overflow-hidden rounded-2xl border border-ffy-border bg-white/60 p-4 transition hover:border-ffy-gold sm:p-5"
                 >
@@ -303,17 +330,21 @@ function LibraryContent() {
                   </div>
                   <span className="text-ffy-gold">→</span>
                 </Link>
+                {companion}
+                </Fragment>
               );
             }
 
             return (
+              <Fragment key={c.slug}>
               <LockedOfferTile
-                key={c.slug}
                 title={c.title}
                 subtitle={c.subtitle}
                 heroImage={c.heroImage}
                 purchaseUrl={PURCHASE_URLS[c.slug]}
               />
+              {companion}
+              </Fragment>
             );
           })}
 
@@ -351,12 +382,12 @@ function LibraryContent() {
               itself (questions, scoring, results) lives on the main site,
               not in this app. See FreeExternalTile above. */}
           <FreeExternalTile
-            title="Where Did The Touch Go?"
+            title="The Touch Reset Quiz"
             // Words and cover taken from the live quiz page, 30 Sep 2026. The
             // old subtitle promised a "Touch Pattern" and "the language your
             // body has been waiting for", which the rebuilt quiz no longer
             // says, and the cover was a hand on tree bark. Both wrong.
-            subtitle="Being touched is not the same as feeling it. Five minutes, and you find out where the touch actually went, and what has been holding it there."
+            subtitle="Where Did The Touch Go? Being touched is not the same as feeling it. Five minutes, and you find out where the touch actually went, and what has been holding it there."
             heroImage="/offers/touch-reset-quiz-cover.jpg"
             href="https://feelfullyyou.com/touch-reset-quiz"
             note="Free · 5 minutes"
