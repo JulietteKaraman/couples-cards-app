@@ -127,7 +127,10 @@
 // back down to the real 15 (5 categories x 3) plus the real Cards upsell
 // copy, and a real "your-next-yes" closing added back (One Touch pitch,
 // matching Gamma's actual close, not the course's "book a call" pitch).
-// Touch Base's video also moved off Google Drive onto Vimeo (1219027987),
+// Touch Base's video also moved off Google Drive onto Vimeo. Juliette
+// supplied a BETTER Touch Base recording 30 Sep 2026, 1223329859, which
+// replaces the earlier 1219027987 everywhere. The old id still resolves,
+// it is simply the weaker take. (was 1219027987),
 // matching the Trace Ritual's existing Vimeo embed (1213290844), both
 // supplied by Juliette 27 Aug 2026. If this guide ever needs to grow past
 // ten again, that is a new decision from her, not a default to restore
@@ -373,7 +376,7 @@ export const tenTouchRituals: PracticeCollection = {
             { text: "So discreet your partner won't even notice. But your body will.", emphasis: "accent" },
           ],
         },
-        { kind: "video", vimeoId: "1219027987" },
+        { kind: "video", vimeoId: "1223329859" },
         {
           kind: "driveAudio",
           url: "https://drive.google.com/file/d/1-7kHzl2T-kBXJIae6uk-3u_KMeDV9Mks/view?usp=sharing",

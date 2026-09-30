@@ -66,6 +66,14 @@ export type ContentBlock =
   | { kind: "driveVideo"; url: string; label: string }
   | { kind: "driveAudio"; url: string; label: string }
   | { kind: "audio"; src: string; label: string }
+  // The timed container, and it is load bearing rather than a convenience.
+  // Juliette, 30 Sep 2026: "just like with the cards, we can put a timer in
+  // the app, right, so that they can hold time by themselves here." Her own
+  // Skin to Skin recording ends "when the bell sounds", so a day with a
+  // container and no timer breaks the audio. `minutes` lists the options and
+  // the FIRST one is the default. One option renders as a single fixed
+  // container with no chooser.
+  | { kind: "timer"; minutes: number[]; label?: string }
   | { kind: "instagram"; url: string }
   | { kind: "promptGroup"; category: string; color: PromptGroupColor; prompts: string[] }
   | { kind: "diagram"; steps: DiagramStep[] }

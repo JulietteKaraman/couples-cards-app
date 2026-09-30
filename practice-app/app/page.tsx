@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { tenTouchRituals } from "@/lib/content/ten-touch-rituals";
+import { thirtyOneTouchPoints } from "@/lib/content/31-touch-points";
 import { theUnspokenDistance } from "@/lib/content/the-unspoken-distance";
 import { whenSheGoesQuiet } from "@/lib/content/when-she-goes-quiet";
 import { communicationRebootKit } from "@/lib/content/communication-reboot-kit";
@@ -34,7 +35,11 @@ function isFreeCollection(slug: string): boolean {
 // sales page yet, a locked tile here would point at a dead purchase link.
 // Its content and route (/practice/between-touches, lib/content/between-
 // touches.ts) are untouched, this only stops it appearing in the library.
-const ALL_COLLECTIONS = [tenTouchRituals, theUnspokenDistance, whenSheGoesQuiet, communicationRebootKit];
+// 31 Touch Points added 30 Sep 2026. It RETIRES the £7 Ten Touch Rituals and
+// the £27 31 Daily Touch Points PDF into one month. Both are still listed for
+// now so existing buyers keep their access; drop tenTouchRituals from this
+// array once everyone on the old list has been moved over and told.
+const ALL_COLLECTIONS = [thirtyOneTouchPoints, tenTouchRituals, theUnspokenDistance, whenSheGoesQuiet, communicationRebootKit];
 
 // Offers that never live inside this app at all (no PracticeCollection,
 // no deck_type, nothing to unlock here) but that Juliette wants

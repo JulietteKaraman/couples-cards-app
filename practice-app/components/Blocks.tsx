@@ -2,6 +2,7 @@ import Image from "next/image";
 import Script from "next/script";
 import type { ReactNode } from "react";
 import { ContentBlock } from "@/lib/content/blocks";
+import PracticeTimer from "@/components/PracticeTimer";
 
 function driveIdFromUrl(url: string): string | null {
   const m = url.match(/\/file\/d\/([^/]+)/);
@@ -382,6 +383,9 @@ export function Blocks({ blocks, dark = false }: { blocks: ContentBlock[]; dark?
               </div>
             );
           }
+
+          case "timer":
+            return <PracticeTimer key={i} minutes={b.minutes} label={b.label} dark={dark} />;
 
           case "audio":
             return (

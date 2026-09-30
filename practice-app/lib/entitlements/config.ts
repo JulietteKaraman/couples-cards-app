@@ -2,6 +2,7 @@
 // that grants it. Adding a new product later means adding one line here,
 // not new sign-in/session code.
 export const COLLECTION_DECK_TYPES: Record<string, string> = {
+  "31-touch-points": "31-touch-points",
   "ten-touch-rituals": "ten-touch-rituals",
   "the-unspoken-distance": "unspoken-distance",
   "when-she-goes-quiet": "when-she-goes-quiet",
@@ -15,6 +16,16 @@ export const COLLECTION_DECK_TYPES: Record<string, string> = {
 // product this app sells, not just one hardcoded price (the-unspoken-distance
 // spec R4/R5). Add one line here per new product's live price ID.
 export const PRICE_ID_TO_DECK_TYPE: Record<string, string> = {
+  // 31 Touch Points. The Stripe prices already existed from the old 41-page
+  // PDF product, "31 Daily Touch Points", and all three are mapped in the
+  // site webhook (tag 20794225, sequence 2817543). All three grant the app,
+  // because anyone who ever bought that product bought this month, and
+  // Juliette's instruction was to give existing buyers access rather than
+  // make them pay twice. Price IDs copied from
+  // 01 Site & Dev/feelfullyyou-site/netlify/functions/stripe-webhook.js.
+  price_1TqqjCCCw18geY15dCXrlEjD: "31-touch-points", // £31 full price, "a pound a day". Payment link https://buy.stripe.com/00waEW0XFfpu85LfPn0co1w
+  price_1TiBhLCCw18geY15dLECqNFr: "31-touch-points", // £27 standalone, earlier price
+  price_1TlpvDCCw18geY15wlpzVg4f: "31-touch-points", // £19, Between Touches upsell only, never standalone
   price_1Tlpu0CCw18geY15b8J3jlBW: "ten-touch-rituals", // 10 Touch Rituals, £7
   price_1TzO4DCCw18geY15u7X9j7iw: "unspoken-distance", // The Unspoken Distance, £77 (old price, real buyers 31 Jul-1 Aug 2026)
   price_1TnxAqCCw18geY153w22a2Ye: "unspoken-distance", // The Unspoken Distance, £97 (current, back from £77 1 Aug 2026 — now includes free Couples Cards)
@@ -58,6 +69,12 @@ export const FREE_DECK_TYPES: string[] = ["when-she-goes-quiet"];
 // checkout. Only paid collections need an entry here; free collections are
 // always unlocked (see FREE_DECK_TYPES) so they never render a locked tile.
 export const PURCHASE_URLS: Record<string, string> = {
+  // The page FILE exists (feelfullyyou-site/31-daily-touch-points.html, £31,
+  // correct Stripe link) but _redirects lines 38-39 currently 301 both
+  // /31-daily-touch-points and the .html variant to /10-touch-rituals, so the
+  // live URL serves the £7 page. Remove those two lines and rewrite the page
+  // for the app version, then this URL is real.
+  "31-touch-points": "https://feelfullyyou.com/31-daily-touch-points",
   "ten-touch-rituals": "https://feelfullyyou.com/10-touch-rituals",
   "the-unspoken-distance": "https://feelfullyyou.com/the-unspoken-distance",
   "communication-reboot-kit": "https://feelfullyyou.com/communication-reboot-kit",
