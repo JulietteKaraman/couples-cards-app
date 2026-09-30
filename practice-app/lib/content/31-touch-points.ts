@@ -534,7 +534,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
       slug: "day-4-the-heart-hug",
       order: 8,
       title: "Day 4. The Heart Hug",
-      image: "/unspoken-distance/couple-arms-crossed-beach.jpg",
+      image: "/31-touch-points/heart-hug.jpg",
       eyebrow: "About 5 minutes. Two on yourself, then one of them is theirs",
       kind: "ritual",
       imageSide: "left",
