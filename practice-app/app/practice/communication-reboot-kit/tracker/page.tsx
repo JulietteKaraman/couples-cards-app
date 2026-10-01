@@ -19,6 +19,51 @@ function entryFor(entries: TrackerEntry[], day: number, period: TrackerPeriod) {
   return entries.find((e) => e.dayNumber === day && e.period === period);
 }
 
+/** The first morning or afternoon slot with nothing in it, scanning day 1 upward. */
+function findFirstGap(entries: TrackerEntry[]): { day: number; period: TrackerPeriod } | null {
+  for (const d of DAYS) {
+    for (const p of ["AM", "PM"] as TrackerPeriod[]) {
+      if (!entryFor(entries, d, p)) return { day: d, period: p };
+    }
+  }
+  return null;
+}
+
+/** Ten taps, not a number keyboard. This gets used on a phone, twice a day. */
+function Rating({
+  label,
+  value,
+  onChange,
+}: {
+  label: string;
+  value: number | "";
+  onChange: (n: number | "") => void;
+}) {
+  return (
+    <div>
+      <label className="block text-xs uppercase tracking-wide text-ffy-gold-deep">{label}</label>
+      <div className="mt-2 grid grid-cols-10 gap-1">
+        {Array.from({ length: 10 }, (_, i) => i + 1).map((n) => (
+          <button
+            key={n}
+            type="button"
+            aria-label={`${label} ${n}`}
+            aria-pressed={value === n}
+            onClick={() => onChange(value === n ? "" : n)}
+            className={`flex h-9 items-center justify-center rounded-md border text-sm transition ${
+              value === n
+                ? "border-ffy-gold bg-ffy-teal font-semibold text-ffy-cream"
+                : "border-ffy-border bg-white text-ffy-brown hover:border-ffy-gold-deep/50"
+            }`}
+          >
+            {n}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 // Spec E5: this is the primary context for the tracker (a phone, twice a
 // day), so the UI leads with a single "log this one" card rather than a
 // 31-row table nobody could comfortably fill in one-handed. The history
@@ -50,6 +95,14 @@ function TrackerPageContent() {
     getTrackerEntries(user.id, DECK_TYPE).then((rows) => {
       setEntries(rows);
       setLoading(false);
+      // 1 Oct 2026: this used to open on Day 1 every time. On day twelve
+      // that is eleven taps on the plus button, twice a day, before you can
+      // log anything. It now opens on the first slot you have not filled.
+      const firstGap = findFirstGap(rows);
+      if (firstGap) {
+        setDay(firstGap.day);
+        setPeriod(firstGap.period);
+      }
     });
   }, [user]);
 
@@ -154,31 +207,9 @@ function TrackerPageContent() {
             ))}
           </div>
 
-          <div className="mt-5 grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-xs uppercase tracking-wide text-ffy-gold-deep">Before, 1 to 10</label>
-              <input
-                type="number"
-                min={1}
-                max={10}
-                value={before}
-                onChange={(e) => setBefore(e.target.value === "" ? "" : Number(e.target.value))}
-                className="mt-1.5 w-full rounded-xl border border-ffy-border bg-white px-4 py-3 text-lg"
-                inputMode="numeric"
-              />
-            </div>
-            <div>
-              <label className="block text-xs uppercase tracking-wide text-ffy-gold-deep">After, 1 to 10</label>
-              <input
-                type="number"
-                min={1}
-                max={10}
-                value={after}
-                onChange={(e) => setAfter(e.target.value === "" ? "" : Number(e.target.value))}
-                className="mt-1.5 w-full rounded-xl border border-ffy-border bg-white px-4 py-3 text-lg"
-                inputMode="numeric"
-              />
-            </div>
+          <div className="mt-5 flex flex-col gap-5">
+            <Rating label="Before, 1 to 10" value={before} onChange={setBefore} />
+            <Rating label="After, 1 to 10" value={after} onChange={setAfter} />
           </div>
 
           {saveError && <p className="mt-3 text-sm text-red-700">{saveError}</p>}
@@ -195,27 +226,39 @@ function TrackerPageContent() {
         </div>
 
         <p className="mt-10 text-xs uppercase tracking-[0.15em] text-ffy-gold-deep">Your progress</p>
+        <p className="mt-2 text-xs text-ffy-brown">
+          Filled means both halves of that day are in. Half filled means one. Tap any day to open it.
+        </p>
         {loading ? (
           <p className="mt-3 text-sm text-ffy-brown">Loading…</p>
         ) : (
-          <div className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2">
+          // 1 Oct 2026: this was thirty one full-width rows, most of them
+          // reading "AM - . PM -", which is a long wall of nothing. It is now
+          // a grid you can take in at a glance: a dot per day, filled when
+          // both halves are logged, half filled when one is.
+          <div className="mt-4 grid grid-cols-8 gap-2 sm:grid-cols-10">
             {DAYS.map((d) => {
               const am = entryFor(entries, d, "AM");
               const pm = entryFor(entries, d, "PM");
+              const done = (am ? 1 : 0) + (pm ? 1 : 0);
+              const state =
+                done === 2
+                  ? "border-ffy-teal bg-ffy-teal text-ffy-cream"
+                  : done === 1
+                    ? "border-ffy-gold bg-ffy-gold/25 text-ffy-black"
+                    : "border-ffy-border bg-white/60 text-ffy-black/40";
               return (
                 <button
                   key={d}
                   type="button"
                   onClick={() => setDay(d)}
-                  className={`flex items-center justify-between rounded-xl border px-4 py-2.5 text-left text-sm transition ${
-                    d === day ? "border-ffy-gold bg-ffy-cream-2" : "border-ffy-border bg-white/60"
+                  title={`Day ${d}. Morning ${am ? `${am.beforeRating ?? "-"} to ${am.afterRating ?? "-"}` : "not logged"}. Afternoon ${pm ? `${pm.beforeRating ?? "-"} to ${pm.afterRating ?? "-"}` : "not logged"}.`}
+                  aria-label={`Day ${d}, ${done} of 2 logged`}
+                  className={`flex aspect-square items-center justify-center rounded-lg border text-sm transition ${state} ${
+                    d === day ? "ring-2 ring-ffy-gold-deep ring-offset-1" : ""
                   }`}
                 >
-                  <span className="font-medium text-ffy-black">Day {d}</span>
-                  <span className="text-xs text-ffy-brown">
-                    AM {am ? `${am.beforeRating ?? "–"}→${am.afterRating ?? "–"}` : "–"} · PM{" "}
-                    {pm ? `${pm.beforeRating ?? "–"}→${pm.afterRating ?? "–"}` : "–"}
-                  </span>
+                  {d}
                 </button>
               );
             })}
