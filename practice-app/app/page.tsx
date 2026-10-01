@@ -289,6 +289,8 @@ function LibraryContent() {
                   heroImage={CARDS_COMPANION.heroImage}
                   purchaseUrl={CARDS_COMPANION.purchaseUrl}
                   note={CARDS_COMPANION.note}
+                  slug="31-days-closer"
+                  userEmail={user?.email}
                 />
               ) : null;
 
@@ -347,6 +349,13 @@ function LibraryContent() {
                 subtitle={c.subtitle}
                 heroImage={c.heroImage}
                 purchaseUrl={PURCHASE_URLS[c.slug]}
+                // 1 Oct 2026: these two were never passed, anywhere, so
+                // handleClick returned early every single time and the
+                // interest tracking built on 9 Aug has never once fired.
+                // This branch is the one that matters most: a person who
+                // has bought one thing, looking at the rest.
+                slug={c.slug}
+                userEmail={user?.email}
               />
               {companion}
               </Fragment>
