@@ -118,7 +118,7 @@ const welcome: PracticeEntry = {
       lines: [
         { text: "Bite-sized scripts and invitations for starting an honest, positive conversation about intimacy. No blame, no awkwardness." },
         { text: "The Soft Start toolkit: support for re-entering togetherness gently, so both partners feel safe, not put on the spot." },
-        { text: "The simple Touch Base™ anchor, a body-based reset move so anyone can feel comfortable and present. Making every conversation easier." },
+        { text: "The simple Touch Base® anchor, a body-based reset move so anyone can feel comfortable and present. Making every conversation easier." },
       ],
     },
     {
@@ -179,7 +179,7 @@ const startHere: PracticeEntry = {
       kind: "numberedSteps",
       steps: [
         {
-          heading: "Touch Base™ Video",
+          heading: "Touch Base® Video",
           text: "Begin with a simple, powerful kinesthetic gesture to ground your body in safety and presence, before any conversation or touch. This transforms nerves into calm and sets the foundation for true connection.",
         },
         {
@@ -208,14 +208,14 @@ const startHere: PracticeEntry = {
 const touchBase: PracticeEntry = {
   slug: "touch-base",
   order: 2,
-  title: "The Touch Base™ Video",
+  title: "The Touch Base® Video",
   eyebrow: "A tiny gesture. A massive shift.",
   kind: "essay",
   image: "/reboot-kit/touch-base.jpg",
   imageAlt: "Touch Base, the real branded banner from the kit",
   imageSide: "left",
   body: [
-    { kind: "p", text: "This short video introduces you to the Touch Base™ cue. A discreet, powerful physical anchor that signals to your body: \"I'm here. I'm safe. I can stay.\"" },
+    { kind: "p", text: "This short video introduces you to the Touch Base® cue. A discreet, powerful physical anchor that signals to your body: \"I'm here. I'm safe. I can stay.\"" },
     { kind: "p", text: "It's the foundational cue I teach all my private clients, including those navigating phobias, trauma, sudden shutdowns, or a tendency to leave their body the moment touch feels like too much." },
     { kind: "p", text: "Because this isn't just about touch. It's about helping your system feel safe enough to receive it." },
     {
@@ -228,7 +228,7 @@ const touchBase: PracticeEntry = {
         { text: "So discreet you can use it in bed, at dinner, mid-argument, or before intimacy." },
       ],
     },
-    { kind: "youtube", videoId: TOUCH_BASE_YOUTUBE_ID, label: "Watch the Touch Base™ video" },
+    { kind: "youtube", videoId: TOUCH_BASE_YOUTUBE_ID, label: "Watch the Touch Base® video" },
     {
       kind: "why",
       lines: [
@@ -241,7 +241,7 @@ const touchBase: PracticeEntry = {
     { kind: "p", text: "All it takes is one loaded moment. A look. A brush. A hand that lingered where it shouldn't have. And your body registers it. You might not even remember when. But your system does. It braces." },
     { kind: "p", text: "And often, even in loving relationships, this is why touch doesn't land. Not because you don't want to receive it. Because your body's still armoured, just in case." },
     { kind: "p", text: "This gesture interrupts that loop without drama. No need for emotional excavation. No need to explain yourself mid-connection.", emphasis: "bold" },
-    { kind: "quote", text: "Touch Base™, the cue that brings your body back to yes." },
+    { kind: "quote", text: "Touch Base®, the cue that brings your body back to yes." },
     {
       kind: "step",
       label: "How",
@@ -260,9 +260,9 @@ const touchBase: PracticeEntry = {
     {
       kind: "why",
       lines: [
-        { text: "Make it stick. The 31-day Touch Base™ practice.", emphasis: "bold" },
+        { text: "Make it stick. The 31-day Touch Base® practice.", emphasis: "bold" },
         { text: "Watching the video is a beautiful start. Repetition is what rewires." },
-        { text: "When you practise the Touch Base™ cue consistently, even just a few minutes a day, you create a new default in your body. Presence becomes easier. Safety becomes familiar. Connection stops feeling like work." },
+        { text: "When you practise the Touch Base® cue consistently, even just a few minutes a day, you create a new default in your body. Presence becomes easier. Safety becomes familiar. Connection stops feeling like work." },
         { text: "Science shows that repetition forms new neural pathways. When you pair breath, attention, and a physical anchor, you train your system to associate the gesture with safety, stillness, and connection. Ninety days for it to become embodied, real mastery, muscle memory." },
         { text: "You only need six minutes a day. That's it. Everyone has six minutes. Split it up into three minutes, twice a day." },
       ],
@@ -273,7 +273,7 @@ const touchBase: PracticeEntry = {
       lines: [
         { text: "Set an alarm twice a day, morning and afternoon or evening." },
         { text: "When it goes off, pause." },
-        { text: "Do the kinesthetic Touch Base™ gesture slowly, with breath, for two minutes or a bit longer." },
+        { text: "Do the kinesthetic Touch Base® gesture slowly, with breath, for two minutes or a bit longer." },
         { text: "Before: rate how you feel, one to ten." },
         { text: "After: rate again. What shifted? What did you notice?" },
       ],
@@ -384,7 +384,7 @@ const softStart: PracticeEntry = {
       highlight: true,
       lines: [
         { text: "Have I tried one or two prompts myself, to feel confident?" },
-        { text: "Am I regulated and calm? A breath or Touch Base™ always helps." },
+        { text: "Am I regulated and calm? A breath or Touch Base® always helps." },
         { text: "Is my tone open and curious, not critical?" },
         { text: "Is the timing right, not rushed or stressed?" },
       ],

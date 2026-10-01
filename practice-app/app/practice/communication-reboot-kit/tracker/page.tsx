@@ -158,7 +158,7 @@ function TrackerPageContent() {
         <h1 className="mt-6 font-display text-3xl font-semibold text-ffy-teal">Your 31-day tracker</h1>
         <p className="mt-2 text-sm text-ffy-brown">
           Twice a day, morning and afternoon or evening. Two minutes each. Rate how you feel before
-          the Touch Base™ gesture, and again after.
+          the Touch Base® gesture, and again after.
         </p>
         <p className="mt-3 text-sm text-ffy-brown">
           Pick the day, choose morning or afternoon/evening, do the gesture, then rate yourself
