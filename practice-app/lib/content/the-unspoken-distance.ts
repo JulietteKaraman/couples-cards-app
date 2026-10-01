@@ -1258,7 +1258,10 @@ export const theUnspokenDistance: PracticeCollection = {
         { kind: "quote", text: "The Beginning: The Ultimate Touch Reset" },
         { kind: "image", src: "/unspoken-distance/the-beginning-touch-reset.png", alt: "The Beginning: The Ultimate Touch Reset" },
         { kind: "p", text: "Everything in this guide gives you understanding." },
-        { kind: "p", text: "The Beginning: The Ultimate Touch Reset gives you eight weeks of embodied experience." },
+        // 1 Oct 2026: said EIGHT weeks, two lines above a line calling it a
+        // twelve-week programme, and the live sales page says twelve throughout.
+        // Juliette confirmed: "it is 12 weeks".
+        { kind: "p", text: "The Beginning: The Ultimate Touch Reset gives you twelve weeks of embodied experience." },
         { kind: "p", text: "Understanding changes how you think." },
         { kind: "p", text: "Embodied experience changes what your body knows." },
         { kind: "p", text: "Both matter. They are not the same thing.", emphasis: "accent" },
