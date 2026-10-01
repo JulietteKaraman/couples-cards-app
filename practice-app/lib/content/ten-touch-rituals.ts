@@ -184,7 +184,11 @@ export const tenTouchRituals: PracticeCollection = {
   slug: "ten-touch-rituals",
   title: "10 Touch Rituals",
   subtitle: "For couples who love each other and want to feel it again.",
-  byline: "By Juliette Karaman, creator of The Beginning: The Ultimate Touch Reset",
+  // Corrected 1 Oct 2026. Juliette: "it should say, creator of the Touch Reset,
+  // instead of the Beginning". The Touch Reset is her METHOD, the whole of what
+  // she teaches. The Beginning is one programme inside it, so naming that as the
+  // thing she created was both stale and too small.
+  byline: "By Juliette Karaman, creator of The Touch Reset",
   heroImage: "/rituals/hero.png",
   unlockMode: "free-browse",
   entries: [

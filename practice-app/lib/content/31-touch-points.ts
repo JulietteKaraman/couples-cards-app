@@ -49,7 +49,11 @@ export const thirtyOneTouchPoints: PracticeCollection = {
   slug: "31-touch-points",
   title: "31 Touch Points",
   subtitle: "A month of feeling touched again. Not all of it is physical.",
-  byline: "By Juliette Karaman, creator of The Beginning: The Ultimate Touch Reset",
+  // Corrected 1 Oct 2026. Juliette: "it should say, creator of the Touch Reset,
+  // instead of the Beginning". The Touch Reset is her METHOD, the whole of what
+  // she teaches. The Beginning is one programme inside it, so naming that as the
+  // thing she created was both stale and too small.
+  byline: "By Juliette Karaman, creator of The Touch Reset",
   // TODO needs its own hero. Borrowing the rituals one for now, flagged to her.
   heroImage: "/31-touch-points/hero.jpg",
   // "sequential" is only a label: nothing in the app reads this field. The
