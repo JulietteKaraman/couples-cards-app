@@ -31,15 +31,17 @@ const jost = Jost({ subsets: ["latin"], weight: ["400", "500", "700"] });
 // box the artwork already leaves empty.
 //
 // TWO THINGS FOR JULIETTE TO SETTLE, both flagged to her:
-//  1. The band and the back box say REBOOT. Her other decks put the CATEGORY
-//     there ("PLAY & DISCOVERY"). This kit has no categories, so REBOOT is my
-//     choice, not hers.
+//  1. SETTLED 1 Oct 2026. Juliette: "it is communication reboot". The band
+//     and the back box carry the kit's real name, over the two lines her own
+//     deck's band is already built for (the real card has a brand span and a
+//     category span). My placeholder word REBOOT is gone.
 //  2. SETTLED 1 Oct 2026. Juliette: "the prompt stays bold because if there's
 //     a second line under it, it's not bold." So: .ffy-prompt is 700 on every
 //     card, .ffy-sub is 400. That is what this does, and it matches the real
 //     deck. Her 12 Aug note ("ONLY the cards that have 2 questions are in
 //     bold") was about the old PNG version and is superseded.
-const BAND_LABEL = "REBOOT";
+const BAND_TOP = "COMMUNICATION";
+const BAND_BOTTOM = "REBOOT";
 
 function CardFace({
   card,
@@ -72,7 +74,8 @@ function CardFace({
       </svg>
 
       <div className="ffy-band">
-        <span>{BAND_LABEL}</span>
+        <span>{BAND_TOP}</span>
+        <span>{BAND_BOTTOM}</span>
       </div>
 
       <div className="ffy-body">
@@ -91,7 +94,7 @@ function CardFace({
       {!revealed && (
         <div className="ffy-front">
           <div className="ffy-fbox">
-            <span className="ffy-fdeck">{BAND_LABEL}</span>
+            <span className="ffy-fdeck">{BAND_TOP} {BAND_BOTTOM}</span>
           </div>
         </div>
       )}
