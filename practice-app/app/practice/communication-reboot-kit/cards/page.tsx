@@ -34,10 +34,11 @@ const jost = Jost({ subsets: ["latin"], weight: ["400", "500", "700"] });
 //  1. The band and the back box say REBOOT. Her other decks put the CATEGORY
 //     there ("PLAY & DISCOVERY"). This kit has no categories, so REBOOT is my
 //     choice, not hers.
-//  2. On 12 Aug 2026 she said "ONLY the cards that have 2 questions are in
-//     bold", correcting the old PNG version. The real deck's own CSS makes
-//     .prompt bold on every card. Matching the real deck is the point of this
-//     rebuild, so the prompt is bold throughout. Hers to overrule.
+//  2. SETTLED 1 Oct 2026. Juliette: "the prompt stays bold because if there's
+//     a second line under it, it's not bold." So: .ffy-prompt is 700 on every
+//     card, .ffy-sub is 400. That is what this does, and it matches the real
+//     deck. Her 12 Aug note ("ONLY the cards that have 2 questions are in
+//     bold") was about the old PNG version and is superseded.
 const BAND_LABEL = "REBOOT";
 
 function CardFace({
