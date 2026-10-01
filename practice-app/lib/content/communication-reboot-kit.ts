@@ -24,7 +24,7 @@
 //
 // Two pieces of this kit are NOT static content and do not live in this
 // file: the 31-day AM/PM tracker and the reflection journal. Both are
-// real, persisted, interactive features — see
+// real, persisted, interactive features, see
 // app/practice/communication-reboot-kit/tracker/page.tsx and
 // .../journal/page.tsx, and lib/entitlements/tracker.ts / journal.ts.
 
@@ -40,8 +40,8 @@ export const REBOOT_PLAYLIST_STATEMENT =
 // The Drive copy this used to point at (1H9glMx7rnAkzwMFMxlBE9UDEvJH2bOu7) is
 // dead, confirmed 11 Aug 2026 (Drive returns "the file you have requested
 // does not exist"). Touch Base already has a real, working, canonical video
-// live elsewhere in this app on YouTube — app/practice/touch-base/page.tsx,
-// sourced from feelfullyyou.com/touch-base-anchor — so this points at that
+// live elsewhere in this app on YouTube, app/practice/touch-base/page.tsx,
+// sourced from feelfullyyou.com/touch-base-anchor, so this points at that
 // same video instead of a second, separately-uploaded Drive copy.
 const TOUCH_BASE_YOUTUBE_ID = "qWaZ3rk0His";
 const MINI_DYAD_VIDEO_URL =
@@ -51,7 +51,7 @@ const MINI_DYAD_VIDEO_URL =
 // phrasing of the same closing integration prompt, both included.
 // Some cards are a statement plus a separate follow-up question. Real
 // cards render that as two lines: the statement bold, the question plain
-// underneath, not run together as one sentence — Juliette, 12 Aug 2026:
+// underneath, not run together as one sentence, Juliette, 12 Aug 2026:
 // "so how I do it in the normal cards is the first line here would be
 // bold... then the next sentence (not bold & under it)." A plain string
 // is a single-line card; {main, secondary} is the two-line kind.
@@ -182,10 +182,10 @@ const startHere: PracticeEntry = {
       // before it.
       //
       // Originally 6 steps. "Open the Conversation" was dropped 12 Aug
-      // 2026 — it promised its own piece but never had one anywhere, not
+      // 2026. It promised its own piece but never had one anywhere, not
       // in this build, not in Juliette's own source doc. Her call once
       // she saw it named plainly: "I think there are enough examples in
-      // the kit" (the cards + Soft Start already cover it) — removed
+      // the kit" (the cards + Soft Start already cover it), removed
       // rather than left as an unfulfilled promise. Now 5 steps.
       kind: "numberedSteps",
       steps: [
@@ -344,7 +344,7 @@ const softStart: PracticeEntry = {
     { kind: "quote", text: "Text message swipe files. For when you want to open the door." },
     {
       // Juliette, 12 Aug 2026: "should have different colour backgrounds"
-      // (back after the last pass made all four the same blush tone) —
+      // (back after the last pass made all four the same blush tone) ,
       // restored distinct colours, one per category, so they read as four
       // separate moods at a glance, same approved palette as everywhere
       // else in the app.
@@ -493,11 +493,16 @@ const cards: PracticeEntry = {
       lines: [
         { text: "Want more?", emphasis: "bold" },
         { text: "Love this practice? There's an entire collection waiting for you." },
-        { text: "The Communication & Intimacy Prompt Card Collection is a beautifully designed bundle of five themed decks created to deepen connection across every part of your life. Romantic Relationships. Beliefs & Emotions. Sex. Family. Life." },
+        // 1 Oct 2026: this promised "five themed decks, Romantic Relationships,
+        // Beliefs & Emotions, Sex, Family, Life". Not one of those exists any
+        // more. The decks were rebuilt by OCCASION on 27 Sep 2026, so anyone
+        // tapping through landed on a shop selling things with none of the
+        // names they had just been promised. Rewritten off the live page.
+        { text: "There is a whole collection now, sorted by the moment you are in rather than by theme. 31 Days Closer, one card a day for a month, already in the right order. Couples, 169 cards. Friends and Family, 172 cards. They all live in the same app, one payment, permanent access." },
         { text: "These aren't just conversation starters. They're connection catalysts. Perfect for couples, friends, family, or as a solo reflection tool when you want to meet yourself more deeply." },
       ],
     },
-    { kind: "image", src: "/reboot-kit/card-fan.png", alt: "The full Communication & Intimacy Prompt Card Collection, five themed decks" },
+    { kind: "image", src: "/reboot-kit/card-fan.png", alt: "The full Communication & Intimacy card collection" },
     { kind: "link", text: "See the full card collection →", href: "https://feelfullyyou.com/cards" },
   ],
 };
@@ -509,7 +514,7 @@ const finalWords: PracticeEntry = {
   eyebrow: "You're in the perfect place for your next step",
   kind: "closing",
   image: "/reboot-kit/final-words.png",
-  imageAlt: "In Touch Taster Audit, the real closing banner from the kit",
+  imageAlt: "Touch Audit, the real closing banner from the kit",
   imageSide: "left",
   body: [
     { kind: "p", text: "Something in you knew. There has to be more than this: **more warmth, presence, and honest connection.**" },
@@ -523,16 +528,16 @@ const finalWords: PracticeEntry = {
     {
       kind: "why",
       lines: [
-        { text: "Your next invitation: the In Touch Taster Audit.", emphasis: "bold" },
+        { text: "Your next invitation: the Touch Audit.", emphasis: "bold" },
         { text: "Connection builds slowly, through presence meeting presence." },
         { text: "These prompts are designed to invite you back into yourself, one breath, one truth, one felt moment at a time." },
         { text: "When something stirs, a tightness in your throat, a subtle ache under your ribs, a recognition that your body trusts this work enough to soften, you do not need to walk it alone." },
       ],
     },
-    { kind: "p", text: "The In Touch Taster Audit is a 25 minute private space to pause, breathe, let what is rising have space to be named, practise truth in connection rather than isolation, and feel the difference between performing intimacy and receiving it." },
+    { kind: "p", text: "The Touch Audit is a 30 minute private space to pause, breathe, let what is rising have space to be named, practise truth in connection rather than isolation, and feel the difference between performing intimacy and receiving it." },
     { kind: "p", text: "We will Touch Base, sit in presence, and follow sensation rather than strategy. You leave with clarity, softness, and your feet back inside your life, not outside watching yourself live it." },
     { kind: "p", text: "If your body exhales at the idea of that, follow it." },
-    { kind: "link", text: "Book your In Touch Taster Audit →", href: "https://tidycal.com/juliette2/in-touch-audit" },
+    { kind: "link", text: "Book your Touch Audit →", href: "https://tidycal.com/juliette2/in-touch-audit" },
     { kind: "p", text: "If you prefer to listen, to stay in this yes frequency, tune into The Scrumptious Woman® Podcast. Stories. Secrets. Sensual truths that bring you closer to yourself." },
     { kind: "quote", text: "You are only just beginning. I'm excited for you." },
     { kind: "signature", src: "/reboot-kit/signature.png", alt: "Love Always, Juliette (signature)" },
