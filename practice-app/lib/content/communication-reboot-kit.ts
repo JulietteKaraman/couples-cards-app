@@ -1,3 +1,14 @@
+// EDITED 1 Oct 2026 against Juliette's own ban list. This file was a verbatim
+// transcription of her Google Doc, and the doc predates several rules she set
+// afterwards, so her own words here were breaking her own rules. Thirteen
+// changes, every one shown to her: "you aren't broken" (a hard ban, twice over),
+// two "not because..." constructions, one "not through X but through Y", one
+// "sit with", three sentences opening on "And", two "journey", one
+// "transformation", the playlist being called the Touch Reboot playlist which
+// collides with her twelve-week programme, and the deck being called The
+// Connection and Intimacy Cards on one page and The Communication and Intimacy
+// Cards on every other. Also: the cards page was reusing the welcome page's
+// photograph, now its own.
 // Source of truth: the Google Doc "Communication & Intimacy Reboot Kit"
 // (id 1-BlkZq0vsCDPGOgDutt5h_a2Bar201dVkpI9jFtkFdw), read in full, and the
 // PDF export "Communication & Intimacy Reboot Kit (2).pdf" (pages 5-13),
@@ -109,7 +120,7 @@ const welcome: PracticeEntry = {
     { kind: "big", text: "If you're here, you've already taken the bravest step. Admitting something's quietly missing and that your connection could feel more alive." },
     { kind: "quote", text: "That's not a crisis. It's the start of real change." },
     { kind: "p", text: "Maybe life together is \"fine,\" but intimacy, affection, or easy closeness feels flat or rare. Maybe it's hard to talk about, or nothing you've tried has really solved it." },
-    { kind: "p", text: "You aren't broken. Neither is your relationship.", emphasis: "bold" },
+    { kind: "p", text: "This is a pattern, not a verdict. Patterns can be changed.", emphasis: "bold" },
     { kind: "p", text: "This kit isn't about \"fixing.\" It's about making space for something you quietly want more of." },
     { kind: "p", text: "This is your go-to. A pressure-free, achievable beginning for couples who want to say, \"Let's talk about what could feel better for both of us.\"" },
     {
@@ -137,13 +148,13 @@ const welcome: PracticeEntry = {
       lines: [
         { text: "Discover a safe, simple way to start talking about what's missing: **without drama or difficult \"talks.\"**" },
         { text: "Begin rebuilding closeness and desire gently, with actionable prompts and quick wins." },
-        { text: "Experience how even one open moment can make it easier to reconnect: without needing therapy or a huge transformation." },
+        { text: "Experience how even one open moment can make it easier to reconnect: without needing therapy or a huge overhaul." },
       ],
     },
     { kind: "quote", text: "Pick one tool at a time. Take it slow." },
     { kind: "p", text: "This isn't about fixing anything. It's about making space for what really matters, one small **\"yes\"** at a time." },
     { kind: "quote", text: "Welcome inside. This is your first, doable step into a new kind of intimacy and real communication." },
-    { kind: "p", text: "The journey doesn't begin in your head. It begins with simple communication into intimacy." },
+    { kind: "p", text: "This does not begin in your head. It begins with simple communication into intimacy." },
     { kind: "signature", src: "/reboot-kit/signature.png", alt: "Love Always, Juliette (signature)" },
     { kind: "p", text: "Host of The Scrumptious Woman® Podcast." },
     { kind: "p", text: "Featured in Forbes, Cosmopolitan, The Telegraph, The Times, FOX, CBS and more." },
@@ -187,7 +198,7 @@ const startHere: PracticeEntry = {
           text: "Use gentle, swipe-and-go scripts to invite your partner in, without turning it into \"a thing.\" These make it safe and easy to say, \"Can we talk?\" or \"Let's reconnect,\" no matter how long it's been.",
         },
         {
-          heading: "The Connection and Intimacy Cards",
+          heading: "The Communication and Intimacy Cards",
           text: "Forty-six communication and intimacy prompts to help you speak from the heart, not just the head. Let these cues guide you to the words you didn't know how to say, or to questions that create understanding in minutes.",
         },
         {
@@ -238,8 +249,8 @@ const touchBase: PracticeEntry = {
       ],
     },
     { kind: "p", text: "Your body is always scanning. Especially if you're a woman, or were socialised as one, your subconscious is constantly asking: \"Is it safe to soften here? Is it safe to let go?\"" },
-    { kind: "p", text: "All it takes is one loaded moment. A look. A brush. A hand that lingered where it shouldn't have. And your body registers it. You might not even remember when. But your system does. It braces." },
-    { kind: "p", text: "And often, even in loving relationships, this is why touch doesn't land. Not because you don't want to receive it. Because your body's still armoured, just in case." },
+    { kind: "p", text: "All it takes is one loaded moment. A look. A brush. A hand that lingered where it shouldn't have. Your body registers it. You might not even remember when. But your system does. It braces." },
+    { kind: "p", text: "Often, even in loving relationships, this is why touch doesn't land. You do want to receive it. Your body is still armoured, just in case." },
     { kind: "p", text: "This gesture interrupts that loop without drama. No need for emotional excavation. No need to explain yourself mid-connection.", emphasis: "bold" },
     { kind: "quote", text: "Touch Base®, the cue that brings your body back to yes." },
     {
@@ -256,7 +267,7 @@ const touchBase: PracticeEntry = {
     { kind: "p", text: "One woman who had a lifelong fear of flying used this gesture mid-takeoff. It was the first time she stayed present in her body, rather than dissociating." },
     { kind: "p", text: "Another used it to anchor herself during touch with her partner, after years of feeling like she \"left\" her body the moment things became intimate." },
     { kind: "p", text: "This is the cue that quietly tells your body: \"You're here. You're safe. You don't have to run.\"", emphasis: "accent" },
-    { kind: "p", text: "Once you feel what it does, you'll return to it again and again. Not because it's flashy. Because it works." },
+    { kind: "p", text: "Once you feel what it does, you'll return to it again and again. Because it works." },
     {
       kind: "why",
       lines: [
@@ -309,7 +320,7 @@ const playlist: PracticeEntry = {
     // generated fresh against REBOOT_PLAYLIST_URL (not a reused image of
     // the doc's own QR, so it can never point at a stale link).
     { kind: "image", src: "/reboot-kit/playlist-mockup.png", alt: "The real Touch Reboot Kit playlist on Tidal, 44 tracks" },
-    { kind: "link", text: "Open the Touch Reboot playlist on Tidal →", href: REBOOT_PLAYLIST_URL },
+    { kind: "link", text: "Open the Touch Reconnection playlist on Tidal →", href: REBOOT_PLAYLIST_URL },
     { kind: "image", src: "/reboot-kit/playlist-qr.png", alt: "QR code to open the Touch Reconnection Playlist" },
     { kind: "notice", lines: [{ text: REBOOT_PLAYLIST_STATEMENT }] },
   ],
@@ -420,7 +431,7 @@ const cards: PracticeEntry = {
   title: "The Communication and Intimacy Cards",
   eyebrow: "Authentic cards and prompts for deeper intimacy",
   kind: "essay",
-  image: "/reboot-kit/hero.png",
+  image: "/reboot-kit/card-fan.png",
   imageAlt: "Communication & Intimacy Reboot",
   imageSide: "left",
   body: [
@@ -429,7 +440,7 @@ const cards: PracticeEntry = {
     { kind: "p", text: "These cards and prompts invite you back into what's real, for honest intimacy with your partner, or deeper reflection with yourself." },
     { kind: "p", text: "Rooted in the powerful Dyad Technique, this is more than just conversation. **It's an experience.** A way to drop the walls, strip back the performance, and meet what's really there." },
     { kind: "p", text: "Not the polished version. Not the overthinking. Just what's true.", emphasis: "bold" },
-    { kind: "quote", text: "This isn't therapy. It's not a \"fix.\" It's presence. Precision. And a whole lot of tenderness." },
+    { kind: "quote", text: "This isn't therapy. It's not a \"fix.\" It's presence. Precision. A whole lot of tenderness." },
     // The 46 cards are the flagship of this entry, and the whole kit.
     // Juliette, 12 Aug 2026: first "the cards aren't even on there" (they
     // were, just buried past the instructions and video), then after
@@ -460,7 +471,7 @@ const cards: PracticeEntry = {
     { kind: "image", src: "/reboot-kit/juliette-video.png", alt: "Juliette introducing the Mini Dyad Instruction video" },
     { kind: "driveVideo", url: MINI_DYAD_VIDEO_URL, label: "Watch the Mini Dyad Instruction video" },
     { kind: "big", text: "The 46 prompts" },
-    { kind: "p", text: "Choose one at a time, the way you would with the real deck. Not a list to scroll through, a card to sit with." },
+    { kind: "p", text: "Choose one at a time, the way you would with the real deck. Not a list to scroll through, a card to stay with." },
     { kind: "link", text: "Open the cards →", href: "/practice/communication-reboot-kit/cards" },
     {
       kind: "why",
@@ -513,7 +524,7 @@ const finalWords: PracticeEntry = {
       kind: "why",
       lines: [
         { text: "Your next invitation: the In Touch Taster Audit.", emphasis: "bold" },
-        { text: "Connection builds slowly. Not through pushing, not through performance, but through presence meeting presence." },
+        { text: "Connection builds slowly, through presence meeting presence." },
         { text: "These prompts are designed to invite you back into yourself, one breath, one truth, one felt moment at a time." },
         { text: "When something stirs, a tightness in your throat, a subtle ache under your ribs, a recognition that your body trusts this work enough to soften, you do not need to walk it alone." },
       ],
@@ -523,7 +534,7 @@ const finalWords: PracticeEntry = {
     { kind: "p", text: "If your body exhales at the idea of that, follow it." },
     { kind: "link", text: "Book your In Touch Taster Audit →", href: "https://tidycal.com/juliette2/in-touch-audit" },
     { kind: "p", text: "If you prefer to listen, to stay in this yes frequency, tune into The Scrumptious Woman® Podcast. Stories. Secrets. Sensual truths that bring you closer to yourself." },
-    { kind: "quote", text: "Your journey is just beginning. I'm excited for you." },
+    { kind: "quote", text: "You are only just beginning. I'm excited for you." },
     { kind: "signature", src: "/reboot-kit/signature.png", alt: "Love Always, Juliette (signature)" },
   ],
 };
