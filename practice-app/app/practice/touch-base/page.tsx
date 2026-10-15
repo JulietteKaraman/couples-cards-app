@@ -8,10 +8,10 @@
 // model. Not gated — same frictionless, no-login-needed spirit as the
 // marketing site's own free version and the cards taster.
 //
-// Video is the real one from feelfullyyou.com/touch-base-anchor
-// (YouTube, not Vimeo, so this doesn't use the shared "video" ContentBlock,
-// which is Vimeo-only) — embedded directly here since this is a one-off
-// standalone page, not a recurring block kind.
+// Video is the real one, the same Vimeo video as feelfullyyou.com/
+// thankyou-touch-base (Juliette, 15 Oct 2026: Vimeo is the right one, the
+// old YouTube embed is retired). Embedded directly here since this is a
+// one-off standalone page, not a recurring block kind.
 
 import Link from "next/link";
 
@@ -31,9 +31,9 @@ export default function TouchBasePage() {
 
         <div className="mt-8 overflow-hidden rounded-2xl bg-ffy-black" style={{ position: "relative", paddingBottom: "56.25%" }}>
           <iframe
-            src="https://www.youtube.com/embed/qWaZ3rk0His"
+            src="https://player.vimeo.com/video/1223329859?title=0&byline=0&portrait=0&dnt=1"
             title="Touch Base® — The Video"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allow="autoplay; fullscreen; picture-in-picture"
             allowFullScreen
             style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", border: "none" }}
           />

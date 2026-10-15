@@ -383,14 +383,33 @@ function LibraryContent() {
               lib/content/cards-taster.ts go with it. In git history if it
               is ever wanted back. */}
 
-          {/* Touch Base® tile removed from freebies 16 Sep 2026 per Juliette
-              ("take off touch base from the freebies, both on website and
-              on the app"). The standalone practice still lives at
-              /practice/touch-base, just no longer listed here. Prior
-              history: pulled 27 Aug ("too much for free"), restored 28 Aug
-              ("let touch base still be the normal freebie"), pulled again
-              16 Sep 2026. If restoring again, the removed block is in git
-              history on this file. */}
+          {/* Touch Base® — restored 15 Oct 2026 at Juliette's instruction: it
+              should live in the app so people can come back to it, and the
+              Touch Base welcome email points here. Prior history: added 1 Aug,
+              pulled 27 Aug, restored 28 Aug, pulled 16 Sep 2026. Same shape
+              as before, its own standalone route, no login needed. */}
+          <Link
+            href="/practice/touch-base"
+            className="group flex items-center gap-5 overflow-hidden rounded-2xl border border-ffy-border bg-white/60 p-4 transition hover:border-ffy-gold sm:p-5"
+          >
+            <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-xl bg-white sm:h-24 sm:w-24">
+              <Image
+                src="/offers/touch-base-logo.png"
+                alt="Touch Base® Anchor"
+                fill
+                sizes="96px"
+                className="object-contain p-2"
+              />
+            </div>
+            <div className="min-w-0 flex-1">
+              <h2 className="font-display text-xl font-semibold text-ffy-black group-hover:text-ffy-teal">
+                Touch Base®, the Anchor
+              </h2>
+              <p className="mt-1 text-sm text-ffy-brown">Two minutes, no equipment. A way back to yourself, anywhere, any time.</p>
+              <p className="mt-2 text-xs uppercase tracking-wide text-ffy-gold-deep">Free practice</p>
+            </div>
+            <span className="text-ffy-gold">→</span>
+          </Link>
 
           {/* The Touch Reset Quiz — free, always unlocked, but the quiz
               itself (questions, scoring, results) lives on the main site,
