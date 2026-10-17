@@ -253,7 +253,7 @@ function LibraryContent() {
         {!user && (
           <div className="mb-6 rounded-2xl border border-ffy-gold/50 bg-white/70 p-5">
             <p className="font-display text-lg font-semibold text-ffy-teal">
-              Start with the quiz. It is free and it takes five minutes.
+              Start with The Touch Reset Quiz. It is free and it takes five minutes.
             </p>
             <p className="mt-1 text-sm text-ffy-brown">
               Everything below is yours to look through. Some of it is free, some of it you buy
@@ -275,6 +275,23 @@ function LibraryContent() {
         </div>
 
         <div className="grid gap-5">
+          {/* The Touch Reset Quiz, moved to the TOP 17 Oct 2026 (Juliette: with two
+              quizzes on the shelf, the "start with the quiz" line above must
+              lead straight to the Touch Reset one). Free, always unlocked, but the quiz
+              itself (questions, scoring, results) lives on the main site,
+              not in this app. See FreeExternalTile above. */}
+          <FreeExternalTile
+            title="The Touch Reset Quiz"
+            // Words and cover taken from the live quiz page, 30 Sep 2026. The
+            // old subtitle promised a "Touch Pattern" and "the language your
+            // body has been waiting for", which the rebuilt quiz no longer
+            // says, and the cover was a hand on tree bark. Both wrong.
+            subtitle="Where Did The Touch Go? Being touched is not the same as feeling it. Five minutes, and you find out where the touch actually went, and what has been holding it there."
+            heroImage="/offers/touch-reset-quiz-cover.jpg"
+            href="https://feelfullyyou.com/touch-reset-quiz"
+            note="Free · 5 minutes"
+          />
+
           {ALL_COLLECTIONS.map((c) => {
             // Signed out, nothing is "unlocked": a free guide still needs an
             // account so the entitlement can be granted, and a paid one still
@@ -427,21 +444,6 @@ function LibraryContent() {
             </div>
             <span className="text-ffy-gold">→</span>
           </Link>
-
-          {/* The Touch Reset Quiz — free, always unlocked, but the quiz
-              itself (questions, scoring, results) lives on the main site,
-              not in this app. See FreeExternalTile above. */}
-          <FreeExternalTile
-            title="The Touch Reset Quiz"
-            // Words and cover taken from the live quiz page, 30 Sep 2026. The
-            // old subtitle promised a "Touch Pattern" and "the language your
-            // body has been waiting for", which the rebuilt quiz no longer
-            // says, and the cover was a hand on tree bark. Both wrong.
-            subtitle="Where Did The Touch Go? Being touched is not the same as feeling it. Five minutes, and you find out where the touch actually went, and what has been holding it there."
-            heroImage="/offers/touch-reset-quiz-cover.jpg"
-            href="https://feelfullyyou.com/touch-reset-quiz"
-            note="Free · 5 minutes"
-          />
 
           {/* The Sacred No Quiz, 17 Oct 2026 (specs/sacred-no-in-app.md R9).
               Free, lives on the main site, same shape as the Touch Reset
