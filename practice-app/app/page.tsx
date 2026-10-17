@@ -7,6 +7,7 @@ import { thirtyOneTouchPoints } from "@/lib/content/31-touch-points";
 import { theUnspokenDistance } from "@/lib/content/the-unspoken-distance";
 import { whenSheGoesQuiet } from "@/lib/content/when-she-goes-quiet";
 import { communicationRebootKit } from "@/lib/content/communication-reboot-kit";
+import { theSacredNo } from "@/lib/content/the-sacred-no";
 import { useAuth } from "@/components/providers/AuthProvider";
 import { getCompletedSlugs } from "@/lib/entitlements/progress";
 import { COLLECTION_DECK_TYPES, PURCHASE_URLS, FREE_DECK_TYPES } from "@/lib/entitlements/config";
@@ -42,7 +43,9 @@ function isFreeCollection(slug: string): boolean {
 // sells the same practices twice and puts two tiles with the same photo side
 // by side. Existing buyers keep their entitlement and their direct URL still
 // resolves, it simply no longer appears as a tile.
-const ALL_COLLECTIONS = [thirtyOneTouchPoints, theUnspokenDistance, whenSheGoesQuiet, communicationRebootKit];
+// The Sacred No added 17 Oct 2026 (specs/sacred-no-in-app.md R8), appended
+// so no existing tile moves.
+const ALL_COLLECTIONS = [thirtyOneTouchPoints, theUnspokenDistance, whenSheGoesQuiet, communicationRebootKit, theSacredNo];
 
 // Offers that never live inside this app at all (no PracticeCollection,
 // no deck_type, nothing to unlock here) but that Juliette wants
@@ -362,6 +365,20 @@ function LibraryContent() {
             );
           })}
 
+          {/* "Talk to me", 17 Oct 2026 (specs/sacred-no-in-app.md R10). The
+              next step after The Sacred No, after One Touch: a Touch Reset
+              call. Shown to signed-in owners of The Sacred No (and so to
+              Juliette, who is entitled to everything). */}
+          {user && entitledCollections.includes(theSacredNo.slug) && (
+            <FreeExternalTile
+              title="Talk to me"
+              subtitle="Somewhere in The Sacred No, or through the other side of it? Book a call and we look at where you are and what comes next."
+              heroImage="/offers/talk-to-me.jpg"
+              href="https://tidycal.com/juliette2/the-touch-reset-call"
+              note="Touch Reset call · book a time"
+            />
+          )}
+
           {/* Members App tile removed from the home library — Juliette, 11 Aug
               2026, seeing it live: "take the members app off the home page-
               it does not go anywhere yet so should not live on the app where
@@ -424,6 +441,18 @@ function LibraryContent() {
             heroImage="/offers/touch-reset-quiz-cover.jpg"
             href="https://feelfullyyou.com/touch-reset-quiz"
             note="Free · 5 minutes"
+          />
+
+          {/* The Sacred No Quiz, 17 Oct 2026 (specs/sacred-no-in-app.md R9).
+              Free, lives on the main site, same shape as the Touch Reset
+              Quiz tile above. */}
+          <FreeExternalTile
+            title="The Sacred No Quiz"
+            // Words taken from the live quiz page, 17 Oct 2026.
+            subtitle="Are you saying yes when you mean no? Twelve honest questions. Let your body answer first. At the end, the pattern you are leading from, and your way back to a clean no."
+            heroImage="/sacred-no/hero.jpg"
+            href="https://feelfullyyou.com/sacred-no-quiz"
+            note="Free"
           />
 
           {/* Offers with no in-app content at all (Repair Kit, One Touch) —

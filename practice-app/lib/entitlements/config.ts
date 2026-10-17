@@ -9,6 +9,8 @@ export const COLLECTION_DECK_TYPES: Record<string, string> = {
   "between-touches": "between-touches",
   "communication-reboot-kit": "communication-reboot-kit",
   "members-app": "members-app",
+  // The Sacred No, £17, moved into the app 17 Oct 2026 (specs/sacred-no-in-app.md R6).
+  "the-sacred-no": "sacred-no",
 };
 
 // Maps a real Stripe price ID to the deck_type it grants, so resolve-purchase
@@ -37,6 +39,10 @@ export const PRICE_ID_TO_DECK_TYPE: Record<string, string> = {
   price_1TnxAqCCw18geY153w22a2Ye: "unspoken-distance", // The Unspoken Distance, £97 (current, back from £77 1 Aug 2026 — now includes free Couples Cards)
   price_1TnwwmCCw18geY15egD5h7Fr: "communication-reboot-kit", // Communication Reboot Kit, £37 (live Payment Link, communication-reboot-kit.html)
   price_1U2uFbCCw18geY156WA0jb05: "members-app", // Members App, £77/month recurring — created 10 Aug 2026, spec R10
+  // The Sacred No, £17 (sacred-no-in-app spec R13). Same line as
+  // PRACTICE_APP_DECK_TYPES in the site webhook. The live payment link,
+  // plink_1UD0gtCCw18geY15E6gj9XGx, is matched by payment link there.
+  price_1UD0f6CCw18geY15BCSTDIlW: "sacred-no",
 };
 
 // Deck types that are RECURRING subscriptions rather than one-time
@@ -90,6 +96,7 @@ export const PURCHASE_URLS: Record<string, string> = {
   // £77/month, live) is ready; this URL needs the actual page built and a
   // checkout button wired to that price before it's real.
   "members-app": "https://feelfullyyou.com/members-app",
+  "the-sacred-no": "https://feelfullyyou.com/sacred-no",
 };
 
 export function deckTypesForApp(): string[] {
