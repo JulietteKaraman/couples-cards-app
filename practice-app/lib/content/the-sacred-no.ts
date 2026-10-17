@@ -7,9 +7,10 @@
 // The members page stays live as a quiet backup (R16) and nothing here
 // links to it.
 //
-// Every entry is open the moment a buyer has access (R3). This is a
-// free-browse collection, modelled on the non-drip guides, never on the
-// 31 Touch Points one-day-at-a-time drip.
+// CHANGED 17 Oct 2026, launch day: Juliette asked for the lessons to open
+// day by day once done, like 31 Touch Points. Day 1 = Welcome + lesson 1,
+// days 2 to 7 one lesson each, Bonus with day 7. The gate lives in
+// lib/content/the-sacred-no-drip.ts.
 //
 // The lesson descriptions are the members page's own lines, lightly
 // corrected (the page said "seven lessons" and carried "sitting
@@ -26,7 +27,7 @@ export const theSacredNo: PracticeCollection = {
   slug: "the-sacred-no",
   title: "The Sacred No",
   subtitle:
-    "Nine short videos, a few minutes each. Watch them in any order, at any pace. There is no wrong way to move through this.",
+    "Seven days, one lesson a day. Mark each one done and the next opens tomorrow. Miss a day and nothing is lost, it waits for you.",
   byline: "By Juliette Karaman",
   heroImage: "/sacred-no/hero.jpg",
   unlockMode: "free-browse",
@@ -35,7 +36,7 @@ export const theSacredNo: PracticeCollection = {
       slug: "welcome",
       order: 0,
       title: "Welcome",
-      eyebrow: "Before you begin",
+      eyebrow: "Day 1 · Before you begin",
       kind: "ritual",
       imageSide: "left",
       body: [
@@ -51,7 +52,7 @@ export const theSacredNo: PracticeCollection = {
       slug: "why-is-no-so-difficult",
       order: 1,
       title: "1 Why is no so difficult",
-      eyebrow: "Lesson 1",
+      eyebrow: "Day 1 · Lesson 1",
       kind: "ritual",
       imageSide: "left",
       body: [
@@ -66,7 +67,7 @@ export const theSacredNo: PracticeCollection = {
       slug: "body-as-a-compass",
       order: 2,
       title: "2 Body as a compass",
-      eyebrow: "Lesson 2",
+      eyebrow: "Day 2 · Lesson 2",
       kind: "ritual",
       imageSide: "left",
       body: [
@@ -81,7 +82,7 @@ export const theSacredNo: PracticeCollection = {
       slug: "rrrr-process",
       order: 3,
       title: "3 RRRR process",
-      eyebrow: "Lesson 3",
+      eyebrow: "Day 3 · Lesson 3",
       kind: "ritual",
       imageSide: "left",
       body: [
@@ -96,7 +97,7 @@ export const theSacredNo: PracticeCollection = {
       slug: "touch-base",
       order: 4,
       title: "Touch Base session 4",
-      eyebrow: "Lesson 4",
+      eyebrow: "Day 4 · Lesson 4",
       kind: "ritual",
       imageSide: "left",
       body: [
@@ -111,7 +112,7 @@ export const theSacredNo: PracticeCollection = {
       slug: "standards-with-others",
       order: 5,
       title: "Standards with others",
-      eyebrow: "Lesson 5",
+      eyebrow: "Day 5 · Lesson 5",
       kind: "ritual",
       imageSide: "left",
       body: [
@@ -126,7 +127,7 @@ export const theSacredNo: PracticeCollection = {
       slug: "standards-with-self",
       order: 6,
       title: "Standards with self",
-      eyebrow: "Lesson 6",
+      eyebrow: "Day 6 · Lesson 6",
       kind: "ritual",
       imageSide: "left",
       body: [
@@ -141,7 +142,7 @@ export const theSacredNo: PracticeCollection = {
       slug: "the-last-day",
       order: 7,
       title: "The last day",
-      eyebrow: "Lesson 7",
+      eyebrow: "Day 7 · Lesson 7",
       kind: "ritual",
       imageSide: "left",
       body: [
@@ -176,7 +177,7 @@ export const theSacredNo: PracticeCollection = {
       slug: "bonus-meditation",
       order: 8,
       title: "Bonus meditation",
-      eyebrow: "Bonus",
+      eyebrow: "Day 7 · Bonus",
       kind: "ritual",
       imageSide: "left",
       body: [
