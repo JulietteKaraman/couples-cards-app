@@ -452,7 +452,7 @@ function LibraryContent() {
             title="The Sacred No Quiz"
             // Words taken from the live quiz page, 17 Oct 2026.
             subtitle="Are you saying yes when you mean no? Twelve honest questions. Let your body answer first. At the end, the pattern you are leading from, and your way back to a clean no."
-            heroImage="/sacred-no/hero.jpg"
+            heroImage="/sacred-no/quiz.jpg"
             href="https://feelfullyyou.com/sacred-no-quiz"
             note="Free"
           />
