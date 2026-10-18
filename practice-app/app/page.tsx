@@ -45,7 +45,11 @@ function isFreeCollection(slug: string): boolean {
 // resolves, it simply no longer appears as a tile.
 // The Sacred No added 17 Oct 2026 (specs/sacred-no-in-app.md R8), appended
 // so no existing tile moves.
-const ALL_COLLECTIONS = [thirtyOneTouchPoints, theUnspokenDistance, whenSheGoesQuiet, communicationRebootKit, theSacredNo];
+// Free first, 18 Oct 2026 (Juliette: "prob good to have all free things on
+// top"). whenSheGoesQuiet is the only FREE_DECK_TYPES collection, so it
+// leads, directly under the three free tiles above. The paid ones keep
+// their own order, and 31 Days Closer still pins under 31 Touch Points.
+const ALL_COLLECTIONS = [whenSheGoesQuiet, thirtyOneTouchPoints, theUnspokenDistance, communicationRebootKit, theSacredNo];
 
 // Offers that never live inside this app at all (no PracticeCollection,
 // no deck_type, nothing to unlock here) but that Juliette wants
@@ -292,6 +296,47 @@ function LibraryContent() {
             note="Free · 5 minutes"
           />
 
+          {/* The Sacred No Quiz, 17 Oct 2026 (specs/sacred-no-in-app.md R9).
+              Free, lives on the main site, same shape as the Touch Reset
+              Quiz tile above. */}
+          <FreeExternalTile
+            title="The Sacred No Quiz"
+            // Words taken from the live quiz page, 17 Oct 2026.
+            subtitle="Are you saying yes when you mean no? Twelve honest questions. Let your body answer first. At the end, the pattern you are leading from, and your way back to a clean no."
+            heroImage="/sacred-no/quiz.jpg"
+            href="https://feelfullyyou.com/sacred-no-quiz"
+            note="Free"
+          />
+
+          {/* Touch Base® — restored 15 Oct 2026 at Juliette's instruction: it
+              should live in the app so people can come back to it, and the
+              Touch Base welcome email points here. Prior history: added 1 Aug,
+              pulled 27 Aug, restored 28 Aug, pulled 16 Sep 2026. Same shape
+              as before, its own standalone route, no login needed. */}
+          <Link
+            href="/practice/touch-base"
+            className="group flex items-center gap-5 overflow-hidden rounded-2xl border border-ffy-border bg-white/60 p-4 transition hover:border-ffy-gold sm:p-5"
+          >
+            <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-xl bg-white sm:h-24 sm:w-24">
+              <Image
+                src="/offers/touch-base-logo.png"
+                alt="Touch Base® Anchor"
+                fill
+                sizes="96px"
+                className="object-contain p-2"
+              />
+            </div>
+            <div className="min-w-0 flex-1">
+              <h2 className="font-display text-xl font-semibold text-ffy-black group-hover:text-ffy-teal">
+                Touch Base®, the Anchor
+              </h2>
+              <p className="mt-1 text-sm text-ffy-brown">Two minutes, no equipment. A way back to yourself, anywhere, any time.</p>
+              <p className="mt-2 text-xs uppercase tracking-wide text-ffy-gold-deep">Free practice</p>
+            </div>
+            <span className="text-ffy-gold">→</span>
+          </Link>
+
+
           {ALL_COLLECTIONS.map((c) => {
             // Signed out, nothing is "unlocked": a free guide still needs an
             // account so the entitlement can be granted, and a paid one still
@@ -417,45 +462,7 @@ function LibraryContent() {
               lib/content/cards-taster.ts go with it. In git history if it
               is ever wanted back. */}
 
-          {/* Touch Base® — restored 15 Oct 2026 at Juliette's instruction: it
-              should live in the app so people can come back to it, and the
-              Touch Base welcome email points here. Prior history: added 1 Aug,
-              pulled 27 Aug, restored 28 Aug, pulled 16 Sep 2026. Same shape
-              as before, its own standalone route, no login needed. */}
-          <Link
-            href="/practice/touch-base"
-            className="group flex items-center gap-5 overflow-hidden rounded-2xl border border-ffy-border bg-white/60 p-4 transition hover:border-ffy-gold sm:p-5"
-          >
-            <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-xl bg-white sm:h-24 sm:w-24">
-              <Image
-                src="/offers/touch-base-logo.png"
-                alt="Touch Base® Anchor"
-                fill
-                sizes="96px"
-                className="object-contain p-2"
-              />
-            </div>
-            <div className="min-w-0 flex-1">
-              <h2 className="font-display text-xl font-semibold text-ffy-black group-hover:text-ffy-teal">
-                Touch Base®, the Anchor
-              </h2>
-              <p className="mt-1 text-sm text-ffy-brown">Two minutes, no equipment. A way back to yourself, anywhere, any time.</p>
-              <p className="mt-2 text-xs uppercase tracking-wide text-ffy-gold-deep">Free practice</p>
-            </div>
-            <span className="text-ffy-gold">→</span>
-          </Link>
 
-          {/* The Sacred No Quiz, 17 Oct 2026 (specs/sacred-no-in-app.md R9).
-              Free, lives on the main site, same shape as the Touch Reset
-              Quiz tile above. */}
-          <FreeExternalTile
-            title="The Sacred No Quiz"
-            // Words taken from the live quiz page, 17 Oct 2026.
-            subtitle="Are you saying yes when you mean no? Twelve honest questions. Let your body answer first. At the end, the pattern you are leading from, and your way back to a clean no."
-            heroImage="/sacred-no/quiz.jpg"
-            href="https://feelfullyyou.com/sacred-no-quiz"
-            note="Free"
-          />
 
           {/* Offers with no in-app content at all (Repair Kit, One Touch) —
               always locked, always pointing out to the real sales page.
