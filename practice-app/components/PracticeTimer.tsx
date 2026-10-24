@@ -195,12 +195,12 @@ export default function PracticeTimer({
   return (
     <div
       className={`flex flex-col gap-4 rounded-2xl border px-5 py-5 ${
-        dark ? "border-ffy-gold/40 bg-white/5" : "border-ffy-gold/60 bg-ffy-cream-2"
+        dark ? "rounded-3xl border-[1.5px] border-[rgba(221,201,142,0.55)] bg-[rgba(13,53,53,0.55)] shadow-[0_0_40px_-18px_rgba(221,201,142,0.6)]" : "border-ffy-gold/60 bg-ffy-cream-2"
       }`}
     >
       <p
         className={`text-xs uppercase tracking-wide ${
-          dark ? "text-ffy-gold-pale" : "text-ffy-gold-deep"
+          dark ? "tracking-[0.16em] text-[#DDC98E]" : "text-ffy-gold-deep"
         }`}
       >
         {label ?? "Your container"}
@@ -208,8 +208,8 @@ export default function PracticeTimer({
 
       <div className="flex flex-wrap items-center gap-3">
         <span
-          className={`font-mono text-4xl tabular-nums ${done ? "opacity-60" : ""} ${
-            dark ? "text-white" : "text-ffy-black"
+          className={`tabular-nums ${done ? "opacity-60" : ""} ${
+            dark ? "font-display text-5xl font-light text-[#DDC98E]" : "font-mono text-4xl text-ffy-black"
           }`}
           aria-live="off"
         >
@@ -227,7 +227,7 @@ export default function PracticeTimer({
                 aria-pressed={m === chosen}
                 className={`rounded-full border px-3 py-1 text-sm transition disabled:opacity-40 ${
                   m === chosen
-                    ? "border-ffy-gold bg-ffy-gold text-white"
+                    ? dark ? "border-[#DDC98E] bg-[#DDC98E] text-[#070707]" : "border-ffy-gold bg-ffy-gold text-white"
                     : dark
                       ? "border-ffy-gold/40 text-ffy-gold-pale"
                       : "border-ffy-gold/60 text-ffy-gold-deep"
@@ -243,7 +243,7 @@ export default function PracticeTimer({
           <button
             type="button"
             onClick={toggle}
-            className="rounded-full bg-ffy-gold px-5 py-2 text-sm font-medium text-white transition hover:opacity-90"
+            className={dark ? "min-h-[44px] rounded-full bg-[#DDC98E] px-6 text-sm font-medium text-[#070707] transition hover:bg-[#EEDE80]" : "rounded-full bg-ffy-gold px-5 py-2 text-sm font-medium text-white transition hover:opacity-90"}
           >
             {running ? "Pause" : paused ? "Resume" : done ? "Again" : "Start"}
           </button>
@@ -261,7 +261,12 @@ export default function PracticeTimer({
         </div>
       </div>
 
-      <p className={`text-sm ${dark ? "text-white/70" : "text-ffy-black/70"}`}>
+      {dark && (
+        <div className="h-1 overflow-hidden rounded-full bg-[rgba(221,201,142,0.15)]" aria-hidden="true">
+          <div className="h-full rounded-full bg-[#DDC98E] transition-all duration-500" style={{ width: `${done ? 100 : Math.max(0, Math.min(100, (1 - remaining / (chosen * 60)) * 100))}%` }} />
+        </div>
+      )}
+      <p className={`text-sm ${dark ? "text-[rgba(254,252,250,0.75)]" : "text-ffy-black/70"}`}>
         {done
           ? "That is the container closed. Stop here, even if it was going beautifully."
           : "Your screen stays awake and it chimes softly at the end, so neither of you has to watch it."}
