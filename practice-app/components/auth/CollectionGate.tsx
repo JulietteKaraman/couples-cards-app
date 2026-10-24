@@ -13,7 +13,13 @@ function GateContent({
   collectionSlug: string;
   children: React.ReactNode;
 }) {
-  const { entitledCollections, user } = useAuth();
+  const { entitledCollections, entitlementsReady, user, signOut } = useAuth();
+
+  // Wait quietly until access has actually been read, so a real buyer never
+  // sees "This isn't on your account" flash up first (fixed 24 Oct 2026).
+  if (!entitlementsReady && !entitledCollections.includes(collectionSlug)) {
+    return <main className="min-h-screen bg-ffy-cream" aria-busy="true" />;
+  }
 
   if (!entitledCollections.includes(collectionSlug)) {
     return (
@@ -30,9 +36,22 @@ function GateContent({
             </a>
             .
           </p>
+          {/* The most common cause is signing in with a different email
+              from the one used to pay. Give them a way out (24 Oct 2026). */}
+          <button
+            type="button"
+            onClick={async () => {
+              const here = window.location.pathname;
+              await signOut();
+              window.location.href = `/login?next=${encodeURIComponent(here)}`;
+            }}
+            className="mt-6 block w-full rounded-full bg-ffy-teal px-5 py-3 font-display text-sm font-medium text-ffy-cream sm:mx-auto sm:w-auto"
+          >
+            Paid with a different email? Sign in with that one
+          </button>
           <a
             href="/"
-            className="mt-6 inline-block rounded-full bg-ffy-teal px-5 py-3 font-display text-sm font-medium text-ffy-cream"
+            className="mt-4 inline-block text-sm text-ffy-teal underline underline-offset-4"
           >
             Back to your library
           </a>

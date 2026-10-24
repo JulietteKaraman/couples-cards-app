@@ -143,8 +143,10 @@ function TouchPointEntryContent() {
   }
   const imageFirst = entry.imageSide === "left";
 
+  // Day 31 is a "closing" page but it is still a day: it must be markable, or
+  // the month can never reach 31 of 31 (fixed 24 Oct 2026).
   const markCompleteBlock =
-    entry.kind === "ritual" ? (
+    entry.kind === "ritual" || dayOf(entry.slug) > 0 ? (
       <div className="mt-8">
         {completed ? (
           <p className="inline-flex items-center gap-2 rounded-full bg-ffy-teal px-5 py-2.5 font-display text-sm font-medium text-ffy-cream">
@@ -186,7 +188,23 @@ function TouchPointEntryContent() {
             {entry.title}
           </h1>
 
+          {/* Day 31 opens on its photo (it was never drawn in this layout). */}
+          {entry.image && (
+            <div className="relative mt-6 aspect-[4/3] w-full overflow-hidden rounded-2xl">
+              <Image
+                src={entry.image}
+                alt={entry.imageAlt ?? ""}
+                fill
+                priority
+                sizes="(min-width: 768px) 672px, 100vw"
+                className="object-cover"
+                style={{ objectPosition: entry.imageFocus && entry.imageFocus !== "top" ? entry.imageFocus : "center" }}
+              />
+            </div>
+          )}
+
           <Blocks blocks={entry.body} />
+          {markCompleteBlock}
 
           <div className="mt-12 flex items-center justify-between border-t border-ffy-border pt-6 text-sm">
             {prev ? (

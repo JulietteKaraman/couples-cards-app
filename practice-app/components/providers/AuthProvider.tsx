@@ -10,6 +10,10 @@ interface AuthContextType {
   user: User | null;
   loading: boolean;
   entitledCollections: string[]; // collection slugs, not deck_type values
+  // True once entitlements have actually been read for the current user (or
+  // there is no user). CollectionGate waits for this so a real buyer never
+  // sees "This isn't on your account" for a second before access arrives.
+  entitlementsReady: boolean;
   sendMagicLink: (email: string, next?: string) => Promise<{ error: string | null }>;
   signOut: () => Promise<void>;
   refreshEntitlements: () => Promise<void>;
@@ -21,6 +25,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [entitledCollections, setEntitledCollections] = useState<string[]>([]);
+  const [entitlementsReady, setEntitlementsReady] = useState(false);
 
   const loadEntitlements = useCallback(async (userId: string, email?: string) => {
     // Juliette sees everything. She owns all of it, and being locked out of
@@ -30,6 +35,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // already gates on, so this grants nothing new to anybody else.
     if (email && email.toLowerCase() === ADMIN_EMAIL) {
       setEntitledCollections(Object.keys(COLLECTION_DECK_TYPES));
+      setEntitlementsReady(true);
       return;
     }
 
@@ -49,6 +55,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (error) {
       console.error("Error loading entitlements:", error);
       setEntitledCollections([]);
+      setEntitlementsReady(true);
       return;
     }
 
@@ -56,6 +63,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       .map((row) => collectionSlugForDeckType(row.deck_type))
       .filter((slug): slug is string => Boolean(slug));
     setEntitledCollections(slugs);
+    setEntitlementsReady(true);
   }, []);
 
   // Free guides (FREE_DECK_TYPES) are granted automatically to every
@@ -103,6 +111,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setUser(data.session?.user ?? null);
       if (data.session?.user) {
         ensureFreeAccessAndLoad(data.session.user.id, data.session.user.email);
+      } else {
+        setEntitlementsReady(true);
       }
       setLoading(false);
     });
@@ -114,6 +124,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           ensureFreeAccessAndLoad(session.user.id, session.user.email);
         } else {
           setEntitledCollections([]);
+          setEntitlementsReady(true);
         }
       }
     );
@@ -152,7 +163,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <AuthContext.Provider
-      value={{ user, loading, entitledCollections, sendMagicLink, signOut, refreshEntitlements }}
+      value={{ user, loading, entitledCollections, entitlementsReady, sendMagicLink, signOut, refreshEntitlements }}
     >
       {children}
     </AuthContext.Provider>

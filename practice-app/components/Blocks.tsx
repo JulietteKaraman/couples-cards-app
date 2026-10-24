@@ -432,6 +432,12 @@ export function Blocks({ blocks, dark = false }: { blocks: ContentBlock[]; dark?
             );
           }
 
+          // Restored 24 Oct 2026: this case was dropped by accident on 30 Sep
+          // (commit 845606d), so the fourteen timers 31 Touch Points promises
+          // never showed for any buyer.
+          case "timer":
+            return <PracticeTimer key={i} minutes={b.minutes} label={b.label} dark={dark} />;
+
           case "audio":
             return (
               <div
