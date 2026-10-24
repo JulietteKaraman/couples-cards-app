@@ -24,3 +24,20 @@ export const LOCAL_AUDIO = new Set<string>([
   "1zJJ5oMZYxiPkytFmNK6uTnVoVP-3Nkk5",
 ]);
 export const localAudioSrc = (id: string) => `/31-touch-points/audio/${id}.m4a`;
+
+// The Sacred No lesson videos, moved from Google Drive into the app 24 Oct
+// 2026 (Juliette: "all those Google files, because they're videos, go in
+// there properly"). Re-encoded to 720p for phones; poster = a frame at 4s.
+export const LOCAL_VIDEO = new Set<string>([
+  "182L01c5FYbPJ8YBqSH48wQKAA-r2vaXJ",
+  "14uK4B3K4-Hl44Rm4MlsLHTi1x1tud3YF",
+  "1Rvuo5_Ote8UbofjTLt7cMMGnJlxMI3SN",
+  "15cXfLYktIj09TNPwDWHLyDCPoeNdcZid",
+  "1hmSbssx6IV04FMkRGUzw_22AmAwsVqa_",
+  "1z6wmOgueesXQaxSTy3vvikyeP6eA02tt",
+  "1NOtDXfaB3prEpybDSUTiSkAOQK-BWh2K",
+  "1HosI7C7hX42wX19ieqylne-SOHTYZDue",
+  "1ky9FWoeBl0jsxm1-D_BRDOShH9clqGkS",
+]);
+export const localVideoSrc = (id: string) => `/sacred-no/video/${id}.mp4`;
+export const localVideoPoster = (id: string) => `/sacred-no/video/${id}.jpg`;

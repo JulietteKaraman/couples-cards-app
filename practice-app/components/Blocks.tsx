@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import { ContentBlock } from "@/lib/content/blocks";
 import PracticeTimer from "@/components/PracticeTimer";
 import VoicePlayer from "@/components/VoicePlayer";
-import { LOCAL_AUDIO, localAudioSrc } from "@/lib/content/local-audio";
+import { LOCAL_AUDIO, localAudioSrc, LOCAL_VIDEO, localVideoSrc, localVideoPoster } from "@/lib/content/local-audio";
 
 function driveIdFromUrl(url: string): string | null {
   const m = url.match(/\/file\/d\/([^/]+)/);
@@ -345,7 +345,23 @@ export function Blocks({ blocks, dark = false }: { blocks: ContentBlock[]; dark?
             return (
               <div key={i} className="flex flex-col gap-2">
                 <p className={`text-xs uppercase tracking-wide ${dark ? "text-ffy-gold-pale" : "text-ffy-gold-deep"}`}>{b.label}</p>
-                {id ? (
+                {id && LOCAL_VIDEO.has(id) ? (
+                  <div className="flex justify-center">
+                    <video
+                      src={localVideoSrc(id)}
+                      poster={localVideoPoster(id)}
+                      controls
+                      playsInline
+                      preload="metadata"
+                      controlsList="nodownload"
+                      className={`block h-auto max-h-[78vh] w-auto max-w-full rounded-2xl bg-ffy-black ${
+                        dark ? "border-[1.5px] border-[rgba(221,201,142,0.55)] shadow-[0_0_50px_-20px_rgba(221,201,142,0.55)]" : "border border-ffy-gold"
+                      }`}
+                    >
+                      {b.label}
+                    </video>
+                  </div>
+                ) : id ? (
                   <div className="aspect-video w-full overflow-hidden rounded-2xl bg-ffy-black">
                     <iframe
                       src={`https://drive.google.com/file/d/${id}/preview`}

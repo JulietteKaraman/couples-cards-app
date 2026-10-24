@@ -378,14 +378,14 @@ function LibraryContent() {
             note="Free practice"
           />
           <Tile
-            href={user ? `/practice/${whenSheGoesQuiet.slug}` : "/login"}
+            href={`/practice/${whenSheGoesQuiet.slug}`}
             title={whenSheGoesQuiet.title}
             subtitle={whenSheGoesQuiet.subtitle}
             heroImage={whenSheGoesQuiet.heroImage}
             note={
               user
                 ? `Free · ${doneCount(whenSheGoesQuiet.slug)} of ${whenSheGoesQuiet.entries.length} done`
-                : "Free · sign in to open"
+                : "Free · open it now"
             }
           />
         </div>

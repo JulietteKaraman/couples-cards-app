@@ -2,6 +2,7 @@
 
 import { useAuth } from "@/components/providers/AuthProvider";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
+import { COLLECTION_DECK_TYPES, FREE_DECK_TYPES } from "@/lib/entitlements/config";
 
 // Spec E6: someone who isn't entitled to a collection must be blocked with
 // a clear message if they hit its URL directly, not a silent 404 and
@@ -70,6 +71,12 @@ export function CollectionGate({
   collectionSlug: string;
   children: React.ReactNode;
 }) {
+  // Free guides (When She Goes Quiet) open with no sign-in at all
+  // (Juliette, 24 Oct 2026: "Now make that free. It doesn't need to be
+  // signed in first."). Progress ticks still save for anyone signed in.
+  if (FREE_DECK_TYPES.includes(COLLECTION_DECK_TYPES[collectionSlug] ?? collectionSlug)) {
+    return <>{children}</>;
+  }
   return (
     <ProtectedRoute>
       <GateContent collectionSlug={collectionSlug}>{children}</GateContent>
