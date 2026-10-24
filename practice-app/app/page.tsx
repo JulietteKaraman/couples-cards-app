@@ -2,87 +2,52 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Fragment, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { thirtyOneTouchPoints } from "@/lib/content/31-touch-points";
 import { theUnspokenDistance } from "@/lib/content/the-unspoken-distance";
 import { whenSheGoesQuiet } from "@/lib/content/when-she-goes-quiet";
 import { communicationRebootKit } from "@/lib/content/communication-reboot-kit";
 import { theSacredNo } from "@/lib/content/the-sacred-no";
+import { dayOf } from "@/lib/content/31-touch-points-drip";
 import { useAuth } from "@/components/providers/AuthProvider";
 import { getCompletedSlugs } from "@/lib/entitlements/progress";
 import { COLLECTION_DECK_TYPES, PURCHASE_URLS, FREE_DECK_TYPES } from "@/lib/entitlements/config";
 
-// A collection is "free" if its deck_type is in FREE_DECK_TYPES — these
-// always render unlocked, even in the split second before (or if)
-// ensure-free-access's grant lands, so a timing hiccup or dropped request
-// never shows a free guide behind a paywall-looking locked tile.
+// ===========================================================================
+// THE HOME, rebuilt dark 24 Oct 2026 (specs/feel-fully-you-app-home.md).
+// Juliette: "I love the way that the cards look, so I want to carry this on
+// into the other app too." 31 Touch Points leads, because it is where she
+// sends almost everyone. The order is: Today (if you own something) or the
+// featured 31 Touch Points, then Start free, then Yours, then More ways in.
+//
+// Everything the old shelf did still happens here: the same purchase URLs,
+// the 31 Days Closer pin under 31 Touch Points, interest tracking on tiles
+// for things you do not own, Talk to me for Sacred No owners, and the free
+// guide routing through sign in. History of each decision is in git (the
+// previous page.tsx, commit b398b83 and earlier).
+// ===========================================================================
+
 function isFreeCollection(slug: string): boolean {
   return FREE_DECK_TYPES.includes(COLLECTION_DECK_TYPES[slug]);
 }
 
-// Every collection this app can show, in display order. Adding a new
-// product means adding one line here (plus its deck_type in
-// entitlements/config.ts) — no other change to this page. Every entry
-// shows, always — owned/free ones open, everything else shows locked with
-// a "Get access" link out to the real sales page (spec: the library is
-// the cross-sell surface between products, not just a delivery box for
-// what's already been bought — Juliette, 1 Aug 2026).
-// betweenTouches REMOVED from this list 28 Aug 2026 (Juliette: "between
-// touches is still on the app! I thought you took it off"), matching the
-// earlier removal from FREE_DECK_TYPES in entitlements/config.ts. Left out
-// entirely rather than shown as a locked tile, since it has no price or
-// sales page yet, a locked tile here would point at a dead purchase link.
-// Its content and route (/practice/between-touches, lib/content/between-
-// touches.ts) are untouched, this only stops it appearing in the library.
-// 31 Touch Points added 30 Sep 2026. It RETIRES the £7 Ten Touch Rituals and
-// the £27 31 Daily Touch Points PDF into one month. Both are still listed for
-// now so existing buyers keep their access; drop tenTouchRituals from this
-// array once everyone on the old list has been moved over and told.
-// 10 Touch Rituals is RETIRED from the library, 30 Sep 2026. 31 Touch Points
-// absorbs it: every ritual in it is now a day of the month, so showing both
-// sells the same practices twice and puts two tiles with the same photo side
-// by side. Existing buyers keep their entitlement and their direct URL still
-// resolves, it simply no longer appears as a tile.
-// The Sacred No added 17 Oct 2026 (specs/sacred-no-in-app.md R8), appended
-// so no existing tile moves.
-// Free first, 18 Oct 2026 (Juliette: "prob good to have all free things on
-// top"). whenSheGoesQuiet is the only FREE_DECK_TYPES collection, so it
-// leads, directly under the three free tiles above. The paid ones keep
-// their own order, and 31 Days Closer still pins under 31 Touch Points.
-const ALL_COLLECTIONS = [whenSheGoesQuiet, thirtyOneTouchPoints, theUnspokenDistance, communicationRebootKit, theSacredNo];
+// Paid collections, in display order. When She Goes Quiet is free and sits
+// in Start free. betweenTouches stays off the shelf (Juliette, 28 Aug 2026).
+const PAID_COLLECTIONS = [thirtyOneTouchPoints, theUnspokenDistance, communicationRebootKit, theSacredNo];
 
-// Offers that never live inside this app at all (no PracticeCollection,
-// no deck_type, nothing to unlock here) but that Juliette wants
-// discoverable from the library anyway, always shown locked, always
-// pointing at the real sales page. Not the same as a locked ALL_COLLECTIONS
-// tile, which unlocks in-app once owned — these never unlock here, the
-// product experience itself lives elsewhere (the cards app, a course).
-//
-// Repair Kit: purchaseUrl is the real sales page with checkout, NOT
-// cards.feelfullyyou.com/app/repair-kit/unlock — that second URL is the
-// POST-purchase code-redeem screen (confirmed live 1 Aug 2026, it's a
-// sign-in wall, not a way to buy), so it would dead-end anyone who
-// doesn't already own it. Juliette asked for the unlock URL specifically;
-// swapped for the real purchase path so the tile actually converts.
-// 31 Days Closer lives in the CARDS app, not this one, so it can never be a
-// normal collection tile here. It is pinned directly under 31 Touch Points
-// because the two are the pair: a month of touch and a month of conversation.
-// Juliette, 30 Sep 2026: "if it is public-facing, then the 31 Days Closer
-// cards need to come right under the 31 Touch Points."
+// 31 Days Closer lives in the cards app. Pinned under 31 Touch Points
+// (Juliette, 30 Sep 2026): a month of touch and a month of conversation.
 const CARDS_COMPANION = {
+  slug: "31-days-closer",
   title: "31 Days Closer",
   subtitle:
-    "The other half of the month. Thirty one conversation prompts, one a day, fifteen minutes each. Touch reopens the door, words are how you walk back through it.",
+    "The other half of the month. Thirty one conversation prompts, one a day, fifteen minutes each.",
   heroImage: "/offers/31-days-closer-cover.jpg",
   purchaseUrl: "https://feelfullyyou.com/31-days-closer",
-  // The \u00a335 bundle price came OFF on 30 Sep 2026 (Juliette: "take off the
-  // \u00a335 with this"). Everyone who can see this tile has ALREADY bought 31
-  // Touch Points, so quoting them the both-products bundle is quoting a price
-  // for something they own half of. \u00a317 is the only number that means
-  // anything here. No other tile on this shelf carries a price at all.
-  note: "Lives in the cards app \u00b7 \u00a317",
+  note: "Lives in the cards app · £17",
 };
 
+// Offers with no content in this app: they unlock elsewhere (a deck, a code).
 const EXTERNAL_OFFERS = [
   {
     slug: "repair-kit",
@@ -90,11 +55,6 @@ const EXTERNAL_OFFERS = [
     subtitle: "31 days, one prompt a day, for couples finding their way back to each other.",
     heroImage: "/offers/repair-kit-cover.png",
     purchaseUrl: "https://feelfullyyou.com/romantic-relationship-repair-kit",
-    // These two don't unlock in THIS app once bought — a different door
-    // (the cards app), a different mechanism (a code by email), not the
-    // "Get access" flow every other locked tile here uses. Said plainly
-    // so nobody assumes this is the same one-tap unlock as everything
-    // else on the page (Juliette, 1 Aug 2026).
     note: "Delivered as a card deck · code by email",
   },
   {
@@ -107,401 +67,377 @@ const EXTERNAL_OFFERS = [
   },
 ];
 
-// The Touch Reset Quiz: free, but it doesn't live in this app at all, its
-// question flow, scoring, and results live on the main marketing site.
-// Same shape as Touch Base / Cards Taster (full-colour image, "Free" label,
-// always unlocked) but an external link that opens the real quiz in a new
-// tab, not an in-app route — there's no PracticeCollection or content file
-// for it here, and there doesn't need to be (Juliette, 2 Aug 2026: it
-// should sit on the app with all the free & paid resources).
-function FreeExternalTile({
+// Clicking something you do not own is a real signal of interest
+// (9 Aug 2026). Fire and forget, never blocks the link.
+function trackInterest(slug?: string, email?: string | null) {
+  if (!slug || !email) return;
+  fetch("/api/track-interest", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, offerSlug: slug }),
+  }).catch(() => {});
+}
+
+const tileBase =
+  "ffy-rise group relative flex items-center gap-4 overflow-hidden rounded-2xl border border-[rgba(221,201,142,0.18)] bg-[rgba(254,252,250,0.03)] p-3.5 transition duration-300 hover:-translate-y-0.5 hover:border-[#DDC98E] sm:p-4";
+
+function Tile({
+  href,
+  external,
   title,
   subtitle,
   heroImage,
-  href,
-  note = "Free",
+  note,
+  imageFit = "cover",
+  onClick,
 }: {
+  href: string;
+  external?: boolean;
   title: string;
   subtitle: string;
   heroImage: string;
-  href: string;
-  note?: string;
+  note: string;
+  imageFit?: "cover" | "contain";
+  onClick?: () => void;
 }) {
-  return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noreferrer"
-      className="group flex items-center gap-5 overflow-hidden rounded-2xl border border-ffy-border bg-white/60 p-4 transition hover:border-ffy-gold sm:p-5"
-    >
-      <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-xl sm:h-24 sm:w-24">
-        <Image src={heroImage} alt={title} fill sizes="96px" className="object-cover" />
+  const inner = (
+    <>
+      <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-xl bg-[#0d3535] sm:h-24 sm:w-24">
+        <Image
+          src={heroImage}
+          alt={title}
+          fill
+          sizes="96px"
+          className={imageFit === "contain" ? "object-contain p-2" : "object-cover"}
+        />
       </div>
       <div className="min-w-0 flex-1">
-        <h2 className="font-display text-xl font-semibold text-ffy-black group-hover:text-ffy-teal">
-          {title}
-        </h2>
-        <p className="mt-1 text-sm text-ffy-brown">{subtitle}</p>
-        <p className="mt-2 text-xs uppercase tracking-wide text-ffy-gold-deep">{note}</p>
+        <h3 className="font-display text-lg font-normal leading-snug text-ffy-cream">{title}</h3>
+        <p className="mt-1 text-sm leading-relaxed text-[rgba(254,252,250,0.62)]">{subtitle}</p>
+        <p className="mt-2 text-[11px] uppercase tracking-[0.14em] text-[#DDC98E]">{note}</p>
       </div>
-      <span className="text-ffy-gold">→</span>
-    </a>
+      <span className="text-[#DDC98E] transition group-hover:translate-x-0.5">→</span>
+    </>
+  );
+  if (external) {
+    return (
+      <a href={href} target="_blank" rel="noreferrer" onClick={onClick} className={tileBase}>
+        {inner}
+      </a>
+    );
+  }
+  return (
+    <Link href={href} onClick={onClick} className={tileBase}>
+      {inner}
+    </Link>
   );
 }
 
-function LockedOfferTile({
-  title,
-  subtitle,
-  heroImage,
-  purchaseUrl,
-  slug,
-  userEmail,
-  note = "Not yet on your account · Get access",
-}: {
-  title: string;
-  subtitle: string;
-  heroImage: string;
-  purchaseUrl: string;
-  slug?: string;
-  userEmail?: string | null;
-  note?: string;
-}) {
-  // Shown, not hidden — this tile IS the cross-sell. Dimmed photo, lock
-  // badge, and a real link out to the sales page, never a click into
-  // content that isn't there.
-  //
-  // Added 9 Aug 2026: clicking a locked tile is a real signal someone's
-  // interested, even if they don't buy today, and until now that signal
-  // went nowhere. Fire-and-forget POST to /api/track-interest, never
-  // awaited, never blocks the actual navigation — the link opens exactly
-  // as fast whether the tag lands or not.
-  const handleClick = () => {
-    if (!slug || !userEmail) return;
-    fetch("/api/track-interest", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: userEmail, offerSlug: slug }),
-    }).catch(() => {
-      // Silent on purpose — a tracking miss is never worth surfacing here.
-    });
-  };
+function SectionHead({ eyebrow, title }: { eyebrow: string; title: string }) {
   return (
-    <a
-      href={purchaseUrl}
-      target="_blank"
-      rel="noreferrer"
-      onClick={handleClick}
-      className="group flex items-center gap-5 overflow-hidden rounded-2xl border border-ffy-border bg-white/60 p-4 opacity-80 transition hover:border-ffy-gold hover:opacity-100 sm:p-5"
-    >
-      <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-xl sm:h-24 sm:w-24">
-        <Image src={heroImage} alt={title} fill sizes="96px" className="object-cover grayscale" />
-        <div className="absolute inset-0 flex items-center justify-center bg-ffy-black/45">
-          <svg viewBox="0 0 24 24" className="h-6 w-6 text-ffy-cream" fill="none" stroke="currentColor" strokeWidth={2}>
-            <rect x="5" y="11" width="14" height="9" rx="2" />
-            <path d="M8 11V8a4 4 0 0 1 8 0v3" />
-          </svg>
-        </div>
-      </div>
-      <div className="min-w-0 flex-1">
-        <h2 className="font-display text-xl font-semibold text-ffy-black">{title}</h2>
-        <p className="mt-1 text-sm text-ffy-brown">{subtitle}</p>
-        <p className="mt-2 text-xs font-semibold uppercase tracking-wide text-ffy-gold-deep">
-          {note}
-        </p>
-      </div>
-      <span className="text-ffy-gold">→</span>
-    </a>
+    <div className="mb-4 mt-12">
+      <p className="text-[11px] uppercase tracking-[0.18em] text-[#DDC98E]">{eyebrow}</p>
+      <h2 className="font-display mt-1 text-2xl font-light text-ffy-cream">{title}</h2>
+    </div>
   );
 }
 
 function LibraryContent() {
   const { user, entitledCollections, signOut } = useAuth();
-  const [completedCounts, setCompletedCounts] = useState<Record<string, number>>({});
+  const [completed, setCompleted] = useState<Record<string, string[]>>({});
+  const [loaded, setLoaded] = useState(false);
 
-  const unlockedCollections = ALL_COLLECTIONS.filter(
-    (c) => entitledCollections.includes(c.slug) || isFreeCollection(c.slug)
-  );
+  const owns = (slug: string) => !!user && entitledCollections.includes(slug);
+  const ownedPaid = PAID_COLLECTIONS.filter((c) => owns(c.slug));
+  const freeOpen = !!user ? [whenSheGoesQuiet] : [];
+  const progressCollections = [...ownedPaid, ...freeOpen];
 
   useEffect(() => {
-    if (!user || unlockedCollections.length === 0) return;
+    if (!user || progressCollections.length === 0) return;
     Promise.all(
-      unlockedCollections.map((c) =>
-        getCompletedSlugs(user.id, COLLECTION_DECK_TYPES[c.slug]).then(
-          (slugs) => [c.slug, slugs.length] as const
-        )
+      progressCollections.map((c) =>
+        getCompletedSlugs(user.id, COLLECTION_DECK_TYPES[c.slug]).then((s) => [c.slug, s] as const)
       )
-    ).then((results) => setCompletedCounts(Object.fromEntries(results)));
+    ).then((r) => {
+      setCompleted(Object.fromEntries(r));
+      setLoaded(true);
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, entitledCollections.join(",")]);
 
+  const doneCount = (slug: string) => (completed[slug] || []).length;
+
+  // TODAY: 31 Touch Points if owned, otherwise the owned practice with the
+  // most progress. Day = days completed + 1, capped at 31.
+  const owns31 = owns(thirtyOneTouchPoints.slug);
+  const days31 = (completed[thirtyOneTouchPoints.slug] || []).filter((s) => dayOf(s) > 0).length;
+  const nextDay = Math.min(31, days31 + 1);
+  const finished31 = days31 >= 31;
+  const todayOther = !owns31 && ownedPaid.length
+    ? [...ownedPaid].sort((a, b) => doneCount(b.slug) - doneCount(a.slug))[0]
+    : null;
+
+  const lockedPaid = PAID_COLLECTIONS.filter((c) => !owns(c.slug) && c.slug !== thirtyOneTouchPoints.slug);
+
   return (
-    <main className="min-h-screen bg-ffy-cream">
-      <section className="relative flex h-[36vh] items-end overflow-hidden md:h-[62vh]">
-        <Image
-          src="/app/hero.jpg"
-          alt="Juliette Karaman"
-          fill
-          priority
-          className="object-cover object-top"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-ffy-black/80 via-ffy-black/10 to-transparent" />
-        <div className="relative z-10 mx-auto w-full max-w-3xl px-6 pb-8">
-          <h1 className="font-display text-4xl font-semibold text-ffy-cream sm:text-5xl">
-            The Feel Fully You App
-          </h1>
-          <p className="mt-2 text-ffy-gold-pale">The Practice, your rituals, in one place.</p>
+    <main className="min-h-screen bg-[#070707] text-ffy-cream">
+      <style>{`
+        @keyframes ffyRise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+        .ffy-rise { animation: ffyRise .7s cubic-bezier(.2,.8,.2,1) both; }
+        @media (prefers-reduced-motion: reduce) { .ffy-rise { animation: none; } }
+      `}</style>
+
+      {/* Hero */}
+      <section className="relative flex h-[42vh] items-end overflow-hidden md:h-[58vh]">
+        <Image src="/app/hero.jpg" alt="Juliette Karaman" fill priority className="object-cover object-top" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#070707] via-[#070707]/30 to-transparent" />
+        <div className="relative z-10 mx-auto w-full max-w-3xl px-5 pb-7">
+          <h1 className="font-display text-4xl font-light text-ffy-cream sm:text-5xl">The Feel Fully You App</h1>
+          <p className="mt-2 text-[#DDC98E]">Your practices, in one place.</p>
         </div>
       </section>
 
-      <div className="mx-auto max-w-3xl px-6 py-10">
+      <div className="mx-auto max-w-3xl px-5 pb-16 pt-6 [background-image:radial-gradient(90%_50%_at_50%_30%,rgba(13,53,53,0.55)_0%,rgba(7,7,7,0)_70%)]">
         {!user && (
-          <div className="mb-6 rounded-2xl border border-ffy-gold/50 bg-white/70 p-5">
-            <p className="font-display text-lg font-semibold text-ffy-teal">
-              Start with The Touch Reset Quiz. It is free and it takes five minutes.
-            </p>
-            <p className="mt-1 text-sm text-ffy-brown">
-              Everything below is yours to look through. Some of it is free, some of it you buy
-              once and keep.
-            </p>
-            <Link
-              href="/login"
-              className="mt-3 inline-block text-sm font-medium text-ffy-gold-deep underline"
-            >
-              Already bought something? Sign in to open it.
+          <p className="mb-2 text-sm text-[rgba(254,252,250,0.62)]">
+            Already bought something?{" "}
+            <Link href="/login" className="text-[#DDC98E] underline underline-offset-4">
+              Sign in to open it
             </Link>
-          </div>
+          </p>
         )}
-        <div className={`mb-6 flex items-center justify-between text-sm text-ffy-brown ${user ? "" : "hidden"}`}>
-          <span>Signed in as {user?.email}</span>
-          <button onClick={signOut} className="text-ffy-gold-deep underline">
-            Sign out
-          </button>
-        </div>
 
-        <div className="grid gap-5">
-          {/* The Touch Reset Quiz, moved to the TOP 17 Oct 2026 (Juliette: with two
-              quizzes on the shelf, the "start with the quiz" line above must
-              lead straight to the Touch Reset one). Free, always unlocked, but the quiz
-              itself (questions, scoring, results) lives on the main site,
-              not in this app. See FreeExternalTile above. */}
-          <FreeExternalTile
-            title="The Touch Reset Quiz"
-            // Words and cover taken from the live quiz page, 30 Sep 2026. The
-            // old subtitle promised a "Touch Pattern" and "the language your
-            // body has been waiting for", which the rebuilt quiz no longer
-            // says, and the cover was a hand on tree bark. Both wrong.
-            subtitle="Where Did The Touch Go? Being touched is not the same as feeling it. Five minutes, and you find out where the touch actually went, and what has been holding it there."
-            heroImage="/offers/touch-reset-quiz-cover.jpg"
-            href="https://feelfullyyou.com/touch-reset-quiz"
-            note="Free · 5 minutes"
-          />
-
-          {/* The Sacred No Quiz, 17 Oct 2026 (specs/sacred-no-in-app.md R9).
-              Free, lives on the main site, same shape as the Touch Reset
-              Quiz tile above. */}
-          <FreeExternalTile
-            title="The Sacred No Quiz"
-            // Words taken from the live quiz page, 17 Oct 2026.
-            subtitle="Are you saying yes when you mean no? Twelve honest questions. Let your body answer first. At the end, the pattern you are leading from, and your way back to a clean no."
-            heroImage="/sacred-no/quiz.jpg"
-            href="https://feelfullyyou.com/sacred-no-quiz"
-            note="Free"
-          />
-
-          {/* Touch Base® — restored 15 Oct 2026 at Juliette's instruction: it
-              should live in the app so people can come back to it, and the
-              Touch Base welcome email points here. Prior history: added 1 Aug,
-              pulled 27 Aug, restored 28 Aug, pulled 16 Sep 2026. Same shape
-              as before, its own standalone route, no login needed. */}
+        {/* TODAY, for an owner */}
+        {owns31 && (
           <Link
-            href="/practice/touch-base"
-            className="group flex items-center gap-5 overflow-hidden rounded-2xl border border-ffy-border bg-white/60 p-4 transition hover:border-ffy-gold sm:p-5"
+            href={`/practice/${thirtyOneTouchPoints.slug}`}
+            className="ffy-rise group mt-4 block overflow-hidden rounded-3xl border border-[rgba(221,201,142,0.45)] bg-[rgba(13,53,53,0.45)] p-6 shadow-[0_0_70px_-20px_rgba(221,201,142,0.35)] sm:p-8"
           >
-            <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-xl bg-white sm:h-24 sm:w-24">
-              <Image
-                src="/offers/touch-base-logo.png"
-                alt="Touch Base® Anchor"
-                fill
-                sizes="96px"
-                className="object-contain p-2"
+            <p className="text-[11px] uppercase tracking-[0.18em] text-[#DDC98E]">Today</p>
+            <div className="mt-3 flex items-end justify-between gap-4">
+              <div>
+                <h2 className="font-display text-2xl font-light text-ffy-cream sm:text-3xl">
+                  {finished31 ? "You finished the month." : "Carry on with 31 Touch Points"}
+                </h2>
+                <p className="mt-2 text-sm text-[rgba(254,252,250,0.62)]">
+                  {finished31 ? "Every day is still here to come back to." : "One touch point a day. Nothing is lost if you miss one."}
+                </p>
+              </div>
+              {loaded && !finished31 && (
+                <div className="shrink-0 text-right">
+                  <span className="block text-[11px] uppercase tracking-[0.16em] text-[rgba(254,252,250,0.62)]">Day</span>
+                  <span className="font-display block text-6xl font-light leading-none text-[#DDC98E]">{nextDay}</span>
+                </div>
+              )}
+            </div>
+            <div className="mt-5 h-1 overflow-hidden rounded-full bg-[rgba(221,201,142,0.15)]">
+              <div className="h-full rounded-full bg-[#DDC98E] transition-all duration-700" style={{ width: `${(Math.min(days31, 31) / 31) * 100}%` }} />
+            </div>
+            <span className="mt-6 inline-flex min-h-[48px] items-center rounded-full bg-[#DDC98E] px-6 text-[15px] font-medium text-[#070707] transition group-hover:bg-[#EEDE80]">
+              {finished31 ? "Open the month" : loaded ? `Open day ${nextDay}` : "Carry on"}
+            </span>
+          </Link>
+        )}
+
+        {!owns31 && todayOther && (
+          <Link
+            href={`/practice/${todayOther.slug}`}
+            className="ffy-rise group mt-4 block rounded-3xl border border-[rgba(221,201,142,0.45)] bg-[rgba(13,53,53,0.45)] p-6 sm:p-8"
+          >
+            <p className="text-[11px] uppercase tracking-[0.18em] text-[#DDC98E]">Today</p>
+            <h2 className="font-display mt-3 text-2xl font-light text-ffy-cream">Carry on with {todayOther.title}</h2>
+            <p className="mt-2 text-sm text-[rgba(254,252,250,0.62)]">
+              {doneCount(todayOther.slug)} of {todayOther.entries.length} done
+            </p>
+            <span className="mt-6 inline-flex min-h-[48px] items-center rounded-full bg-[#DDC98E] px-6 text-[15px] font-medium text-[#070707]">
+              Carry on
+            </span>
+          </Link>
+        )}
+
+        {/* FEATURED 31 Touch Points, for everyone who does not own it */}
+        {!owns31 && (
+          <>
+            <a
+              href={PURCHASE_URLS[thirtyOneTouchPoints.slug]}
+              target="_blank"
+              rel="noreferrer"
+              onClick={() => trackInterest(thirtyOneTouchPoints.slug, user?.email)}
+              className="ffy-rise group relative mt-5 block overflow-hidden rounded-3xl border border-[rgba(221,201,142,0.4)] bg-[#0b1414] shadow-[0_0_70px_-24px_rgba(221,201,142,0.35)]"
+            >
+              <div className="relative h-56 overflow-hidden sm:h-72">
+                <Image src={thirtyOneTouchPoints.heroImage} alt={thirtyOneTouchPoints.title} fill sizes="(max-width: 768px) 100vw, 768px" className="object-cover transition duration-700 group-hover:scale-[1.03]" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0b1414] via-transparent to-transparent" />
+              </div>
+              <div className="relative -mt-10 p-6 pt-0 sm:p-8 sm:pt-0">
+                <p className="text-[11px] uppercase tracking-[0.18em] text-[#DDC98E]">Where most people start</p>
+                <h2 className="font-display mt-2 text-3xl font-light text-ffy-cream sm:text-4xl">{thirtyOneTouchPoints.title}</h2>
+                <p className="mt-2 max-w-md text-[15px] leading-relaxed text-[rgba(254,252,250,0.82)]">{thirtyOneTouchPoints.subtitle}</p>
+                <div className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-2 text-[rgba(254,252,250,0.62)]">
+                  <span><b className="font-display mr-1 text-2xl font-light text-[#DDC98E]">31</b>days</span>
+                  <span><b className="font-display mr-1 text-2xl font-light text-[#DDC98E]">1</b>a day</span>
+                  <span className="text-[11px] uppercase tracking-[0.14em]">Buy once, keep it</span>
+                </div>
+                <span className="mt-5 inline-flex min-h-[48px] items-center rounded-full bg-[#DDC98E] px-6 text-[15px] font-medium text-[#070707] transition group-hover:bg-[#EEDE80]">
+                  See inside 31 Touch Points
+                </span>
+              </div>
+            </a>
+            <div className="mt-3">
+              <Tile
+                href={CARDS_COMPANION.purchaseUrl}
+                external
+                title={CARDS_COMPANION.title}
+                subtitle={CARDS_COMPANION.subtitle}
+                heroImage={CARDS_COMPANION.heroImage}
+                note={CARDS_COMPANION.note}
+                onClick={() => trackInterest(CARDS_COMPANION.slug, user?.email)}
               />
             </div>
-            <div className="min-w-0 flex-1">
-              <h2 className="font-display text-xl font-semibold text-ffy-black group-hover:text-ffy-teal">
-                Touch Base®, the Anchor
-              </h2>
-              <p className="mt-1 text-sm text-ffy-brown">Two minutes, no equipment. A way back to yourself, anywhere, any time.</p>
-              <p className="mt-2 text-xs uppercase tracking-wide text-ffy-gold-deep">Free practice</p>
-            </div>
-            <span className="text-ffy-gold">→</span>
-          </Link>
+          </>
+        )}
 
-
-          {ALL_COLLECTIONS.map((c) => {
-            // Signed out, nothing is "unlocked": a free guide still needs an
-            // account so the entitlement can be granted, and a paid one still
-            // needs buying. Both get a tile that says what it is and how to
-            // get in, rather than being hidden behind a login screen.
-            const unlocked =
-              !!user && (entitledCollections.includes(c.slug) || isFreeCollection(c.slug));
-
-            const companion =
-              c.slug === "31-touch-points" ? (
-                <LockedOfferTile
-                  key="31-days-closer-companion"
-                  title={CARDS_COMPANION.title}
-                  subtitle={CARDS_COMPANION.subtitle}
-                  heroImage={CARDS_COMPANION.heroImage}
-                  purchaseUrl={CARDS_COMPANION.purchaseUrl}
-                  note={CARDS_COMPANION.note}
-                  slug="31-days-closer"
-                  userEmail={user?.email}
-                />
-              ) : null;
-
-            if (!user) {
-              const free = isFreeCollection(c.slug);
-              return (
-                <Fragment key={c.slug}>
-                <LockedOfferTile
+        {/* YOURS */}
+        {user && ownedPaid.length > 0 && (
+          <>
+            <SectionHead eyebrow="Yours" title="Your practices" />
+            <div className="grid gap-3">
+              {ownedPaid.map((c) => (
+                <Tile
+                  key={c.slug}
+                  href={`/practice/${c.slug}`}
                   title={c.title}
                   subtitle={c.subtitle}
                   heroImage={c.heroImage}
-                  purchaseUrl={free ? "/login" : PURCHASE_URLS[c.slug]}
-                  note={free ? "Free \u00b7 sign in to open" : "Buy once, keep it \u00b7 See what is inside"}
+                  note={`${doneCount(c.slug)} of ${c.entries.length} done`}
                 />
-                {companion}
-                </Fragment>
-              );
+              ))}
+              {owns31 && (
+                <Tile
+                  href={CARDS_COMPANION.purchaseUrl}
+                  external
+                  title={CARDS_COMPANION.title}
+                  subtitle={CARDS_COMPANION.subtitle}
+                  heroImage={CARDS_COMPANION.heroImage}
+                  note={CARDS_COMPANION.note}
+                  onClick={() => trackInterest(CARDS_COMPANION.slug, user?.email)}
+                />
+              )}
+              {entitledCollections.includes(theSacredNo.slug) && (
+                <Tile
+                  href="https://tidycal.com/juliette2/the-touch-reset-call"
+                  external
+                  title="Talk to me"
+                  subtitle="Somewhere in The Sacred No, or through the other side of it? Book a call and we look at where you are and what comes next."
+                  heroImage="/offers/talk-to-me.jpg"
+                  note="Touch Reset call · book a time"
+                />
+              )}
+            </div>
+          </>
+        )}
+
+        {/* START FREE */}
+        <SectionHead eyebrow="Free" title="Start here" />
+        <a
+          href="https://feelfullyyou.com/touch-reset-quiz"
+          target="_blank"
+          rel="noreferrer"
+          className="ffy-rise group relative block overflow-hidden rounded-3xl border border-[rgba(221,201,142,0.3)]"
+        >
+          <div className="relative h-44 sm:h-56">
+            <Image src="/offers/touch-reset-quiz-cover.jpg" alt="The Touch Reset Quiz" fill sizes="(max-width: 768px) 100vw, 768px" className="object-cover" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#070707] via-[#070707]/40 to-transparent" />
+          </div>
+          <div className="relative -mt-14 p-5 sm:p-6">
+            <p className="text-[11px] uppercase tracking-[0.16em] text-[#DDC98E]">Free · 5 minutes</p>
+            <h3 className="font-display mt-1 text-2xl font-light text-ffy-cream">The Touch Reset Quiz</h3>
+            <p className="mt-1 text-sm leading-relaxed text-[rgba(254,252,250,0.62)]">
+              Where did the touch go? Being touched is not the same as feeling it. Five minutes, and you find out where the touch actually went.
+            </p>
+            <span className="mt-4 inline-flex min-h-[44px] items-center rounded-full border border-[#DDC98E] px-5 text-sm text-ffy-cream transition group-hover:bg-[#DDC98E] group-hover:text-[#070707]">
+              Take the quiz
+            </span>
+          </div>
+        </a>
+        <div className="mt-3 grid gap-3">
+          <Tile
+            href="https://feelfullyyou.com/sacred-no-quiz"
+            external
+            title="The Sacred No Quiz"
+            subtitle="Are you saying yes when you mean no? Twelve honest questions. Let your body answer first."
+            heroImage="/sacred-no/quiz.jpg"
+            note="Free"
+          />
+          <Tile
+            href="/practice/touch-base"
+            title="Touch Base®, the Anchor"
+            subtitle="Two minutes, no equipment. A way back to yourself, anywhere, any time."
+            heroImage="/offers/touch-base-logo.png"
+            imageFit="contain"
+            note="Free practice"
+          />
+          <Tile
+            href={user ? `/practice/${whenSheGoesQuiet.slug}` : "/login"}
+            title={whenSheGoesQuiet.title}
+            subtitle={whenSheGoesQuiet.subtitle}
+            heroImage={whenSheGoesQuiet.heroImage}
+            note={
+              user
+                ? `Free · ${doneCount(whenSheGoesQuiet.slug)} of ${whenSheGoesQuiet.entries.length} done`
+                : "Free · sign in to open"
             }
-
-            if (unlocked) {
-              return (
-                <Fragment key={c.slug}>
-                <Link
-                  href={`/practice/${c.slug}`}
-                  className="group flex items-center gap-5 overflow-hidden rounded-2xl border border-ffy-border bg-white/60 p-4 transition hover:border-ffy-gold sm:p-5"
-                >
-                  <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-xl sm:h-24 sm:w-24">
-                    <Image
-                      src={c.heroImage}
-                      alt={c.title}
-                      fill
-                      sizes="96px"
-                      className="object-cover"
-                    />
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <h2 className="font-display text-xl font-semibold text-ffy-black group-hover:text-ffy-teal">
-                      {c.title}
-                    </h2>
-                    <p className="mt-1 text-sm text-ffy-brown">{c.subtitle}</p>
-                    <p className="mt-2 text-xs uppercase tracking-wide text-ffy-gold-deep">
-                      {completedCounts[c.slug] ?? 0} of {c.entries.length} done
-                    </p>
-                  </div>
-                  <span className="text-ffy-gold">→</span>
-                </Link>
-                {companion}
-                </Fragment>
-              );
-            }
-
-            return (
-              <Fragment key={c.slug}>
-              <LockedOfferTile
-                title={c.title}
-                subtitle={c.subtitle}
-                heroImage={c.heroImage}
-                purchaseUrl={PURCHASE_URLS[c.slug]}
-                // 1 Oct 2026: these two were never passed, anywhere, so
-                // handleClick returned early every single time and the
-                // interest tracking built on 9 Aug has never once fired.
-                // This branch is the one that matters most: a person who
-                // has bought one thing, looking at the rest.
-                slug={c.slug}
-                userEmail={user?.email}
-              />
-              {companion}
-              </Fragment>
-            );
-          })}
-
-          {/* "Talk to me", 17 Oct 2026 (specs/sacred-no-in-app.md R10). The
-              next step after The Sacred No, after One Touch: a Touch Reset
-              call. Shown to signed-in owners of The Sacred No (and so to
-              Juliette, who is entitled to everything). */}
-          {user && entitledCollections.includes(theSacredNo.slug) && (
-            <FreeExternalTile
-              title="Talk to me"
-              subtitle="Somewhere in The Sacred No, or through the other side of it? Book a call and we look at where you are and what comes next."
-              heroImage="/offers/talk-to-me.jpg"
-              href="https://tidycal.com/juliette2/the-touch-reset-call"
-              note="Touch Reset call · book a time"
-            />
-          )}
-
-          {/* Members App tile removed from the home library — Juliette, 11 Aug
-              2026, seeing it live: "take the members app off the home page-
-              it does not go anywhere yet so should not live on the app where
-              people get their freebies and want to upsell- if it is broken
-              or subpar- we do not put it on." Not this session's build; the
-              routes/content under specs/members-app.md are untouched, this
-              only stops it from being shown to real freebie-seekers on the
-              home screen until whoever owns it says it's ready. Restore by
-              re-adding this block once confirmed ready. */}
-
-          {/* The Cards taster tile was REMOVED 28 Sep 2026 at Juliette's
-              instruction. Two faults, not one. It offered FIVE free cards
-              while the real cards app now gives ONE per deck, so the two
-              free routes disagreed with each other. And its buttons pointed
-              at cards.feelfullyyou.com, the address retired when the app
-              moved to feelfullyyou.com/my-cards. The free cards live in one
-              place now: the cards app, which has the timer, the Dyad
-              teaching and a single upsell. The route and
-              lib/content/cards-taster.ts go with it. In git history if it
-              is ever wanted back. */}
-
-
-
-          {/* Offers with no in-app content at all (Repair Kit, One Touch) —
-              always locked, always pointing out to the real sales page.
-              See EXTERNAL_OFFERS above for why each purchaseUrl is what
-              it is. */}
-          {EXTERNAL_OFFERS.map((o) => (
-            <LockedOfferTile
-              key={o.slug}
-              title={o.title}
-              subtitle={o.subtitle}
-              heroImage={o.heroImage}
-              purchaseUrl={o.purchaseUrl}
-              note={o.note}
-              slug={o.slug}
-              userEmail={user?.email}
-            />
-          ))}
+          />
         </div>
+
+        {/* MORE WAYS IN */}
+        {(lockedPaid.length > 0 || EXTERNAL_OFFERS.length > 0) && (
+          <>
+            <SectionHead eyebrow="When you want more" title="More ways in" />
+            <div className="grid gap-3">
+              {lockedPaid.map((c) => (
+                <Tile
+                  key={c.slug}
+                  href={PURCHASE_URLS[c.slug]}
+                  external
+                  title={c.title}
+                  subtitle={c.subtitle}
+                  heroImage={c.heroImage}
+                  note="Buy once, keep it · see what is inside"
+                  onClick={() => trackInterest(c.slug, user?.email)}
+                />
+              ))}
+              {EXTERNAL_OFFERS.map((o) => (
+                <Tile
+                  key={o.slug}
+                  href={o.purchaseUrl}
+                  external
+                  title={o.title}
+                  subtitle={o.subtitle}
+                  heroImage={o.heroImage}
+                  note={o.note}
+                  onClick={() => trackInterest(o.slug, user?.email)}
+                />
+              ))}
+            </div>
+          </>
+        )}
+
+        {user && (
+          <div className="mt-14 flex items-center justify-between border-t border-[rgba(221,201,142,0.15)] pt-5 text-xs text-[rgba(254,252,250,0.5)]">
+            <span className="truncate pr-4">Signed in as {user.email}</span>
+            <button onClick={signOut} className="min-h-[44px] shrink-0 text-[#DDC98E] underline underline-offset-4">
+              Sign out
+            </button>
+          </div>
+        )}
       </div>
     </main>
   );
 }
 
-// THE FRONT DOOR, 30 Sep 2026.
-//
-// Juliette: "I would love the quiz to be there in that app because at one
-// point I want to just put the app on my links so that people can go there
-// for their freebies. Then all of a sudden they see, oh, these things are
-// for sale there."
-//
-// Until now this page was wrapped in ProtectedRoute, so a stranger arriving
-// from her link in bio was bounced straight to /login and saw nothing at all.
-// Nothing to browse, no quiz, no sense that anything was for sale. It could
-// never have worked as a links destination.
-//
-// The shelf is public now. Signed out you see everything: the quiz, the free
-// guides, and the paid ones with their price and a way in. Signing in is only
-// needed to OPEN something, which is still gated per collection by
-// CollectionGate and by entitlements, so nothing paid leaks.
+// The shelf is public (30 Sep 2026): signed out you can see everything,
+// signing in is only needed to OPEN something, gated per collection.
 export default function LibraryPage() {
   return <LibraryContent />;
 }
