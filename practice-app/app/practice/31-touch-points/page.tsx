@@ -7,7 +7,7 @@ import VoicePlayer from "@/components/VoicePlayer";
 // Juliette's welcome to the month. Drop the file into
 // public/31-touch-points/audio/ and put its name here. It shows only before
 // Day 1 is done. Empty = nothing shows.
-const WELCOME_31TP = "";
+const WELCOME_31TP = "welcome.m4a";
 import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { thirtyOneTouchPoints } from "@/lib/content/31-touch-points";
