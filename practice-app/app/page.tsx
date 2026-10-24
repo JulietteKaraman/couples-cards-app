@@ -79,7 +79,7 @@ function trackInterest(slug?: string, email?: string | null) {
 }
 
 const tileBase =
-  "ffy-rise group relative flex items-center gap-4 overflow-hidden rounded-2xl border border-[rgba(221,201,142,0.18)] bg-[rgba(254,252,250,0.03)] p-3.5 transition duration-300 hover:-translate-y-0.5 hover:border-[#DDC98E] sm:p-4";
+  "ffy-rise group relative flex items-center gap-4 overflow-hidden rounded-2xl border-[1.5px] border-[rgba(221,201,142,0.55)] bg-[linear-gradient(135deg,rgba(13,53,53,0.55),rgba(254,252,250,0.04))] p-3.5 shadow-[0_0_30px_-18px_rgba(221,201,142,0.6)] transition duration-300 hover:-translate-y-0.5 hover:border-[#DDC98E] sm:p-4";
 
 function Tile({
   href,
@@ -113,7 +113,7 @@ function Tile({
       </div>
       <div className="min-w-0 flex-1">
         <h3 className="font-display text-lg font-normal leading-snug text-ffy-cream">{title}</h3>
-        <p className="mt-1 text-sm leading-relaxed text-[rgba(254,252,250,0.62)]">{subtitle}</p>
+        <p className="mt-1 text-sm leading-relaxed text-[rgba(254,252,250,0.78)]">{subtitle}</p>
         <p className="mt-2 text-[11px] uppercase tracking-[0.14em] text-[#DDC98E]">{note}</p>
       </div>
       <span className="text-[#DDC98E] transition group-hover:translate-x-0.5">→</span>
@@ -199,7 +199,7 @@ function LibraryContent() {
 
       <div className="mx-auto max-w-3xl px-5 pb-16 pt-6 [background-image:radial-gradient(90%_50%_at_50%_30%,rgba(13,53,53,0.55)_0%,rgba(7,7,7,0)_70%)]">
         {!user && (
-          <p className="mb-2 text-sm text-[rgba(254,252,250,0.62)]">
+          <p className="mb-2 text-sm text-[rgba(254,252,250,0.78)]">
             Already bought something?{" "}
             <Link href="/login" className="text-[#DDC98E] underline underline-offset-4">
               Sign in to open it
@@ -211,7 +211,7 @@ function LibraryContent() {
         {owns31 && (
           <Link
             href={`/practice/${thirtyOneTouchPoints.slug}`}
-            className="ffy-rise group mt-4 block overflow-hidden rounded-3xl border border-[rgba(221,201,142,0.45)] bg-[rgba(13,53,53,0.45)] p-6 shadow-[0_0_70px_-20px_rgba(221,201,142,0.35)] sm:p-8"
+            className="ffy-rise group mt-4 block overflow-hidden rounded-3xl border-2 border-[#DDC98E] bg-[rgba(13,53,53,0.6)] p-6 shadow-[0_0_70px_-20px_rgba(221,201,142,0.35)] sm:p-8"
           >
             <p className="text-[11px] uppercase tracking-[0.18em] text-[#DDC98E]">Today</p>
             <div className="mt-3 flex items-end justify-between gap-4">
@@ -219,13 +219,13 @@ function LibraryContent() {
                 <h2 className="font-display text-2xl font-light text-ffy-cream sm:text-3xl">
                   {finished31 ? "You finished the month." : "Carry on with 31 Touch Points"}
                 </h2>
-                <p className="mt-2 text-sm text-[rgba(254,252,250,0.62)]">
+                <p className="mt-2 text-sm text-[rgba(254,252,250,0.78)]">
                   {finished31 ? "Every day is still here to come back to." : "One touch point a day. Nothing is lost if you miss one."}
                 </p>
               </div>
               {loaded && !finished31 && (
                 <div className="shrink-0 text-right">
-                  <span className="block text-[11px] uppercase tracking-[0.16em] text-[rgba(254,252,250,0.62)]">Day</span>
+                  <span className="block text-[11px] uppercase tracking-[0.16em] text-[rgba(254,252,250,0.78)]">Day</span>
                   <span className="font-display block text-6xl font-light leading-none text-[#DDC98E]">{nextDay}</span>
                 </div>
               )}
@@ -242,11 +242,11 @@ function LibraryContent() {
         {!owns31 && todayOther && (
           <Link
             href={`/practice/${todayOther.slug}`}
-            className="ffy-rise group mt-4 block rounded-3xl border border-[rgba(221,201,142,0.45)] bg-[rgba(13,53,53,0.45)] p-6 sm:p-8"
+            className="ffy-rise group mt-4 block rounded-3xl border-2 border-[#DDC98E] bg-[rgba(13,53,53,0.6)] p-6 sm:p-8"
           >
             <p className="text-[11px] uppercase tracking-[0.18em] text-[#DDC98E]">Today</p>
             <h2 className="font-display mt-3 text-2xl font-light text-ffy-cream">Carry on with {todayOther.title}</h2>
-            <p className="mt-2 text-sm text-[rgba(254,252,250,0.62)]">
+            <p className="mt-2 text-sm text-[rgba(254,252,250,0.78)]">
               {doneCount(todayOther.slug)} of {todayOther.entries.length} done
             </p>
             <span className="mt-6 inline-flex min-h-[48px] items-center rounded-full bg-[#DDC98E] px-6 text-[15px] font-medium text-[#070707]">
@@ -263,7 +263,7 @@ function LibraryContent() {
               target="_blank"
               rel="noreferrer"
               onClick={() => trackInterest(thirtyOneTouchPoints.slug, user?.email)}
-              className="ffy-rise group relative mt-5 block overflow-hidden rounded-3xl border border-[rgba(221,201,142,0.4)] bg-[#0b1414] shadow-[0_0_70px_-24px_rgba(221,201,142,0.35)]"
+              className="ffy-rise group relative mt-5 block overflow-hidden rounded-3xl border-2 border-[#DDC98E] bg-[#0b1414] shadow-[0_0_70px_-24px_rgba(221,201,142,0.35)]"
             >
               <div className="relative h-56 overflow-hidden sm:h-72">
                 <Image src={thirtyOneTouchPoints.heroImage} alt={thirtyOneTouchPoints.title} fill sizes="(max-width: 768px) 100vw, 768px" className="object-cover transition duration-700 group-hover:scale-[1.03]" />
@@ -273,7 +273,7 @@ function LibraryContent() {
                 <p className="text-[11px] uppercase tracking-[0.18em] text-[#DDC98E]">Where most people start</p>
                 <h2 className="font-display mt-2 text-3xl font-light text-ffy-cream sm:text-4xl">{thirtyOneTouchPoints.title}</h2>
                 <p className="mt-2 max-w-md text-[15px] leading-relaxed text-[rgba(254,252,250,0.82)]">{thirtyOneTouchPoints.subtitle}</p>
-                <div className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-2 text-[rgba(254,252,250,0.62)]">
+                <div className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-2 text-[rgba(254,252,250,0.78)]">
                   <span><b className="font-display mr-1 text-2xl font-light text-[#DDC98E]">31</b>days</span>
                   <span><b className="font-display mr-1 text-2xl font-light text-[#DDC98E]">1</b>a day</span>
                   <span className="text-[11px] uppercase tracking-[0.14em]">Buy once, keep it</span>
@@ -343,7 +343,7 @@ function LibraryContent() {
           href="https://feelfullyyou.com/touch-reset-quiz"
           target="_blank"
           rel="noreferrer"
-          className="ffy-rise group relative block overflow-hidden rounded-3xl border border-[rgba(221,201,142,0.3)]"
+          className="ffy-rise group relative block overflow-hidden rounded-3xl border-[1.5px] border-[rgba(221,201,142,0.7)] bg-[#0b1414]"
         >
           <div className="relative h-44 sm:h-56">
             <Image src="/offers/touch-reset-quiz-cover.jpg" alt="The Touch Reset Quiz" fill sizes="(max-width: 768px) 100vw, 768px" className="object-cover" />
@@ -352,7 +352,7 @@ function LibraryContent() {
           <div className="relative -mt-14 p-5 sm:p-6">
             <p className="text-[11px] uppercase tracking-[0.16em] text-[#DDC98E]">Free · 5 minutes</p>
             <h3 className="font-display mt-1 text-2xl font-light text-ffy-cream">The Touch Reset Quiz</h3>
-            <p className="mt-1 text-sm leading-relaxed text-[rgba(254,252,250,0.62)]">
+            <p className="mt-1 text-sm leading-relaxed text-[rgba(254,252,250,0.78)]">
               Where did the touch go? Being touched is not the same as feeling it. Five minutes, and you find out where the touch actually went.
             </p>
             <span className="mt-4 inline-flex min-h-[44px] items-center rounded-full border border-[#DDC98E] px-5 text-sm text-ffy-cream transition group-hover:bg-[#DDC98E] group-hover:text-[#070707]">
