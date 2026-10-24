@@ -60,10 +60,13 @@ export function nextDayStart(ts: number): number {
 
 /** Human phrasing for a moment in the near future. Never states a clock time. */
 export function whenItOpens(dueAt: number): string {
+  // Plain words first (24 Oct 2026): "tomorrow" or "later today", and an hour
+  // count only when it is close enough to be useful.
   const hrs = Math.max(1, Math.round((dueAt - Date.now()) / 3600000));
+  const sameDay = new Date(dueAt).toDateString() === new Date().toDateString();
   if (hrs <= 1) return "in about an hour";
-  if (hrs < 20) return `in about ${hrs} hours`;
-  return "tomorrow";
+  if (hrs <= 3) return `in about ${hrs} hours`;
+  return sameDay ? "later today" : "tomorrow";
 }
 
 export type DripState = {

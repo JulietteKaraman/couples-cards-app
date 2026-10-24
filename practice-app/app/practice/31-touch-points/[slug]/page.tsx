@@ -65,6 +65,16 @@ function TouchPointEntryContent() {
 
   if (!entry) notFound();
 
+  // The five opening reads tick themselves off when opened (24 Oct 2026), so
+  // the month screen can show which ones have been read. They never move the
+  // day clock (only day completions do).
+  useEffect(() => {
+    if (!user || !entry || dayOf(entry.slug) > 0 || doneSlugs === null) return;
+    if (doneSlugs.includes(entry.slug)) return;
+    markComplete(user.id, "31-touch-points", entry.slug).catch(() => {});
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, entry, doneSlugs === null]);
+
   async function handleMarkComplete() {
     if (!user || !entry) return;
     await markComplete(user.id, "31-touch-points", entry.slug);
@@ -109,149 +119,69 @@ function TouchPointEntryContent() {
   const nextRaw = entries[index + 1];
   const next = !isAdmin && nextRaw && dayOf(nextRaw.slug) > unlockedThrough ? undefined : nextRaw;
 
+  const dark = "min-h-screen bg-[#070707] text-ffy-cream [background-image:radial-gradient(110%_55%_at_50%_0%,rgba(13,53,53,0.9)_0%,rgba(7,7,7,0)_70%)]";
+  const pill = "inline-flex min-h-[44px] items-center gap-1.5 rounded-full border-[1.5px] border-[rgba(221,201,142,0.55)] px-4 text-sm text-[#DDC98E] transition hover:border-[#DDC98E]";
+
+  // Never flash a day's content before we know whether it is open yet.
+  if (!isAdmin && doneSlugs === null && thisDay > 1) {
+    return <main className={dark} aria-busy="true" />;
+  }
+
   if (locked) {
     return (
-      <main className="mx-auto max-w-2xl px-6 py-24 text-center">
-        <p className="text-xs uppercase tracking-[0.15em] text-ffy-gold-deep">Not yet</p>
-        <h1 className="mt-3 font-display text-3xl font-semibold text-ffy-teal">
-          {consecutive >= thisDay - 1 && dueAt
-            ? `${entry.title} opens ${whenItOpens(dueAt)}`
-            : `${entry.title} opens after day ${thisDay - 1}`}
-        </h1>
-        <p className="mt-5 text-ffy-black/70">
-          One day at a time, on purpose. A month you can finish teaches your body far more than a
-          month you read in one sitting.
-        </p>
-        <p className="mt-3 text-ffy-black/70">
-          Nothing is lost if you miss a day. It waits for you.
-        </p>
-        {lastOpen && (
-          <Link
-            href={`/practice/31-touch-points/${lastOpen.slug}`}
-            className="mt-8 inline-block rounded-full bg-ffy-gold px-6 py-3 font-display text-sm font-medium text-white transition hover:opacity-90"
-          >
-            Go to {lastOpen.title}
-          </Link>
-        )}
-        <p className="mt-6">
-          <Link href="/practice/31-touch-points" className="text-sm text-ffy-gold-deep underline">
-            See the whole month
-          </Link>
-        </p>
-      </main>
-    );
-  }
-  const imageFirst = entry.imageSide === "left";
-
-  // Day 31 is a "closing" page but it is still a day: it must be markable, or
-  // the month can never reach 31 of 31 (fixed 24 Oct 2026).
-  const markCompleteBlock =
-    entry.kind === "ritual" || dayOf(entry.slug) > 0 ? (
-      <div className="mt-8">
-        {completed ? (
-          <p className="inline-flex items-center gap-2 rounded-full bg-ffy-teal px-5 py-2.5 font-display text-sm font-medium text-ffy-cream">
-            ✓ Marked done
-          </p>
-        ) : (
-          <button
-            onClick={handleMarkComplete}
-            className="rounded-full border border-ffy-gold px-5 py-2.5 font-display text-sm font-medium text-ffy-teal transition hover:bg-ffy-gold hover:text-ffy-cream"
-          >
-            Mark this one done
-          </button>
-        )}
-      </div>
-    ) : null;
-
-  // "closing" pages (Cards upsell, Meet Juliette, Your Next Yes) are built
-  // from several stacked photo+text moments in the deck, not one persistent
-  // side photo — so they render as a single content column, with each real
-  // photo placed inline via a "image" block, instead of the split hero
-  // layout used for a single ritual.
-  if (entry.kind === "closing") {
-    return (
-      <main className="min-h-screen bg-ffy-cream">
-        <div className="mx-auto max-w-2xl px-6 py-14">
-          <Link
-            href="/practice/31-touch-points"
-            className="inline-flex items-center gap-1.5 rounded-full border border-ffy-gold-deep/40 px-4 py-2 text-sm font-medium text-ffy-gold-deep transition hover:bg-ffy-gold-deep/5"
-          >
-            ← The month
-          </Link>
-
-          {entry.eyebrow && (
-            <p className="mt-6 text-xs uppercase tracking-[0.15em] text-ffy-gold-deep">
-              {entry.eyebrow}
-            </p>
-          )}
-          <h1 className="mt-2 font-display text-3xl font-semibold leading-tight text-ffy-teal sm:text-4xl">
-            {entry.title}
+      <main className={`${dark} flex items-center`}>
+        <div className="mx-auto max-w-xl px-6 py-20 text-center">
+          <p className="text-[11px] uppercase tracking-[0.18em] text-[#DDC98E]">Not yet</p>
+          <h1 className="mt-3 font-display text-3xl font-light leading-snug">
+            {consecutive >= thisDay - 1 && dueAt
+              ? `${entry.title} opens ${whenItOpens(dueAt)}`
+              : `${entry.title} opens after day ${thisDay - 1}`}
           </h1>
-
-          {/* Day 31 opens on its photo (it was never drawn in this layout). */}
-          {entry.image && (
-            <div className="relative mt-6 aspect-[4/3] w-full overflow-hidden rounded-2xl">
-              <Image
-                src={entry.image}
-                alt={entry.imageAlt ?? ""}
-                fill
-                priority
-                sizes="(min-width: 768px) 672px, 100vw"
-                className="object-cover"
-                style={{ objectPosition: entry.imageFocus && entry.imageFocus !== "top" ? entry.imageFocus : "center" }}
-              />
-            </div>
+          <p className="mt-5 text-[rgba(254,252,250,0.78)]">
+            One day at a time, on purpose. A month you can finish teaches your body far more than a
+            month you read in one sitting.
+          </p>
+          <p className="mt-3 text-[rgba(254,252,250,0.78)]">Nothing is lost if you miss a day. It waits for you.</p>
+          {lastOpen && (
+            <Link
+              href={`/practice/31-touch-points/${lastOpen.slug}`}
+              className="mt-8 inline-flex min-h-[48px] items-center rounded-full bg-[#DDC98E] px-6 text-[15px] font-medium text-[#070707]"
+            >
+              Go to {lastOpen.title}
+            </Link>
           )}
-
-          <Blocks blocks={entry.body} />
-          {markCompleteBlock}
-
-          <div className="mt-12 flex items-center justify-between border-t border-ffy-border pt-6 text-sm">
-            {prev ? (
-              <Link
-                href={`/practice/31-touch-points/${prev.slug}`}
-                className="text-ffy-gold-deep hover:underline"
-              >
-                ← {prev.title}
-              </Link>
-            ) : (
-              <span />
-            )}
-            {next ? (
-              <Link
-                href={`/practice/31-touch-points/${next.slug}`}
-                className="text-ffy-gold-deep hover:underline"
-              >
-                {next.title} →
-              </Link>
-            ) : (
-              <span />
-            )}
-          </div>
+          <p className="mt-6">
+            <Link href="/practice/31-touch-points" className="text-sm text-[#DDC98E] underline underline-offset-4">
+              See the whole month
+            </Link>
+          </p>
         </div>
       </main>
     );
   }
 
+  const isDay = thisDay > 0;
+  const finishedMonth = isDay && thisDay === 31 && completed;
+
+  // ONE LAYOUT FOR EVERY DAY (24 Oct 2026): photo on top, then the words, then
+  // the day's actions. The old split layout and the separate "closing" layout
+  // are gone, so Day 31 behaves like every other day.
   return (
-    <main className="min-h-screen bg-ffy-cream">
-      <section
-        className={`mx-auto flex max-w-5xl flex-col ${
-          imageFirst ? "md:flex-row" : "md:flex-row-reverse"
-        }`}
-      >
+    <main className={dark}>
+      <div className="mx-auto max-w-2xl px-5 pb-16 pt-6">
+        <Link href="/practice/31-touch-points" className={pill}>
+          ← The month
+        </Link>
+
         {entry.image && (
-          <div className="relative h-[46vh] w-full md:h-screen md:w-1/2">
+          <div className="relative mt-5 h-[48vh] max-h-[560px] w-full overflow-hidden rounded-3xl border-[1.5px] border-[rgba(221,201,142,0.45)]">
             <Image
               src={entry.image}
               alt={entry.imageAlt ?? ""}
               fill
               priority
-              sizes="(min-width: 768px) 50vw, 100vw"
+              sizes="(min-width: 768px) 672px, 100vw"
               className="object-cover"
-              // The hero is half width and full height, so object-cover crops hard
-              // and centring loses heads on a portrait. imageFocus is now a real
-              // object-position per photo. "top" keeps its old meaning.
               style={{
                 objectPosition:
                   entry.imageFocus === "top"
@@ -261,53 +191,74 @@ function TouchPointEntryContent() {
                       : "center",
               }}
             />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#070707]/70 via-transparent to-transparent" />
+            {isDay && (
+              <span className="absolute bottom-4 left-5 font-display text-5xl font-light leading-none text-[#DDC98E]">
+                {thisDay}
+              </span>
+            )}
           </div>
         )}
 
-        <div className="flex w-full flex-col justify-center px-6 py-12 md:w-1/2 md:px-14 md:py-0">
-          <Link
-            href="/practice/31-touch-points"
-            className="inline-flex items-center gap-1.5 rounded-full border border-ffy-gold-deep/40 px-4 py-2 text-sm font-medium text-ffy-gold-deep transition hover:bg-ffy-gold-deep/5"
-          >
-            ← The month
-          </Link>
+        {entry.eyebrow && (
+          <p className="mt-7 text-[11px] uppercase tracking-[0.18em] text-[#DDC98E]">{entry.eyebrow}</p>
+        )}
+        <h1 className="mt-2 font-display text-3xl font-light leading-tight sm:text-4xl">{entry.title}</h1>
 
-          {entry.eyebrow && (
-            <p className="mt-6 text-xs uppercase tracking-[0.15em] text-ffy-gold-deep">
-              {entry.eyebrow}
-            </p>
+        <Blocks blocks={entry.body} dark />
+
+        {isDay && (
+          <div className="mt-10">
+            {completed ? (
+              <div className="ffy-done rounded-3xl border-2 border-[#DDC98E] bg-[rgba(13,53,53,0.6)] p-6 text-center">
+                <span className="block font-display text-5xl font-light leading-none text-[#DDC98E]">
+                  {finishedMonth ? "31 of 31" : `Day ${thisDay}`}
+                </span>
+                <p className="mt-3 text-[15px] text-ffy-cream">
+                  {finishedMonth
+                    ? "All thirty one done. Every one of them is yours to go back to, and you can swap who leads."
+                    : "Done. See you tomorrow."}
+                </p>
+                <Link
+                  href="/practice/31-touch-points"
+                  className="mt-5 inline-flex min-h-[44px] items-center text-sm text-[#DDC98E] underline underline-offset-4"
+                >
+                  Back to the month
+                </Link>
+              </div>
+            ) : (
+              <button
+                onClick={handleMarkComplete}
+                className="inline-flex min-h-[52px] w-full items-center justify-center rounded-full bg-[#DDC98E] px-6 font-display text-[15px] font-medium text-[#070707] transition hover:bg-[#EEDE80] sm:w-auto"
+              >
+                Mark day {thisDay} done
+              </button>
+            )}
+          </div>
+        )}
+
+        <div className="mt-12 flex items-center justify-between gap-4 border-t border-[rgba(221,201,142,0.2)] pt-5 text-sm">
+          {prev ? (
+            <Link href={`/practice/31-touch-points/${prev.slug}`} className="min-h-[44px] py-3 text-[#DDC98E]">
+              ← {prev.title}
+            </Link>
+          ) : (
+            <span />
           )}
-          <h1 className="mt-2 font-display text-3xl font-semibold leading-tight text-ffy-teal sm:text-4xl">
-            {entry.title}
-          </h1>
-
-          <Blocks blocks={entry.body} />
-          {markCompleteBlock}
+          {next ? (
+            <Link href={`/practice/31-touch-points/${next.slug}`} className="min-h-[44px] py-3 text-right text-[#DDC98E]">
+              {next.title} →
+            </Link>
+          ) : (
+            <span />
+          )}
         </div>
-      </section>
-
-      <div className="mx-auto flex max-w-5xl items-center justify-between border-t border-ffy-border px-6 py-6 text-sm md:px-14">
-        {prev ? (
-          <Link
-            href={`/practice/31-touch-points/${prev.slug}`}
-            className="text-ffy-gold-deep hover:underline"
-          >
-            ← {prev.title}
-          </Link>
-        ) : (
-          <span />
-        )}
-        {next ? (
-          <Link
-            href={`/practice/31-touch-points/${next.slug}`}
-            className="text-ffy-gold-deep hover:underline"
-          >
-            {next.title} →
-          </Link>
-        ) : (
-          <span />
-        )}
       </div>
+      <style>{`
+        @keyframes ffyDone { from { opacity: 0; transform: scale(.96); } to { opacity: 1; transform: none; } }
+        .ffy-done { animation: ffyDone .6s cubic-bezier(.2,.8,.2,1) both; }
+        @media (prefers-reduced-motion: reduce) { .ffy-done { animation: none; } }
+      `}</style>
     </main>
   );
 }
