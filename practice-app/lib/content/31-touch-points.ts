@@ -2010,6 +2010,58 @@ export const thirtyOneTouchPoints: PracticeCollection = {
           ],
         },
         { kind: "p", text: "Connection is not something you tick off. When you notice you have slipped back into logistics, screens, work and coexisting, come back and pick one. Your answers will not be the same ones.", emphasis: "bold" },
+        {
+          kind: "p",
+          text: "When you are ready, the page after this one is what comes next.",
+          emphasis: "accent",
+        },
+      ],
+    },
+    // ------------------------------------------------------- your next yes
+    // 24 Oct 2026. Juliette: "it should, of course, have a page that upsells
+    // to something that used to be in there." It was the 31 Days Closer page
+    // that closed the old Ten Touch Rituals guide (ten-touch-rituals.ts,
+    // "When you want the words back"). Restored here as its own page after
+    // Day 31, with One Touch and the call moved down from Day 31's body.
+    {
+      slug: "your-next-yes",
+      order: 36,
+      title: "Your Next Yes",
+      eyebrow: "When you want the words back",
+      kind: "closing",
+      image: "/rituals/31-days-closer.jpg",
+      imageAlt: "31 Days Closer open on a phone at day one, beside the printed deck",
+      imageSide: "left",
+      body: [
+        {
+          kind: "p",
+          text: "This month brought touch back into the room. 31 Days Closer is the other half of it.",
+        },
+        {
+          kind: "p",
+          text: "Touch reaches what words cannot. It also has a limit, and most couples meet it: you can be close in the body and still not have said the thing.",
+        },
+        {
+          kind: "p",
+          text: "One prompt a day, for thirty one days. Fifteen minutes each.",
+          emphasis: "accent",
+        },
+        {
+          kind: "p",
+          text: "The single reason a practice like this dies is that on day two nobody knows which question to pick. One of you wants the easy one, the other wants the real one, and the fifteen minutes goes on choosing instead of talking. This takes the choosing away. You open it, today's prompt is there, and that is the only decision made for you.",
+        },
+        { kind: "quote", text: "The order is doing something" },
+        { kind: "p", text: "Seven days on what you notice, and what you have stopped noticing." },
+        { kind: "p", text: "Seven on what is actually going on in the other one." },
+        { kind: "p", text: "Seven on the part most couples have quietly taken off the list." },
+        { kind: "p", text: "Seven on what has been left unsaid, once you have had three weeks of practice at being heard." },
+        { kind: "p", text: "Three at the end, on what you are both saying yes to." },
+        {
+          kind: "bigLink",
+          text: "31 Days Closer, \u00a317",
+          subtext: "Thirty one prompts, one a day. It opens on any phone, no account and no password, and the first card is waiting when you open it.",
+          href: "https://buy.stripe.com/6oUcN47m3gty71H1Yx0co1U",
+        },
         { kind: "quote", text: "If you want to go further than a month can take you" },
         // The One Touch graphic moved OFF the hero and down here, where it
         // belongs, 30 Sep 2026. Juliette: "the next reach prob also needs a

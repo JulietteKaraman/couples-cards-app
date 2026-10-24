@@ -215,12 +215,22 @@ function TouchPointEntryContent() {
                     ? "All thirty one done. Every one of them is yours to go back to, and you can swap who leads."
                     : "Done. See you tomorrow."}
                 </p>
-                <Link
+                {finishedMonth && (
+                  <Link
+                    href="/practice/31-touch-points/your-next-yes"
+                    className="mt-5 inline-flex min-h-[48px] items-center rounded-full bg-[#DDC98E] px-6 text-[15px] font-medium text-[#070707] transition hover:bg-[#EEDE80]"
+                  >
+                    Your next yes →
+                  </Link>
+                )}
+                <div>
+                  <Link
                   href="/practice/31-touch-points"
                   className="mt-5 inline-flex min-h-[44px] items-center text-sm text-[#DDC98E] underline underline-offset-4"
                 >
                   Back to the month
                 </Link>
+                </div>
               </div>
             ) : (
               <button

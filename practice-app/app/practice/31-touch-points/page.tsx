@@ -83,7 +83,7 @@ function MonthContent() {
   }, []);
 
   const entries = thirtyOneTouchPoints.entries;
-  const essays = entries.filter((e) => dayOf(e.slug) === 0);
+  const essays = entries.filter((e) => dayOf(e.slug) === 0 && e.slug !== "your-next-yes");
   const days = entries.filter((e) => dayOf(e.slug) > 0);
 
   useEffect(() => {
@@ -144,6 +144,12 @@ function MonthContent() {
                 <p className="mt-3 text-[15px] leading-relaxed">
                   All thirty one done. Every one of them is yours to go back to, and you can swap who leads.
                 </p>
+                <Link
+                  href="/practice/31-touch-points/your-next-yes"
+                  className="mt-5 inline-flex min-h-[48px] items-center rounded-full bg-[#DDC98E] px-6 text-[15px] font-medium text-[#070707] transition hover:bg-[#EEDE80]"
+                >
+                  Your next yes →
+                </Link>
               </div>
             ) : today ? (
               <Link href={`/practice/31-touch-points/${today.slug}`} className="group block">
