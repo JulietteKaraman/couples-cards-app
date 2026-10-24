@@ -3,6 +3,8 @@ import Script from "next/script";
 import type { ReactNode } from "react";
 import { ContentBlock } from "@/lib/content/blocks";
 import PracticeTimer from "@/components/PracticeTimer";
+import VoicePlayer from "@/components/VoicePlayer";
+import { LOCAL_AUDIO, localAudioSrc } from "@/lib/content/local-audio";
 
 function driveIdFromUrl(url: string): string | null {
   const m = url.match(/\/file\/d\/([^/]+)/);
@@ -369,6 +371,9 @@ export function Blocks({ blocks, dark = false }: { blocks: ContentBlock[]; dark?
           // page that has one.
           case "driveAudio": {
             const id = driveIdFromUrl(b.url);
+            if (id && LOCAL_AUDIO.has(id)) {
+              return <VoicePlayer key={i} src={localAudioSrc(id)} label={b.label} dark={dark} />;
+            }
             const missing = !id;
             return (
               <div

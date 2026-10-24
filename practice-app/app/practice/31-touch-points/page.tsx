@@ -2,6 +2,12 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import VoicePlayer from "@/components/VoicePlayer";
+
+// Juliette's welcome to the month. Drop the file into
+// public/31-touch-points/audio/ and put its name here. It shows only before
+// Day 1 is done. Empty = nothing shows.
+const WELCOME_31TP = "";
 import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { thirtyOneTouchPoints } from "@/lib/content/31-touch-points";
@@ -164,6 +170,12 @@ function MonthContent() {
                 <p className="mt-2 text-sm text-[rgba(254,252,250,0.78)]">Nothing is lost if you miss a day. It waits for you.</p>
               </div>
             )}
+          </div>
+        )}
+
+        {WELCOME_31TP && doneSlugs !== null && doneCount === 0 && (
+          <div className="mt-6">
+            <VoicePlayer src={`/31-touch-points/audio/${WELCOME_31TP}`} label="Welcome to the month" dark />
           </div>
         )}
 
