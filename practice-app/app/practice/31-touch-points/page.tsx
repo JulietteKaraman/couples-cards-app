@@ -148,8 +148,8 @@ function MonthContent() {
             ) : today ? (
               <Link href={`/practice/31-touch-points/${today.slug}`} className="group block">
                 {today.image && (
-                  <div className="relative h-48 w-full overflow-hidden">
-                    <Image src={today.image} alt={today.imageAlt ?? ""} fill sizes="672px" className="object-cover transition duration-700 group-hover:scale-[1.03]" />
+                  <div className="relative h-56 w-full overflow-hidden">
+                    <Image src={today.image} alt={today.imageAlt ?? ""} fill sizes="672px" className="object-cover transition duration-700 group-hover:scale-[1.03]" style={{ objectPosition: today.imageFocus && today.imageFocus !== "top" && today.imageFocus !== "center" ? today.imageFocus : "center 25%" }} />
                     <div className="absolute inset-0 bg-gradient-to-t from-[rgba(13,53,53,0.95)] via-transparent to-transparent" />
                   </div>
                 )}

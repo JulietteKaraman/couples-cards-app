@@ -173,30 +173,26 @@ function TouchPointEntryContent() {
           ← The month
         </Link>
 
+        {/* The whole photo, never cropped (24 Oct 2026: heads were being cut
+            off, Alex's included). It keeps its own shape on every screen. */}
         {entry.image && (
-          <div className="relative mt-5 h-[48vh] max-h-[560px] w-full overflow-hidden rounded-3xl border-[1.5px] border-[rgba(221,201,142,0.45)]">
-            <Image
-              src={entry.image}
-              alt={entry.imageAlt ?? ""}
-              fill
-              priority
-              sizes="(min-width: 768px) 672px, 100vw"
-              className="object-cover"
-              style={{
-                objectPosition:
-                  entry.imageFocus === "top"
-                    ? "center 20%"
-                    : entry.imageFocus && entry.imageFocus !== "center"
-                      ? entry.imageFocus
-                      : "center",
-              }}
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#070707]/70 via-transparent to-transparent" />
-            {isDay && (
-              <span className="absolute bottom-4 left-5 font-display text-5xl font-light leading-none text-[#DDC98E]">
-                {thisDay}
-              </span>
-            )}
+          <div className="relative mt-5 flex justify-center">
+            <div className="relative inline-block">
+              <Image
+                src={entry.image}
+                alt={entry.imageAlt ?? ""}
+                width={1200}
+                height={1500}
+                priority
+                sizes="(min-width: 768px) 672px, 100vw"
+                className="block h-auto max-h-[78vh] w-auto max-w-full rounded-3xl border-[1.5px] border-[rgba(221,201,142,0.45)]"
+              />
+              {isDay && (
+                <span className="absolute bottom-4 left-5 font-display text-5xl font-light leading-none text-[#DDC98E] [text-shadow:0_2px_18px_rgba(0,0,0,0.75)]">
+                  {thisDay}
+                </span>
+              )}
+            </div>
           </div>
         )}
 
