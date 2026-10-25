@@ -260,120 +260,6 @@ export const thirtyOneTouchPoints: PracticeCollection = {
         { kind: "p", text: "These 31 days are a way back into the conversation your bodies stopped having.", emphasis: "bold" },
       ],
     },
-    {
-      slug: "meet-juliette",
-      order: 4,
-      image: "/rituals/meet-juliette.jpeg",
-      imageAlt: "Juliette Karaman",
-      title: "I'm Juliette",
-      eyebrow: "27 years of helping people feel, relate, and connect",
-      kind: "essay",
-      imageSide: "left",
-      imageFocus: "top",
-      // Juliette, 30 Sep 2026: "I do not know why you took the I am Juliette
-      // out. How we had it a while ago, with the EMDR pills etc. It actually
-      // showed the depth of who I am, what my lawyer asked me etc. You made
-      // it generic af again."
-      // She is right twice over. First I transcribed her audio onto the page,
-      // then I replaced that with the short 10 Touch Rituals bio, which is
-      // the generic one. THIS is the deep version, from her own sales page:
-      // the lawyer, the woman on the other side of the room, the modalities
-      // she needed rather than collected, and the press.
-      // The audio stays a hello. DO NOT shorten this again.
-      body: [
-        {
-          kind: "driveAudio",
-          url: "https://drive.google.com/file/d/1vOBlcZbFpt0XxO9MYuSzbxxaWvWWBzzu/view?usp=sharing",
-          label: "A hello from me, before you start. 2 minutes",
-        },
-        { kind: "big", text: "“Can you teach this?”" },
-        {
-          kind: "p",
-          text: "My own divorce lawyer asked me that. She had sat across from couples who did not need a settlement. They needed to be shown how to touch each other again. How to have little touch points. How to have fun again.",
-        },
-        { kind: "p", text: "How to be touched by each other, and by life again.", emphasis: "accent" },
-        {
-          kind: "p",
-          text: "For twenty seven years I have worked with people and their bodies, the last fifteen of them in the room with couples at exactly this impasse, two people who cannot understand why trying is not enough.",
-        },
-        { kind: "quote", text: "But I was on the other side of that room first" },
-        {
-          kind: "p",
-          text: "I know what it feels like to stiffen when the man you love reaches for you. To pull away and have no language for why. To perform desire because the real thing felt too far to reach.",
-          emphasis: "bold",
-        },
-        {
-          kind: "p",
-          text: "It took me decades to understand what I was braced against, what I needed and had never been given, and what structure would have changed everything. So I followed my own wound into every room it needed to understand.",
-        },
-        {
-          kind: "p",
-          text: "Fifteen years ago I started noticing the same thing in almost every couple I worked with. The bedroom had gone quiet, and the real distance was happening everywhere else. In the kitchen. On the sofa. In the two seconds after one of them reached out and the other pulled back without quite knowing why.",
-        },
-        {
-          kind: "why",
-          lines: [
-            { text: "Safe touch outside the bedroom is where intimacy actually lives.", emphasis: "bold" },
-            { text: "I have spent those years and thousands of client sessions proving it. When the body learns that reaching is safe, that a hand on the back means nothing is being asked of you, everything else begins to shift." },
-            { text: "That is why I build these. Not as a path to sex. As a path back to each other.", emphasis: "accent" },
-            { text: "And yes, physical touch and sexual touch do increase once you start having touch points with each other again." },
-          ],
-        },
-        { kind: "quote", text: "What I trained in, and why" },
-        {
-          kind: "step",
-          label: "The work underneath all of this",
-          highlight: true,
-          lines: [
-            { text: "EMDR · Somatic experiencing · Hypnotherapy · OM and tantra · BDSM · Spinal attunement · Erotic Blueprints", emphasis: "bold" },
-            { text: "I did not collect these. I needed them. Every single one.", emphasis: "accent" },
-          ],
-        },
-        {
-          kind: "p",
-          text: "It began with children on the autism spectrum, helping them trust sensation before they had words for it. It has since been 650 couples and thousands of individuals who love each other, live full lives, and still lose connection the moment touch begins.",
-        },
-        { kind: "p", text: "Insight alone does not change intimacy. Touch alone does not either.", emphasis: "bold" },
-        { kind: "p", text: "Change happens through experiences the body can stay present with.", emphasis: "accent" },
-        {
-          kind: "notice",
-          lines: [
-            { text: "Structure is not the absence of pain.", emphasis: "bold" },
-            { text: "It is not the absence of loneliness, and it is not the end of spontaneity. Structure teaches the body, slowly and daily, that reaching is worth it. That is what brings intimacy back." },
-          ],
-        },
-        {
-          kind: "step",
-          label: "Where you may have seen me",
-          lines: [
-            { text: "Forbes · The Times · Marie Claire · ITV · The Telegraph · Newsweek" },
-            { text: "The Scrumptious Woman podcast, top 2.5% worldwide." },
-          ],
-        },
-        { kind: "image", src: "/rituals/podcast-cover.jpg", alt: "The Scrumptious Woman podcast" },
-        {
-          kind: "link",
-          text: "Listen here",
-          href: "https://open.spotify.com/show/50jFN83FxoNm0UXiryqkJW",
-        },
-        {
-          kind: "p",
-          text: "I have been where you are, in all of it, and I came out with my family intact, my children whole, and the man I was married to still one of my closest people.",
-          emphasis: "bold",
-        },
-        { kind: "p", text: "Every moment of presence is a new chance to come In Touch.", emphasis: "accent" },
-        { kind: "image", src: "/rituals/substack-cta.png", alt: "What The Body Knows, Juliette's Substack" },
-        {
-          kind: "p",
-          text: "I write more deeply on Substack. Why these processes work, what I have seen, and how I got here.",
-        },
-        {
-          kind: "link",
-          text: "Follow here",
-          href: "https://substack.com/@juliettekaraman",
-        },
-      ],
-    },
     // ============================================================ PHASE ONE
     // Landing in your own body. Almost nothing is asked of the other person.
     {
@@ -2111,6 +1997,35 @@ export const thirtyOneTouchPoints: PracticeCollection = {
           text: "Or talk to me first, and we will work out what you actually need",
           href: "https://tidycal.com/juliette2/the-touch-reset-call",
         },
+      ],
+    },
+    {
+      // Moved to the END and cut, 25 Oct 2026. Juliette: "put I'm Juliette, a
+      // cut version, to the end of the app (if they want to read more)" and
+      // "cut the reading, bottom line it, make it fun". Alex: do not mention
+      // the divorce lawyer. This supersedes the 30 Sep "do not shorten" note.
+      slug: "meet-juliette",
+      order: 37,
+      image: "/31-touch-points/ja-selfie-striped.jpg",
+      imageAlt: "Juliette and Alex cheek to cheek in a field",
+      title: "I'm Juliette",
+      eyebrow: "If you want to know who I am",
+      kind: "essay",
+      imageSide: "left",
+      imageFocus: "center 40%",
+      body: [
+        {
+          kind: "driveAudio",
+          url: "https://drive.google.com/file/d/1vOBlcZbFpt0XxO9MYuSzbxxaWvWWBzzu/view?usp=sharing",
+          label: "A hello from me. 2 minutes",
+        },
+        { kind: "big", text: "I'm Juliette, intimacy and touch expert." },
+        { kind: "p", text: "For fifteen years I've helped couples find their way back to each other." },
+        { kind: "quote", text: "I was on the other side of it first" },
+        { kind: "p", text: "I know what it is to stiffen when the man you love reaches for you, and have no words for why.", emphasis: "bold" },
+        { kind: "p", text: "Today I live in England with my fiancé, Alex. Yes, the man in the photos, with the long classical guitar nails on one hand." },
+        { kind: "p", text: "If you want me with you, here are the ways in.", emphasis: "accent" },
+        { kind: "link", text: "Ways to work with me", href: "https://feelfullyyou.com/work-with-me" },
       ],
     },
   ],

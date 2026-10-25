@@ -83,7 +83,7 @@ function MonthContent() {
   }, []);
 
   const entries = thirtyOneTouchPoints.entries;
-  const essays = entries.filter((e) => dayOf(e.slug) === 0 && e.slug !== "your-next-yes");
+  const essays = entries.filter((e) => dayOf(e.slug) === 0 && e.slug !== "your-next-yes" && e.slug !== "meet-juliette");
   const days = entries.filter((e) => dayOf(e.slug) > 0);
 
   useEffect(() => {
@@ -204,7 +204,7 @@ function MonthContent() {
 
         {/* THE FIVE OPENING READS */}
         <h2 className="mt-12 font-display text-xl font-light">Start here</h2>
-        <p className="mt-1 text-sm text-[rgba(254,252,250,0.78)]">Five short reads before day one.</p>
+        <p className="mt-1 text-sm text-[rgba(254,252,250,0.78)]">Four short reads before day one.</p>
         <ul className="mt-4 grid gap-2">
           {essays.map((e) => {
             const read = done.includes(e.slug);
@@ -300,6 +300,9 @@ function MonthContent() {
         <p className="mt-12 border-t border-[rgba(221,201,142,0.2)] pt-6 text-sm text-[rgba(254,252,250,0.78)]">
           Nothing is lost if you miss a day. It waits for you, exactly where you left it.
         </p>
+        <Link href="/practice/31-touch-points/meet-juliette" className="mt-4 inline-flex min-h-[44px] items-center text-sm text-[#DDC98E] underline underline-offset-4">
+          If you want to know who I am →
+        </Link>
       </div>
     </main>
   );
