@@ -1255,6 +1255,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
       // "Your Choice", which hid her most commented mechanic behind a generic
       // title, so nobody scanning the Month screen knew it was in there.
       title: "Day 17. You May",
+      imageFocus: "center 55%",
       image: "/31-touch-points/neck-kiss.jpg",
       eyebrow: "Open the Playful Moments Menu",
       kind: "ritual",
@@ -1719,6 +1720,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
       slug: "day-26-the-3-minute-touch-reset",
       order: 30,
       title: "Day 26. The 3-Minute Touch Reset",
+      imageFocus: "center 100%",
       image: "/rituals/the-3-minute-touch-reset.jpeg",
       eyebrow: "3 minutes, agreed first",
       kind: "ritual",
@@ -1962,7 +1964,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
       image: "/31-touch-points/juliette-alex-field.jpg",
       eyebrow: "The last one",
       kind: "closing",
-      imageFocus: "center 45%",
+      imageFocus: "center 5%",
       imageSide: "right",
       body: [
         {
