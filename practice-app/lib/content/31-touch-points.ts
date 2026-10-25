@@ -837,6 +837,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
             { text: "That was one way to touch each other for eight minutes, leading nowhere at all, purely for connection. Notice which one you said no to, and notice whether it was actually a no or whether it was a habit.", emphasis: "accent" },
           ],
         },
+        {"kind": "notice", "lines": [{"text": "This is one small piece of a Touch Map.", "emphasis": "bold"}, {"text": "In a Touch Map I take your whole body through green, orange and red."}]},
       ],
     },
     {
@@ -1285,6 +1286,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
           ],
         },
         { kind: "why", lines: [{ text: "A predicted touch is a safe touch. This is why hovering for a second before you land changes how the same hand is received.", emphasis: "accent" }] },
+        {"kind": "notice", "lines": [{"text": "Every place you noticed today is a place I would put on your Touch Map.", "emphasis": "bold"}]},
       ],
     },
     {
@@ -1540,6 +1542,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
             { text: "Notice whether the sensation is different, or whether something emotional arrives instead." },
           ],
         },
+        {"kind": "notice", "lines": [{"text": "One zone, three touches.", "emphasis": "bold"}, {"text": "Imagine this for your whole body. That is what a Touch Map is."}]},
       ],
     },
     {
@@ -1696,6 +1699,9 @@ export const thirtyOneTouchPoints: PracticeCollection = {
           subtext: "Thirty one prompts, one a day. It opens on any phone, no account and no password, and the first card is waiting when you open it.",
           href: "https://buy.stripe.com/6oUcN47m3gty71H1Yx0co1U",
         },
+        {"kind": "quote", "text": "Your Touch Map"},
+        {"kind": "p", "text": "You have mapped a few inches this month. If you want me to map all of you, your whole body, then your Touch Language and your Pleasure Language, that is a VIP day with me.", "emphasis": "bold"},
+        {"kind": "bigLink", "text": "Map all of me", "subtext": "VIP days, in person or online", "href": "https://feelfullyyou.com/work-with-me"},
         { kind: "quote", text: "If you want to go further than a month can take you" },
         // The One Touch graphic moved OFF the hero and down here, where it
         // belongs, 30 Sep 2026. Juliette: "the next reach prob also needs a
