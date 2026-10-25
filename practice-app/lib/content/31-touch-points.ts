@@ -75,6 +75,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
       kind: "essay",
       imageSide: "left",
       body: [
+        { kind: "audio", src: "/31-touch-points/audio/opener.m4a", label: "Listen: from me, 45 seconds" },
         {"kind": "p", "text": "That's the whole point.", "emphasis": "bold"},
         {"kind": "p", "text": "We make this playful all the time. We'll be walking to the gym and all of a sudden I say, “You may,” and offer him my neck."},
         {"kind": "p", "text": "He goes, “Oh man.”", "emphasis": "accent"},
@@ -95,6 +96,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
       kind: "ritual",
       imageSide: "right",
       body: [
+        { kind: "audio", src: "/31-touch-points/audio/day-1.m4a", label: "Listen first: 40 seconds" },
         { kind: "p", text: "The month opens with a date. Not with a hand, and not with breathing.", emphasis: "bold" },
         { kind: "p", text: "Nobody here needs more quality time. You have had years of being in the same room." },
         { kind: "p", text: "What you are doing today is collecting a story.", emphasis: "bold" },
@@ -180,6 +182,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
       kind: "ritual",
       imageSide: "right",
       body: [
+        { kind: "audio", src: "/31-touch-points/audio/day-2-you-may.m4a", label: "Listen: how Alex and I play it, 30 seconds" },
         { kind: "p", text: "No instruction today. You pick.", emphasis: "bold" },
         { kind: "p", text: "Choosing is the practice. A couple who can pick something playful for each other have got something back that nobody can teach them." },
         { kind: "quote", text: "The mechanic, and it is the one that makes all of this light" },
