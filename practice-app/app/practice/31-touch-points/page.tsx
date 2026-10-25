@@ -24,6 +24,7 @@ import {
   lsGet,
   lsRemove,
   lsSet,
+  normalizeDone,
   whenItOpens,
 } from "@/lib/content/31-touch-points-drip";
 
@@ -89,7 +90,7 @@ function MonthContent() {
   useEffect(() => {
     if (!user) return;
     getCompletedWithTimes(user.id, "31-touch-points").then((rows) => {
-      setDoneSlugs(rows.map((r) => r.slug));
+      setDoneSlugs(normalizeDone(entries, rows.map((r) => r.slug)));
       const times = rows.filter((r) => dayOf(r.slug) > 0 && r.at).map((r) => r.at as number);
       setLastDone(times.length ? Math.max(...times) : null);
     });
@@ -204,7 +205,7 @@ function MonthContent() {
 
         {/* THE FIVE OPENING READS */}
         <h2 className="mt-12 font-display text-xl font-light">Start here</h2>
-        <p className="mt-1 text-sm text-[rgba(254,252,250,0.78)]">Four short reads before day one.</p>
+        <p className="mt-1 text-sm text-[rgba(254,252,250,0.78)]">One short read before day one.</p>
         <ul className="mt-4 grid gap-2">
           {essays.map((e) => {
             const read = done.includes(e.slug);

@@ -89,12 +89,13 @@ export function computeDrip(args: {
 }): DripState {
   const { entries, doneSlugs, lastDone, now } = args;
 
+  // Counted by DAY NUMBER, not by exact address (25 Oct 2026). The month was
+  // reordered and some days renamed; a buyer who finished "day-5-..." under
+  // the old name has still done day 5, so they keep their place.
+  const doneDays = new Set(doneSlugs.map(dayOf).filter((n) => n > 0));
   let consecutive = 0;
-  while (consecutive < 31) {
-    const e = entries.find((x) => dayOf(x.slug) === consecutive + 1);
-    if (e && doneSlugs.includes(e.slug)) consecutive += 1;
-    else break;
-  }
+  while (consecutive < 31 && doneDays.has(consecutive + 1)) consecutive += 1;
+  void entries;
 
   // The database timestamp is the authority, because it is the same on every
   // device and it survives a cleared browser. localStorage is only a fallback
@@ -158,4 +159,14 @@ export function weekOf(day: number) {
 export function adminBypassActive(email: string | null | undefined, adminEmail: string): boolean {
   if (!email || email.toLowerCase() !== adminEmail) return false;
   return lsGet(ASBUYER_KEY) !== "1";
+}
+
+/** Progress is kept by DAY NUMBER (25 Oct 2026 reorder). A buyer who finished
+ *  "day-5-the-landing" before the reorder has done day 5, which is now
+ *  "day-5-the-threshold". This adds the current address for every day number
+ *  already done, so every "is this done?" check keeps working. */
+export function normalizeDone(entries: PracticeEntry[], slugs: string[]): string[] {
+  const nums = new Set(slugs.map(dayOf).filter((n) => n > 0));
+  const extra = entries.filter((e) => nums.has(dayOf(e.slug))).map((e) => e.slug);
+  return Array.from(new Set([...slugs, ...extra]));
 }

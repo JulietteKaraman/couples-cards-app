@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useParams, notFound } from "next/navigation";
+import { useParams, notFound, redirect } from "next/navigation";
 import { useEffect, useState } from "react";
-import { thirtyOneTouchPoints } from "@/lib/content/31-touch-points";
+import { thirtyOneTouchPoints, LEGACY_31TP_SLUGS } from "@/lib/content/31-touch-points";
 import { Blocks } from "@/components/Blocks";
 import { CollectionGate } from "@/components/auth/CollectionGate";
 import { useAuth } from "@/components/providers/AuthProvider";
@@ -16,6 +16,7 @@ import {
   computeDrip,
   dayOf,
   lsSet,
+  normalizeDone,
   whenItOpens,
 } from "@/lib/content/31-touch-points-drip";
 
@@ -54,7 +55,7 @@ function TouchPointEntryContent() {
   useEffect(() => {
     if (!user || !entry) return;
     getCompletedWithTimes(user.id, "31-touch-points").then((rows) => {
-      const slugs = rows.map((r) => r.slug);
+      const slugs = normalizeDone(entries, rows.map((r) => r.slug));
       setDoneSlugs(slugs);
       setCompleted(slugs.includes(entry.slug));
       // Only DAY completions move the clock. Reading an essay does not.
@@ -63,7 +64,14 @@ function TouchPointEntryContent() {
     });
   }, [user, entry]);
 
-  if (!entry) notFound();
+  if (!entry) {
+    // Old address from before the 25 Oct 2026 reorder: send it to the new one.
+    if (slug in LEGACY_31TP_SLUGS) {
+      const to = LEGACY_31TP_SLUGS[slug];
+      redirect(`/practice/31-touch-points${to ? `/${to}` : ""}`);
+    }
+    notFound();
+  }
 
   // The five opening reads tick themselves off when opened (24 Oct 2026), so
   // the month screen can show which ones have been read. They never move the
