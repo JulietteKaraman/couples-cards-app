@@ -350,6 +350,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
       kind: "ritual",
       imageSide: "left",
       body: [
+        { kind: "audio", src: "/31-touch-points/audio/day-4-kitchen-spin.m4a", label: "Listen: 20 seconds" },
         {"kind": "p", "text": "Two seconds. No planning.", "emphasis": "bold"},
         {"kind": "p", "text": "Come up behind them while they're doing something ordinary. Take their waist. Turn them round to face you."},
         {"kind": "big", "text": "That's it. Nothing after it."},
@@ -375,6 +376,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
       // The reading-them half of the practice below is kept, it does not need
       // a video to land.
       body: [
+        { kind: "audio", src: "/31-touch-points/audio/day-5-threshold.m4a", label: "Listen first: about a minute" },
         { kind: "p", text: "Whoever comes through the door carrying the day does this one. On another day it will be the other one of you." },
         {
           kind: "numberedSteps",
@@ -432,6 +434,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
       // Replaces Feet on the Floor, the thinnest page in week one. Grounding
       // through the feet survives inside her Skin to Skin recording.
       body: [
+        { kind: "audio", src: "/31-touch-points/audio/day-6-heart-hug.m4a", label: "Listen first: about a minute" },
         { kind: "p", text: "Two tools I use with clients when a body needs to come down. Today you learn them on yourself, then you hand them over." },
         {
           kind: "numberedSteps",
