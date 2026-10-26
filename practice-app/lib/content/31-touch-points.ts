@@ -773,10 +773,14 @@ export const thirtyOneTouchPoints: PracticeCollection = {
       kind: "ritual",
       imageSide: "right",
       body: [
-        {"kind": "p", "text": "A kitchen, a party, a restaurant.", "emphasis": "bold"},
-        {"kind": "p", "text": "Catch their eye across the room and hold it one second longer than is comfortable."},
-        {"kind": "big", "text": "Then smile, and look away first."},
-        {"kind": "p", "text": "No touch at all. Notice how much it lands anyway.", "emphasis": "accent"},
+        { kind: "audio", src: "/31-touch-points/audio/day-13-across-the-room.m4a", label: "Listen first: 2.5 minutes" },
+        {"kind": "p", "text": "No touch at all today. This is energetic touch.", "emphasis": "bold"},
+        {"kind": "p", "text": "Next time you're in the same room, catch their eye and hold it, one or two seconds longer than is comfortable. Somewhere public is even better."},
+        {"kind": "why", "lines": [{"text": "Why a look counts as touch", "emphasis": "bold"}, {"text": "After years of living together, the novelty wears off. We stop looking at each other the way we did across a crowded room, full of longing."}, {"text": "Being seen is a touch point. The body registers that it was met, and nobody laid a finger on it.", "emphasis": "accent"}]},
+        {"kind": "step", "label": "Three ways to play it", "lines": [{"text": "The slow look away.", "emphasis": "bold"}, {"text": "Hold it, then look down, then look back at them. The look back is where the charge is."}, {"text": "The raised eyebrow.", "emphasis": "bold"}, {"text": "If they don't look up, clear your throat. When they do, raise one eyebrow. Command their attention, then smile."}, {"text": "The look in company.", "emphasis": "bold"}, {"text": "At dinner with friends, or across a room at a party. A private moment in a public place."}]},
+        {"kind": "step", "label": "What to notice in your body", "lines": [{"text": "Is there heat anywhere? A flush in your face, your chest, your belly?"}, {"text": "Is there movement? A flutter, a little frisson, a smile you can't stop?"}, {"text": "Sometimes there isn't much yet. That's fine. We build on this every day."}]},
+        {"kind": "notice", "lines": [{"text": "If they don't look back", "emphasis": "bold"}, {"text": "It doesn't mean anything. They might be miles away in their own head. Try again later today."}]},
+        {"kind": "step", "label": "Afterwards, ask each other", "highlight": true, "lines": [{"text": "Tell me what you noticed when I held your eye."}, {"text": "Tell me when you last felt me look at you like that."}, {"text": "Whoever asked says only: thank you.", "emphasis": "accent"}]},
       ],
     },
     {
@@ -917,45 +921,14 @@ export const thirtyOneTouchPoints: PracticeCollection = {
       kind: "ritual",
       imageSide: "left",
       body: [
-        { kind: "p", text: "Reach with nowhere to go.", emphasis: "bold" },
-        {
-          kind: "step",
-          label: "Five that cost nothing",
-          lines: [
-            { text: "A hand on the shoulder passing behind them." },
-            { text: "A palm flat between the shoulder blades." },
-            { text: "Fingers brushing theirs handing something over." },
-            { text: "A hand on the small of the back in the kitchen." },
-            { text: "A squeeze of the knee under the table." },
-          ],
-        },
-        {
-          kind: "why",
-          lines: [
-            { text: "Relationships do not usually end in the argument. They end in the pass in the kitchen that stopped happening.", emphasis: "bold" },
-            { text: "A bid with no destination is the cheapest repair there is, and you can make four of them before breakfast." },
-          ],
-        },
-        { kind: "quote", text: "And the half nobody does" },
-        { kind: "p", text: "When one does not land, reach again, gently, within the hour.", emphasis: "bold" },
-        {
-          kind: "step",
-          label: "Ways to do it without making it a thing",
-          lines: [
-            { text: "A hand on the back passing behind." },
-            { text: "Refilling their tea with a touch to the shoulder." },
-            { text: "Catching their eye and holding it with a small smile." },
-            { text: "Sitting closer than you need to." },
-          ],
-        },
-        {
-          kind: "notice",
-          lines: [
-            { text: "One reach that does not land is nothing. It is the not reaching again that teaches you both the lesson.", emphasis: "bold" },
-            { text: "Within the hour matters. By tomorrow it has turned into a story about what it meant." },
-            { text: "And when you catch a small spark, say it at the moment it arrives. I just felt that. Come here, I need to touch you. What gets witnessed, grows.", emphasis: "accent" },
-          ],
-        },
+        { kind: "audio", src: "/31-touch-points/audio/day-16-small-bid.m4a", label: "Listen first: 4 minutes" },
+        {"kind": "p", "text": "Today isn't one practice. It's lots of tiny ones, all day.", "emphasis": "bold"},
+        {"kind": "p", "text": "A small bid is a reach with nowhere to go. It isn't asking for anything. Try at least three before tonight."},
+        {"kind": "step", "label": "The five, and how to stay in them", "highlight": true, "lines": [{"text": "A hand on the shoulder as you pass behind them.", "emphasis": "bold"}, {"text": "Leave it there for a breath. One, two, three. Then walk off."}, {"text": "A palm flat between the shoulder blades.", "emphasis": "bold"}, {"text": "While they're washing up, or cooking. Still. No rubbing, no pat. Notice if they lean back into you."}, {"text": "Fingers brushing theirs.", "emphasis": "bold"}, {"text": "When you hand them a cup of tea, the salt, the post."}, {"text": "Both hands on the small of their back, or their hips.", "emphasis": "bold"}, {"text": "Stay for a moment. A kiss on the shoulder, or whisper “I love you”, or whatever your endearment is."}, {"text": "A squeeze of the knee under the table.", "emphasis": "bold"}, {"text": "Look at them as you do it. Leave your hand there for a few breaths. Even better with other people there."}]},
+        {"kind": "why", "lines": [{"text": "Why small bids matter more than big gestures", "emphasis": "bold"}, {"text": "Relationships rarely end in the big argument. They end in the pass in the kitchen that stopped happening."}, {"text": "A bid with no destination is the cheapest repair there is, and you can make four of them before breakfast.", "emphasis": "accent"}]},
+        {"kind": "step", "label": "The part almost nobody does", "lines": [{"text": "If one doesn't land, reach again, gently, within the hour.", "emphasis": "bold"}, {"text": "It doesn't mean they didn't want it. It might not have been the right moment."}, {"text": "Within the hour matters. By tomorrow it has turned into a story about what the not-receiving meant."}]},
+        {"kind": "notice", "lines": [{"text": "Say the spark out loud", "emphasis": "bold"}, {"text": "If you feel something, say it while it's happening. “Oof, I just felt that.” What gets witnessed, and what gets said, grows."}]},
+        {"kind": "step", "label": "Afterwards, ask each other", "highlight": true, "lines": [{"text": "Tell me which one you noticed today."}, {"text": "Tell me which one you'd like more of."}, {"text": "Whoever asked says only: thank you.", "emphasis": "accent"}]},
       ],
     },
     {
@@ -1017,39 +990,15 @@ export const thirtyOneTouchPoints: PracticeCollection = {
       kind: "ritual",
       imageSide: "right",
       body: [
-        { kind: "p", text: "Same giver and receiver as you like. One instruction again." },
-        { kind: "big", text: "“Touch me, and do not use your hands.”" },
-        {
-          kind: "step",
-          label: "What is left, once the hands are out",
-          highlight: true,
-          lines: [
-            { text: "A forearm laid along an arm." },
-            { text: "A cheek against a shoulder." },
-            { text: "The back of a head resting on a chest." },
-            { text: "Hair drawn slowly across skin." },
-            { text: "A breath, close enough to be felt and not close enough to be contact." },
-            { text: "A shin, a knee, the top of a foot. Nothing is off the list except hands." },
-          ],
-        },
-        { kind: "p", text: "Same rule as yesterday. You do not ask whether it landed.", emphasis: "bold" },
-        {
-          kind: "why",
-          lines: [
-            { text: "Hands are where all the habits live.", emphasis: "bold" },
-            { text: "They know four moves and they do them in the same order, and both of you stopped feeling any of it years ago. Take them away and there is nothing to fall back on.", emphasis: "accent" },
-          ],
-        },
-        { kind: "timer", minutes: [3], label: "Three minutes, no hands" },
-        {
-          kind: "notice",
-          lines: [
-            { text: "Then swap, and do not skip it", emphasis: "bold" },
-            { text: "Same instruction, the other way round. The short ones are exactly the ones people do once and call done." },
-            { text: "Was it easier to receive that, or to be the one working out what to do without your hands?" },
-            { text: "Which half left you wanting to stop sooner, and can you say why?", emphasis: "accent" },
-          ],
-        },
+        { kind: "audio", src: "/31-touch-points/audio/day-19-no-hands.m4a", label: "Listen first: 2.5 minutes" },
+        {"kind": "p", "text": "Decide who gives and who receives.", "emphasis": "bold"},
+        {"kind": "p", "text": "Receiver, sit or stand somewhere comfortable. You don't have to do anything except notice. Giver, one instruction: touch them, and don't use your hands."},
+        {"kind": "step", "label": "What's left when the hands are out", "highlight": true, "lines": [{"text": "A forearm laid along their arm."}, {"text": "Your cheek resting on their shoulder."}, {"text": "The back of your head against their chest, or their back."}, {"text": "Long hair drawn slowly across their skin."}, {"text": "Standing behind them, breath close to the neck. Close enough to feel, not quite touching."}, {"text": "A knee against a knee. A little footsie, the top of your foot on theirs."}]},
+        {"kind": "timer", "minutes": [3], "label": "Three minutes, no hands"},
+        {"kind": "p", "text": "Then swap. Don't skip the swap. You both need to feel what it's like to receive this touch, and what it's like to give it.", "emphasis": "bold"},
+        {"kind": "why", "lines": [{"text": "Why take the hands away", "emphasis": "bold"}, {"text": "Hands are where all the habits live. They know four moves and do them in the same order, and after years neither of you feels them any more."}, {"text": "Take the hands away and there's nothing to fall back on. You have to pay attention, and so does the body receiving you.", "emphasis": "accent"}]},
+        {"kind": "step", "label": "Take it further", "lines": [{"text": "Receiver, close your eyes this time. Notice how much bigger every touch becomes."}, {"text": "Giver, slow everything right down. Halve the speed, then halve it again."}, {"text": "Same rule as yesterday: don't ask if they liked it."}]},
+        {"kind": "step", "label": "Afterwards, ask each other", "highlight": true, "lines": [{"text": "Tell me which half made you want to stop sooner."}, {"text": "Tell me what came up for you."}, {"text": "Whoever asked says only: thank you.", "emphasis": "accent"}]},
       ],
     },
     {
@@ -1066,47 +1015,16 @@ export const thirtyOneTouchPoints: PracticeCollection = {
       // The Hardest Question, which was one line and is far stronger asked
       // AFTER this than instead of it.
       body: [
-        { kind: "p", text: "This one comes from Betty Martin's Wheel of Consent, and it is the practice most couples have never done in their lives." },
-        { kind: "big", text: "One of you takes. The other allows the taking." },
-        { kind: "p", text: "Nobody is being generous. Decide who is which before you start, and swap another day." },
-        {
-          kind: "step",
-          label: "Agree the boundaries first",
-          highlight: true,
-          lines: [
-            { text: "Green is yes." },
-            { text: "Orange is only if I say so in the moment." },
-            { text: "Red is an absolute no, and it does not get revisited that day.", emphasis: "bold" },
-          ],
-        },
-        {
-          kind: "numberedSteps",
-          steps: [
-            { heading: "Three minutes on the timer", text: "No longer. Three minutes is the whole dose." },
-            { heading: "The taker touches for their own pleasure", text: "Not to give anything. Hands, forearms, hair, back, shoulders. Never sexual." },
-            { heading: "The one allowing does nothing", text: "No arranging yourself, no making it easier, no performing enjoyment. You are allowing, and that is the whole job." },
-            { heading: "When the timer ends, one sentence each", text: "What that was like. Nothing more." },
-          ],
-        },
-        {
-          kind: "why",
-          lines: [
-            { text: "Most people find taking far harder than giving.", emphasis: "bold" },
-            { text: "Giving is familiar and you can hide behind it. Taking is visible, and it asks you to want something out loud." },
-            { text: "Only when three minutes has gone well a few times, and that can mean a month or six, does it become five. Rushing it teaches your body that touch is something to get through.", emphasis: "accent" },
-          ],
-        },
-        { kind: "quote", text: "Then, at the end of the day, ask them this" },
-        { kind: "big", text: "“What do you want?”" },
-        {
-          kind: "notice",
-          lines: [
-            { text: "Once. Not about dinner.", emphasis: "bold" },
-            { text: "I don't know yet is a real answer. Take it, and do not help them find a better one. Somebody who has spent years not being asked needs the question to sit there a while before anything comes back." },
-            { text: "And if you are the one being asked, resist answering with what you think they would like to hear. That is the pattern talking, not you.", emphasis: "accent" },
-          ],
-        },
-        { kind: "timer", minutes: [3], label: "Three minutes. Not five." },
+        { kind: "audio", src: "/31-touch-points/audio/day-20-greedy-hands.m4a", label: "Listen first: 3 minutes" },
+        {"kind": "p", "text": "This one comes from Betty Martin's Wheel of Consent. Most couples have never heard of it, let alone done it.", "emphasis": "bold"},
+        {"kind": "p", "text": "One of you takes. The other allows. Decide now who is which."},
+        {"kind": "step", "label": "Agree your colours first, out loud", "highlight": true, "lines": [{"text": "Green is yes."}, {"text": "Orange is only if I say so in the moment."}, {"text": "Red is an absolute no, and it stays no today.", "emphasis": "bold"}, {"text": "This matters. Agree that red means hands off, straight away, no questions."}]},
+        {"kind": "step", "label": "Then three minutes", "lines": [{"text": "Taker, you touch them for your own pleasure.", "emphasis": "bold"}, {"text": "Their hands, forearms, hair, back, shoulders, maybe their feet. Never sexual. You're touching because you want to feel them."}, {"text": "Allower, your whole job is to allow.", "emphasis": "bold"}, {"text": "No arranging yourself, no making it easier, no performing that you're enjoying it."}]},
+        {"kind": "timer", "minutes": [3], "label": "Three minutes. Not five."},
+        {"kind": "why", "lines": [{"text": "Why taking is so hard", "emphasis": "bold"}, {"text": "Giving is familiar. We give touch, and we can hide behind it. Taking asks you to want something, out loud, and to let your partner see you want it."}, {"text": "Being allowed to want something for yourself is often the first thing to go quiet.", "emphasis": "accent"}]},
+        {"kind": "step", "label": "Take it further", "lines": [{"text": "Swap, three minutes the other way. Today or another day."}, {"text": "Only when three minutes has gone well a few times does it become five. That can take a month. Rushing teaches the body that touch is something to get through."}]},
+        {"kind": "step", "label": "Afterwards, ask each other", "highlight": true, "lines": [{"text": "Tell me what that was like. One sentence."}, {"text": "Later today: Tell me, what do you want? Not about dinner."}, {"text": "Whoever asked says only: thank you.", "emphasis": "accent"}]},
+        {"kind": "notice", "lines": [{"text": "“I don't know yet” is a real answer.", "emphasis": "bold"}, {"text": "Take it, say thank you, and don't help them find a better one."}]},
       ],
     },
     {
@@ -1119,25 +1037,15 @@ export const thirtyOneTouchPoints: PracticeCollection = {
       imageFocus: "center 22%",
       imageSide: "right",
       body: [
-        { kind: "big", text: "“My body is an instrument. Touch me like you are playing it.”" },
-        { kind: "p", text: "Three days ago the giver got nothing back at all. Today the body answers, and still nobody speaks.", emphasis: "bold" },
-        {
-          kind: "numberedSteps",
-          steps: [
-            { heading: "The receiver makes sound, not words", text: "Up in the voice when you hit the right note. Down when you do not. No sentences, no adjustments, no thank yous." },
-            { heading: "The giver plays", text: "Follow the sound. When it goes up, stay. When it goes down, change something. Pressure, speed, place." },
-            { heading: "Neither of you explains anything", text: "Not during, and not for a while afterwards." },
-          ],
-        },
-        {
-          kind: "why",
-          lines: [
-            { text: "The feedback arrives while your hand is still moving.", emphasis: "bold" },
-            { text: "Every other way of doing this happens afterwards, in a conversation, by which point you are both discussing a memory. A sound lands in the same second as the touch does, and your hand can answer it before you have thought about it." },
-            { text: "And most women have spent years making no sound at all, in case it was the wrong one.", emphasis: "accent" },
-          ],
-        },
-        { kind: "timer", minutes: [3], label: "Three minutes. Then swap if you want to." },
+        { kind: "audio", src: "/31-touch-points/audio/day-21-instrument.m4a", label: "Listen first: 2.5 minutes" },
+        {"kind": "p", "text": "Decide who receives first. Receiver, say this out loud:", "emphasis": "bold"},
+        {"kind": "big", "text": "“My body is an instrument. Touch me like you're playing it.”"},
+        {"kind": "p", "text": "From then on, no words and no adjusting. Only sound."},
+        {"kind": "step", "label": "How it works", "highlight": true, "lines": [{"text": "Receiver: when it's right, let your voice go up.", "emphasis": "bold"}, {"text": "A hum, a sigh, a mm, a yes with no words in it."}, {"text": "When it's not quite right, let your voice go down.", "emphasis": "bold"}, {"text": "Giver: follow the sound.", "emphasis": "bold"}, {"text": "When it goes up, stay there. When it goes down, change something. The pressure, the speed, the place."}]},
+        {"kind": "timer", "minutes": [3], "label": "Three minutes. Then swap if you want to."},
+        {"kind": "why", "lines": [{"text": "Why sound works better than words", "emphasis": "bold"}, {"text": "Every other kind of feedback happens afterwards, in a conversation, when you're both discussing a memory. Sound arrives in the same second as the touch, so the hand can answer before either of you has thought about it."}, {"text": "Lots of women have spent years making no sound at all, in case it was the wrong one, or because someone once told them they were too loud. Today there is no wrong one.", "emphasis": "accent"}]},
+        {"kind": "step", "label": "Take it further", "lines": [{"text": "Receiver, close your eyes, so you're only listening to your own body."}, {"text": "Giver, choose one place, an arm or the back, and play only there."}, {"text": "Swap, or let it stay one direction today. Both are fine."}]},
+        {"kind": "step", "label": "Afterwards, ask each other", "highlight": true, "lines": [{"text": "Tell me which sound surprised you."}, {"text": "Tell me what it was like to be heard without words."}, {"text": "Whoever asked says only: thank you.", "emphasis": "accent"}]},
       ],
     },
     {
@@ -1412,24 +1320,15 @@ export const thirtyOneTouchPoints: PracticeCollection = {
       kind: "ritual",
       imageSide: "right",
       body: [
-        { kind: "p", text: "Two people, four words, and it is deliberately small." },
-        {
-          kind: "numberedSteps",
-          steps: [
-            { heading: "Before phones, before anything else", text: "When one of you comes in, or when you first find each other in the day." },
-            { heading: "Stand close enough to feel their warmth", text: "Not touching. Close enough that the air between you is warm." },
-            { heading: "One of you says: I'm here", text: "The other says: I feel you. That is all of it." },
-          ],
-        },
-        {
-          kind: "notice",
-          lines: [
-            { text: "Let it be awkward the first few times.", emphasis: "bold" },
-            { text: "It will be. Two people standing still saying four words to each other is strange until it is not, and it usually stops being strange somewhere around the fourth go." },
-          ],
-        },
-        { kind: "p", text: "Then one true sentence, out loud: the thing you are still carrying in. The other says only this: thank you for telling me." },
-        { kind: "timer", minutes: [2], label: "Two minutes, together" },
+        { kind: "audio", src: "/31-touch-points/audio/day-27-landing.m4a", label: "Listen first: 3 minutes" },
+        {"kind": "p", "text": "This might be the smallest thing in the whole month, and the one you keep doing.", "emphasis": "bold"},
+        {"kind": "p", "text": "When one of you comes in, or when you first find each other in the day. Before the phones, before anything else."},
+        {"kind": "step", "label": "How it goes", "highlight": true, "lines": [{"text": "Stand close. Close enough to feel their warmth. Not touching."}, {"text": "Look each other in the eyes."}, {"text": "One of you says: I'm here.", "emphasis": "bold"}, {"text": "The other says: I feel you.", "emphasis": "bold"}, {"text": "Four words. Your attention on each other."}]},
+        {"kind": "notice", "lines": [{"text": "It will feel awkward at first.", "emphasis": "bold"}, {"text": "You live together, you share a bed, and this feels slightly weird. You'll want to look past them, or rush it. It usually stops feeling strange somewhere around the fourth, fifth or sixth go."}]},
+        {"kind": "step", "label": "Then one true sentence", "lines": [{"text": "Say out loud whatever is still in the way of being fully here."}, {"text": "“I'm already thinking about what to cook for dinner.” “I'm pretty spent today.”"}, {"text": "The other says only: thank you for telling me. No fixing. No questions.", "emphasis": "bold"}]},
+        {"kind": "timer", "minutes": [2], "label": "Two minutes, together"},
+        {"kind": "why", "lines": [{"text": "Why it works", "emphasis": "bold"}, {"text": "Most couples move through the day side by side without ever really arriving to each other. This is one tiny moment where you do."}, {"text": "Naming what you're carrying puts it down, so it stops standing between you without either of you knowing it's there.", "emphasis": "accent"}]},
+        {"kind": "step", "label": "Afterwards, ask each other", "highlight": true, "lines": [{"text": "Tell me what you're carrying in today."}, {"text": "Tell me one thing you need from me this evening."}, {"text": "Whoever asked says only: thank you.", "emphasis": "accent"}]},
       ],
     },
     {
