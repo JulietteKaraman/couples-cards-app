@@ -483,6 +483,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
       kind: "ritual",
       imageSide: "right",
       body: [
+        { kind: "audio", src: "/31-touch-points/audio/day-7-second-date.m4a", label: "Listen first: about a minute" },
         { kind: "p", text: "Your first one has happened by now, or it is in the diary. Here is the next one, and it is nothing like the first.", emphasis: "bold" },
         {
           kind: "step",
@@ -535,6 +536,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
       kind: "ritual",
       imageSide: "right",
       body: [
+        { kind: "audio", src: "/31-touch-points/audio/day-8-neck-kiss.m4a", label: "Listen first: 2 minutes" },
         {"kind": "p", "text": "Ask first.", "emphasis": "bold"},
         {"kind": "big", "text": "“May I?”"},
         {"kind": "p", "text": "One kiss, on the side of the neck. Then stop."},
@@ -621,6 +623,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
       kind: "ritual",
       imageSide: "left",
       body: [
+        { kind: "audio", src: "/31-touch-points/audio/day-10-telly-hands.m4a", label: "Listen first: 1.5 minutes" },
         {"kind": "p", "text": "Something on the telly. Their hand within reach.", "emphasis": "bold"},
         {"kind": "p", "text": "Your thumb draws slow circles on the back of their hand while you both keep watching."},
         {"kind": "big", "text": "Nobody mentions it."},
