@@ -2,13 +2,14 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useParams, notFound } from "next/navigation";
+import { useParams, notFound, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { whenSheGoesQuiet } from "@/lib/content/when-she-goes-quiet";
 import { Blocks } from "@/components/Blocks";
 import { CollectionGate } from "@/components/auth/CollectionGate";
 import { useAuth } from "@/components/providers/AuthProvider";
 import { getCompletedSlugs, markComplete } from "@/lib/entitlements/progress";
+import { localDone, addLocalDone } from "../progressLocal";
 
 export default function WhenSheGoesQuietEntry() {
   return (
@@ -22,7 +23,9 @@ function WhenSheGoesQuietEntryContent() {
   const params = useParams();
   const slug = params.slug as string;
   const { user } = useAuth();
+  const router = useRouter();
   const [completed, setCompleted] = useState(false);
+  const [glow, setGlow] = useState(false);
   const dark = whenSheGoesQuiet.theme === "dark";
 
   const entries = whenSheGoesQuiet.entries;
@@ -30,40 +33,49 @@ function WhenSheGoesQuietEntryContent() {
   const entry = entries[index];
 
   useEffect(() => {
-    if (!user || !entry || entry.kind !== "ritual") return;
-    getCompletedSlugs(user.id, "when-she-goes-quiet").then((slugs) =>
-      setCompleted(slugs.includes(entry.slug))
-    );
+    if (!entry) return;
+    setCompleted(localDone().includes(entry.slug));
+    if (!user) return;
+    getCompletedSlugs(user.id, "when-she-goes-quiet").then((slugs) => {
+      if (slugs.includes(entry.slug)) setCompleted(true);
+    });
   }, [user, entry]);
 
   if (!entry) notFound();
 
+  // "I did it" on every part (27 Oct): saves on the phone and to the
+  // account, glows gold, then moves him on to the next part.
   async function handleMarkComplete() {
-    if (!user || !entry) return;
-    await markComplete(user.id, "when-she-goes-quiet", entry.slug);
+    if (!entry) return;
+    const was = completed;
+    addLocalDone(entry.slug);
     setCompleted(true);
+    setGlow(true);
+    if (user) {
+      try { await markComplete(user.id, "when-she-goes-quiet", entry.slug); } catch {}
+    }
+    if (!was && next) setTimeout(() => router.push(`/practice/when-she-goes-quiet/${next.slug}`), 900);
   }
 
   const prev = entries[index - 1];
   const next = entries[index + 1];
 
-  const markCompleteBlock =
-    entry.kind === "ritual" ? (
-      <div className="mt-8">
-        {completed ? (
-          <p className="inline-flex items-center gap-2 rounded-full bg-ffy-gold px-5 py-2.5 font-display text-sm font-medium text-ffy-black">
-            ✓ Marked done
-          </p>
-        ) : (
-          <button
-            onClick={handleMarkComplete}
-            className="rounded-full border border-ffy-gold px-5 py-2.5 font-display text-sm font-medium text-ffy-gold-pale transition hover:bg-ffy-gold hover:text-ffy-black"
-          >
-            Mark this one done
-          </button>
-        )}
-      </div>
-    ) : null;
+  const isLast = index === entries.length - 1;
+  const doLabel = entry.kind === "ritual" ? "I did it" : isLast ? "Finished" : "Got it";
+  const markCompleteBlock = (
+    <div className="mt-12 border-t border-ffy-gold/20 pt-7 text-center">
+      <button
+        onClick={handleMarkComplete}
+        className={`min-h-[48px] rounded-full border border-[#DDC98E] px-7 py-3 font-display text-[17px] font-medium transition ${
+          completed ? "bg-[#DDC98E] text-[#1a1814]" : "text-[#DDC98E]"
+        } ${glow ? "animate-[ffyglow_.9s_ease-out_2]" : ""}`}
+      >
+        {completed ? "Done ✓" : `${doLabel} ✓`}
+      </button>
+      <style>{`@keyframes ffyglow{0%{box-shadow:0 0 0 0 rgba(221,201,142,.7)}100%{box-shadow:0 0 0 22px rgba(221,201,142,0)}}`}</style>
+      {isLast && <TellMe />}
+    </div>
+  );
 
   const navRow = (
     <div
@@ -128,6 +140,7 @@ function WhenSheGoesQuietEntryContent() {
           ← Your library
         </Link>
 
+        <p className="mt-6 text-[11px] uppercase tracking-[0.2em] text-[#a79f90]">Part {index + 1} of {entries.length}</p>
         {entry.eyebrow && (
           <p className={`mt-6 text-xs uppercase tracking-[0.15em] ${dark ? "text-ffy-gold-pale" : "text-ffy-gold-deep"}`}>
             {entry.eyebrow}
@@ -147,5 +160,31 @@ function WhenSheGoesQuietEntryContent() {
 
       {navRow}
     </main>
+  );
+}
+
+// "Tell me how it went" (27 Oct): same card as the buyer pages. Instagram
+// cannot pre-fill a DM, so the first line is copied for him to paste.
+function TellMe() {
+  const [copied, setCopied] = useState(false);
+  const line = "I just did When She Goes Quiet. What came up for me: ";
+  return (
+    <div className="mt-10 rounded-[22px] border border-[#DDC98E] bg-gradient-to-b from-[#0D3535]/50 to-[#211e19] px-5 py-6 text-center">
+      <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-[#DDC98E]">Tell me how it went</p>
+      <h3 className="mt-2.5 font-display text-[26px] font-light leading-tight text-[#f1ece2]">I&rsquo;d love to hear what came up for you.</h3>
+      <p className="mt-2.5 text-[#a79f90]">What did you notice? What surprised you? A line is plenty.</p>
+      <a
+        href="https://ig.me/m/juliettekaraman"
+        target="_blank"
+        rel="noopener"
+        onClick={() => { try { navigator.clipboard.writeText(line).then(() => setCopied(true)); } catch {} }}
+        className="mt-5 inline-block rounded-full bg-[#DDC98E] px-6 py-3.5 font-display text-[17px] font-medium text-[#1a1814]"
+      >
+        Message me on Instagram →
+      </a>
+      <p className="mt-3.5 text-[13px] italic text-[#a79f90]">
+        {copied ? "Copied. Paste it in, then tell me what came up for you." : `Tap, and your first line is ready to paste: \u201c${line.trim()} \u2026\u201d`}
+      </p>
+    </div>
   );
 }

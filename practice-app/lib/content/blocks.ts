@@ -83,4 +83,15 @@ export type ContentBlock =
   // translation tables (When She Goes Quiet, Between Touches, and likely
   // future guides). Real content, same never-skip rule as diagram/stats.
   // Rendered as stacked labelled cards, not an HTML table, phone-first.
-  | { kind: "table"; headers: string[]; rows: string[][] };
+  | { kind: "table"; headers: string[]; rows: string[][] }
+  // Interactive blocks (27 Oct 2026). Same words as the guide, met by
+  // flipping, ticking, copying, choosing or writing. Saved on the phone.
+  | { kind: "flipCards"; key: string; prompt?: string; markLabel?: string; summaryLabel?: string; cards: { front: string; back: string; sub?: string; subLabel?: string }[] }
+  | { kind: "tapCheck"; key: string; label: string; items: string[]; done?: string }
+  | { kind: "copyLines"; label: string; lines: string[] }
+  | { kind: "choice"; key: string; label: string; options: { label: string; lines: string[] }[] }
+  | { kind: "pickOne"; key: string; label: string; items: string[]; chosenLabel: string }
+  | { kind: "journal"; key: string; label: string; placeholder?: string }
+  | { kind: "sortGame"; label: string; a: { label: string; line: string }; b: { label: string; line: string }; items: { text: string; side: "a" | "b" }[]; end?: string }
+  | { kind: "draft"; key: string; label: string; placeholder?: string }
+  | { kind: "nextCard"; image: string; title: string; line: string; href: string; cta: string };

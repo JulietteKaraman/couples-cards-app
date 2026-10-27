@@ -1,0 +1,324 @@
+"use client";
+
+// Interactive blocks for the guides (27 Oct 2026), after Juliette asked for
+// the app to be "really interactive and just fun" like the buyer-page hubs.
+// Every word shown comes from the guide itself: these only change HOW it is
+// met (flip, tick, copy, choose, write), never what it says. Everything a
+// reader taps or writes saves on this phone.
+
+import { useEffect, useState } from "react";
+
+const GOLD = "#DDC98E";
+
+function useSaved<T>(key: string, initial: T): [T, (v: T) => void] {
+  const [v, setV] = useState<T>(initial);
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem("ffy.i." + key);
+      if (raw) setV(JSON.parse(raw));
+    } catch {}
+  }, [key]);
+  const save = (nv: T) => {
+    setV(nv);
+    try { localStorage.setItem("ffy.i." + key, JSON.stringify(nv)); } catch {}
+  };
+  return [v, save];
+}
+
+const Glow = () => (
+  <style>{`@keyframes ffyglow{0%{box-shadow:0 0 0 0 rgba(221,201,142,.7)}100%{box-shadow:0 0 0 18px rgba(221,201,142,0)}}.ffy-glow{animation:ffyglow .9s ease-out 1}`}</style>
+);
+
+const Label = ({ children }: { children: React.ReactNode }) => (
+  <p className="mb-3 text-[11px] font-medium uppercase tracking-[0.2em]" style={{ color: GOLD }}>{children}</p>
+);
+
+/* Tap to turn a card over; optionally mark the ones that land. */
+export function FlipCards({ k, prompt, markLabel, summaryLabel, cards }: {
+  k: string; prompt?: string; markLabel?: string; summaryLabel?: string;
+  cards: { front: string; back: string; sub?: string; subLabel?: string }[];
+}) {
+  const [open, setOpen] = useState<number[]>([]);
+  const [marked, setMarked] = useSaved<number[]>(k, []);
+  const [pulse, setPulse] = useState(-1);
+  return (
+    <div className="my-8">
+      <Glow />
+      {prompt && <Label>{prompt}</Label>}
+      <div className="grid gap-3">
+        {cards.map((c, i) => {
+          const isOpen = open.includes(i);
+          const isMarked = marked.includes(i);
+          return (
+            <div key={i} className={`overflow-hidden rounded-[18px] border transition ${isMarked ? "border-[#DDC98E]" : "border-[#DDC98E]/25"} ${isOpen ? "bg-[#0D3535]/55" : "bg-white/[0.04]"}`}>
+              <button
+                type="button"
+                onClick={() => setOpen(isOpen ? open.filter((x) => x !== i) : [...open, i])}
+                className="flex w-full items-center justify-between gap-3 px-5 py-4 text-left"
+              >
+                <span className="font-display text-[19px] leading-snug text-[#f1ece2]">{c.front}</span>
+                <span className="shrink-0 text-xs uppercase tracking-[0.14em]" style={{ color: GOLD }}>{isOpen ? "Close" : "Turn over"}</span>
+              </button>
+              {isOpen && (
+                <div className="border-t border-[#DDC98E]/20 px-5 pb-5 pt-4">
+                  <p className="font-display text-[18px] italic leading-snug" style={{ color: GOLD }}>{c.back}</p>
+                  {c.sub && (
+                    <p className="mt-3 text-[15px] text-[#a79f90]">
+                      {c.subLabel && <span className="mr-1.5 text-[11px] uppercase tracking-[0.14em] text-[#a79f90]/80">{c.subLabel}</span>}
+                      {c.sub}
+                    </p>
+                  )}
+                  {markLabel && (
+                    <button
+                      type="button"
+                      onClick={() => { setMarked(isMarked ? marked.filter((x) => x !== i) : [...marked, i]); setPulse(i); }}
+                      className={`mt-4 rounded-full border px-4 py-2 text-sm font-medium ${isMarked ? "border-[#DDC98E] bg-[#DDC98E] text-[#1a1814]" : "border-[#DDC98E] text-[#DDC98E]"} ${pulse === i ? "ffy-glow" : ""}`}
+                    >
+                      {isMarked ? `✓ ${markLabel}` : markLabel}
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+      {markLabel && marked.length > 0 && (summaryLabel ? (
+        <div className="mt-4 rounded-[16px] border border-[#DDC98E] bg-[#0D3535]/40 p-4">
+          <p className="text-[11px] font-medium uppercase tracking-[0.2em]" style={{ color: GOLD }}>{summaryLabel}</p>
+          {marked.map((m) => cards[m] && <p key={m} className="mt-1.5 font-display text-[20px] italic text-[#f1ece2]">{cards[m].front}</p>)}
+        </div>
+      ) : (
+        <p className="mt-3 text-sm text-[#a79f90]">{marked.length} marked. They stay marked on this phone.</p>
+      ))}
+    </div>
+  );
+}
+
+/* A checklist that remembers. */
+export function TapCheck({ k, label, items, done }: { k: string; label: string; items: string[]; done?: string }) {
+  const [on, setOn] = useSaved<number[]>(k, []);
+  const [pulse, setPulse] = useState(-1);
+  const all = items.length > 0 && items.every((_, i) => on.includes(i));
+  return (
+    <div className="my-8">
+      <Glow />
+      <Label>{label}</Label>
+      <div className="grid gap-2.5">
+        {items.map((t, i) => {
+          const isOn = on.includes(i);
+          return (
+            <button
+              key={i}
+              type="button"
+              onClick={() => { setOn(isOn ? on.filter((x) => x !== i) : [...on, i]); setPulse(i); }}
+              className={`flex w-full items-start gap-3.5 rounded-[14px] border bg-white/[0.04] p-3.5 text-left text-[16px] leading-relaxed ${isOn ? "border-[#DDC98E]/70" : "border-[#DDC98E]/25"}`}
+            >
+              <span className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-[7px] border-[1.5px] border-[#DDC98E] text-sm ${isOn ? "bg-[#DDC98E] text-[#1a1814]" : ""} ${pulse === i && isOn ? "ffy-glow" : ""}`}>{isOn ? "✓" : ""}</span>
+              <span className={isOn ? "text-[#f1ece2]/70" : "text-[#f1ece2]"}>{t}</span>
+            </button>
+          );
+        })}
+      </div>
+      {done && all && <p className="mt-4 font-display text-[21px]" style={{ color: GOLD }}>{done}</p>}
+    </div>
+  );
+}
+
+/* Lines with a copy button each. */
+export function CopyLines({ label, lines }: { label: string; lines: string[] }) {
+  const [copied, setCopied] = useState(-1);
+  return (
+    <div className="my-8">
+      <Label>{label}</Label>
+      <div className="grid gap-2.5">
+        {lines.map((t, i) => (
+          <div key={i} className="rounded-[14px] border border-[#DDC98E]/25 bg-white/[0.04] p-4">
+            <p className="font-display text-[18px] italic leading-snug text-[#f1ece2]">{t}</p>
+            <button
+              type="button"
+              onClick={() => { try { navigator.clipboard.writeText(t.replace(/^[“"]|[”"]$/g, "")); } catch {} setCopied(i); setTimeout(() => setCopied(-1), 1600); }}
+              className="mt-3 rounded-full border border-[#DDC98E] px-4 py-1.5 text-sm font-medium text-[#DDC98E]"
+            >
+              {copied === i ? "Copied ✓" : "Copy"}
+            </button>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* Pick what happened, see what to do. */
+export function Choice({ k, label, options }: { k: string; label: string; options: { label: string; lines: string[] }[] }) {
+  const [pick, setPick] = useSaved<number>(k, -1);
+  return (
+    <div className="my-8">
+      <Label>{label}</Label>
+      <div className="flex flex-wrap gap-2.5">
+        {options.map((o, i) => (
+          <button
+            key={i}
+            type="button"
+            onClick={() => setPick(i)}
+            className={`min-w-[140px] flex-1 rounded-[16px] border px-4 py-4 font-display text-[17px] ${pick === i ? "border-[#DDC98E] text-[#DDC98E] shadow-[0_0_0_1px_#DDC98E]" : "border-[#DDC98E]/25 bg-white/[0.04] text-[#f1ece2]"}`}
+          >
+            {o.label}
+          </button>
+        ))}
+      </div>
+      {pick >= 0 && options[pick] && (
+        <div className="mt-4 rounded-[16px] border-l-2 border-[#DDC98E] bg-[#0D3535]/40 py-3 pl-4 pr-3">
+          {options[pick].lines.map((t, i) => (
+            <p key={i} className="my-1.5 text-[17px] leading-relaxed text-[#f1ece2]">{t}</p>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* Tap one to choose it. */
+export function PickOne({ k, label, items, chosenLabel }: { k: string; label: string; items: string[]; chosenLabel: string }) {
+  const [pick, setPick] = useSaved<number>(k, -1);
+  return (
+    <div className="my-8">
+      <Label>{label}</Label>
+      <div className="grid gap-2.5">
+        {items.map((t, i) => (
+          <button
+            key={i}
+            type="button"
+            onClick={() => setPick(pick === i ? -1 : i)}
+            className={`rounded-[14px] border p-4 text-left font-display text-[18px] leading-snug ${pick === i ? "border-[#DDC98E] bg-[#0D3535]/55 text-[#DDC98E]" : "border-[#DDC98E]/25 bg-white/[0.04] text-[#f1ece2]"}`}
+          >
+            {pick === i && <span className="mb-1 block text-[11px] font-medium uppercase tracking-[0.18em]">{chosenLabel}</span>}
+            {t}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* Write something down; it stays on this phone with the date. */
+export function Journal({ k, label, placeholder }: { k: string; label: string; placeholder?: string }) {
+  const [list, setList] = useSaved<{ t: string; d: string }[]>(k, []);
+  const [txt, setTxt] = useState("");
+  const [saved, setSaved] = useState(false);
+  return (
+    <div className="my-8">
+      <Glow />
+      <Label>{label}</Label>
+      <textarea
+        value={txt}
+        onChange={(e) => setTxt(e.target.value)}
+        rows={3}
+        placeholder={placeholder}
+        className="w-full resize-y rounded-[14px] border border-[#DDC98E]/25 bg-[#1a1814] p-4 font-display text-[18px] italic text-[#f1ece2] placeholder:text-[#a79f90]/70"
+      />
+      <button
+        type="button"
+        onClick={() => {
+          const t = txt.trim(); if (!t) return;
+          setList([...list, { t, d: new Date().toLocaleDateString("en-GB", { day: "numeric", month: "short" }) }]);
+          setTxt(""); setSaved(true); setTimeout(() => setSaved(false), 1500);
+        }}
+        className={`mt-2.5 rounded-full border border-[#DDC98E] px-5 py-2.5 text-sm font-medium text-[#DDC98E] ${saved ? "ffy-glow" : ""}`}
+      >
+        {saved ? "Saved ✓" : "Save it"}
+      </button>
+      {list.length > 0 && (
+        <div className="mt-4 grid gap-2">
+          {[...list].reverse().map((e, i) => (
+            <div key={i} className="border-l-2 border-[#DDC98E] py-1.5 pl-3.5 font-display text-[17px] italic text-[#f1ece2]">
+              {e.t}
+              <span className="mt-0.5 block font-sans text-xs not-italic text-[#a79f90]">{e.d}</span>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* A one-at-a-time sorting game: which pile does this line belong in? */
+export function SortGame({ label, a, b, items, end }: {
+  label: string; a: { label: string; line: string }; b: { label: string; line: string };
+  items: { text: string; side: "a" | "b" }[]; end?: string;
+}) {
+  const [i, setI] = useState(0);
+  const [pick, setPick] = useState<"a" | "b" | null>(null);
+  const [score, setScore] = useState(0);
+  const finished = i >= items.length;
+  const it = items[Math.min(i, items.length - 1)];
+  return (
+    <div className="my-8 rounded-[22px] border border-[#DDC98E]/40 bg-gradient-to-b from-[#0D3535]/55 to-[#211e19] p-5">
+      <Glow />
+      <Label>{label}</Label>
+      {!finished ? (
+        <>
+          <p className="text-xs uppercase tracking-[0.16em] text-[#a79f90]">{i + 1} of {items.length}</p>
+          <p className="mt-3 min-h-[64px] font-display text-[23px] italic leading-snug text-[#f1ece2]">{it.text}</p>
+          {!pick ? (
+            <div className="mt-4 flex gap-2.5">
+              {(["a", "b"] as const).map((s) => (
+                <button key={s} type="button"
+                  onClick={() => { setPick(s); if (s === it.side) setScore(score + 1); }}
+                  className="flex-1 rounded-full border border-[#DDC98E] px-4 py-3.5 font-display text-[17px] font-medium text-[#DDC98E]">
+                  {s === "a" ? a.label : b.label}
+                </button>
+              ))}
+            </div>
+          ) : (
+            <div className="mt-4">
+              <p className={`font-display text-[19px] ${pick === it.side ? "text-[#DDC98E]" : "text-[#f1ece2]"}`}>
+                {pick === it.side ? `Yes. ${it.side === "a" ? a.label : b.label}.` : `This one is ${(it.side === "a" ? a.label : b.label).toLowerCase()}.`}
+              </p>
+              <p className="mt-2 text-[16px] leading-relaxed text-[#a79f90]">{it.side === "a" ? a.line : b.line}</p>
+              <button type="button" onClick={() => { setPick(null); setI(i + 1); }}
+                className="mt-4 rounded-full bg-[#DDC98E] px-6 py-3 font-display text-[16px] font-medium text-[#1a1814]">
+                {i + 1 < items.length ? "Next →" : "See how you did →"}
+              </button>
+            </div>
+          )}
+        </>
+      ) : (
+        <div className="text-center">
+          <p className="font-display text-[34px] text-[#DDC98E] ffy-glow inline-block rounded-full px-4">{score} of {items.length}</p>
+          {end && <p className="mt-3 font-display text-[20px] text-[#f1ece2]">{end}</p>}
+          <button type="button" onClick={() => { setI(0); setScore(0); setPick(null); }}
+            className="mt-4 rounded-full border border-[#DDC98E] px-5 py-2.5 text-sm font-medium text-[#DDC98E]">Play again</button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* One text box that keeps what he typed on this phone. */
+export function Draft({ k, label, placeholder }: { k: string; label: string; placeholder?: string }) {
+  const [v, setV] = useSaved<string>(k, "");
+  return (
+    <div className="my-8">
+      <Label>{label}</Label>
+      <textarea value={v} onChange={(e) => setV(e.target.value)} rows={3} placeholder={placeholder}
+        className="w-full resize-y rounded-[14px] border border-[#DDC98E]/25 bg-[#1a1814] p-4 font-display text-[18px] italic text-[#f1ece2] placeholder:text-[#a79f90]/70" />
+    </div>
+  );
+}
+
+/* A photo card pointing to the next step. */
+export function NextCard({ image, title, line, href, cta }: { image: string; title: string; line: string; href: string; cta: string }) {
+  return (
+    <a href={href} target="_blank" rel="noopener" className="my-8 block overflow-hidden rounded-[22px] border border-[#DDC98E] bg-[#211e19]">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={image} alt="" className="aspect-[16/10] w-full object-cover" />
+      <span className="block p-5">
+        <span className="block text-[11px] font-medium uppercase tracking-[0.2em] text-[#DDC98E]">Your next step</span>
+        <span className="mt-1.5 block font-display text-[26px] leading-tight text-[#f1ece2]">{title}</span>
+        <span className="mt-2 block text-[16px] text-[#a79f90]">{line}</span>
+        <span className="mt-4 inline-block rounded-full bg-[#DDC98E] px-6 py-3 font-display text-[16px] font-medium text-[#1a1814]">{cta}</span>
+      </span>
+    </a>
+  );
+}

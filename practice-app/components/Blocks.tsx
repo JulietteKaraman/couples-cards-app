@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { ContentBlock } from "@/lib/content/blocks";
 import PracticeTimer from "@/components/PracticeTimer";
 import VoicePlayer from "@/components/VoicePlayer";
+import { FlipCards, TapCheck, CopyLines, Choice, PickOne, Journal, SortGame, Draft, NextCard } from "@/components/Interactive";
 import { LOCAL_AUDIO, localAudioSrc, LOCAL_VIDEO, localVideoSrc, localVideoPoster } from "@/lib/content/local-audio";
 
 function driveIdFromUrl(url: string): string | null {
@@ -456,6 +457,25 @@ export function Blocks({ blocks, dark = false }: { blocks: ContentBlock[]; dark?
           // Restored 24 Oct 2026: this case was dropped by accident on 30 Sep
           // (commit 845606d), so the fourteen timers 31 Touch Points promises
           // never showed for any buyer.
+          case "flipCards":
+            return <FlipCards key={i} k={b.key} prompt={b.prompt} markLabel={b.markLabel} summaryLabel={b.summaryLabel} cards={b.cards} />;
+          case "tapCheck":
+            return <TapCheck key={i} k={b.key} label={b.label} items={b.items} done={b.done} />;
+          case "copyLines":
+            return <CopyLines key={i} label={b.label} lines={b.lines} />;
+          case "choice":
+            return <Choice key={i} k={b.key} label={b.label} options={b.options} />;
+          case "pickOne":
+            return <PickOne key={i} k={b.key} label={b.label} items={b.items} chosenLabel={b.chosenLabel} />;
+          case "sortGame":
+            return <SortGame key={i} label={b.label} a={b.a} b={b.b} items={b.items} end={b.end} />;
+          case "draft":
+            return <Draft key={i} k={b.key} label={b.label} placeholder={b.placeholder} />;
+          case "nextCard":
+            return <NextCard key={i} image={b.image} title={b.title} line={b.line} href={b.href} cta={b.cta} />;
+          case "journal":
+            return <Journal key={i} k={b.key} label={b.label} placeholder={b.placeholder} />;
+
           case "timer":
             return <PracticeTimer key={i} minutes={b.minutes} label={b.label} dark={dark} />;
 
