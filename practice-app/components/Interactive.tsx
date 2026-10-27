@@ -327,7 +327,7 @@ export function NextCard({ image, title, line, href, cta }: { image: string; tit
 export const FEELS = [
   { id: "laughed", label: "We laughed", color: "#EEDE80" },
   { id: "close", label: "Closer", color: "#C29A4E" },
-  { id: "awkward", label: "Awkward", color: "#5f9b97" },
+  { id: "awkward", label: "Awkward", color: "#F1ECE2" },
   { id: "flat", label: "Nothing much", color: "#6b6559" },
 ] as const;
 const FEEL_KEY = "ffy.31tp.feel.v1";

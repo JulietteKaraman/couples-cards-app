@@ -31,10 +31,12 @@ export default function PracticeTimer({
   minutes,
   label,
   dark = false,
+  solo = false,
 }: {
   minutes: number[];
   label?: string;
   dark?: boolean;
+  solo?: boolean;
 }) {
   const options = minutes.length ? minutes : [3];
   const [chosen, setChosen] = useState(options[0]);
@@ -269,7 +271,7 @@ export default function PracticeTimer({
       <p className={`text-sm ${dark ? "text-[rgba(254,252,250,0.75)]" : "text-ffy-black/70"}`}>
         {done
           ? "That is the container closed. Stop here, even if it was going beautifully."
-          : "Your screen stays awake and it chimes softly at the end, so neither of you has to watch it."}
+          : `Your screen stays awake and it chimes softly at the end, ${solo ? "so you don\u2019t have to watch it." : "so neither of you has to watch it."}`}
       </p>
     </div>
   );
