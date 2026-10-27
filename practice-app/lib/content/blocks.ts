@@ -57,7 +57,7 @@ export type ContentBlock =
   // deliberately the loudest thing on the page.
   | { kind: "bigLink"; text: string; subtext?: string; href: string }
   | { kind: "image"; src: string; alt: string }
-  | { kind: "video"; vimeoId: string }
+  | { kind: "video"; vimeoId: string; ratio?: number }
   | { kind: "youtube"; videoId: string; label: string }
   // A small, transparent, non-full-width sign-off graphic (e.g. Juliette's
   // real gold cursive signature) — distinct from `image`, which renders

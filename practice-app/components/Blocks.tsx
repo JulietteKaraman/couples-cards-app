@@ -298,7 +298,7 @@ export function Blocks({ blocks, dark = false }: { blocks: ContentBlock[]; dark?
             // same allow list, player.js loaded once via next/script.
             return (
               <div key={i}>
-                <div style={{ padding: "177.78% 0 0 0", position: "relative" }} className="overflow-hidden rounded-2xl bg-ffy-black">
+                <div style={{ padding: `${b.ratio ?? 177.78}% 0 0 0`, position: "relative" }} className="overflow-hidden rounded-2xl bg-ffy-black">
                   <iframe
                     src={`https://player.vimeo.com/video/${b.vimeoId}?speed=1&badge=0&autopause=0&player_id=0&app_id=58479`}
                     frameBorder={0}

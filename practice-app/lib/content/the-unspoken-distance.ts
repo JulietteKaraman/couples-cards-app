@@ -1042,9 +1042,11 @@ export const theUnspokenDistance: PracticeCollection = {
         },
         {
           "kind": "video",
-          "vimeoId": "1208083538"
+          "vimeoId": "1208469666",
+          "ratio": 146.67
         }
-      ]
+      ],
+      "eyebrow": "Your daily 15 minutes"
     },
     {
       "slug": "to-be-seen-beyond-her-roles",

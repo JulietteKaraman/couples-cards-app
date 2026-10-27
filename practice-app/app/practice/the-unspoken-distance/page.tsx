@@ -75,6 +75,15 @@ function TheUnspokenDistanceHub() {
           </div>
         </div>
 
+        {/* The 15-minute daily sequence the sales page promises (27 Oct). */}
+        <Link href="/practice/the-unspoken-distance/the-groundedness-practice" className="mt-5 flex items-center justify-between rounded-[18px] border border-[#DDC98E] bg-[#0D3535]/50 px-5 py-4">
+          <span>
+            <span className="block text-[11px] font-medium uppercase tracking-[0.2em] text-[#DDC98E]">Every day</span>
+            <span className="mt-0.5 block font-display text-[19px]">Your daily 15 minutes, guided by me</span>
+          </span>
+          <span className="text-[#DDC98E]">&rarr;</span>
+        </Link>
+
         <div className="mt-8 rounded-[22px] border border-[#DDC98E]/20 bg-gradient-to-b from-[#0D3535]/60 to-[#211e19] p-4 pt-5">
           <div className="mb-4 flex items-center gap-4 px-1">
             <svg viewBox="0 0 44 44" className="h-14 w-14 -rotate-90" aria-hidden="true">
