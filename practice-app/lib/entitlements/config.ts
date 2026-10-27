@@ -74,7 +74,9 @@ export const SUBSCRIPTION_GRACE_PERIOD_HOURS = 48;
 // in the app ("between touches is still on the app! I thought you took it
 // off"), confirming she meant the app too, not just the site. Do not
 // re-add without her explicit say, same as ten-touch-rituals above.
-export const FREE_DECK_TYPES: string[] = ["when-she-goes-quiet"];
+// between-touches BACK ON 27 Oct 2026, Juliette's explicit yes, cut down to
+// a 5-page free guide ("Yes, publish Between Touches (switch it back on)").
+export const FREE_DECK_TYPES: string[] = ["when-she-goes-quiet", "between-touches"];
 
 // Where the "Get access" CTA on a locked (not-yet-owned) library tile sends
 // someone — the collection's real marketing sales page, never an in-app

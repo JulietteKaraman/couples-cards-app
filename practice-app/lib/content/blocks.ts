@@ -95,4 +95,6 @@ export type ContentBlock =
   | { kind: "sortGame"; label: string; a: { label: string; line: string }; b: { label: string; line: string }; items: { text: string; side: "a" | "b" }[]; end?: string }
   | { kind: "draft"; key: string; label: string; placeholder?: string }
   | { kind: "nextCard"; image: string; title: string; line: string; href: string; cta: string }
+  | { kind: "promptCard"; deck: string; prompt: string }
+  | { kind: "translateCards"; prompt?: string; cards: { label: string; says: string; layers: { label: string; text: string }[] }[] }
   | { kind: "datePick"; key: string; label: string; options: { title: string; text: string }[] };

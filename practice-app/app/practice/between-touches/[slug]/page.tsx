@@ -1,14 +1,16 @@
 "use client";
 
 import Link from "next/link";
+import { TellMe } from "@/components/TellMe";
 import Image from "next/image";
-import { useParams, notFound } from "next/navigation";
+import { useParams, notFound, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { betweenTouches } from "@/lib/content/between-touches";
 import { Blocks } from "@/components/Blocks";
 import { CollectionGate } from "@/components/auth/CollectionGate";
 import { useAuth } from "@/components/providers/AuthProvider";
 import { getCompletedSlugs, markComplete } from "@/lib/entitlements/progress";
+import { localDone, addLocalDone } from "../progressLocal";
 
 export default function BetweenTouchesEntry() {
   return (
@@ -22,7 +24,9 @@ function BetweenTouchesEntryContent() {
   const params = useParams();
   const slug = params.slug as string;
   const { user } = useAuth();
+  const router = useRouter();
   const [completed, setCompleted] = useState(false);
+  const [glow, setGlow] = useState(false);
   const dark = betweenTouches.theme === "dark";
 
   const entries = betweenTouches.entries;
@@ -30,40 +34,49 @@ function BetweenTouchesEntryContent() {
   const entry = entries[index];
 
   useEffect(() => {
-    if (!user || !entry || entry.kind !== "ritual") return;
-    getCompletedSlugs(user.id, "between-touches").then((slugs) =>
-      setCompleted(slugs.includes(entry.slug))
-    );
+    if (!entry) return;
+    setCompleted(localDone().includes(entry.slug));
+    if (!user) return;
+    getCompletedSlugs(user.id, "between-touches").then((slugs) => {
+      if (slugs.includes(entry.slug)) setCompleted(true);
+    });
   }, [user, entry]);
 
   if (!entry) notFound();
 
+  // "I did it" on every part (27 Oct): saves on the phone and to the
+  // account, glows gold, then moves him on to the next part.
   async function handleMarkComplete() {
-    if (!user || !entry) return;
-    await markComplete(user.id, "between-touches", entry.slug);
+    if (!entry) return;
+    const was = completed;
+    addLocalDone(entry.slug);
     setCompleted(true);
+    setGlow(true);
+    if (user) {
+      try { await markComplete(user.id, "between-touches", entry.slug); } catch {}
+    }
+    if (!was && next) setTimeout(() => router.push(`/practice/between-touches/${next.slug}`), 900);
   }
 
   const prev = entries[index - 1];
   const next = entries[index + 1];
 
-  const markCompleteBlock =
-    entry.kind === "ritual" ? (
-      <div className="mt-8">
-        {completed ? (
-          <p className="inline-flex items-center gap-2 rounded-full bg-ffy-gold px-5 py-2.5 font-display text-sm font-medium text-ffy-black">
-            ✓ Marked done
-          </p>
-        ) : (
-          <button
-            onClick={handleMarkComplete}
-            className="rounded-full border border-ffy-gold px-5 py-2.5 font-display text-sm font-medium text-ffy-gold-pale transition hover:bg-ffy-gold hover:text-ffy-black"
-          >
-            Mark this one done
-          </button>
-        )}
-      </div>
-    ) : null;
+  const isLast = index === entries.length - 1;
+  const doLabel = entry.kind === "ritual" ? "I did it" : isLast ? "Finished" : "Got it";
+  const markCompleteBlock = (
+    <div className="mt-12 border-t border-ffy-gold/20 pt-7 text-center">
+      <button
+        onClick={handleMarkComplete}
+        className={`min-h-[48px] rounded-full border border-[#DDC98E] px-7 py-3 font-display text-[17px] font-medium transition ${
+          completed ? "bg-[#DDC98E] text-[#1a1814]" : "text-[#DDC98E]"
+        } ${glow ? "animate-[ffyglow_.9s_ease-out_2]" : ""}`}
+      >
+        {completed ? "Done ✓" : `${doLabel} ✓`}
+      </button>
+      <style>{`@keyframes ffyglow{0%{box-shadow:0 0 0 0 rgba(221,201,142,.7)}100%{box-shadow:0 0 0 22px rgba(221,201,142,0)}}`}</style>
+      {isLast && <TellMe line="I just did Between Touches. What came up for me: " />}
+    </div>
+  );
 
   const navRow = (
     <div
@@ -128,6 +141,7 @@ function BetweenTouchesEntryContent() {
           ← Your library
         </Link>
 
+        <p className="mt-6 text-[11px] uppercase tracking-[0.2em] text-[#a79f90]">Part {index + 1} of {entries.length}</p>
         {entry.eyebrow && (
           <p className={`mt-6 text-xs uppercase tracking-[0.15em] ${dark ? "text-ffy-gold-pale" : "text-ffy-gold-deep"}`}>
             {entry.eyebrow}
@@ -149,3 +163,4 @@ function BetweenTouchesEntryContent() {
     </main>
   );
 }
+

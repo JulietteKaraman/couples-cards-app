@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import { ContentBlock } from "@/lib/content/blocks";
 import PracticeTimer from "@/components/PracticeTimer";
 import VoicePlayer from "@/components/VoicePlayer";
-import { FlipCards, TapCheck, CopyLines, Choice, PickOne, Journal, SortGame, Draft, NextCard, DatePick } from "@/components/Interactive";
+import { FlipCards, TapCheck, CopyLines, Choice, PickOne, Journal, SortGame, Draft, NextCard, DatePick, TranslateCards, PromptCard } from "@/components/Interactive";
 import { LOCAL_AUDIO, localAudioSrc, LOCAL_VIDEO, localVideoSrc, localVideoPoster } from "@/lib/content/local-audio";
 
 function driveIdFromUrl(url: string): string | null {
@@ -471,6 +471,8 @@ export function Blocks({ blocks, dark = false }: { blocks: ContentBlock[]; dark?
             return <SortGame key={i} label={b.label} a={b.a} b={b.b} items={b.items} end={b.end} />;
           case "draft":
             return <Draft key={i} k={b.key} label={b.label} placeholder={b.placeholder} />;
+          case "promptCard": return <PromptCard key={i} deck={b.deck} prompt={b.prompt} />;
+          case "translateCards": return <TranslateCards key={i} prompt={b.prompt} cards={b.cards} />;
           case "datePick":
             return <DatePick key={i} k={b.key} label={b.label} options={b.options} />;
           case "nextCard":

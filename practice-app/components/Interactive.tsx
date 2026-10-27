@@ -424,3 +424,109 @@ export function DatePick({ k, label, options }: { k: string; label: string; opti
     </div>
   );
 }
+
+/* ---- Between Touches translation cards (27 Oct). Rebuilt from HER Google
+   Doc "Between Touches": her own column names on every layer (He Says / She
+   Hears / What She Does; What She Says / What She Really Means; She Says /
+   What She Feels / He Hears / Try Instead). Each card its own colour, each
+   layer pops in its own colour. HER PALETTE ONLY. */
+type TCard = { label: string; says: string; layers: { label: string; text: string }[] };
+const TC_FRONTS = [
+  { bg: "#F6EFE0", fg: "#1a1814", chip: "#0D3535" },
+  { bg: "#D8DFE1", fg: "#1a1814", chip: "#0D3535" }, // her site's soft blue (27 Oct: "use the light blue, much more on brand")
+  { bg: "#0D3535", fg: "#F6EFE0", chip: "#EEDE80" },
+  { bg: "#C29A4E", fg: "#1a1814", chip: "#F6EFE0" },
+  { bg: "#DDC98E", fg: "#1a1814", chip: "#0D3535" },
+];
+const TC_LAYERS = [
+  { bg: "#0D3535", fg: "#F6EFE0", label: "#EEDE80" },
+  { bg: "#EEDE80", fg: "#1a1814", label: "#0D3535" },
+  { bg: "#F6EFE0", fg: "#0D3535", label: "#C29A4E" },
+  { bg: "#D8DFE1", fg: "#0D3535", label: "#0D3535" },
+];
+// A layer never opens in its card's colour, or the one above it (27 Oct:
+// "green opening on green needs to be changed").
+function tcLayerColours(frontBg: string, n: number) {
+  const out: (typeof TC_LAYERS)[number][] = [];
+  let prev = frontBg;
+  let j = 0;
+  for (let k = 0; k < n; k++) {
+    let tries = 0;
+    while ((TC_LAYERS[j % TC_LAYERS.length].bg === prev || TC_LAYERS[j % TC_LAYERS.length].bg === frontBg) && tries < 8) { j++; tries++; }
+    out.push(TC_LAYERS[j % TC_LAYERS.length]);
+    prev = TC_LAYERS[j % TC_LAYERS.length].bg;
+    j++;
+  }
+  return out;
+}
+export function TranslateCards({ prompt, cards }: { prompt?: string; cards: TCard[] }) {
+  const [step, setStep] = useState<Record<number, number>>({});
+  return (
+    <div className="my-7">
+      <style>{`@keyframes tcIn{0%{opacity:0;transform:translateY(-10px)}100%{opacity:1;transform:none}}@keyframes tcPop{0%{transform:scale(1)}40%{transform:scale(1.04)}100%{transform:scale(1)}}`}</style>
+      {prompt && <p className="mb-4 text-[11px] font-medium uppercase tracking-[0.2em]" style={{ color: GOLD }}>{prompt}</p>}
+      <div className="grid gap-4">
+        {cards.map((c, i) => {
+          const s = step[i] ?? 0;
+          const done = s >= c.layers.length;
+          const f = TC_FRONTS[i % TC_FRONTS.length];
+          return (
+            <div key={i} className="overflow-hidden rounded-[22px] shadow-[0_10px_30px_-14px_rgba(0,0,0,0.7)]">
+              <button
+                type="button"
+                onClick={() => setStep({ ...step, [i]: done ? 0 : s + 1 })}
+                className="block w-full p-5 text-left"
+                style={{ background: f.bg, color: f.fg, animation: s ? "tcPop .35s ease" : undefined }}
+              >
+                <span className="inline-block rounded-full px-3 py-1 text-[10.5px] font-semibold uppercase tracking-[0.18em]" style={{ background: f.chip, color: f.bg }}>{c.label}</span>
+                <span className="mt-3 block font-display text-[23px] leading-snug">&ldquo;{c.says}&rdquo;</span>
+                <span className="mt-3 block text-[13px] font-medium opacity-70">{done ? "Tap to fold it back ↺" : `Tap: ${c.layers[s].label} →`}</span>
+              </button>
+              {c.layers.slice(0, s).map((L, k) => {
+                const C = tcLayerColours(f.bg, c.layers.length)[k];
+                return (
+                  <div key={k} className="px-5 py-4" style={{ background: C.bg, color: C.fg, animation: "tcIn .4s ease" }}>
+                    <span className="block text-[10.5px] font-semibold uppercase tracking-[0.18em]" style={{ color: C.label }}>{L.label}</span>
+                    <span className={`mt-1 block leading-snug ${/actually means|^she hears$/i.test(L.label) ? "font-display text-[20px]" : "text-[17px]"}`}>{L.text}</span>
+                  </div>
+                );
+              })}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+/* ---- The real card, drawn like the cards app (27 Oct, Juliette: "It
+   should show that card in the card app... the black-and-white card").
+   Copied from card-engine/app/index.html: white card 1226x1758, black band,
+   gold chevrons, Jost uppercase prompt, FEELFULLYYOU.COM. */
+export function PromptCard({ deck, prompt }: { deck: string; prompt: string }) {
+  return (
+    <div className="my-7 flex justify-center">
+      <div
+        className="relative w-full max-w-[300px] overflow-hidden bg-white text-black shadow-[0_30px_60px_-28px_rgba(0,0,0,.9),0_0_0_1px_rgba(221,201,142,.12),0_0_70px_-10px_rgba(221,201,142,.22)]"
+        style={{ aspectRatio: "1226 / 1758", containerType: "inline-size", fontFamily: '"Jost","Futura","Century Gothic","Avenir Next",sans-serif' }}
+      >
+        <svg viewBox="0 0 120 106" aria-hidden="true" className="absolute left-1/2 top-0 h-auto -translate-x-1/2" style={{ width: "31cqw" }}>
+          <defs><linearGradient id="pcg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#8c6a2b" /><stop offset=".5" stopColor="#d9c389" /><stop offset="1" stopColor="#8c6a2b" /></linearGradient></defs>
+          <polyline points="0,0 60,104 120,0" fill="none" stroke="url(#pcg)" strokeWidth="2.4" />
+          <polyline points="40,0 60,34 80,0" fill="none" stroke="url(#pcg)" strokeWidth="1.6" />
+        </svg>
+        <div className="absolute inset-x-0 flex items-center justify-center bg-black uppercase text-[#a8843f]" style={{ top: "30.6cqw", height: "17.6cqw", fontSize: "6.2cqw" }}>
+          {deck}
+        </div>
+        <div className="absolute flex flex-col items-center" style={{ left: "14cqw", right: "14cqw", top: "58cqw" }}>
+          <p className="text-center font-bold uppercase" style={{ letterSpacing: ".14em", lineHeight: 1.35, fontSize: "3.9cqw" }}>{prompt}</p>
+        </div>
+        <div className="absolute inset-x-0 text-center" style={{ top: "106cqw", fontSize: "3.2cqw", letterSpacing: ".3em" }}>FEELFULLYYOU.COM</div>
+        <svg viewBox="0 0 120 106" aria-hidden="true" className="absolute bottom-0 left-1/2 h-auto -translate-x-1/2" style={{ width: "31cqw" }}>
+          <polyline points="0,106 60,2 120,106" fill="none" stroke="url(#pcg)" strokeWidth="2.4" />
+          <polyline points="40,106 60,72 80,106" fill="none" stroke="url(#pcg)" strokeWidth="1.6" />
+        </svg>
+      </div>
+    </div>
+  );
+}

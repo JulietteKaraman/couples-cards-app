@@ -89,7 +89,7 @@ export default function TouchBasePage() {
           <div className="overflow-hidden rounded-2xl bg-black" style={{ position: "relative", paddingBottom: "56.25%" }}>
             <iframe
               src="https://player.vimeo.com/video/1223329859?title=0&byline=0&portrait=0&dnt=1"
-              title="Touch Base® — The Video"
+              title="Touch Base®, the video"
               allow="autoplay; fullscreen; picture-in-picture"
               allowFullScreen
               style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", border: "none" }}
@@ -116,6 +116,7 @@ export default function TouchBasePage() {
           <TryIt onSave={save} />
         </div>
 
+        {/* No paid door on this free page (27 Oct, Juliette): it ends on Tell me. */}
         <Month log={log} />
 
         {/* Why it works, 27 Oct: her ask, "this needs to pop", each line on its own */}
@@ -241,23 +242,23 @@ function Month({ log }: { log: Entry[] }) {
   if (!log.length) {
     return (
       <section className="mt-10 rounded-[22px] border border-[#DDC98E]/20 bg-[#211e19] px-5 py-5">
-        <p className="text-[11px] font-medium uppercase tracking-[0.2em]" style={{ color: GOLD }}>Your 31 days</p>
-        <p className="mt-2 text-[#a79f90]">Your first one starts your month. Morning and evening each get a dot.</p>
+        <p className="text-[11px] font-medium uppercase tracking-[0.2em]" style={{ color: GOLD }}>Your first 7 days</p>
+        <p className="mt-2 text-[#a79f90]">Your first one starts your week. Morning and evening each get a dot.</p>
       </section>
     );
   }
   const start = log.map((e) => e.d).sort()[0];
-  const n = Math.min(31, dayIndex(start, today()) + 1);
+  const n = Math.min(DAYS, dayIndex(start, today()) + 1);
   const get = (i: number, slot: "am" | "pm") =>
     [...log].reverse().find((e) => dayIndex(start, e.d) === i && e.slot === slot);
   return (
     <section className="mt-10 rounded-[22px] bg-[#F6EFE0] px-4 py-5 text-[#1a1814] shadow-[0_0_40px_-12px_rgba(238,222,128,0.5)]">
       <div className="flex items-baseline justify-between px-1">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#0D3535]">Your 31 days</p>
-        <p className="text-sm text-[#6b6559]">Day {n} of 31 · <b className="text-[#0D3535]">{log.length} done</b></p>
+        <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#0D3535]">Your first 7 days</p>
+        <p className="text-sm text-[#6b6559]">Day {n} of {DAYS} · <b className="text-[#0D3535]">{log.length} done</b></p>
       </div>
       <div className="mt-4 grid grid-cols-7 gap-1.5">
-        {Array.from({ length: 31 }, (_, i) => {
+        {Array.from({ length: DAYS }, (_, i) => {
           const am = get(i, "am");
           const pm = get(i, "pm");
           const star = MILESTONES.includes(i + 1);
@@ -286,7 +287,7 @@ function Month({ log }: { log: Entry[] }) {
           </span>
         ))}
         <span className="inline-flex items-center gap-1.5">Left dot morning, right dot evening</span>
-        <span className="inline-flex items-center gap-1.5">★ every week</span>
+        <span className="inline-flex items-center gap-1.5">★ your first week</span>
       </div>
     </section>
   );
@@ -299,7 +300,10 @@ const MOODS = [
   { min: 5, label: "Warm", color: "#C29A4E" },
   { min: 1, label: "Settling", color: "#0D3535" },
 ];
-const MILESTONES = [7, 14, 21, 28, 31];
+const MILESTONES = [7];
+// A taster, not the whole month (27 Oct, Juliette: "31 days is way too
+// fucking much... This is just a freebie").
+const DAYS = 7;
 
 function Dot({ e }: { e?: Entry }) {
   if (!e) return <span className="h-3.5 w-3.5 rounded-full border-[1.5px] border-dashed border-[#c9bfa9]" />;

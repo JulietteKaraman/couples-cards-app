@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { thirtyOneTouchPoints } from "@/lib/content/31-touch-points";
 import { theUnspokenDistance } from "@/lib/content/the-unspoken-distance";
 import { whenSheGoesQuiet } from "@/lib/content/when-she-goes-quiet";
+import { betweenTouches } from "@/lib/content/between-touches";
 import { communicationRebootKit } from "@/lib/content/communication-reboot-kit";
 import { theSacredNo } from "@/lib/content/the-sacred-no";
 import { dayOf } from "@/lib/content/31-touch-points-drip";
@@ -32,7 +33,7 @@ function isFreeCollection(slug: string): boolean {
 }
 
 // Paid collections, in display order. When She Goes Quiet is free and sits
-// in Start free. betweenTouches stays off the shelf (Juliette, 28 Aug 2026).
+// in Start free. Between Touches is back in Start free (27 Oct 2026, her yes).
 const PAID_COLLECTIONS = [thirtyOneTouchPoints, theUnspokenDistance, communicationRebootKit, theSacredNo];
 
 // 31 Days Closer lives in the cards app. Pinned under 31 Touch Points
@@ -149,7 +150,7 @@ function LibraryContent() {
 
   const owns = (slug: string) => !!user && entitledCollections.includes(slug);
   const ownedPaid = PAID_COLLECTIONS.filter((c) => owns(c.slug));
-  const freeOpen = !!user ? [whenSheGoesQuiet] : [];
+  const freeOpen = !!user ? [whenSheGoesQuiet, betweenTouches] : [];
   const progressCollections = [...ownedPaid, ...freeOpen];
 
   useEffect(() => {
@@ -385,6 +386,17 @@ function LibraryContent() {
             note={
               user
                 ? `Free · ${doneCount(whenSheGoesQuiet.slug)} of ${whenSheGoesQuiet.entries.length} done`
+                : "Free · open it now"
+            }
+          />
+          <Tile
+            href={`/practice/${betweenTouches.slug}`}
+            title={betweenTouches.title}
+            subtitle={betweenTouches.subtitle}
+            heroImage={betweenTouches.heroImage}
+            note={
+              user
+                ? `Free · ${doneCount(betweenTouches.slug)} of ${betweenTouches.entries.length} done`
                 : "Free · open it now"
             }
           />

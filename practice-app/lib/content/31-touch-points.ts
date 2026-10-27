@@ -157,6 +157,9 @@ export const thirtyOneTouchPoints: PracticeCollection = {
             { text: "That is the whole reason it works. Neither of you has done it before, so there is nothing to perform and no earlier version to live up to." },
           ],
         },
+        // This week's misunderstanding (27 Oct, Juliette: "one misunderstanding a week"). Her Between Touches doc.
+        { kind: "quote", text: "This week's misunderstanding" },
+        { kind: "translateCards", prompt: "Tap it. Said, heard, meant, and what to do instead.", cards: [{"label": "She Says", "says": "You work all the time.", "layers": [{"label": "What he hears", "text": "She wants to control me."}, {"label": "What she actually means", "text": "I feel alone and left out."}, {"label": "Try instead", "text": "Place a hand on your heart. “I know I disappear into work. Tell me what presence would feel like this week.”"}]}] },
       ],
     },
     {
@@ -540,6 +543,9 @@ export const thirtyOneTouchPoints: PracticeCollection = {
         {"kind": "why", "lines": [{"text": "Why it works", "emphasis": "bold"}, {"text": "Most of us learned that a kiss on the neck is the start of something else, so the body braces and starts doing the maths."}, {"text": "One kiss that goes nowhere sexual tells the body it can say yes without signing up for anything else. Do that enough times and the bracing stops.", "emphasis": "accent"}]},
         {"kind": "notice", "lines": [{"text": "If it doesn't land", "emphasis": "bold"}, {"text": "“Not right now” is a real answer. Say thank you and carry on with your day, with no follow-up question. Ask again tomorrow. A no that's allowed is what makes the yes worth having."}]},
         {"kind": "p", "text": "Later today or tomorrow, swap. The one who was kissed gets to ask: may I?", "emphasis": "accent"},
+        // This week's misunderstanding (27 Oct, Juliette: "one misunderstanding a week"). Her Between Touches doc.
+        { kind: "quote", text: "This week's misunderstanding" },
+        { kind: "translateCards", prompt: "Tap it. Said, heard, meant, and what to do instead.", cards: [{"label": "She Says", "says": "I'm fine.", "layers": [{"label": "What he hears", "text": "She's fine. Move on."}, {"label": "What she actually means", "text": "I don't feel safe enough to show you I'm hurt."}, {"label": "Try instead", "text": "Pause. Step closer. Ask softly: “If ‘fine’ wasn't a word, what would you say?”"}]}] },
       ],
     },
     {
@@ -892,6 +898,9 @@ export const thirtyOneTouchPoints: PracticeCollection = {
             { text: "When you come out of it, notice what has arrived in your body. Those are the connection chemicals, and you just made them out of nothing but time.", emphasis: "accent" },
           ],
         },
+        // This week's misunderstanding (27 Oct, Juliette: "one misunderstanding a week"). Her Between Touches doc.
+        { kind: "quote", text: "This week's misunderstanding" },
+        { kind: "translateCards", prompt: "Tap it. Said, heard, meant, and what to do instead.", cards: [{"label": "She Says", "says": "You don't listen.", "layers": [{"label": "What he hears", "text": "I'm failing again."}, {"label": "What she actually means", "text": "I feel invisible."}, {"label": "Try instead", "text": "Turn towards her, slow your breath, and say: “Tell me what you need me to hear right now.”"}]}] },
       ],
     },
     {
@@ -1103,6 +1112,9 @@ export const thirtyOneTouchPoints: PracticeCollection = {
             { text: "Where did you want to speed up, and what happened in you when you did not?", emphasis: "accent" },
           ],
         },
+        // This week's misunderstanding (27 Oct, Juliette: "one misunderstanding a week"). Her Between Touches doc.
+        { kind: "quote", text: "This week's misunderstanding" },
+        { kind: "translateCards", prompt: "Tap it. Said, heard, meant, and what to do instead.", cards: [{"label": "She Says", "says": "You always want sex.", "layers": [{"label": "What he hears", "text": "She's rejecting me."}, {"label": "What she actually means", "text": "I want closeness, but I need slowness first."}, {"label": "Try instead", "text": "Rest your palm on her belly. Breathe together. Ask: “Tell me what kind of touch would feel connecting right now.”"}]}] },
       ],
     },
     {
@@ -1324,6 +1336,9 @@ export const thirtyOneTouchPoints: PracticeCollection = {
         {"kind": "image", "src": "/31-touch-points/cards/day-27.png", "alt": "Tell me what you are still carrying in today."},
         {"kind": "p", "text": "Ask it last, slowly. Whoever asked says only: thank you.", "emphasis": "bold"},
         {"kind": "link", "text": "This is how my cards work. See the full decks", "href": "https://feelfullyyou.com/my-cards"},
+        // This week's misunderstanding (27 Oct, Juliette: "one misunderstanding a week"). Her Between Touches doc.
+        { kind: "quote", text: "This week's misunderstanding" },
+        { kind: "translateCards", prompt: "Tap it. Said, heard, meant, and what to do instead.", cards: [{"label": "She Says", "says": "Nothing's wrong.", "layers": [{"label": "What he hears", "text": "Everything's okay."}, {"label": "What she actually means", "text": "Something's wrong, but I don't trust it's safe to say."}, {"label": "Try instead", "text": "Sit nearby without forcing words. Let silence soften. Then ask: “Tell me what feels off.”"}]}] },
       ],
     },
     {
