@@ -545,3 +545,39 @@ export function StepDone({ k }: { k: string }) {
     </button>
   );
 }
+
+/* ---- A whole card deck you can draw from (27 Oct 2026, One Touch:
+   "make sure that you have all of them"). One card at a time, no repeats
+   until the deck has been through, and the full list underneath. */
+export function CardDeck({ deck, prompts }: { deck: string; prompts: string[] }) {
+  const [order, setOrder] = useState<number[]>(() => prompts.map((_, i) => i));
+  const [pos, setPos] = useState(0);
+  const [showAll, setShowAll] = useState(false);
+  useEffect(() => {
+    const a = prompts.map((_, i) => i);
+    for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+    setOrder(a);
+  }, [prompts]);
+  const draw = () => setPos((p) => (p + 1) % order.length);
+  return (
+    <div className="my-6">
+      <PromptCard deck={deck} prompt={prompts[order[pos]]} />
+      <div className="flex flex-col items-center gap-3">
+        <button onClick={draw} className="rounded-full bg-ffy-gold px-6 py-3 font-display text-sm font-medium text-ffy-black transition hover:opacity-90">
+          Draw another card
+        </button>
+        <p className="text-xs uppercase tracking-[0.15em] text-ffy-gold-pale/70">Card {pos + 1} of {order.length}</p>
+        <button onClick={() => setShowAll((v) => !v)} className="text-sm text-ffy-gold-pale underline">
+          {showAll ? "Hide the list" : `See all ${prompts.length} cards`}
+        </button>
+      </div>
+      {showAll && (
+        <ol className="mt-5 space-y-3 text-sm leading-relaxed text-ffy-cream/80">
+          {prompts.map((p, i) => (
+            <li key={i} className="rounded-xl border border-ffy-gold/15 px-4 py-3">{p}</li>
+          ))}
+        </ol>
+      )}
+    </div>
+  );
+}

@@ -11,6 +11,8 @@ export const COLLECTION_DECK_TYPES: Record<string, string> = {
   "members-app": "members-app",
   // The Sacred No, £17, moved into the app 17 Oct 2026 (specs/sacred-no-in-app.md R6).
   "the-sacred-no": "sacred-no",
+  // One Touch, £97, moved into the app 27 Oct 2026.
+  "one-touch": "one-touch",
 };
 
 // Maps a real Stripe price ID to the deck_type it grants, so resolve-purchase
@@ -43,6 +45,9 @@ export const PRICE_ID_TO_DECK_TYPE: Record<string, string> = {
   // PRACTICE_APP_DECK_TYPES in the site webhook. The live payment link,
   // plink_1UD0gtCCw18geY15E6gj9XGx, is matched by payment link there.
   price_1UD0f6CCw18geY15BCSTDIlW: "sacred-no",
+  // One Touch (27 Oct 2026). Both prices grant it, so every past buyer gets in.
+  price_1Tpr13CCw18geY15W6ooICYF: "one-touch", // £97
+  price_1TzdQNCCw18geY15eh9S2uOe: "one-touch", // £197 (1 Aug 2026)
 };
 
 // Deck types that are RECURRING subscriptions rather than one-time
@@ -92,6 +97,7 @@ export const PURCHASE_URLS: Record<string, string> = {
   "ten-touch-rituals": "https://feelfullyyou.com/10-touch-rituals",
   "the-unspoken-distance": "https://feelfullyyou.com/the-unspoken-distance",
   "communication-reboot-kit": "https://feelfullyyou.com/communication-reboot-kit",
+  "one-touch": "https://feelfullyyou.com/one-touch",
   // This page doesn't exist yet — same as every other product here, the
   // checkout lives on a real marketing sales page, not inside the app.
   // Stripe side (Product prod_V30FzZV1Wv39XG, Price price_1U2uFbCCw18geY156WA0jb05,

@@ -96,5 +96,6 @@ export type ContentBlock =
   | { kind: "draft"; key: string; label: string; placeholder?: string }
   | { kind: "nextCard"; image: string; title: string; line: string; href: string; cta: string }
   | { kind: "promptCard"; deck: string; prompt: string }
+  | { kind: "cardDeck"; deck: string; prompts: string[] }
   | { kind: "translateCards"; prompt?: string; cards: { label: string; says: string; layers: { label: string; text: string }[] }[] }
   | { kind: "datePick"; key: string; label: string; options: { title: string; text: string }[] };
