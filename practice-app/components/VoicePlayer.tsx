@@ -7,6 +7,13 @@ import { useEffect, useRef, useState } from "react";
 // can tap to move through it, and the time. Started by a tap, so it keeps
 // playing with the phone locked.
 
+// Listening speed, shared by every player and remembered on this phone.
+const RATES = [1, 1.25, 1.5];
+const RATE_KEY = "ffy.voice.rate";
+const readRate = () => {
+  try { const r = Number(localStorage.getItem(RATE_KEY)); return RATES.includes(r) ? r : 1; } catch { return 1; }
+};
+
 const fmt = (s: number) => {
   if (!isFinite(s) || s < 0) s = 0;
   const m = Math.floor(s / 60);
@@ -28,13 +35,32 @@ export default function VoicePlayer({
   const [t, setT] = useState(0);
   const [dur, setDur] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [rate, setRate] = useState(1);
+
+  useEffect(() => {
+    setRate(readRate());
+    const onRate = () => setRate(readRate());
+    window.addEventListener("ffy-voice-rate", onRate);
+    return () => window.removeEventListener("ffy-voice-rate", onRate);
+  }, []);
+
+  useEffect(() => {
+    if (ref.current) ref.current.playbackRate = rate;
+  }, [rate]);
+
+  const nextRate = () => {
+    const n = RATES[(RATES.indexOf(rate) + 1) % RATES.length];
+    try { localStorage.setItem(RATE_KEY, String(n)); } catch {}
+    setRate(n);
+    window.dispatchEvent(new Event("ffy-voice-rate"));
+  };
 
   useEffect(() => {
     const a = ref.current;
     if (!a) return;
     const onTime = () => setT(a.currentTime);
     const onMeta = () => setDur(a.duration);
-    const onPlay = () => { setPlaying(true); setLoading(false); };
+    const onPlay = () => { a.playbackRate = readRate(); setPlaying(true); setLoading(false); };
     const onPause = () => setPlaying(false);
     const onWait = () => setLoading(true);
     const onCan = () => setLoading(false);
@@ -128,8 +154,18 @@ export default function VoicePlayer({
           <div className={`h-full rounded-full ${dark ? "bg-[#DDC98E]" : "bg-ffy-gold"}`} style={{ width: `${pct}%` }} />
         </div>
       </div>
-      <div className={`flex justify-between text-xs tabular-nums ${dark ? "text-[rgba(254,252,250,0.7)]" : "text-ffy-black/55"}`}>
+      <div className={`flex items-center justify-between text-xs tabular-nums ${dark ? "text-[rgba(254,252,250,0.7)]" : "text-ffy-black/55"}`}>
         <span>{loading ? "Loading" : fmt(t)}</span>
+        <button
+          type="button"
+          onClick={nextRate}
+          aria-label="Listening speed"
+          className={`rounded-full border px-3 py-1 text-xs font-medium ${
+            dark ? "border-[rgba(221,201,142,0.5)] text-[#DDC98E]" : "border-ffy-gold/60 text-ffy-gold-deep"
+          }`}
+        >
+          {rate === 1 ? "1" : rate}&times;
+        </button>
         <span>{dur ? `-${fmt(dur - t)}` : ""}</span>
       </div>
     </div>
