@@ -139,6 +139,8 @@
 import { ContentBlock } from "./blocks";
 
 export type PracticeEntry = {
+  // Optional: [from, to) block range shown behind a "Read more" tap (27 Oct 2026, The Unspoken Distance).
+  readMore?: number[];
   slug: string;
   order: number;
   title: string;

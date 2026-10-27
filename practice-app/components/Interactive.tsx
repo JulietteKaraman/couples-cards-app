@@ -530,3 +530,18 @@ export function PromptCard({ deck, prompt }: { deck: string; prompt: string }) {
     </div>
   );
 }
+
+/* ---- "I've done this" on a practice box (27 Oct, The Unspoken Distance:
+   "this needs to be a good resource for £97"). Saves on the phone. */
+export function StepDone({ k }: { k: string }) {
+  const [done, setDone] = useSaved<boolean>(k, false);
+  return (
+    <button
+      type="button"
+      onClick={() => setDone(!done)}
+      className={`mt-4 inline-flex min-h-[44px] items-center gap-2 rounded-full border px-5 text-[15px] font-medium transition ${done ? "border-[#DDC98E] bg-[#DDC98E] text-[#1a1814] shadow-[0_0_24px_-6px_rgba(221,201,142,0.8)]" : "border-[#DDC98E]/60 text-[#DDC98E]"}`}
+    >
+      {done ? "Done ✓" : "I've done this"}
+    </button>
+  );
+}

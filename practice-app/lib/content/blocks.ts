@@ -46,7 +46,7 @@ export type ContentBlock =
   // one — for a step that matters but reads as skippable next to louder
   // neighbours (a "why" box, a photo). Juliette, 12 Aug 2026, on "Before
   // you invite them in": "it is just really bland and easy to skip over."
-  | { kind: "step"; label: string; lines: WhyLine[]; highlight?: boolean }
+  | { kind: "step"; label: string; lines: WhyLine[]; highlight?: boolean; doneKey?: string }
   | { kind: "notice"; lines: WhyLine[] }
   | { kind: "why"; lines: WhyLine[] }
   | { kind: "link"; text: string; href: string }

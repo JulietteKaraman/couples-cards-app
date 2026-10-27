@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import { ContentBlock } from "@/lib/content/blocks";
 import PracticeTimer from "@/components/PracticeTimer";
 import VoicePlayer from "@/components/VoicePlayer";
-import { FlipCards, TapCheck, CopyLines, Choice, PickOne, Journal, SortGame, Draft, NextCard, DatePick, TranslateCards, PromptCard } from "@/components/Interactive";
+import { FlipCards, TapCheck, CopyLines, Choice, PickOne, Journal, SortGame, Draft, NextCard, DatePick, TranslateCards, PromptCard, StepDone } from "@/components/Interactive";
 import { LOCAL_AUDIO, localAudioSrc, LOCAL_VIDEO, localVideoSrc, localVideoPoster } from "@/lib/content/local-audio";
 
 function driveIdFromUrl(url: string): string | null {
@@ -170,6 +170,7 @@ export function Blocks({ blocks, dark = false }: { blocks: ContentBlock[]; dark?
                     )
                   )}
                 </div>
+                {b.doneKey && <StepDone k={b.doneKey} />}
               </div>
             );
 
