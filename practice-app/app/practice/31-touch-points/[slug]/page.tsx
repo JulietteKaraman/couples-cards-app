@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { TellMe } from "@/components/TellMe";
 import Image from "next/image";
 import { useParams, notFound, redirect } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -10,6 +11,7 @@ import { CollectionGate } from "@/components/auth/CollectionGate";
 import { useAuth } from "@/components/providers/AuthProvider";
 import { ADMIN_EMAIL } from "@/lib/entitlements/admin";
 import { getCompletedWithTimes, markComplete } from "@/lib/entitlements/progress";
+import { FeelTracker } from "@/components/Interactive";
 import {
   ADV_KEY,
   adminBypassActive,
@@ -223,6 +225,15 @@ function TouchPointEntryContent() {
                     ? "All thirty one done. Every one of them is yours to go back to, and you can swap who leads."
                     : "Done. See you tomorrow."}
                 </p>
+                <div className="mx-auto max-w-sm text-left">
+                  <FeelTracker day={thisDay} />
+                </div>
+                {/* "Tell me how it went" (27 Oct): at the end of each week and on Day 31 */}
+                {TELL_ME_DAYS[thisDay] && (
+                  <div className="text-left">
+                    <TellMe line={TELL_ME_DAYS[thisDay]} />
+                  </div>
+                )}
                 {finishedMonth && (
                   <Link
                     href="/practice/31-touch-points/your-next-yes"
@@ -245,7 +256,7 @@ function TouchPointEntryContent() {
                 onClick={handleMarkComplete}
                 className="inline-flex min-h-[52px] w-full items-center justify-center rounded-full bg-[#DDC98E] px-6 font-display text-[15px] font-medium text-[#070707] transition hover:bg-[#EEDE80] sm:w-auto"
               >
-                Mark day {thisDay} done
+                I did it ✓
               </button>
             )}
           </div>
@@ -276,3 +287,11 @@ function TouchPointEntryContent() {
     </main>
   );
 }
+
+const TELL_ME_DAYS: Record<number, string> = {
+  7: "We just finished the Play week of 31 Touch Points. What came up for me: ",
+  14: "We just finished the Noticing week of 31 Touch Points. What came up for me: ",
+  21: "We just finished the Giving week of 31 Touch Points. What came up for me: ",
+  26: "We just finished the Opening week of 31 Touch Points. What came up for me: ",
+  31: "We just finished all 31 Touch Points. What came up for me: ",
+};

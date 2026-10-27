@@ -322,3 +322,105 @@ export function NextCard({ image, title, line, href, cta }: { image: string; tit
     </a>
   );
 }
+
+/* ---- 31 Touch Points: "How did it feel?" (27 Oct) ---- */
+export const FEELS = [
+  { id: "laughed", label: "We laughed", color: "#EEDE80" },
+  { id: "close", label: "Closer", color: "#C29A4E" },
+  { id: "awkward", label: "Awkward", color: "#5f9b97" },
+  { id: "flat", label: "Nothing much", color: "#6b6559" },
+] as const;
+const FEEL_KEY = "ffy.31tp.feel.v1";
+export function readFeels(): Record<string, string> {
+  try { return JSON.parse(localStorage.getItem(FEEL_KEY) || "{}") || {}; } catch { return {}; }
+}
+export function FeelTracker({ day }: { day: number }) {
+  const [v, setV] = useState<string>("");
+  useEffect(() => { setV(readFeels()[String(day)] || ""); }, [day]);
+  const choose = (id: string) => {
+    const all = readFeels(); all[String(day)] = id;
+    try { localStorage.setItem(FEEL_KEY, JSON.stringify(all)); } catch {}
+    setV(id);
+  };
+  return (
+    <div className="mt-6">
+      <Glow />
+      <p className="text-[11px] font-medium uppercase tracking-[0.2em]" style={{ color: GOLD }}>How did it feel?</p>
+      <div className="mt-3 grid grid-cols-2 gap-2">
+        {FEELS.map((f) => (
+          <button key={f.id} type="button" onClick={() => choose(f.id)}
+            className={`flex items-center justify-center gap-2 whitespace-nowrap rounded-full border px-2 py-3 text-[14px] ${v === f.id ? "border-[#DDC98E] bg-[rgba(221,201,142,0.15)] text-[#f1ece2] ffy-glow" : "border-[#DDC98E]/30 text-[#f1ece2]/80"}`}>
+            <span className="h-3 w-3 shrink-0 rounded-full" style={{ background: f.color }} />{f.label}
+          </button>
+        ))}
+      </div>
+      {v && <p className="mt-3 text-sm text-[#a79f90]">Saved. It colours Day {day} on your month.</p>}
+    </div>
+  );
+}
+export function MonthFeelings({ doneDays }: { doneDays: number[] }) {
+  const [feels, setFeels] = useState<Record<string, string>>({});
+  useEffect(() => { setFeels(readFeels()); }, []);
+  const col = (d: number) => FEELS.find((f) => f.id === feels[String(d)])?.color;
+  const any = Object.keys(feels).length > 0;
+  return (
+    <div className="mt-6 rounded-2xl border border-[rgba(221,201,142,0.25)] bg-[rgba(13,53,53,0.35)] p-4">
+      <p className="text-[11px] uppercase tracking-[0.18em] text-[#DDC98E]">Your month so far</p>
+      <div className="mt-3 grid grid-cols-[repeat(16,minmax(0,1fr))] gap-1.5">
+        {Array.from({ length: 31 }, (_, i) => i + 1).map((d) => {
+          const c = col(d); const done = doneDays.includes(d);
+          return <span key={d} title={`Day ${d}`} className="aspect-square rounded-full border"
+            style={{ background: c ?? (done ? "rgba(221,201,142,0.35)" : "transparent"), borderColor: c ?? "rgba(221,201,142,0.3)" }} />;
+        })}
+      </div>
+      <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1.5 text-xs text-[rgba(254,252,250,0.7)]">
+        {FEELS.map((f) => <span key={f.id} className="inline-flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-full" style={{ background: f.color }} />{f.label}</span>)}
+      </div>
+      {!any && <p className="mt-2 text-xs text-[rgba(254,252,250,0.55)]">After each day, tap how it felt and your month fills with colour.</p>}
+    </div>
+  );
+}
+
+/* ---- Weekly date: pick one, then put it in the calendar (27 Oct) ---- */
+export function DatePick({ k, label, options }: { k: string; label: string; options: { title: string; text: string }[] }) {
+  const [pick, setPick] = useSaved<number>(k, -1);
+  const [when, setWhen] = useSaved<string>(k + ".when", "");
+  const ics = () => {
+    if (pick < 0 || !when) return;
+    const o = options[pick]; const start = new Date(when);
+    const end = new Date(start.getTime() + 90 * 60000);
+    const f = (d: Date) => d.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
+    const body = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Feel Fully You//31 Touch Points//EN", "BEGIN:VEVENT",
+      `UID:31tp-${k}-${start.getTime()}@feelfullyyou.com`, `DTSTAMP:${f(new Date())}`, `DTSTART:${f(start)}`, `DTEND:${f(end)}`,
+      `SUMMARY:Our date: ${o.title.replace(/[,;]/g, "")}`, `DESCRIPTION:${o.text.replace(/[,;\n]/g, " ")}`, "END:VEVENT", "END:VCALENDAR"].join("\r\n");
+    const url = URL.createObjectURL(new Blob([body], { type: "text/calendar" }));
+    const a = document.createElement("a"); a.href = url; a.download = "our-date.ics"; a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 2000);
+  };
+  return (
+    <div className="my-8 rounded-[22px] border border-[#DDC98E] bg-gradient-to-b from-[#0D3535]/60 to-[#211e19] p-5">
+      <Label>{label}</Label>
+      <div className="grid gap-2.5">
+        {options.map((o, i) => (
+          <button key={i} type="button" onClick={() => setPick(i)}
+            className={`rounded-[16px] border p-4 text-left ${pick === i ? "border-[#DDC98E] bg-[rgba(221,201,142,0.12)]" : "border-[#DDC98E]/25 bg-white/[0.03]"}`}>
+            {pick === i && <span className="mb-1 block text-[11px] font-medium uppercase tracking-[0.18em] text-[#DDC98E]">Our date</span>}
+            <span className="block font-display text-[19px] text-[#f1ece2]">{o.title}</span>
+            <span className="mt-1 block text-[15px] leading-relaxed text-[#a79f90]">{o.text}</span>
+          </button>
+        ))}
+      </div>
+      {pick >= 0 && (
+        <div className="mt-5">
+          <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#DDC98E]">Put it in the diary</p>
+          <input type="datetime-local" value={when} onChange={(e) => setWhen(e.target.value)}
+            className="mt-2 w-full rounded-[14px] border border-[#DDC98E]/30 bg-[#1a1814] p-3 text-[#f1ece2] [color-scheme:dark]" />
+          <button type="button" onClick={ics} disabled={!when}
+            className="mt-3 w-full rounded-full bg-[#DDC98E] px-5 py-3.5 font-display text-[16px] font-medium text-[#1a1814] disabled:opacity-40">
+            Add to my calendar
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}

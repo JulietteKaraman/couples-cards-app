@@ -120,19 +120,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
           ],
         },
         { kind: "quote", text: "One date a week. Three to choose from. Pick one." },
-        {
-          kind: "step",
-          label: "Your date this week. Week one.",
-          highlight: true,
-          lines: [
-            { text: "Make each other a playlist. Ten songs each.", emphasis: "bold" },
-            { text: "Then sit and listen to the whole of theirs, or pick one song out of it and only play that." },
-            { text: "The dance.", emphasis: "bold" },
-            { text: "One of you picks a song and makes up a little dance to it. The other one has to learn it and follow. Somewhere between the Macarena and a disaster." },
-            { text: "Start a puzzle, and finish it.", emphasis: "bold" },
-            { text: "Actually finish it. That is the date." },
-          ],
-        },
+        { kind: "datePick", key: "31tp-date-one", label: "Your date this week. Week one. Tap the one you pick", options: [{"title": "Make each other a playlist. Ten songs each", "text": "Then sit and listen to the whole of theirs, or pick one song out of it and only play that."}, {"title": "The dance", "text": "One of you picks a song and makes up a little dance to it. The other one has to learn it and follow. Somewhere between the Macarena and a disaster."}, {"title": "Start a puzzle, and finish it", "text": "Actually finish it. That is the date."}] },
         { kind: "p", text: "Three more arrive at the start of next week, and the week after that. You are not meant to do them all." },
         { kind: "quote", text: "And here is what you actually do today, in ten minutes" },
         { kind: "p", text: "Booking something is not doing something. So before you close this, you are both writing a list.", emphasis: "bold" },
@@ -145,6 +133,8 @@ export const thirtyOneTouchPoints: PracticeCollection = {
             { heading: "And hold the look for a second afterwards", text: "That is all. Do not discuss it, do not rank them, do not explain any of them." },
           ],
         },
+        { kind: "timer", minutes: [10], label: "Your ten minutes" },
+        { kind: "journal", key: "31tp-day1-list", label: "Your list, if you want to keep it", placeholder: "The way you said my name..." },
         {
           kind: "notice",
           lines: [
@@ -873,16 +863,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
       kind: "ritual",
       imageSide: "right",
       body: [
-        {
-          kind: "step",
-          label: "Your date this week. Week three.",
-          lines: [
-            { text: "One of you plans the whole thing, and you are allowed to spend twenty pounds.", emphasis: "bold" },
-            { text: "The other one finds out nothing until they arrive. Twenty pounds buys a lot when nobody is trying to impress anybody." },
-            { text: "A sunset on the sea and a picnic blanket costs almost nothing and beats most restaurants." },
-            { text: "Book it now. Then come back and do today's, which takes one minute." },
-          ],
-        },
+        { kind: "datePick", key: "31tp-date-three", label: "Your date this week. Week three", options: [{"title": "One of you plans the whole thing, and you are allowed to spend twenty pounds", "text": "The other one finds out nothing until they arrive. Twenty pounds buys a lot when nobody is trying to impress anybody. A sunset on the sea and a picnic blanket costs almost nothing and beats most restaurants. Book it now. Then come back and do today's, which takes one minute."}] },
         {
           kind: "driveAudio",
           url: "https://drive.google.com/file/d/10JkmLg-WOZtQo86U9qtxjlO9yX-LS3_4/view?usp=sharing",
@@ -1078,16 +1059,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
       imageFocus: "center 30%",
       imageSide: "left",
       body: [
-        {
-          kind: "step",
-          label: "Your date this week. Week four.",
-          lines: [
-            { text: "The jar.", emphasis: "bold" },
-            { text: "You each write five activities on five pieces of paper. Fold them, put them all in a jar." },
-            { text: "Then you each pick one out, without looking, and that is what you do." },
-            { text: "You will get one of theirs, which is the point. Book it now, then come back to today." },
-          ],
-        },
+        { kind: "datePick", key: "31tp-date-four", label: "Your date this week. Week four", options: [{"title": "The jar", "text": "You each write five activities on five pieces of paper. Fold them, put them all in a jar. Then you each pick one out, without looking, and that is what you do. You will get one of theirs, which is the point. Book it now, then come back to today."}] },
         {
           kind: "driveAudio",
           url: "https://drive.google.com/file/d/12t1IVCP9J06lKlrcdI5dNmMLq9C4baYz/view?usp=sharing",
