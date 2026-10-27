@@ -299,7 +299,7 @@ export function Blocks({ blocks, dark = false }: { blocks: ContentBlock[]; dark?
               <div key={i}>
                 <div style={{ padding: "177.78% 0 0 0", position: "relative" }} className="overflow-hidden rounded-2xl bg-ffy-black">
                   <iframe
-                    src={`https://player.vimeo.com/video/${b.vimeoId}?badge=0&autopause=0&player_id=0&app_id=58479`}
+                    src={`https://player.vimeo.com/video/${b.vimeoId}?speed=1&badge=0&autopause=0&player_id=0&app_id=58479`}
                     frameBorder={0}
                     allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
                     referrerPolicy="strict-origin-when-cross-origin"
@@ -484,17 +484,9 @@ export function Blocks({ blocks, dark = false }: { blocks: ContentBlock[]; dark?
             return <PracticeTimer key={i} minutes={b.minutes} label={b.label} dark={dark} />;
 
           case "audio":
-            return (
-              <div
-                key={i}
-                className={`flex flex-col gap-2 rounded-xl border px-5 py-4 ${
-                  dark ? "border-ffy-gold/40 bg-white/5" : "border-ffy-gold/60 bg-ffy-cream-2"
-                }`}
-              >
-                <p className={`text-xs uppercase tracking-wide ${dark ? "text-ffy-gold-pale" : "text-ffy-gold-deep"}`}>{b.label}</p>
-                <audio controls className="w-full" src={b.src} />
-              </div>
-            );
+            // Her voice with the speed buttons (1x / 1.25x / 1.5x) everywhere
+            // (27 Oct, Juliette: "make sure everything can speed up").
+            return <VoicePlayer key={i} src={b.src} label={b.label} dark={dark} />;
 
           case "instagram": {
             const embedUrl = instagramEmbedUrl(b.url);

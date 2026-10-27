@@ -88,7 +88,7 @@ export default function TouchBasePage() {
         <Section eyebrow="Watch">
           <div className="overflow-hidden rounded-2xl bg-black" style={{ position: "relative", paddingBottom: "56.25%" }}>
             <iframe
-              src="https://player.vimeo.com/video/1223329859?title=0&byline=0&portrait=0&dnt=1"
+              src="https://player.vimeo.com/video/1223329859?speed=1&title=0&byline=0&portrait=0&dnt=1"
               title="Touch Base®, the video"
               allow="autoplay; fullscreen; picture-in-picture"
               allowFullScreen
