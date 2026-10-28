@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { TellMe } from "@/components/TellMe";
+import { count } from "@/lib/count";
 import Image from "next/image";
 import { useParams, notFound, redirect } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -11,7 +12,7 @@ import { CollectionGate } from "@/components/auth/CollectionGate";
 import { useAuth } from "@/components/providers/AuthProvider";
 import { ADMIN_EMAIL } from "@/lib/entitlements/admin";
 import { getCompletedWithTimes, markComplete } from "@/lib/entitlements/progress";
-import { FeelTracker } from "@/components/Interactive";
+import { FeelTracker, GiverReceiverNotes } from "@/components/Interactive";
 import {
   ADV_KEY,
   adminBypassActive,
@@ -88,6 +89,7 @@ function TouchPointEntryContent() {
   async function handleMarkComplete() {
     if (!user || !entry) return;
     await markComplete(user.id, "31-touch-points", entry.slug);
+    if (dayOf(entry.slug) > 0) count("day_done", dayOf(entry.slug));
     setCompleted(true);
     setDoneSlugs((prev) => (prev && prev.includes(entry.slug) ? prev : [...(prev ?? []), entry.slug]));
     // Marking done starts the clock on tomorrow. It does not open it.
@@ -214,6 +216,15 @@ function TouchPointEntryContent() {
         <Blocks blocks={entry.body} dark />
 
         {isDay && (
+          <>
+            {ROLE_DAYS[thisDay] && <GiverReceiverNotes day={thisDay} labels={ROLE_DAYS[thisDay]} />}
+            <div className="mt-6 rounded-3xl border border-[#DDC98E]/40 bg-[rgba(13,53,53,0.35)] px-5 pb-5 pt-1">
+              <FeelTracker day={thisDay} />
+            </div>
+          </>
+        )}
+
+        {isDay && (
           <div className="mt-10">
             {completed ? (
               <div className="ffy-done rounded-3xl border-2 border-[#DDC98E] bg-[rgba(13,53,53,0.6)] p-6 text-center">
@@ -225,9 +236,6 @@ function TouchPointEntryContent() {
                     ? "All thirty one done. Every one of them is yours to go back to, and you can swap who leads."
                     : "Done. See you tomorrow."}
                 </p>
-                <div className="mx-auto max-w-sm text-left">
-                  <FeelTracker day={thisDay} />
-                </div>
                 {/* "Tell me how it went" (27 Oct): at the end of each week and on Day 31 */}
                 {TELL_ME_DAYS[thisDay] && (
                   <div className="text-left">
@@ -287,6 +295,22 @@ function TouchPointEntryContent() {
     </main>
   );
 }
+
+// Only the days that really have two roles get the two coloured note boxes
+// (Juliette, 28 Oct: "not each day has giver and receiver, ONLY put it on the
+// days that are like that"). Checked against each day's own wording. Day 20
+// calls them Taker and Allower, so it uses those words.
+const ROLE_DAYS: Record<number, [string, string]> = {
+  14: ["Giver", "Receiver"],
+  18: ["Giver", "Receiver"],
+  19: ["Giver", "Receiver"],
+  20: ["Taker", "Allower"],
+  21: ["Giver", "Receiver"],
+  22: ["Giver", "Receiver"],
+  23: ["Giver", "Receiver"],
+  25: ["Giver", "Receiver"],
+  30: ["Giver", "Receiver"],
+};
 
 const TELL_ME_DAYS: Record<number, string> = {
   7: "We just finished the Play week of 31 Touch Points. What came up for me: ",

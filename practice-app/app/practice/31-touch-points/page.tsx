@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import VoicePlayer from "@/components/VoicePlayer";
-import { MonthFeelings } from "@/components/Interactive";
+import { MonthFeelings, MonthNotes } from "@/components/Interactive";
 
 // Juliette's welcome to the month. Drop the file into
 // public/31-touch-points/audio/ and put its name here. It shows only before
@@ -137,6 +137,7 @@ function MonthContent() {
           <div className="h-full rounded-full bg-[#DDC98E] transition-all duration-700" style={{ width: `${(doneCount / 31) * 100}%` }} />
         </div>
         <MonthFeelings doneDays={days.filter((e) => done.includes(e.slug)).map((e) => dayOf(e.slug))} />
+        <MonthNotes titles={Object.fromEntries(days.map((e) => [dayOf(e.slug), stripDay(e.title)]))} />
 
         {/* TODAY */}
         {doneSlugs !== null && (

@@ -1,4 +1,5 @@
 "use client";
+import { count } from "@/lib/count";
 
 // Interactive blocks for the guides (27 Oct 2026), after Juliette asked for
 // the app to be "really interactive and just fun" like the buyer-page hubs.
@@ -341,6 +342,7 @@ export function FeelTracker({ day }: { day: number }) {
     const all = readFeels(); all[String(day)] = id;
     try { localStorage.setItem(FEEL_KEY, JSON.stringify(all)); } catch {}
     setV(id);
+    count("day_feel", day, id);
   };
   return (
     <div className="mt-6">
@@ -579,5 +581,79 @@ export function CardDeck({ deck, prompts }: { deck: string; prompts: string[] })
         </ol>
       )}
     </div>
+  );
+}
+
+/* ---- 31 Touch Points: Giver and Receiver notes (28 Oct) ----
+   Juliette: "a space for receiver to write and for giver to write, maybe make
+   them different colours... all of the app should have that too". Giver in her
+   gold, receiver in her soft blue #D8DFE1. Saved on this phone as they type,
+   and gathered on the month screen as "Your notes". */
+export const NOTE_PEOPLE = [
+  { id: "giver", who: "Giver", color: "#DDC98E", placeholder: "Leading felt..." },
+  { id: "receiver", who: "Receiver", color: "#D8DFE1", placeholder: "Receiving felt..." },
+] as const;
+const NOTES_KEY = "ffy.31tp.notes.v1";
+type DayNotes = { giver?: string; receiver?: string; d?: string; l?: [string, string] };
+export function readNotes(): Record<string, DayNotes> {
+  try { return JSON.parse(localStorage.getItem(NOTES_KEY) || "{}") || {}; } catch { return {}; }
+}
+export function GiverReceiverNotes({ day, labels = ["Giver", "Receiver"] }: { day: number; labels?: [string, string] }) {
+  const [n, setN] = useState<DayNotes>({});
+  useEffect(() => { setN(readNotes()[String(day)] || {}); }, [day]);
+  const write = (id: "giver" | "receiver", v: string) => {
+    const all = readNotes();
+    const next = { ...(all[String(day)] || {}), [id]: v, l: labels, d: new Date().toLocaleDateString("en-GB", { day: "numeric", month: "short" }) };
+    all[String(day)] = next;
+    try { localStorage.setItem(NOTES_KEY, JSON.stringify(all)); } catch {}
+    setN(next);
+  };
+  return (
+    <div className="mt-10">
+      <p className="text-[11px] font-medium uppercase tracking-[0.2em]" style={{ color: GOLD }}>What did you feel? A line each.</p>
+      <div className="mt-3 space-y-3">
+        {NOTE_PEOPLE.map((p, i) => (
+          <label key={p.id} className="block rounded-2xl border-[1.5px] p-4" style={{ borderColor: p.color, background: `${p.color}12` }}>
+            <span className="flex items-center gap-2 text-[13px] font-medium uppercase tracking-[0.16em]" style={{ color: p.color }}>
+              <span className="h-3 w-3 rounded-full" style={{ background: p.color }} />{labels[i]}
+            </span>
+            <textarea
+              value={n[p.id] || ""}
+              onChange={(e) => write(p.id, e.target.value)}
+              placeholder={i === 0 ? (labels[0] === "Taker" ? "Taking felt..." : "Leading felt...") : (labels[1] === "Allower" ? "Allowing felt..." : "Receiving felt...")}
+              rows={3}
+              className="mt-2 w-full resize-none bg-transparent text-[16px] leading-relaxed text-[#f1ece2] placeholder:text-[#f1ece2]/35 focus:outline-none"
+            />
+          </label>
+        ))}
+      </div>
+      <p className="mt-2 text-[13px] text-[#8f877a]">Saved as you type, on this phone only. What you write stays on your phone. Not even I see it.</p>
+    </div>
+  );
+}
+export function MonthNotes({ titles }: { titles: Record<number, string> }) {
+  const [notes, setNotes] = useState<Record<string, DayNotes>>({});
+  useEffect(() => { setNotes(readNotes()); }, []);
+  const days = Object.keys(notes).map(Number).filter((d) => d > 0 && (notes[d]?.giver?.trim() || notes[d]?.receiver?.trim())).sort((a, b) => a - b);
+  if (days.length === 0) return null;
+  return (
+    <details className="mt-4 rounded-2xl border border-[rgba(221,201,142,0.25)] bg-[rgba(13,53,53,0.35)] p-4">
+      <summary className="cursor-pointer text-[11px] uppercase tracking-[0.18em]" style={{ color: GOLD }}>
+        Your notes · {days.length} {days.length === 1 ? "day" : "days"}
+      </summary>
+      <div className="mt-4 space-y-4">
+        {days.map((d) => (
+          <div key={d} className="border-t border-[rgba(221,201,142,0.15)] pt-3">
+            <p className="text-sm text-[#f1ece2]">Day {d} · {titles[d] || ""}<span className="ml-2 text-xs text-[#a79f90]">{notes[d]?.d}</span></p>
+            {NOTE_PEOPLE.map((p, i) => notes[d]?.[p.id]?.trim() ? (
+              <p key={p.id} className="mt-1.5 border-l-2 pl-3 text-[15px] italic text-[#f1ece2]" style={{ borderColor: p.color }}>
+                <span className="mr-1.5 not-italic text-[12px] uppercase tracking-[0.12em]" style={{ color: p.color }}>{notes[d]?.l?.[i] ?? p.who}</span>{notes[d]?.[p.id]}
+              </p>
+            ) : null)}
+          </div>
+        ))}
+      </div>
+      <p className="mt-4 text-xs text-[#a79f90]">Kept on this phone only. Not even I see it.</p>
+    </details>
   );
 }
