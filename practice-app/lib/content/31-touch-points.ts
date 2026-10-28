@@ -76,7 +76,6 @@ export const thirtyOneTouchPoints: PracticeCollection = {
       imageSide: "left",
       body: [
         { kind: "audio", src: "/31-touch-points/audio/opener.m4a", label: "Listen: from me, 45 seconds" },
-        {"kind": "p", "text": "That's the whole point.", "emphasis": "bold"},
         {"kind": "p", "text": "We make this playful all the time. We'll be walking to the gym and all of a sudden I say, “You may,” and offer him my neck."},
         {"kind": "p", "text": "He goes, “Oh man.”", "emphasis": "accent"},
         {"kind": "p", "text": "He doesn't always want to. When we do, even for thirty seconds, it's connection."},
@@ -92,74 +91,43 @@ export const thirtyOneTouchPoints: PracticeCollection = {
       order: 5,
       title: "Day 1. The Menu",
       image: "/31-touch-points/juliette-and-alex.jpg",
-      eyebrow: "Ten minutes today, and a date booked for this week",
+      eyebrow: "Three minutes today, and a date booked for this week",
       kind: "ritual",
       imageSide: "right",
       body: [
+        // 28 Oct, Juliette: "lighten day 1 so it is not immediately 10 minutes... playful but also impactful".
+        // Was ~670 words + a 10-minute list (backup 31-touch-points.ts.bak-day1-long). Her voice note covers the date only.
         { kind: "audio", src: "/31-touch-points/audio/day-1.m4a", label: "Listen first: 40 seconds" },
         { kind: "p", text: "The month opens with a date. Not with a hand, and not with breathing.", emphasis: "bold" },
-        { kind: "p", text: "Nobody here needs more quality time. You have had years of being in the same room." },
         { kind: "p", text: "What you are doing today is collecting a story.", emphasis: "bold" },
-        {
-          kind: "why",
-          lines: [
-            { text: "Why a silly afternoon counts as a touch point", emphasis: "bold" },
-            { text: "Do enough small ridiculous things together and you build up a stock of them." },
-            { text: "Then, years later, one of you says remember when we randomly did that, and the other one is already laughing before the sentence finishes.", emphasis: "bold" },
-            { text: "That is a touch point. It reaches into the body and lands, and nobody had to touch anybody to make it.", emphasis: "accent" },
-          ],
-        },
-        { kind: "p", text: "A real one needs forty five minutes to an hour and a half, so the date itself is not today. Today you pick it, you put it in the diary, and then you do the ten minute thing at the bottom of this page." },
         {
           kind: "step",
           label: "The set-up",
           lines: [
-            { text: "A morning, or the middle of a day. By the evening you have both got nothing left, and then you blame each other for the nothing." },
-            { text: "Phones off and away. Not face down on the table." },
-            { text: "Get ready separately, the way you would for anybody else. That part counts more than people think." },
+            { text: "A morning, or the middle of a day. Phones off and away. Get ready separately, the way you would for anybody else." },
           ],
         },
         { kind: "quote", text: "One date a week. Three to choose from. Pick one." },
         { kind: "datePick", key: "31tp-date-one", label: "Your date this week. Week one. Tap the one you pick", options: [{"title": "Make each other a playlist. Ten songs each", "text": "Then sit and listen to the whole of theirs, or pick one song out of it and only play that."}, {"title": "The dance", "text": "One of you picks a song and makes up a little dance to it. The other one has to learn it and follow. Somewhere between the Macarena and a disaster."}, {"title": "Start a puzzle, and finish it", "text": "Actually finish it. That is the date."}] },
-        { kind: "p", text: "Three more arrive at the start of next week, and the week after that. You are not meant to do them all." },
-        { kind: "quote", text: "And here is what you actually do today, in ten minutes" },
-        { kind: "p", text: "Booking something is not doing something. So before you close this, you are both writing a list.", emphasis: "bold" },
+        { kind: "quote", text: "What you actually do today, in three minutes" },
         {
           kind: "numberedSteps",
           steps: [
-            { heading: "Set a timer for ten minutes", text: "Go to separate rooms, or just turn away from each other. Nobody reads anybody's list until the timer goes." },
-            { heading: "Write down ten to twenty things you loved about them when you first got together", text: "Not what you appreciate now. What you loved then. The way they said your name. What they wore. Something they did that you have never told them you noticed." },
-            { heading: "Then read them out loud to each other", text: "One at a time, taking turns. The listener says nothing at all until their partner has finished the whole list." },
-            { heading: "And hold the look for a second afterwards", text: "That is all. Do not discuss it, do not rank them, do not explain any of them." },
+            { heading: "Set a timer for three minutes", text: "Turn away from each other. Nobody reads anybody's list until the timer goes." },
+            { heading: "Write down three things you loved about them when you first got together", text: "What you loved then. The way they said your name. What they wore. Something they did that you have never told them you noticed." },
+            { heading: "Read them out loud to each other", text: "One at a time, taking turns. The listener says nothing at all until their partner has finished." },
+            { heading: "Hold the look for a second afterwards", text: "That is all. Do not discuss it, do not rank them, do not explain any of them." },
           ],
         },
-        { kind: "timer", minutes: [10], label: "Your ten minutes" },
-        { kind: "journal", key: "31tp-day1-list", label: "Your list, if you want to keep it", placeholder: "The way you said my name..." },
+        { kind: "timer", minutes: [3], label: "Your three minutes" },
+        { kind: "journal", key: "31tp-day1-list", label: "Your three, if you want to keep them", placeholder: "The way you said my name..." },
         {
           kind: "notice",
           lines: [
-            { text: "Ten minutes is deliberately not enough time to be careful.", emphasis: "bold" },
-            { text: "A timer makes you write fast, and fast is where the real ones are. The list you would produce over an afternoon would be a much better list and a much less true one." },
+            { text: "Three minutes is deliberately not enough time to be careful.", emphasis: "bold" },
+            { text: "Fast is where the true ones are." },
           ],
         },
-        {
-          kind: "why",
-          lines: [
-            { text: "This is the oldest thing I run with couples, and it is first for a reason.", emphasis: "bold" },
-            { text: "Nothing in this month works on two people who cannot remember why they are standing next to each other. Ten minutes of remembering does more for the next thirty days than any instruction I could give you on day one.", emphasis: "accent" },
-            { text: "And most people hear at least one thing tonight that they have been married to for years and never once been told." },
-          ],
-        },
-        {
-          kind: "notice",
-          lines: [
-            { text: "Every one of those is a first.", emphasis: "bold" },
-            { text: "That is the whole reason it works. Neither of you has done it before, so there is nothing to perform and no earlier version to live up to." },
-          ],
-        },
-        // This week's misunderstanding (27 Oct, Juliette: "one misunderstanding a week"). Her Between Touches doc.
-        { kind: "quote", text: "This week's misunderstanding" },
-        { kind: "translateCards", prompt: "Tap it. Said, heard, meant, and what to do instead.", cards: [{"label": "She Says", "says": "You work all the time.", "layers": [{"label": "What he hears", "text": "She wants to control me."}, {"label": "What she actually means", "text": "I feel alone and left out."}, {"label": "Try instead", "text": "Place a hand on your heart. “I know I disappear into work. Tell me what presence would feel like this week.”"}]}] },
       ],
     },
     {
@@ -287,7 +255,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
           lines: [
             { text: "This sounds like an odd instruction and it is the reason the whole thing works." },
             { text: "Nobody behind you. No tiger waiting in the room.", emphasis: "bold" },
-            { text: "I often tell people to do this in the car, or sitting with their back against a wall, so the body knows nothing can come at it from behind. No one can jump out and hurt you." },
+            { text: "I often tell people to do this in the car, or with their back against a wall, so the body knows nothing can come at it from behind. No one can jump out and hurt you." },
             { text: "Your body will not let go while part of it is still watching the door.", emphasis: "accent" },
           ],
         },
@@ -343,6 +311,8 @@ export const thirtyOneTouchPoints: PracticeCollection = {
       kind: "ritual",
       imageSide: "left",
       body: [
+        // Quick warm-up (28 Oct, Juliette: "they are supposed to be fun"). Moved from the end of a heavy day. Her Between Touches doc.
+        { kind: "translateCards", prompt: "You may recognise yourself in this one, or how you used to be. Tap it.", cards: [{"label": "She Says", "says": "You work all the time.", "layers": [{"label": "What he hears", "text": "She wants to control me."}, {"label": "What she actually means", "text": "I feel alone and left out."}, {"label": "Try instead", "text": "Place a hand on your heart. “I know I disappear into work. Tell me what presence would feel like this week.”"}]}] },
         { kind: "audio", src: "/31-touch-points/audio/day-4-kitchen-spin.m4a", label: "Listen: 20 seconds" },
         {"kind": "p", "text": "Two seconds. No planning.", "emphasis": "bold"},
         {"kind": "p", "text": "Come up behind them while they're doing something ordinary. Washing up, making coffee, reading the post. Take their waist. Turn them round to face you."},
@@ -381,7 +351,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
             { heading: "Stop before your hand touches the door", text: "Palm flat on your own chest, standing outside." },
             { heading: "Three slow breaths", text: "The out-breath longer than the in-breath, every time. On the third, let your shoulders drop." },
             { heading: "Walk in, and look at them before you say anything", text: "Not hello. Not what is for dinner. Look first, and read what you find. Have they just come off a full day with children, or work? Is their body turned away, occupied, somewhere else?" },
-            { heading: "Then speak, or do not", text: "Waiting for the right moment is not passive. It is one of the most respectful things you can do." },
+            { heading: "Then speak, or do not", text: "Waiting for the right moment is one of the most respectful things you can do." },
           ],
         },
         { kind: "quote", text: "And then the other half, which is the one couples lose first" },
@@ -543,9 +513,6 @@ export const thirtyOneTouchPoints: PracticeCollection = {
         {"kind": "why", "lines": [{"text": "Why it works", "emphasis": "bold"}, {"text": "Most of us learned that a kiss on the neck is the start of something else, so the body braces and starts doing the maths."}, {"text": "One kiss that goes nowhere sexual tells the body it can say yes without signing up for anything else. Do that enough times and the bracing stops.", "emphasis": "accent"}]},
         {"kind": "notice", "lines": [{"text": "If it doesn't land", "emphasis": "bold"}, {"text": "“Not right now” is a real answer. Say thank you and carry on with your day, with no follow-up question. Ask again tomorrow. A no that's allowed is what makes the yes worth having."}]},
         {"kind": "p", "text": "Later today or tomorrow, swap. The one who was kissed gets to ask: may I?", "emphasis": "accent"},
-        // This week's misunderstanding (27 Oct, Juliette: "one misunderstanding a week"). Her Between Touches doc.
-        { kind: "quote", text: "This week's misunderstanding" },
-        { kind: "translateCards", prompt: "Tap it. Said, heard, meant, and what to do instead.", cards: [{"label": "She Says", "says": "I'm fine.", "layers": [{"label": "What he hears", "text": "She's fine. Move on."}, {"label": "What she actually means", "text": "I don't feel safe enough to show you I'm hurt."}, {"label": "Try instead", "text": "Pause. Step closer. Ask softly: “If ‘fine’ wasn't a word, what would you say?”"}]}] },
       ],
     },
     {
@@ -649,6 +616,8 @@ export const thirtyOneTouchPoints: PracticeCollection = {
       kind: "ritual",
       imageSide: "left",
       body: [
+        // Quick warm-up (28 Oct, Juliette: "they are supposed to be fun"). Moved from the end of a heavy day. Her Between Touches doc.
+        { kind: "translateCards", prompt: "You may recognise yourself in this one, or how you used to be. Tap it.", cards: [{"label": "She Says", "says": "I'm fine.", "layers": [{"label": "What he hears", "text": "She's fine. Move on."}, {"label": "What she actually means", "text": "I don't feel safe enough to show you I'm hurt."}, {"label": "Try instead", "text": "Pause. Step closer. Ask softly: “If ‘fine’ wasn't a word, what would you say?”"}]}] },
         { kind: "p", text: "Find a silk scarf, or anything soft. Bare arm, wrist, or collarbone. Yours or theirs." },
         {
           kind: "driveAudio",
@@ -898,9 +867,6 @@ export const thirtyOneTouchPoints: PracticeCollection = {
             { text: "When you come out of it, notice what has arrived in your body. Those are the connection chemicals, and you just made them out of nothing but time.", emphasis: "accent" },
           ],
         },
-        // This week's misunderstanding (27 Oct, Juliette: "one misunderstanding a week"). Her Between Touches doc.
-        { kind: "quote", text: "This week's misunderstanding" },
-        { kind: "translateCards", prompt: "Tap it. Said, heard, meant, and what to do instead.", cards: [{"label": "She Says", "says": "You don't listen.", "layers": [{"label": "What he hears", "text": "I'm failing again."}, {"label": "What she actually means", "text": "I feel invisible."}, {"label": "Try instead", "text": "Turn towards her, slow your breath, and say: “Tell me what you need me to hear right now.”"}]}] },
       ],
     },
     {
@@ -914,9 +880,11 @@ export const thirtyOneTouchPoints: PracticeCollection = {
       kind: "ritual",
       imageSide: "left",
       body: [
+        // Quick warm-up (28 Oct, Juliette: "they are supposed to be fun"). Moved from the end of a heavy day. Her Between Touches doc.
+        { kind: "translateCards", prompt: "You may recognise yourself in this one, or how you used to be. Tap it.", cards: [{"label": "She Says", "says": "You don't listen.", "layers": [{"label": "What he hears", "text": "I'm failing again."}, {"label": "What she actually means", "text": "I feel invisible."}, {"label": "Try instead", "text": "Turn towards her, slow your breath, and say: “Tell me what you need me to hear right now.”"}]}] },
         { kind: "audio", src: "/31-touch-points/audio/day-16-small-bid.m4a", label: "Listen first: 4 minutes" },
         {"kind": "p", "text": "Today isn't one practice. It's lots of tiny ones, all day.", "emphasis": "bold"},
-        {"kind": "p", "text": "A small bid is a reach with nowhere to go. It isn't asking for anything. Try at least three before tonight."},
+        {"kind": "p", "text": "A small bid is a reach with nowhere to go. It isn't asking for anything. Try at least three before the day is out."},
         {"kind": "step", "label": "The five, and how to stay in them", "highlight": true, "lines": [{"text": "A hand on the shoulder as you pass behind them.", "emphasis": "bold"}, {"text": "Leave it there for a breath. One, two, three. Then walk off."}, {"text": "A palm flat between the shoulder blades.", "emphasis": "bold"}, {"text": "While they're washing up, or cooking. Still. No rubbing, no pat. Notice if they lean back into you."}, {"text": "Fingers brushing theirs.", "emphasis": "bold"}, {"text": "When you hand them a cup of tea, the salt, the post."}, {"text": "Both hands on the small of their back, or their hips.", "emphasis": "bold"}, {"text": "Stay for a moment. A kiss on the shoulder, or whisper “I love you”, or whatever your endearment is."}, {"text": "A squeeze of the knee under the table.", "emphasis": "bold"}, {"text": "Look at them as you do it. Leave your hand there for a few breaths. Even better with other people there."}]},
         {"kind": "why", "lines": [{"text": "Why small bids matter more than big gestures", "emphasis": "bold"}, {"text": "Relationships rarely end in the big argument. They end in the pass in the kitchen that stopped happening."}, {"text": "A bid with no destination is the cheapest repair there is, and you can make four of them before breakfast.", "emphasis": "accent"}]},
         {"kind": "step", "label": "The part almost nobody does", "lines": [{"text": "If one doesn't land, reach again, gently, within the hour.", "emphasis": "bold"}, {"text": "It doesn't mean they didn't want it. It might not have been the right moment."}, {"text": "Within the hour matters. By tomorrow it has turned into a story about what the not-receiving meant."}]},
@@ -1112,9 +1080,6 @@ export const thirtyOneTouchPoints: PracticeCollection = {
             { text: "Where did you want to speed up, and what happened in you when you did not?", emphasis: "accent" },
           ],
         },
-        // This week's misunderstanding (27 Oct, Juliette: "one misunderstanding a week"). Her Between Touches doc.
-        { kind: "quote", text: "This week's misunderstanding" },
-        { kind: "translateCards", prompt: "Tap it. Said, heard, meant, and what to do instead.", cards: [{"label": "She Says", "says": "You always want sex.", "layers": [{"label": "What he hears", "text": "She's rejecting me."}, {"label": "What she actually means", "text": "I want closeness, but I need slowness first."}, {"label": "Try instead", "text": "Rest your palm on her belly. Breathe together. Ask: “Tell me what kind of touch would feel connecting right now.”"}]}] },
       ],
     },
     {
@@ -1176,6 +1141,8 @@ export const thirtyOneTouchPoints: PracticeCollection = {
       kind: "ritual",
       imageSide: "left",
       body: [
+        // Quick warm-up (28 Oct, Juliette: "they are supposed to be fun"). Moved from the end of a heavy day. Her Between Touches doc.
+        { kind: "translateCards", prompt: "You may recognise yourself in this one, or how you used to be. Tap it.", cards: [{"label": "She Says", "says": "You always want sex.", "layers": [{"label": "What he hears", "text": "She's rejecting me."}, {"label": "What she actually means", "text": "I want closeness, but I need slowness first."}, {"label": "Try instead", "text": "Rest your palm on her belly. Breathe together. Ask: “Tell me what kind of touch would feel connecting right now.”"}]}] },
         { kind: "p", text: "This is the one with no contact in it at all, and it is the one that surprises people." },
         {
           kind: "driveAudio",
@@ -1221,7 +1188,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
         },
         { kind: "p", text: "Three minutes. One gives, one receives. Decide who is doing what." },
         { kind: "p", text: "Receiver, your job today is the hard one. You say out loud what you want, while it is happening.", emphasis: "bold" },
-        { kind: "p", text: "Ask for the touch on one body part. An arm, a leg, your back. And be specific." },
+        { kind: "p", text: "Ask for the touch on one body part. An arm, a leg, your back. Be specific." },
         { kind: "big", text: "“I would like your hands on my shoulders, pushed down, with more grounding.”" },
         {
           kind: "step",
@@ -1336,9 +1303,6 @@ export const thirtyOneTouchPoints: PracticeCollection = {
         {"kind": "image", "src": "/31-touch-points/cards/day-27.png", "alt": "Tell me what you are still carrying in today."},
         {"kind": "p", "text": "Ask it last, slowly. Whoever asked says only: thank you.", "emphasis": "bold"},
         {"kind": "link", "text": "This is how my cards work. See the full decks", "href": "https://feelfullyyou.com/my-cards"},
-        // This week's misunderstanding (27 Oct, Juliette: "one misunderstanding a week"). Her Between Touches doc.
-        { kind: "quote", text: "This week's misunderstanding" },
-        { kind: "translateCards", prompt: "Tap it. Said, heard, meant, and what to do instead.", cards: [{"label": "She Says", "says": "Nothing's wrong.", "layers": [{"label": "What he hears", "text": "Everything's okay."}, {"label": "What she actually means", "text": "Something's wrong, but I don't trust it's safe to say."}, {"label": "Try instead", "text": "Sit nearby without forcing words. Let silence soften. Then ask: “Tell me what feels off.”"}]}] },
       ],
     },
     {
@@ -1396,7 +1360,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
           kind: "why",
           lines: [
             { text: "A back is the one part of us nobody asks to see, and it is where being braced lives.", emphasis: "bold" },
-            { text: "Letting somebody take your weight is trust with no words in it at all. And the two questions underneath this one, whether you can be held and whether you believe you can hold them, are the whole of a long relationship." },
+            { text: "Letting somebody take your weight is trust with no words in it at all. The two questions underneath this one, whether you can be held and whether you believe you can hold them, are the whole of a long relationship." },
           ],
         },
         { kind: "timer", minutes: [5], label: "Five minutes. The bell is the one in my recording." },
@@ -1416,6 +1380,8 @@ export const thirtyOneTouchPoints: PracticeCollection = {
       // 10 minutes and a say-yes-out-loud mechanic. Neither is in the
       // recording. Do not reinstate them without listening first.
       body: [
+        // Quick warm-up (28 Oct, Juliette: "they are supposed to be fun"). Moved from the end of a heavy day. Her Between Touches doc.
+        { kind: "translateCards", prompt: "You may recognise yourself in this one, or how you used to be. Tap it.", cards: [{"label": "She Says", "says": "Nothing's wrong.", "layers": [{"label": "What he hears", "text": "Everything's okay."}, {"label": "What she actually means", "text": "Something's wrong, but I don't trust it's safe to say."}, {"label": "Try instead", "text": "Sit nearby without forcing words. Let silence soften. Then ask: “Tell me what feels off.”"}]}] },
         { kind: "p", text: "Open one arm and rest the elbow on something. A sofa arm, the back of a chair, a bed, a desk, a table." },
         {
           kind: "driveAudio",
