@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useEffect, useState } from "react";
 import { FEELS } from "@/components/Interactive";
 import { count } from "@/lib/count";
@@ -87,14 +86,15 @@ export default function TasteThirtyOneTouchPoints() {
         </p>
 
         <div className="relative mt-5 flex justify-center">
-          <Image
-            src="/31-touch-points/itv-raspberry-feed.jpg"
-            alt="Juliette feeding Ferne McCann a raspberry on ITV"
-            width={1000}
-            height={644}
-            priority
-            sizes="(min-width: 768px) 672px, 100vw"
-            className="block h-auto max-h-[70vh] w-auto max-w-full rounded-3xl border-[1.5px] border-[rgba(221,201,142,0.45)]"
+          {/* 28 Oct: 15 seconds of the ITV moment, with sound, tap to play (Juliette's call) */}
+          <video
+            src="/31-touch-points/taster-itv-feeding.mp4"
+            poster="/31-touch-points/taster-itv-feeding-poster.jpg"
+            controls
+            playsInline
+            preload="metadata"
+            aria-label="Juliette feeding Ferne McCann a raspberry on ITV"
+            className="block h-auto w-full max-w-full rounded-3xl border-[1.5px] border-[rgba(221,201,142,0.45)] bg-black"
           />
         </div>
 
