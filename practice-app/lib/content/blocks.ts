@@ -88,7 +88,7 @@ export type ContentBlock =
   // flipping, ticking, copying, choosing or writing. Saved on the phone.
   | { kind: "flipCards"; key: string; prompt?: string; markLabel?: string; summaryLabel?: string; cards: { front: string; back: string; sub?: string; subLabel?: string }[] }
   | { kind: "tapCheck"; key: string; label: string; items: string[]; done?: string }
-  | { kind: "copyLines"; label: string; lines: string[] }
+  | { kind: "copyLines"; label: string; lines: string[]; tone?: "green" | "ochre" | "blue" | "cream" }
   | { kind: "choice"; key: string; label: string; options: { label: string; lines: string[] }[] }
   | { kind: "pickOne"; key: string; label: string; items: string[]; chosenLabel: string }
   | { kind: "journal"; key: string; label: string; placeholder?: string }

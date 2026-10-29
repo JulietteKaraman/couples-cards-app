@@ -463,7 +463,7 @@ export function Blocks({ blocks, dark = false }: { blocks: ContentBlock[]; dark?
           case "tapCheck":
             return <TapCheck key={i} k={b.key} label={b.label} items={b.items} done={b.done} />;
           case "copyLines":
-            return <CopyLines key={i} label={b.label} lines={b.lines} />;
+            return <CopyLines key={i} label={b.label} lines={b.lines} tone={b.tone} />;
           case "choice":
             return <Choice key={i} k={b.key} label={b.label} options={b.options} />;
           case "pickOne":

@@ -6,6 +6,8 @@ import { useParams, notFound } from "next/navigation";
 import { communicationRebootKit } from "@/lib/content/communication-reboot-kit";
 import { Blocks } from "@/components/Blocks";
 import { CollectionGate } from "@/components/auth/CollectionGate";
+import { useEffect } from "react";
+import { addLocalDone } from "../progressLocal";
 
 export default function RebootKitEntry() {
   return (
@@ -22,6 +24,9 @@ function RebootKitEntryContent() {
   const entries = communicationRebootKit.entries;
   const index = entries.findIndex((e) => e.slug === slug);
   const entry = entries[index];
+
+  // Ticks this piece off on the hub (29 Oct 2026), on this phone only.
+  useEffect(() => { if (entry) addLocalDone(entry.slug); }, [entry]);
 
   if (!entry) notFound();
 

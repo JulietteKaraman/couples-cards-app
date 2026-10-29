@@ -43,6 +43,7 @@ export const PRICE_ID_TO_DECK_TYPE: Record<string, string> = {
   price_1TzO4DCCw18geY15u7X9j7iw: "unspoken-distance", // The Unspoken Distance, £77 (old price, real buyers 31 Jul-1 Aug 2026)
   price_1TnxAqCCw18geY153w22a2Ye: "unspoken-distance", // The Unspoken Distance, £97 (current, back from £77 1 Aug 2026 — now includes free Couples Cards)
   price_1TnwwmCCw18geY15egD5h7Fr: "communication-reboot-kit", // Communication Reboot Kit, £37 (live Payment Link, communication-reboot-kit.html)
+  price_1TqqcmCCw18geY15FjLGqM2q: "communication-reboot-kit", // Communication Reboot Kit, £17 (When She Goes Quiet offer). Was missing until 29 Oct 2026, so £17 buyers could not get in.
   price_1U2uFbCCw18geY156WA0jb05: "members-app", // Members App, £77/month recurring — created 10 Aug 2026, spec R10
   // The Sacred No, £17 (sacred-no-in-app spec R13). Same line as
   // PRACTICE_APP_DECK_TYPES in the site webhook. The live payment link,

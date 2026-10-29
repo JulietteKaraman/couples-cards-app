@@ -127,19 +127,36 @@ export function TapCheck({ k, label, items, done }: { k: string; label: string; 
 }
 
 /* Lines with a copy button each. */
-export function CopyLines({ label, lines }: { label: string; lines: string[] }) {
+// tone (29 Oct 2026, Juliette: "too much of the same colour so we can't see
+// what is what"): each group of messages can wear one of her four colours.
+// No tone = the original dark card, so every existing page looks the same.
+const COPY_TONES: Record<string, { box: string; text: string; btn: string; label: string }> = {
+  green: { box: "border-[#DDC98E]/40 bg-[#0D3535]", text: "text-[#f1ece2]", btn: "border-[#DDC98E] text-[#DDC98E]", label: "#DDC98E" },
+  ochre: { box: "border-transparent bg-[#A88538]", text: "text-[#1a1814]", btn: "border-[#1a1814] text-[#1a1814]", label: "#DDC98E" },
+  blue: { box: "border-transparent bg-[#D8DFE1]", text: "text-[#0D3535]", btn: "border-[#0D3535] text-[#0D3535]", label: "#D8DFE1" },
+  cream: { box: "border-transparent bg-[#fefcfa]", text: "text-[#1a1814]", btn: "border-[#A88538] text-[#7a5d1f]", label: "#fefcfa" },
+};
+
+export function CopyLines({ label, lines, tone }: { label: string; lines: string[]; tone?: string }) {
   const [copied, setCopied] = useState(-1);
+  const t = tone ? COPY_TONES[tone] : undefined;
   return (
     <div className="my-8">
-      <Label>{label}</Label>
+      {t ? (
+        <p className="mb-3 flex items-center gap-2 text-[12px] font-semibold uppercase tracking-[0.2em]" style={{ color: t.label }}>
+          <span className="inline-block h-3 w-3 rounded-full" style={{ background: t.label }} />{label}
+        </p>
+      ) : (
+        <Label>{label}</Label>
+      )}
       <div className="grid gap-2.5">
-        {lines.map((t, i) => (
-          <div key={i} className="rounded-[14px] border border-[#DDC98E]/25 bg-white/[0.04] p-4">
-            <p className="font-display text-[18px] italic leading-snug text-[#f1ece2]">{t}</p>
+        {lines.map((line, i) => (
+          <div key={i} className={`rounded-[14px] border p-4 ${t ? t.box : "border-[#DDC98E]/25 bg-white/[0.04]"}`}>
+            <p className={`font-display text-[18px] italic leading-snug ${t ? t.text : "text-[#f1ece2]"}`}>{line}</p>
             <button
               type="button"
-              onClick={() => { try { navigator.clipboard.writeText(t.replace(/^[“"]|[”"]$/g, "")); } catch {} setCopied(i); setTimeout(() => setCopied(-1), 1600); }}
-              className="mt-3 rounded-full border border-[#DDC98E] px-4 py-1.5 text-sm font-medium text-[#DDC98E]"
+              onClick={() => { try { navigator.clipboard.writeText(line.replace(/^[“"]|[”"]$/g, "")); } catch {} setCopied(i); setTimeout(() => setCopied(-1), 1600); }}
+              className={`mt-3 rounded-full border px-4 py-1.5 text-sm font-medium ${t ? t.btn : "border-[#DDC98E] text-[#DDC98E]"}`}
             >
               {copied === i ? "Copied ✓" : "Copy"}
             </button>

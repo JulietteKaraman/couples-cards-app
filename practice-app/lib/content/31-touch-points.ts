@@ -87,6 +87,78 @@ export const thirtyOneTouchPoints: PracticeCollection = {
       ],
     },
     {
+      // ADDED 29 Oct 2026: the one piece Juliette kept from the retired
+      // Communication Reboot Kit ("the only thing which is good is the soft
+      // conversation kit, how to ask them in"). Rebuilt the same day to look
+      // like the newer interactive pages ("needs to look much better"):
+      // messages with a Copy button, a tick list, her own words to write,
+      // a real photo of her and Alex. Open from the start, not a day.
+      slug: "how-to-invite-them-in",
+      order: 1,
+      title: "How to invite them in",
+      eyebrow: "Bonus · before you start",
+      kind: "essay",
+      image: "/31-touch-points/ja-selfie-leaves.jpg",
+      imageAlt: "Juliette and Alex, a selfie under the leaves, both smiling",
+      imageFocus: "center 30%",
+      imageSide: "left",
+      body: [
+        { kind: "big", text: "The hardest part is often just the asking." },
+        { kind: "p", text: "For when you want to invite your partner in, without pressure, performance, or a \"talk.\"" },
+        { kind: "choice", key: "31tp-invite-vibe", label: "First, how are things between you right now? Tap one.", options: [
+          { label: "Quiet. We've drifted.", lines: ["Go for the blue ones, Tender and grounded.", "Slow and warm. No jokes yet."] },
+          { label: "Fine, just busy.", lines: ["Go for the green ones, Soft and curious.", "Light and easy. Make it sound small, because it is."] },
+          { label: "We still laugh.", lines: ["Go for the ochre ones, Cheeky and playful.", "Make it a game. Dare them."] },
+          { label: "I'd rather say it out loud.", lines: ["Go for the cream ones, Face to face.", "Look at them, smile, ask."] },
+        ] },
+        { kind: "p", text: "Pick the message that sounds most like you, tap Copy, and send it." },
+        { kind: "copyLines", label: "Soft and curious", tone: "green", lines: [
+          "Hi love, I found us something. A month of little touch moments, a few minutes a day. Would you try one with me? No pressure, just a chance to feel closer.",
+          "I found something all about small, easy moments of touch and it made me think about us. Want to try one together?",
+          "Can we have a little \"us\" time this week? One touch point, a few minutes. I think it could be warm and easy.",
+        ] },
+        { kind: "copyLines", label: "Cheeky and playful", tone: "ochre", lines: [
+          "Guess what, I got us a month of mini games. Thirty-one of them. Want to play today's and see what happens?",
+          "I picked up something fun. Think curiosity, not awkwardness. Fancy trying one with me?",
+          "You up for a connection mini-challenge? A few minutes a day. I bet we'll laugh.",
+        ] },
+        { kind: "copyLines", label: "Tender and grounded", tone: "blue", lines: [
+          "I want us to feel close again. I found something gentle, a few minutes a day. Would you be open to trying it with me?",
+          "I miss us. I found something that eases us back into touch, one small moment at a time. Shall we try one?",
+          "There's so much I appreciate about us. I think this could help us feel even more of it. Can we try it together, one day at a time?",
+        ] },
+        { kind: "copyLines", label: "Face to face", tone: "cream", lines: [
+          "Would you try one of these with me? It's a few minutes, no pressure, just a gentle way to be together.",
+          "I found something that makes touch easy again, in a light way. Want to give it a go when we have a moment?",
+          "Can we do today's one together? I'd love to feel close to you, in a small way.",
+        ] },
+        { kind: "flipCards", key: "31tp-invite-replies", prompt: "What if they say... Tap a card to see what to say back.", cards: [
+          { front: "\"What's this about?\"", back: "\"Nothing's wrong. I just want more of us.\"" },
+          { front: "\"I'm too tired.\"", back: "\"Okay. Tomorrow? It takes three minutes.\"" },
+          { front: "\"Did a therapist tell you to do this?\"", back: "\"Ha. No. It's more like a game.\"" },
+          { front: "\"No.\"", back: "Say okay, and mean it. Ask again another day. Being able to hear no is part of it." },
+        ] },
+        { kind: "draft", key: "31tp-invite-own", label: "Or write it in your own words", placeholder: "Hi love..." },
+        { kind: "tapCheck", key: "31tp-invite-ready", label: "Before you send it. Tap the ones that are true.", items: [
+          "I've read today's touch point myself, so I feel confident.",
+          "I'm calm. A breath or Touch Base® helps.",
+          "My tone is open and curious, not critical.",
+          "The timing is right, nobody's rushed or stressed.",
+        ], done: "You're ready. Send it." },
+        { kind: "notice", lines: [{ text: "Keep it light. Let them feel this is something for the two of you, never a fix." }] },
+        {
+          kind: "why",
+          lines: [
+            { text: "Reminders for yourself.", emphasis: "bold" },
+            { text: "You're allowed to invite, never demand." },
+            { text: "One real moment of openness can shift everything.", emphasis: "accent" },
+          ],
+        },
+        { kind: "quote", text: "Just the invitation itself is intimacy." },
+        { kind: "link", text: "Day 1 is waiting", href: "/practice/31-touch-points/day-1-the-menu" },
+      ],
+    },
+    {
       slug: "day-1-the-menu",
       order: 5,
       title: "Day 1. The Menu",
