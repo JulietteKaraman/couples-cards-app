@@ -160,7 +160,7 @@ export default function VoicePlayer({
           type="button"
           onClick={nextRate}
           aria-label="Listening speed"
-          className={`rounded-full border px-3 py-1 text-xs font-medium ${
+          className={`inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full border px-3 py-1 text-xs font-medium ${
             dark ? "border-[rgba(221,201,142,0.5)] text-[#DDC98E]" : "border-ffy-gold/60 text-ffy-gold-deep"
           }`}
         >

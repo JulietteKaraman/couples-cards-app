@@ -10,6 +10,7 @@ import { betweenTouches } from "@/lib/content/between-touches";
 import { communicationRebootKit } from "@/lib/content/communication-reboot-kit";
 import { theSacredNo } from "@/lib/content/the-sacred-no";
 import { oneTouch } from "@/lib/content/one-touch";
+import { touchMap } from "@/lib/content/touch-map";
 import { dayOf } from "@/lib/content/31-touch-points-drip";
 import { useAuth } from "@/components/providers/AuthProvider";
 import { getCompletedSlugs } from "@/lib/entitlements/progress";
@@ -35,7 +36,7 @@ function isFreeCollection(slug: string): boolean {
 
 // Paid collections, in display order. When She Goes Quiet is free and sits
 // in Start free. Between Touches is back in Start free (27 Oct 2026, her yes).
-const PAID_COLLECTIONS = [thirtyOneTouchPoints, oneTouch, theUnspokenDistance, communicationRebootKit, theSacredNo];
+const PAID_COLLECTIONS = [thirtyOneTouchPoints, oneTouch, touchMap, theUnspokenDistance, communicationRebootKit, theSacredNo];
 
 // 31 Days Closer lives in the cards app. Pinned under 31 Touch Points
 // (Juliette, 30 Sep 2026): a month of touch and a month of conversation.

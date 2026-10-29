@@ -16,6 +16,10 @@ export const COLLECTION_DECK_TYPES: Record<string, string> = {
   // How to Feel Like a Woman, the course women, 29 Oct 2026. Granted by hand
   // from /admin for now (specs/how-to-feel-like-a-woman-app.md R1).
   "how-to-feel-like-a-woman": "how-to-feel-like-a-woman",
+  // The Touch Map, £197, version 1 (29 Oct 2026, specs/touch-map.md in APP
+  // builds). Add its live Stripe price id to PRICE_ID_TO_DECK_TYPE once the
+  // payment link exists.
+  "touch-map": "touch-map",
 };
 
 // Maps a real Stripe price ID to the deck_type it grants, so resolve-purchase
@@ -102,6 +106,7 @@ export const PURCHASE_URLS: Record<string, string> = {
   "the-unspoken-distance": "https://feelfullyyou.com/the-unspoken-distance",
   "communication-reboot-kit": "https://feelfullyyou.com/communication-reboot-kit",
   "one-touch": "https://feelfullyyou.com/one-touch",
+  "touch-map": "/taste/touch-map",
   // This page doesn't exist yet — same as every other product here, the
   // checkout lives on a real marketing sales page, not inside the app.
   // Stripe side (Product prod_V30FzZV1Wv39XG, Price price_1U2uFbCCw18geY156WA0jb05,

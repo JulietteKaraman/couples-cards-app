@@ -5,7 +5,7 @@ import { supabaseAdmin } from "@/lib/supabase/admin";
 // their phone; we only count what they DO. Stores the event, a day number
 // and a feeling colour. Never a user id, email, IP address or any text they
 // typed. Fire-and-forget: a failure here never affects the page.
-const EVENTS = new Set(["taster_open", "taster_done", "taster_feel", "taster_buy_click", "day_done", "day_feel", "htflaw_solo", "htflaw_lab"]);
+const EVENTS = new Set(["taster_open", "taster_done", "taster_feel", "taster_buy_click", "day_done", "day_feel", "htflaw_solo", "htflaw_lab", "tm_taster_open", "tm_taster_done", "tm_taster_buy_click", "tm_day_done", "tm_vip_click"]);
 const FEELS = new Set(["laughed", "close", "awkward", "flat", "little", "bit", "range"]);
 
 export async function POST(req: Request) {

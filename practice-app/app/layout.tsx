@@ -17,7 +17,7 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: "The Feel Fully You App",
-  description: "The Practice — your rituals, in one place.",
+  description: "The Practice: your rituals, in one place.",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
