@@ -34,6 +34,16 @@ function isFreeCollection(slug: string): boolean {
   return FREE_DECK_TYPES.includes(COLLECTION_DECK_TYPES[slug]);
 }
 
+// Tiles show the same photo as each sales page (Juliette, 29 Oct 2026: "make sure all the tiles are the same as the sales pages").
+// The in-app hub keeps its own hero; only the tile changes.
+const TILE_IMAGE: Record<string, string> = {
+  "one-touch": "/offers/sales/one-touch.jpg",
+  "the-sacred-no": "/offers/sales/the-sacred-no.jpg",
+};
+function tileImage(c: { slug: string; heroImage: string }): string {
+  return TILE_IMAGE[c.slug] ?? c.heroImage;
+}
+
 // Paid collections, in display order. When She Goes Quiet is free and sits
 // in Start free. Between Touches is back in Start free (27 Oct 2026, her yes).
 const PAID_COLLECTIONS = [thirtyOneTouchPoints, oneTouch, touchMap, theUnspokenDistance, communicationRebootKit, theSacredNo];
@@ -45,7 +55,7 @@ const CARDS_COMPANION = {
   title: "31 Days Closer",
   subtitle:
     "The other half of the month. Thirty one conversation prompts, one a day, fifteen minutes each.",
-  heroImage: "/offers/31-days-closer-cover.jpg",
+  heroImage: "/offers/sales/31-days-closer.jpg",
   purchaseUrl: "https://feelfullyyou.com/31-days-closer",
   note: "Lives in the cards app · £17",
 };
@@ -56,7 +66,7 @@ const EXTERNAL_OFFERS = [
     slug: "repair-kit",
     title: "The Romantic Relationship Repair Kit",
     subtitle: "31 days, one prompt a day, for couples finding their way back to each other.",
-    heroImage: "/offers/repair-kit-cover.png",
+    heroImage: "/offers/sales/repair-kit.jpg",
     purchaseUrl: "https://feelfullyyou.com/romantic-relationship-repair-kit",
     note: "Delivered as a card deck · code by email",
   },
@@ -172,7 +182,8 @@ function LibraryContent() {
     ? [...ownedPaid].sort((a, b) => doneCount(b.slug) - doneCount(a.slug))[0]
     : null;
 
-  const lockedPaid = PAID_COLLECTIONS.filter((c) => !owns(c.slug) && c.slug !== thirtyOneTouchPoints.slug);
+  // The Communication Reboot Kit is retired (29 Oct 2026): owners still see it above, nobody new is offered it.
+  const lockedPaid = PAID_COLLECTIONS.filter((c) => !owns(c.slug) && c.slug !== thirtyOneTouchPoints.slug && c.slug !== communicationRebootKit.slug);
 
   return (
     <main className="min-h-screen bg-[#070707] text-ffy-cream">
@@ -303,7 +314,7 @@ function LibraryContent() {
                   href={`/practice/${c.slug}`}
                   title={c.title}
                   subtitle={c.subtitle}
-                  heroImage={c.heroImage}
+                  heroImage={tileImage(c)}
                   note={`${doneCount(c.slug)} of ${c.entries.length} done`}
                 />
               ))}
@@ -323,7 +334,8 @@ function LibraryContent() {
                   href="/practice/how-to-feel-like-a-woman"
                   title="How to Feel Like a Woman"
                   subtitle="Your cards, your practices, my voice. New things every week."
-                  heroImage="/how-to-feel-like-a-woman/juliette-boudoir.jpg"
+                  heroImage="/offers/sales/how-to-feel-like-a-woman.jpg"
+                  imageFit="contain"
                   note="Practice Lab · cards · Scrumptious Confessions"
                 />
               )}
@@ -354,10 +366,10 @@ function LibraryContent() {
             <div className="absolute inset-0 bg-gradient-to-t from-[#070707] via-[#070707]/40 to-transparent" />
           </div>
           <div className="relative -mt-14 p-5 sm:p-6">
-            <p className="text-[11px] uppercase tracking-[0.16em] text-[#DDC98E]">Free · 5 minutes</p>
+            <p className="text-[11px] uppercase tracking-[0.16em] text-[#DDC98E]">Free · two minutes</p>
             <h3 className="font-display mt-1 text-2xl font-light text-ffy-cream">The Touch Reset Quiz</h3>
             <p className="mt-1 text-sm leading-relaxed text-[rgba(254,252,250,0.78)]">
-              Where did the touch go? Being touched is not the same as feeling it. Five minutes, and you find out where the touch actually went.
+              Where did the touch go? Being touched is not the same as feeling it. Two minutes, and you find out where the touch actually went.
             </p>
             <span className="mt-4 inline-flex min-h-[44px] items-center rounded-full border border-[#DDC98E] px-5 text-sm text-ffy-cream transition group-hover:bg-[#DDC98E] group-hover:text-[#070707]">
               Take the quiz
@@ -370,7 +382,7 @@ function LibraryContent() {
             external
             title="The Sacred No Quiz"
             subtitle="Are you saying yes when you mean no? Twelve honest questions. Let your body answer first."
-            heroImage="/sacred-no/quiz.jpg"
+            heroImage="/offers/sales/sacred-no-quiz.jpg"
             note="Free"
           />
           <Tile
@@ -417,7 +429,8 @@ function LibraryContent() {
                   external
                   title="How to Feel Like a Woman"
                   subtitle="For women. Fifteen minutes a day with my voice, a card from me every week, Practice Lab with me three mornings a week."
-                  heroImage="/how-to-feel-like-a-woman/pose11-shush.jpg"
+                  heroImage="/offers/sales/how-to-feel-like-a-woman.jpg"
+                  imageFit="contain"
                   note="Women only · join any time · see what is inside"
                   onClick={() => trackInterest("how-to-feel-like-a-woman", user?.email)}
                 />
@@ -429,7 +442,7 @@ function LibraryContent() {
                   external
                   title={c.title}
                   subtitle={c.subtitle}
-                  heroImage={c.heroImage}
+                  heroImage={tileImage(c)}
                   note="Buy once, keep it · see what is inside"
                   onClick={() => trackInterest(c.slug, user?.email)}
                 />

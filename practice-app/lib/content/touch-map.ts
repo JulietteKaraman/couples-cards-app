@@ -264,7 +264,7 @@ export const touchMap = {
   slug: TM_SLUG,
   title: "The Touch Map",
   subtitle: "Learn to steer touch until it lands. One place a day, two touches, my voice in your ear, and a map that colours itself in.",
-  heroImage: "/touch-map/tile.jpg",
+  heroImage: "/touch-map/tile-shapeshifter.jpg",
   entries: AREAS,
 };
 
