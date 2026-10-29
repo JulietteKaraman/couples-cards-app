@@ -13,6 +13,9 @@ export const COLLECTION_DECK_TYPES: Record<string, string> = {
   "the-sacred-no": "sacred-no",
   // One Touch, £97, moved into the app 27 Oct 2026.
   "one-touch": "one-touch",
+  // How to Feel Like a Woman, the course women, 29 Oct 2026. Granted by hand
+  // from /admin for now (specs/how-to-feel-like-a-woman-app.md R1).
+  "how-to-feel-like-a-woman": "how-to-feel-like-a-woman",
 };
 
 // Maps a real Stripe price ID to the deck_type it grants, so resolve-purchase
@@ -105,6 +108,7 @@ export const PURCHASE_URLS: Record<string, string> = {
   // checkout button wired to that price before it's real.
   "members-app": "https://feelfullyyou.com/members-app",
   "the-sacred-no": "https://feelfullyyou.com/sacred-no",
+  "how-to-feel-like-a-woman": "https://feelfullyyou.com/how-to-feel-like-a-woman",
 };
 
 export function deckTypesForApp(): string[] {

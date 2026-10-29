@@ -292,7 +292,7 @@ function LibraryContent() {
         )}
 
         {/* YOURS */}
-        {user && ownedPaid.length > 0 && (
+        {user && (ownedPaid.length > 0 || entitledCollections.includes("how-to-feel-like-a-woman")) && (
           <>
             <SectionHead eyebrow="Yours" title="Your practices" />
             <div className="grid gap-3">
@@ -315,6 +315,15 @@ function LibraryContent() {
                   heroImage={CARDS_COMPANION.heroImage}
                   note={CARDS_COMPANION.note}
                   onClick={() => trackInterest(CARDS_COMPANION.slug, user?.email)}
+                />
+              )}
+              {entitledCollections.includes("how-to-feel-like-a-woman") && (
+                <Tile
+                  href="/practice/how-to-feel-like-a-woman"
+                  title="How to Feel Like a Woman"
+                  subtitle="Your cards, your practices, my voice. New things every week."
+                  heroImage="/how-to-feel-like-a-woman/juliette-boudoir.jpg"
+                  note="Practice Lab · cards · Scrumptious Confessions"
                 />
               )}
               {entitledCollections.includes(theSacredNo.slug) && (
@@ -396,10 +405,22 @@ function LibraryContent() {
         </div>
 
         {/* MORE WAYS IN */}
-        {(lockedPaid.length > 0 || EXTERNAL_OFFERS.length > 0) && (
+        {(lockedPaid.length > 0 || EXTERNAL_OFFERS.length > 0 || !entitledCollections.includes("how-to-feel-like-a-woman")) && (
           <>
             <SectionHead eyebrow="When you want more" title="More ways in" />
             <div className="grid gap-3">
+              {/* 28 Oct, Juliette: show it to everyone so they can click through and join. */}
+              {!entitledCollections.includes("how-to-feel-like-a-woman") && (
+                <Tile
+                  href={PURCHASE_URLS["how-to-feel-like-a-woman"]}
+                  external
+                  title="How to Feel Like a Woman"
+                  subtitle="For women. Fifteen minutes a day with my voice, a card from me every week, Practice Lab with me three mornings a week."
+                  heroImage="/how-to-feel-like-a-woman/pose11-shush.jpg"
+                  note="Women only · join any time · see what is inside"
+                  onClick={() => trackInterest("how-to-feel-like-a-woman", user?.email)}
+                />
+              )}
               {lockedPaid.map((c) => (
                 <Tile
                   key={c.slug}

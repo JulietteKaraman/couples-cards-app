@@ -25,6 +25,7 @@ const PRODUCT_LABELS: Record<string, string> = {
   "between-touches": "Between Touches",
   "communication-reboot-kit": "Communication Reboot Kit",
   "members-app": "Members App",
+  "how-to-feel-like-a-woman": "How to Feel Like a Woman",
 };
 
 const DECK_TYPES = Object.values(COLLECTION_DECK_TYPES);

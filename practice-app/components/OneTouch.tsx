@@ -91,7 +91,7 @@ function VoiceNote({ src }: { src: string }) {
 
 // 27 Oct, Juliette: "they will be mostly doing this solo". On your own is THE how-to;
 // with someone is a quiet extra underneath, closed until she opens it.
-function HowTo({ compact = false }: { compact?: boolean }) {
+export function HowTo({ compact = false }: { compact?: boolean }) {
   const [together, setTogether] = useState(false);
   const steps = (list: string[]) => (
     <ol className="mx-auto mt-4 max-w-sm space-y-2.5 text-left">
