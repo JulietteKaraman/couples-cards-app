@@ -7,7 +7,6 @@ import { thirtyOneTouchPoints } from "@/lib/content/31-touch-points";
 import { theUnspokenDistance } from "@/lib/content/the-unspoken-distance";
 import { whenSheGoesQuiet } from "@/lib/content/when-she-goes-quiet";
 import { betweenTouches } from "@/lib/content/between-touches";
-import { communicationRebootKit } from "@/lib/content/communication-reboot-kit";
 import { theSacredNo } from "@/lib/content/the-sacred-no";
 import { oneTouch } from "@/lib/content/one-touch";
 import { touchMap } from "@/lib/content/touch-map";
@@ -46,7 +45,7 @@ function tileImage(c: { slug: string; heroImage: string }): string {
 
 // Paid collections, in display order. When She Goes Quiet is free and sits
 // in Start free. Between Touches is back in Start free (27 Oct 2026, her yes).
-const PAID_COLLECTIONS = [thirtyOneTouchPoints, oneTouch, touchMap, theUnspokenDistance, communicationRebootKit, theSacredNo];
+const PAID_COLLECTIONS = [thirtyOneTouchPoints, oneTouch, touchMap, theUnspokenDistance, theSacredNo];
 
 // 31 Days Closer lives in the cards app. Pinned under 31 Touch Points
 // (Juliette, 30 Sep 2026): a month of touch and a month of conversation.
@@ -182,8 +181,8 @@ function LibraryContent() {
     ? [...ownedPaid].sort((a, b) => doneCount(b.slug) - doneCount(a.slug))[0]
     : null;
 
-  // The Communication Reboot Kit is retired (29 Oct 2026): owners still see it above, nobody new is offered it.
-  const lockedPaid = PAID_COLLECTIONS.filter((c) => !owns(c.slug) && c.slug !== thirtyOneTouchPoints.slug && c.slug !== communicationRebootKit.slug);
+  // The Communication Reboot Kit is removed for everyone, past buyers included (Juliette, 29 Oct 2026).
+  const lockedPaid = PAID_COLLECTIONS.filter((c) => !owns(c.slug) && c.slug !== thirtyOneTouchPoints.slug);
 
   return (
     <main className="min-h-screen bg-[#070707] text-ffy-cream">
