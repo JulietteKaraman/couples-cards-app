@@ -13,6 +13,32 @@
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { LANGUAGES, LANG_STYLE, type LanguageId } from "@/lib/content/touch-map";
+import { SlimPlayer } from "@/components/SlimPlayer";
+
+// SOUND, 30 Oct 2026, Juliette: "the quiz in the Touch Map doesn't make any sound".
+// Same as her website quiz: a soft hum while you turn the dial (it rises as it
+// warms), a bell at "toes curl", her voice on the first screen, and a Sound
+// on/off switch. Web Audio only, nothing to download.
+let AC: AudioContext | null = null;
+function ac(): AudioContext | null {
+  try {
+    if (!AC) AC = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
+    if (AC.state === "suspended") AC.resume();
+  } catch { return null; }
+  return AC;
+}
+function bell(fs: number[], vol = 0.09) {
+  const a = ac(); if (!a) return;
+  const t = a.currentTime;
+  fs.forEach((f, k) => {
+    const o = a.createOscillator(), G = a.createGain();
+    o.type = "sine"; o.frequency.value = f;
+    G.gain.setValueAtTime(0.0001, t + k * 0.08);
+    G.gain.exponentialRampToValueAtTime(vol, t + k * 0.08 + 0.02);
+    G.gain.exponentialRampToValueAtTime(0.0001, t + k * 0.08 + 1.2);
+    o.connect(G); G.connect(a.destination); o.start(t + k * 0.08); o.stop(t + k * 0.08 + 1.3);
+  });
+}
 
 export type Scores = Record<LanguageId, number>;
 export function rankLanguages(s: Scores): LanguageId[] {
@@ -104,6 +130,25 @@ export function PleasureQuiz({ onDone, onChooseMyself }: { onDone: (langs: Langu
   const dragging = useRef(false);
   const buzzed = useRef(false);
   const total = STEPS.length;
+  const [sound, setSound] = useState(true);
+  const hum = useRef<{ o: OscillatorNode; g: GainNode } | null>(null);
+  const humOn = () => {
+    if (!sound || hum.current) return;
+    const a = ac(); if (!a) return;
+    const o = a.createOscillator(), g = a.createGain(), f = a.createBiquadFilter();
+    f.type = "lowpass"; f.frequency.value = 900; o.type = "sine";
+    o.connect(f); f.connect(g); g.connect(a.destination);
+    g.gain.value = 0.0001; o.start(); g.gain.exponentialRampToValueAtTime(0.06, a.currentTime + 0.15);
+    hum.current = { o, g };
+  };
+  const humOff = () => {
+    const h = hum.current, a = AC; if (!h || !a) return;
+    h.g.gain.exponentialRampToValueAtTime(0.0001, a.currentTime + 0.4);
+    setTimeout(() => { try { h.o.stop(); } catch {} }, 450);
+    hum.current = null;
+  };
+  const humPitch = (x: number) => { if (hum.current && AC) hum.current.o.frequency.setTargetAtTime(110 + x * 220, AC.currentTime, 0.05); };
+  useEffect(() => () => humOff(), []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (i !== total) return;
@@ -126,6 +171,8 @@ export function PleasureQuiz({ onDone, onChooseMyself }: { onDone: (langs: Langu
             <p className="mt-3 text-[16px] text-[#f1ece2]/85">Six touches to feel, four quick questions. Go with your body, not your head.</p>
           </div>
         </div>
+        <div className="mt-5"><SlimPlayer src="/touch-map/quiz/hear-from-me-first.m4a" label="Hear from me first · 0:22" /></div>
+        <p className="mt-3 text-center text-[13px] text-[#8f877a]">Sound on. The dial hums as you turn it.</p>
         <button type="button" onClick={() => go(0)}
           className="mt-6 inline-flex min-h-[58px] w-full items-center justify-center rounded-full bg-[#DDC98E] px-6 font-display text-[17px] font-medium text-[#070707] shadow-[0_0_40px_-8px_rgba(221,201,142,0.85)] active:scale-[0.98]">
           Begin
@@ -199,6 +246,7 @@ export function PleasureQuiz({ onDone, onChooseMyself }: { onDone: (langs: Langu
       <div className="flex flex-1 gap-1.5">
         {STEPS.map((_, n) => <span key={n} className="h-1.5 flex-1 rounded-full" style={{ background: n < i ? GOLD : n === i ? "rgba(221,201,142,0.6)" : "rgba(255,255,255,0.18)" }} />)}
       </div>
+      <button type="button" onClick={() => { setSound((s) => !s); humOff(); }} className="shrink-0 rounded-full border border-[#DDC98E]/40 bg-[#070707]/40 px-3 py-2 text-[12px] text-[#DDC98E] backdrop-blur">{sound ? "Sound on" : "Sound off"}</button>
     </div>
   );
 
@@ -233,8 +281,9 @@ export function PleasureQuiz({ onDone, onChooseMyself }: { onDone: (langs: Langu
       if (a < 0) a = clientX < cx ? Math.PI : 0;
       const nv = Math.max(0, Math.min(1, 1 - a / Math.PI));
       setV(nv);
+      humPitch(nv);
       const nw = Math.min(5, Math.floor(nv * 6));
-      if (nw === 5 && !buzzed.current) { buzzed.current = true; try { navigator.vibrate?.([18, 40, 18]); } catch {} }
+      if (nw === 5 && !buzzed.current) { buzzed.current = true; try { navigator.vibrate?.([18, 40, 18]); } catch {} if (sound) bell([659, 988, 1319]); }
       if (nw < 5) buzzed.current = false;
     };
     return (
@@ -251,9 +300,9 @@ export function PleasureQuiz({ onDone, onChooseMyself }: { onDone: (langs: Langu
           <p className="mt-2 text-[14px] text-[#cfc8bb]">How does it feel? Drag the dial.</p>
         </div>
         <div className="relative mx-auto mt-6 w-[300px] max-w-full select-none touch-none"
-          onPointerDown={(e) => { dragging.current = true; (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId); set(e.clientX, e.clientY); }}
+          onPointerDown={(e) => { dragging.current = true; (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId); humOn(); set(e.clientX, e.clientY); }}
           onPointerMove={(e) => { if (dragging.current) set(e.clientX, e.clientY); }}
-          onPointerUp={() => { dragging.current = false; }} onPointerCancel={() => { dragging.current = false; }}>
+          onPointerUp={() => { dragging.current = false; humOff(); }} onPointerCancel={() => { dragging.current = false; humOff(); }}>
           <svg ref={dialRef} viewBox="0 0 300 165" className="w-full">
             <path d="M20 150 A130 130 0 0 1 280 150" fill="none" stroke="rgba(221,201,142,0.25)" strokeWidth="14" strokeLinecap="round" />
             <path d="M20 150 A130 130 0 0 1 280 150" fill="none" stroke={GOLD} strokeWidth="14" strokeLinecap="round" pathLength={100} strokeDasharray={`${Math.max(v, 0) * 100} 100`} />
