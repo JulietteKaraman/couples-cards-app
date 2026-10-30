@@ -27,6 +27,8 @@ const DIR = "/how-to-feel-like-a-woman";
 // and put its name here. Empty = that part simply doesn't show yet.
 const WELCOME_AUDIO = "";
 const WRIST_AUDIO = "";
+// 30 Oct, Juliette picked the velvet dress video for the Friday wrist drop.
+const WRIST_VIDEO = "wrist-velvet.mp4";
 const STROKING_AUDIO = "scrumptious-stroking-15.m4a";
 const CARD_HOWTO_AUDIO = "/one-touch/voice/on-your-own.m4a"; // her solo how-to, same as the cards app
 // Practice Lab: Mon, Wed, Fri 7:30am UK. Returns "today at 7:30am", "tomorrow at 7:30am" or "Friday at 7:30am".
@@ -419,6 +421,13 @@ function Wrist() {
         <p className="mt-5 flex items-center gap-2 rounded-full border border-[#DDC98E]/40 px-4 py-2.5 text-[14px] text-[#DDC98E]">
           <span aria-hidden="true">🔒</span> Opens {opensDay}. I&rsquo;ll take you through it.
         </p>
+      )}
+      {!locked && WRIST_VIDEO && (
+        <div className="mx-auto mt-6 max-w-[360px]">
+          <video src={`${DIR}/video/${WRIST_VIDEO}`} poster={`${DIR}/video/wrist-velvet-poster.jpg`} controls playsInline preload="none"
+            className="aspect-[9/16] w-full rounded-2xl border border-[#DDC98E]/30 bg-black object-cover" />
+          <p className="mt-2 text-center text-[13px] text-[#8f877a]">Do it with me · 3 minutes</p>
+        </div>
       )}
       {!locked && WRIST_AUDIO && <SlimPlayer src={`${DIR}/audio/${WRIST_AUDIO}`} label="Do it with me · 3 minutes" />}
       <ol className={`mt-5 space-y-3 transition ${locked ? "pointer-events-none select-none opacity-35 grayscale" : ""}`} aria-disabled={locked}>
