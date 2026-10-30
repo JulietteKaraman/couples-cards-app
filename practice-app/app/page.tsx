@@ -54,6 +54,22 @@ function tileImage(c: { slug: string; heroImage: string }): string {
 // in Start free. Between Touches is back in Start free (27 Oct 2026, her yes).
 const PAID_COLLECTIONS = [thirtyOneTouchPoints, oneTouch, touchMap, theUnspokenDistance, theSacredNo];
 
+// PARKED, 30 Oct 2026, Juliette: "too many things, we're overwhelming people... take them down,
+// but in a way that we can reinstate them in no time." Anything listed here disappears from the
+// library for people who don't own it. Nothing is deleted: the pages, content and links all still
+// work, and anyone who BOUGHT one still sees it under "Yours". To bring one back, delete its line.
+// What stays on show: the quiz + Between Touches (free), 31 Touch Points, 31 Days Closer,
+// One Touch, The Unspoken Distance, How to Feel Like a Woman.
+const PARKED = new Set<string>([
+  "touch-map",
+  "the-sacred-no",
+  "sacred-no-quiz",
+  "touch-base",
+  "when-she-goes-quiet",
+  "repair-kit",
+]);
+const shown = (slug: string) => !PARKED.has(slug);
+
 // 31 Days Closer lives in the cards app. Pinned under 31 Touch Points
 // (Juliette, 30 Sep 2026): a month of touch and a month of conversation.
 const CARDS_COMPANION = {
@@ -203,7 +219,8 @@ function LibraryContent() {
     : null;
 
   // The Communication Reboot Kit is removed for everyone, past buyers included (Juliette, 29 Oct 2026).
-  const lockedPaid = PAID_COLLECTIONS.filter((c) => !owns(c.slug) && c.slug !== thirtyOneTouchPoints.slug);
+  const lockedPaid = PAID_COLLECTIONS.filter((c) => !owns(c.slug) && c.slug !== thirtyOneTouchPoints.slug && shown(c.slug));
+  const externalShown = EXTERNAL_OFFERS.filter((o) => shown(o.slug));
 
   return (
     <main className="min-h-screen bg-[#070707] text-ffy-cream">
@@ -400,23 +417,23 @@ function LibraryContent() {
           </div>
         </a>
         <div className="mt-3 grid gap-3">
-          <Tile
+          {shown("sacred-no-quiz") && <Tile
             href="https://feelfullyyou.com/sacred-no-quiz"
             external
             title="The Sacred No Quiz"
             subtitle="Are you saying yes when you mean no? Twelve honest questions. Let your body answer first."
             heroImage="/offers/sales/sacred-no-quiz.jpg"
             note="Free"
-          />
-          <Tile
+          />}
+          {shown("touch-base") && <Tile
             href="/practice/touch-base"
             title="Touch Base®, the Anchor"
             subtitle="Two minutes, no equipment. A way back to yourself, anywhere, any time."
             heroImage="/offers/touch-base-logo.png"
             imageFit="contain"
             note="Free practice"
-          />
-          <Tile
+          />}
+          {shown(whenSheGoesQuiet.slug) && <Tile
             href={`/practice/${whenSheGoesQuiet.slug}`}
             title={whenSheGoesQuiet.title}
             subtitle={whenSheGoesQuiet.subtitle}
@@ -426,7 +443,7 @@ function LibraryContent() {
                 ? `Free · ${doneCount(whenSheGoesQuiet.slug)} of ${whenSheGoesQuiet.entries.length} done`
                 : "Free · open it now"
             }
-          />
+          />}
           <Tile
             href={`/practice/${betweenTouches.slug}`}
             title={betweenTouches.title}
@@ -441,7 +458,7 @@ function LibraryContent() {
         </div>
 
         {/* MORE WAYS IN */}
-        {(lockedPaid.length > 0 || EXTERNAL_OFFERS.length > 0 || !entitledCollections.includes("how-to-feel-like-a-woman")) && (
+        {(lockedPaid.length > 0 || externalShown.length > 0 || !entitledCollections.includes("how-to-feel-like-a-woman")) && (
           <>
             <SectionHead eyebrow="When you want more" title="More ways in" />
             <div className="grid gap-3">
@@ -469,7 +486,7 @@ function LibraryContent() {
                   onClick={() => trackInterest(c.slug, user?.email)}
                 />
               ))}
-              {EXTERNAL_OFFERS.map((o) => (
+              {externalShown.map((o) => (
                 <Tile
                   key={o.slug}
                   href={user?.email?.toLowerCase() === "juliette@feelfullyyou.com" ? CARDS_APP_ALL : o.purchaseUrl}
