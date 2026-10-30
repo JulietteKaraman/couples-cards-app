@@ -88,13 +88,19 @@ const STEPS: ({ t: "pic"; i: number } | { t: "tap"; i: number } | { t: "mirror" 
 ];
 const NUM = ["None", "One", "Two", "Three", "Four", "Five", "Six"];
 // Her mirror, word for word from the website quiz: what her body just told her.
-function mirrorLines(vals: (number | null)[]): [string, string, string] {
-  let n = 0, low = 0, high = 0, curl = 0;
-  vals.forEach((x) => { if (x == null || x < 0) return; n++; if (x < 2 / 6) low++; if (x >= 0.5) high++; if (x >= 5 / 6) curl++; });
-  const curlLine = curl ? `${NUM[curl]} made your toes curl.` : "Not one made your toes curl.";
-  if (low >= Math.ceil(n / 2)) return [`${NUM[n]} touches.`, `${NUM[low]} barely reached you.`, `${curlLine} This is what your body has been living with.`];
-  if (high >= n - 1) return [`${NUM[n]} touches.`, `${NUM[high]} reached you.`, "Imagine touch landing like that every single day."];
-  return [`${NUM[n]} touches.`, `${NUM[high]} reached you. ${NUM[n - high]} didn\u2019t.`, `${curlLine} Your body knows what it\u2019s missing.`];
+// 30 Oct, Juliette: "really give the proper reading: 6 touches, 2 made your toes curl...
+// not generic crap". Her own dial words, counted, then every touch with its word.
+const SHORT = ["Black lace", "Silk", "A singing bowl", "Rope round your ankles", "A kiss on your neck", "A hand on your heart"];
+const ONE = ["was an ick", "did nothing", "was just nice", "was \u201cmmm\u201d", "gave you goosebumps", "made your toes curl"];
+const MANY = ["were an ick", "did nothing", "were just nice", "were \u201cmmm\u201d", "gave you goosebumps", "made your toes curl"];
+function mirrorLines(vals: (number | null)[]): { h1: string; h2: string; sub: string; rows: { label: string; w: number }[] } {
+  const cnt = [0, 0, 0, 0, 0, 0];
+  const rows: { label: string; w: number; x: number }[] = [];
+  vals.forEach((x, k) => { if (x == null || x < 0) return; const w = Math.min(5, Math.floor(x * 6)); cnt[w]++; rows.push({ label: SHORT[k], w, x }); });
+  const parts: string[] = [];
+  for (let w = 5; w >= 0; w--) if (cnt[w]) parts.push(`${NUM[cnt[w]]} ${cnt[w] === 1 ? ONE[w] : MANY[w]}.`);
+  rows.sort((p, q) => q.x - p.x);
+  return { h1: `${NUM[rows.length]} touches.`, h2: parts.slice(0, 2).join(" "), sub: parts.slice(2).join(" "), rows };
 }
 const WORDS = ["ick", "nothing", "nice", "mmm", "goosebumps", "toes curl"];
 const GOLD = "#DDC98E";
@@ -252,7 +258,7 @@ export function PleasureQuiz({ onDone, onChooseMyself }: { onDone: (langs: Langu
 
   // ---------- the mirror ----------
   if (step.t === "mirror") {
-    const [h1, h2, sub] = mirrorLines(vals);
+    const { h1, h2, sub, rows } = mirrorLines(vals);
     return (
       <section className="relative -mx-5 -mt-2 min-h-[calc(100vh-90px)] overflow-hidden px-5 pt-3" key={`m${i}`}>
         <div className="absolute inset-0">
@@ -260,10 +266,17 @@ export function PleasureQuiz({ onDone, onChooseMyself }: { onDone: (langs: Langu
           <div className="absolute inset-0 bg-gradient-to-b from-[#070707]/60 via-[#070707]/30 to-[#070707]" />
         </div>
         <div className="relative">{bars}</div>
-        <div className="relative mt-[22vh] text-center">
+        <div className="relative mt-[8vh] text-center">
           <p className="text-[11px] uppercase tracking-[0.22em] text-[#DDC98E]">What your body just told you</p>
           <h2 className="tm-rise mt-3 font-display text-[34px] font-light leading-tight">{h1}<br /><em className="text-[#DDC98E]">{h2}</em></h2>
-          <p className="mx-auto mt-4 max-w-[30ch] text-[16px] leading-relaxed text-[#cfc8bb]">{sub}</p>
+          {sub && <p className="mx-auto mt-4 max-w-[30ch] text-[16px] leading-relaxed text-[#cfc8bb]">{sub}</p>}
+          <ul className="mx-auto mt-5 max-w-[340px] text-left">
+            {rows.map((r) => (
+              <li key={r.label} className="flex justify-between gap-3 border-b border-[#DDC98E]/20 py-2.5 text-[15px]">
+                <span>{r.label}</span><b className={`font-medium ${r.w >= 4 ? "text-[#EEDE80]" : "text-[#f1ece2]/60"}`}>{WORDS[r.w]}</b>
+              </li>
+            ))}
+          </ul>
           <button type="button" onClick={() => go(i + 1)} className="mt-8 inline-flex min-h-[52px] items-center rounded-full border border-[#DDC98E] px-8 text-[13px] uppercase tracking-[0.25em] text-[#DDC98E]">Keep going</button>
         </div>
       </section>

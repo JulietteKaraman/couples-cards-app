@@ -394,6 +394,9 @@ function LibraryContent() {
             <span className="mt-5 inline-flex min-h-[48px] items-center rounded-full bg-[#0D3535] px-8 text-[12px] font-semibold uppercase tracking-[0.24em] text-[#fefcfa] transition group-hover:bg-[#070707]">
               Take the quiz
             </span>
+            {/* 30 Oct, Juliette: "if I don't give my results, can I get back to the app? No, there's no button."
+                The quiz lives on the website, so on a phone it opens over the app. The ✕ top left brings them back. */}
+            <p className="mt-3 text-[12px] text-[#5b4a2e]">Opens over the app. Tap ✕ at the top to come back.</p>
           </div>
         </a>
         <div className="mt-3 grid gap-3">
