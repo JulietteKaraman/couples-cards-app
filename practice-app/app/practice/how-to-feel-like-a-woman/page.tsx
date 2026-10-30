@@ -26,7 +26,7 @@ const DIR = "/how-to-feel-like-a-woman";
 // Her recordings. Drop the file into public/how-to-feel-like-a-woman/audio/
 // and put its name here. Empty = that part simply doesn't show yet.
 const WELCOME_AUDIO = "";
-const WRIST_AUDIO = "";
+const WRIST_AUDIO = "wrist-yes.m4a"; // 30 Oct, her energetic yes audio (3:34)
 // 30 Oct: velvet video tried and taken out (it talks about her event, wrong for this container).
 // Her 3-minute "yes" voice note goes in WRIST_AUDIO when recorded.
 const WRIST_VIDEO = "";
@@ -390,17 +390,17 @@ function TapToTurn({ prompt, onTurned }: { prompt: string; onTurned: () => void 
 
 /* ---- THE WRIST. Her four steps, her order, her question. */
 const WRIST_STEPS = [
-  { t: "Up, down, lighter", d: "A touch you can say yes to." },
-  { t: "Each pleasure language", d: "One at a time, each its own touch." },
-  { t: "Add nails", d: "" },
-  { t: "Look down", d: "Look down while you're stroking yourself up." },
+  // 30 Oct, Juliette: "It's just up and down... Just say add voice." Matches her energetic audio.
+  { t: "Up", d: "From your wrist to your elbow, ever so slowly." },
+  { t: "Down", d: "Back towards your palm." },
+  { t: "Add voice", d: "Say yes out loud to every stroke you feel." },
 ];
 const STOP = [
   { id: "yes", label: "Yes", c: "#5fae5a" },
   { id: "maybe", label: "Maybe", c: "#E8B04B" },
   { id: "no", label: "No", c: "#d0644f" },
 ];
-const WRIST_KEY = "ffy.htflaw.wrist.v1";
+const WRIST_KEY = "ffy.htflaw.wrist.v2"; // v2 30 Oct: steps changed to Up, Down, Add voice
 // 28 Oct, Juliette: "I'm wondering if I'm just overwhelming them... put just the wrist and then
 // make it grey, the up-down lighter... that becomes available on Friday." Touch Base and
 // Scrumptious Stroking are always there; the week's practice opens on its day.
@@ -416,7 +416,7 @@ function Wrist() {
     <section className="mt-16">
       <Banner src={`${DIR}/eso15-feather.jpg`} pos="50% 60%" eyebrow="This week's practice · three minutes" title="The Wrist" />
       <p className="mt-5 text-[17px] leading-relaxed text-[#cfc8bb]">
-        Did that increase sensation? Did it decrease it? Is it saying yes? It&rsquo;s harder to tell than you&rsquo;d think.
+        Try this and see what feels like a yes.<br />Did voicing it out loud increase sensation?
       </p>
       {locked && (
         <p className="mt-5 flex items-center gap-2 rounded-full border border-[#DDC98E]/40 px-4 py-2.5 text-[14px] text-[#DDC98E]">
@@ -430,7 +430,7 @@ function Wrist() {
           <p className="mt-2 text-center text-[13px] text-[#8f877a]">Do it with me · 3 minutes</p>
         </div>
       )}
-      {!locked && WRIST_AUDIO && <SlimPlayer src={`${DIR}/audio/${WRIST_AUDIO}`} label="Do it with me · 3 minutes" />}
+      {!locked && WRIST_AUDIO && <SlimPlayer src={`${DIR}/audio/${WRIST_AUDIO}`} label="Do it with me · 3½ minutes" />}
       <ol className={`mt-5 space-y-3 transition ${locked ? "pointer-events-none select-none opacity-35 grayscale" : ""}`} aria-disabled={locked}>
         {WRIST_STEPS.map((s, i) => (
           <li key={i} className="rounded-2xl border border-[#DDC98E]/30 bg-[rgba(13,53,53,0.3)] p-4">
