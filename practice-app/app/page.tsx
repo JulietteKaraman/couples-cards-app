@@ -58,13 +58,12 @@ const PAID_COLLECTIONS = [thirtyOneTouchPoints, oneTouch, touchMap, theUnspokenD
 // but in a way that we can reinstate them in no time." Anything listed here disappears from the
 // library for people who don't own it. Nothing is deleted: the pages, content and links all still
 // work, and anyone who BOUGHT one still sees it under "Yours". To bring one back, delete its line.
-// What stays on show: the quiz + Between Touches (free), 31 Touch Points, 31 Days Closer,
+// What stays on show: the quiz, Between Touches and Touch Base (free; Touch Base back 30 Oct, her call), 31 Touch Points, 31 Days Closer,
 // One Touch, The Unspoken Distance, How to Feel Like a Woman.
 const PARKED = new Set<string>([
   "touch-map",
   "the-sacred-no",
   "sacred-no-quiz",
-  "touch-base",
   "when-she-goes-quiet",
   "repair-kit",
 ]);
