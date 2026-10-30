@@ -9,9 +9,8 @@
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { count } from "@/lib/count";
-import { PlaceClip } from "@/components/TouchMap";
 import { SlimPlayer } from "@/components/SlimPlayer";
-import { LANGUAGES, LANG_STYLE, STEERS_BY_LANGUAGE, ANSWERS, TM_AUDIO, TM_BUY_URL, TASTER_CLIP, type LanguageId, type Answer } from "@/lib/content/touch-map";
+import { LANGUAGES, LANG_STYLE, STEERS_BY_LANGUAGE, ANSWERS, TM_AUDIO, TM_BUY_URL, type LanguageId, type Answer } from "@/lib/content/touch-map";
 
 const KEY = "ffy.touchmap.taste.v3";
 const AUDIO: Record<LanguageId, string> = {
@@ -60,9 +59,9 @@ export default function TasteTouchMap() {
         </a>
         <p className="mt-4 text-[11px] uppercase tracking-[0.2em] text-[#DDC98E]">The Touch Map · a taste</p>
 
-        <PlaceClip src={TASTER_CLIP} label="The neck-kiss reel" poster="/touch-map/taster-neck-kiss-poster.jpg" />
-
-        <h1 className="mt-7 font-display text-3xl font-light leading-tight sm:text-4xl">Which one calls to you?</h1>
+        {/* 30 Oct, Juliette: the neck-kiss video "feels a little bit misleading because it's all
+            audio that they're getting". Taken out; the taste opens straight on the five flavours. */}
+        <h1 className="mt-3 font-display text-3xl font-light leading-tight sm:text-4xl">Which one calls to you?</h1>
         <p className="mt-2 text-[16px] leading-relaxed text-[#cfc8bb]">Five flavours of touch. Pick one, put your phone down, and let me take you through it on your own wrist. About a minute and a half.</p>
 
         <div className="mt-6 grid grid-cols-2 gap-2.5 sm:grid-cols-3">
