@@ -66,6 +66,13 @@ const CARDS_COMPANION = {
   note: "Lives in the cards app · £17",
 };
 
+// Juliette, 30 Oct 2026: tapping the black card tile took her (owner of everything)
+// to a sales page. Card decks live in the cards app, so a signed-in person goes
+// straight there; it shows what they own and offers the rest. The owner gets every
+// deck unlocked on that phone.
+const CARDS_APP = "https://feelfullyyou.com/my-cards/";
+const CARDS_APP_ALL = CARDS_APP + "?unlock=31-days-closer,couples,friends-family,trust-repair,repair-kit,touch-languages,holiday,three-answers,fifteen-after,essence,reconnect,one-touch";
+
 // Offers with no content in this app: they unlock elsewhere (a deck, a code).
 const EXTERNAL_OFFERS = [
   {
@@ -327,7 +334,7 @@ function LibraryContent() {
               ))}
               {owns31 && (
                 <Tile
-                  href={CARDS_COMPANION.purchaseUrl}
+                  href={user?.email?.toLowerCase() === "juliette@feelfullyyou.com" ? CARDS_APP_ALL : CARDS_APP}
                   external
                   title={CARDS_COMPANION.title}
                   subtitle={CARDS_COMPANION.subtitle}
@@ -458,7 +465,7 @@ function LibraryContent() {
               {EXTERNAL_OFFERS.map((o) => (
                 <Tile
                   key={o.slug}
-                  href={o.purchaseUrl}
+                  href={user?.email?.toLowerCase() === "juliette@feelfullyyou.com" ? CARDS_APP_ALL : o.purchaseUrl}
                   external
                   title={o.title}
                   subtitle={o.subtitle}

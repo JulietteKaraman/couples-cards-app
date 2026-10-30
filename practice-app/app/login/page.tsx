@@ -171,6 +171,8 @@ function CodeBox({ email, next }: { email: string; next?: string }) {
     setState("checking");
     const { data, error } = await supabaseBrowser.auth.verifyOtp({ email: email.toLowerCase().trim(), token, type: "email" });
     if (error || !data.session) { setState("wrong"); return; }
+    // Make sure the session is saved on this phone before we leave the page.
+    await supabaseBrowser.auth.setSession({ access_token: data.session.access_token, refresh_token: data.session.refresh_token });
     try {
       await fetch("/api/resolve-purchase", {
         method: "POST",
