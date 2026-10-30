@@ -27,8 +27,9 @@ const DIR = "/how-to-feel-like-a-woman";
 // and put its name here. Empty = that part simply doesn't show yet.
 const WELCOME_AUDIO = "";
 const WRIST_AUDIO = "";
-// 30 Oct, Juliette picked the velvet dress video for the Friday wrist drop.
-const WRIST_VIDEO = "wrist-velvet.mp4";
+// 30 Oct: velvet video tried and taken out (it talks about her event, wrong for this container).
+// Her 3-minute "yes" voice note goes in WRIST_AUDIO when recorded.
+const WRIST_VIDEO = "";
 const STROKING_AUDIO = "scrumptious-stroking-15.m4a";
 const CARD_HOWTO_AUDIO = "/one-touch/voice/on-your-own.m4a"; // her solo how-to, same as the cards app
 // Practice Lab: Mon, Wed, Fri 7:30am UK. Returns "today at 7:30am", "tomorrow at 7:30am" or "Friday at 7:30am".
