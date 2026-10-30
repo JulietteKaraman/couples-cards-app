@@ -39,6 +39,13 @@ const TILE_IMAGE: Record<string, string> = {
   "one-touch": "/offers/sales/one-touch.jpg",
   "the-sacred-no": "/offers/sales/the-sacred-no.jpg",
 };
+// Where each tile photo sits in its square, so heads are never cut off (Juliette, 30 Oct 2026).
+const TILE_POS: Record<string, string> = {
+  "/offers/sales/sacred-no-quiz.jpg": "50% 6%",
+  "/when-she-goes-quiet/real/hero.jpg": "50% 4%",
+  "/offers/sales/repair-kit.jpg": "50% 16%",
+  "/how-to-feel-like-a-woman/juliette-boudoir.jpg": "78% 45%",
+};
 function tileImage(c: { slug: string; heroImage: string }): string {
   return TILE_IMAGE[c.slug] ?? c.heroImage;
 }
@@ -113,6 +120,7 @@ function Tile({
           fill
           sizes="96px"
           className={imageFit === "contain" ? "object-contain p-2" : "object-cover"}
+          style={TILE_POS[heroImage] ? { objectPosition: TILE_POS[heroImage] } : undefined}
         />
       </div>
       <div className="min-w-0 flex-1">
@@ -333,8 +341,7 @@ function LibraryContent() {
                   href="/practice/how-to-feel-like-a-woman"
                   title="How to Feel Like a Woman"
                   subtitle="Your cards, your practices, my voice. New things every week."
-                  heroImage="/offers/sales/how-to-feel-like-a-woman.jpg"
-                  imageFit="contain"
+                  heroImage="/how-to-feel-like-a-woman/juliette-boudoir.jpg"
                   note="Practice Lab · cards · Scrumptious Confessions"
                 />
               )}
@@ -363,16 +370,16 @@ function LibraryContent() {
           className="ffy-rise group relative block overflow-hidden rounded-[22px] bg-[#fefcfa] text-center text-[#0D3535] shadow-[0_20px_50px_-20px_rgba(0,0,0,0.6)]"
         >
           <div className="relative h-60 sm:h-64">
-            <Image src="/offers/touch-reset-quiz-popup.jpg" alt="Juliette laughing while Alex kisses her cheek" fill sizes="(max-width: 768px) 100vw, 768px" className="object-cover" style={{ objectPosition: "50% 30%" }} />
-            <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-b from-transparent via-[#fefcfa]/70 to-[#fefcfa]" />
+            <Image src="/offers/touch-reset-quiz-bw-full.jpg" alt="Juliette and Alex, black and white, her eyes closed" fill sizes="(max-width: 768px) 100vw, 768px" className="object-cover" style={{ objectPosition: "50% 24%" }} />
+            <div className="absolute inset-x-0 bottom-0 h-7 bg-gradient-to-b from-transparent to-[#fefcfa]" />
           </div>
-          <div className="relative -mt-6 px-6 pb-7">
+          <div className="relative px-6 pb-7 pt-1">
             <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-[#7a6236]">Free · two minutes</p>
             <h3 className="font-display mt-2 text-[2rem] font-semibold leading-[1.08] text-[#0D3535]">
               Where did
               <em className="block italic text-[#A88538]">the touch go?</em>
             </h3>
-            <p className="mx-auto mt-3 max-w-sm text-[15px] leading-relaxed text-[#1c1714]">Six touches. A few quick taps. Your body answers.</p>
+            <p className="mx-auto mt-3 max-w-sm text-[15px] leading-relaxed text-[#1c1714]">Sixteen quick taps. Your body answers.</p>
             <span className="mt-5 inline-flex min-h-[48px] items-center rounded-full bg-[#0D3535] px-8 text-[12px] font-semibold uppercase tracking-[0.24em] text-[#fefcfa] transition group-hover:bg-[#070707]">
               Take the quiz
             </span>
@@ -431,8 +438,7 @@ function LibraryContent() {
                   external
                   title="How to Feel Like a Woman"
                   subtitle="For women. Fifteen minutes a day with my voice, a card from me every week, Practice Lab with me three mornings a week."
-                  heroImage="/offers/sales/how-to-feel-like-a-woman.jpg"
-                  imageFit="contain"
+                  heroImage="/how-to-feel-like-a-woman/juliette-boudoir.jpg"
                   note="Women only · join any time · see what is inside"
                   onClick={() => trackInterest("how-to-feel-like-a-woman", user?.email)}
                 />

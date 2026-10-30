@@ -459,7 +459,7 @@ function RoundVoice({ src, img, label }: { src: string; img: string; label: stri
   const [p, setP] = useState(0);
   return (
     <button type="button" aria-label={playing ? "Pause" : label}
-      onClick={() => { const a = ref.current; if (!a) return; if (a.paused) a.play(); else a.pause(); }}
+      onClick={() => { const a = ref.current; if (!a) return; if (a.paused) playVoice(a); else a.pause(); }}
       className="relative h-[72px] w-[72px] shrink-0 rounded-full">
       <Image src={img} alt="" width={72} height={72} className="h-[72px] w-[72px] rounded-full object-cover object-[60%_20%]" />
       <svg viewBox="0 0 36 36" className="absolute inset-0 h-full w-full -rotate-90" aria-hidden="true">
@@ -475,6 +475,12 @@ function RoundVoice({ src, img, label }: { src: string; img: string; label: stri
 }
 
 /* A slim player: gold button, one line of text, a thin line. No box. */
+// iPhone: let her voice play even with the silent switch on, and retry once if the phone refuses (30 Oct 2026).
+function playVoice(a: HTMLAudioElement) {
+  try { const n = navigator as unknown as { audioSession?: { type: string } }; if (n.audioSession) n.audioSession.type = "playback"; } catch {}
+  a.play().catch(() => { a.load(); a.play().catch(() => {}); });
+}
+
 function SlimPlayer({ src, label }: { src: string; label: string }) {
   const ref = useRef<HTMLAudioElement | null>(null);
   const [playing, setPlaying] = useState(false);
@@ -488,7 +494,7 @@ function SlimPlayer({ src, label }: { src: string; label: string }) {
   return (
     <div className="mt-5 flex items-center gap-4">
       <button type="button" aria-label={playing ? "Pause" : label}
-        onClick={() => { const a = ref.current; if (!a) return; if (a.paused) a.play(); else a.pause(); }}
+        onClick={() => { const a = ref.current; if (!a) return; if (a.paused) playVoice(a); else a.pause(); }}
         className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-[#DDC98E] text-[#070707] shadow-[0_0_28px_-6px_rgba(221,201,142,0.7)]">
         {playing ? "❚❚" : "▶"}
       </button>

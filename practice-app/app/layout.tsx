@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Poppins, Inter } from "next/font/google";
 import { AuthProvider } from "@/components/providers/AuthProvider";
+import { AudioPlayback } from "@/components/AudioPlayback";
 import "./globals.css";
 
 const poppins = Poppins({
@@ -36,6 +37,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${poppins.variable} ${inter.variable}`}>
       <body>
+        <AudioPlayback />
         <AuthProvider>{children}</AuthProvider>
       </body>
     </html>
