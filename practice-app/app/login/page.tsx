@@ -3,6 +3,7 @@
 import { Suspense, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useAuth } from "@/components/providers/AuthProvider";
+import { supabaseBrowser } from "@/lib/supabase/client";
 
 // Juliette, 12 Aug 2026: "it is also clunky to be sent to a different
 // app" — this screen said nothing about what someone was actually trying
@@ -106,13 +107,19 @@ function LoginPageContent() {
           <div className="mt-6">
             <p className="text-ffy-black">Check your email.</p>
             <p className="mt-2 text-sm text-ffy-brown">
-              We sent a link to <strong>{email}</strong>. Tap it on this
-              device{destination ? ` to open ${destination}` : " to sign in"}, no password needed.
+              We sent a code to <strong>{email || prefillEmail}</strong>. Type it here, no password needed.
             </p>
+            <CodeBox email={email || prefillEmail} next={next} />
+            <p className="mt-4 text-xs text-ffy-brown">
+              Or tap the link in the email{destination ? ` to open ${destination}` : ""}. On an iPhone home-screen app, use the code.
+            </p>
+            <button type="button" onClick={() => send(email || prefillEmail)} className="mt-3 text-sm text-ffy-teal underline underline-offset-4">
+              Send a new code
+            </button>
           </div>
         ) : status === "sending" && prefillEmail ? (
           <div className="mt-6">
-            <p className="text-ffy-black">Sending your link…</p>
+            <p className="text-ffy-black">Sending your code…</p>
             <p className="mt-2 text-sm text-ffy-brown">
               to <strong>{prefillEmail}</strong>
             </p>
@@ -121,8 +128,8 @@ function LoginPageContent() {
           <form onSubmit={handleSubmit} className="mt-6 flex flex-col gap-3">
             <p className="text-sm text-ffy-brown">
               {destination
-                ? `Enter your email and we'll send you a link straight to ${destination}.`
-                : "Enter your email and we’ll send you a link to open your library."}{" "}
+                ? `Enter your email and we'll send you a code to open ${destination}.`
+                : "Enter your email and we’ll send you a code to open your library."}{" "}
               Free practices unlock straight away, no purchase
               needed, plus anything you&rsquo;ve already bought.
             </p>
@@ -139,7 +146,7 @@ function LoginPageContent() {
               disabled={status === "sending"}
               className="rounded-full bg-ffy-teal px-5 py-3 font-display text-sm font-medium text-ffy-cream transition hover:bg-ffy-black disabled:opacity-60"
             >
-              {status === "sending" ? "Sending…" : "Send my link"}
+              {status === "sending" ? "Sending…" : "Send my code"}
             </button>
             {status === "error" && (
               <p className="text-sm text-red-700">{errorMessage}</p>
@@ -148,5 +155,53 @@ function LoginPageContent() {
         )}
       </div>
     </main>
+  );
+}
+
+// Juliette, 30 Oct 2026: from the iPhone home-screen app the email link opens
+// in Safari, so the home-screen app stayed signed out and showed sales pages.
+// Typing the code here signs in the app she is actually holding.
+function CodeBox({ email, next }: { email: string; next?: string }) {
+  const [code, setCode] = useState("");
+  const [state, setState] = useState<"idle" | "checking" | "wrong">("idle");
+  async function submit(e: React.FormEvent) {
+    e.preventDefault();
+    const token = code.replace(/\D/g, "");
+    if (token.length < 6) return;
+    setState("checking");
+    const { data, error } = await supabaseBrowser.auth.verifyOtp({ email: email.toLowerCase().trim(), token, type: "email" });
+    if (error || !data.session) { setState("wrong"); return; }
+    try {
+      await fetch("/api/resolve-purchase", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: data.session.user.id, email: data.session.user.email }),
+      });
+    } catch {}
+    window.location.href = next || "/";
+  }
+  return (
+    <form onSubmit={submit} className="mt-5 flex flex-col gap-3">
+      <input
+        inputMode="numeric"
+        autoComplete="one-time-code"
+        maxLength={10}
+        value={code}
+        onChange={(e) => { setCode(e.target.value); if (state === "wrong") setState("idle"); }}
+        placeholder="Your code"
+        aria-label="Your code from the email"
+        className="rounded-xl border border-ffy-border px-4 py-3 text-center text-xl tracking-[0.4em] text-ffy-black outline-none focus:border-ffy-gold"
+      />
+      <button
+        type="submit"
+        disabled={state === "checking" || code.replace(/\D/g, "").length < 6}
+        className="rounded-full bg-ffy-teal px-5 py-3 font-display text-sm font-medium text-ffy-cream transition hover:bg-ffy-black disabled:opacity-60"
+      >
+        {state === "checking" ? "Opening…" : "Open my library"}
+      </button>
+      {state === "wrong" && (
+        <p className="text-sm text-red-700">That code didn&rsquo;t work. Check it, or send a new one.</p>
+      )}
+    </form>
   );
 }
