@@ -277,7 +277,7 @@ const FEELS = [
 ] as const;
 const DAYS_KEY = "ffy.htflaw.days.v1";
 const START_KEY = "ffy.htflaw.start.v1";
-type DayRec = { feel?: string; where?: "solo" | "lab"; done?: boolean };
+type DayRec = { feel?: string; where?: "solo" | "lab"; done?: boolean; missed?: boolean };
 function readDays(): Record<string, DayRec> { try { return JSON.parse(lsGet(DAYS_KEY) || "{}") || {}; } catch { return {}; } }
 
 function Today() {
@@ -300,7 +300,7 @@ function Today() {
     let s = start;
     if (!s) { s = today; lsSet(START_KEY, s); setStart(s); }
     const n = Math.min(31, daysBetween(s, sel) + 1);
-    save({ done: true });
+    save({ done: true, missed: false });
     count(rec.where === "lab" ? "htflaw_lab" : "htflaw_solo", n, rec.feel);
   };
   const pill = (on: boolean) => `flex min-h-[48px] items-center justify-center gap-2 rounded-full border px-3 text-[15px] ${on ? "border-[#DDC98E] bg-[rgba(221,201,142,0.15)] text-[#f1ece2]" : "border-[#DDC98E]/30 text-[#f1ece2]/80"}`;
@@ -352,10 +352,27 @@ function Today() {
               <button type="button" onClick={() => save({ done: false })} className="mt-3 inline-flex min-h-[44px] items-center text-[14px] text-[#DDC98E] underline underline-offset-4">Not done yet? Undo</button>
             </div>
           ) : (
-            <button type="button" onClick={markDone}
-              className="inline-flex min-h-[52px] w-full items-center justify-center rounded-full bg-[#DDC98E] font-display text-[16px] font-medium text-[#070707] transition hover:bg-[#EEDE80]">
-              I did it ✓
-            </button>
+            <>
+              {/* 30 Oct 2026, a woman in the group asked to show the day she missed.
+                  Her pick: an empty gold dot with a small cross. Past days only. */}
+              {rec.missed && (
+                <div className="mb-3 rounded-2xl border border-[#DDC98E]/50 p-4 text-center">
+                  <span className="mx-auto flex h-8 w-8 items-center justify-center rounded-full border border-[#DDC98E] text-[16px] text-[#DDC98E]">×</span>
+                  <p className="mt-2 text-[15px]">Day {dayNum} is marked as missed. That&rsquo;s information too.</p>
+                  <button type="button" onClick={() => save({ missed: false })} className="mt-1 inline-flex min-h-[44px] items-center text-[14px] text-[#DDC98E] underline underline-offset-4">Undo</button>
+                </div>
+              )}
+              <button type="button" onClick={markDone}
+                className="inline-flex min-h-[52px] w-full items-center justify-center rounded-full bg-[#DDC98E] font-display text-[16px] font-medium text-[#070707] transition hover:bg-[#EEDE80]">
+                I did it ✓
+              </button>
+              {!isToday && !rec.missed && (
+                <button type="button" onClick={() => save({ missed: true })}
+                  className="mt-3 inline-flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full border border-[#DDC98E]/60 text-[15px] text-[#DDC98E]">
+                  <span className="flex h-5 w-5 items-center justify-center rounded-full border border-[#DDC98E] text-[12px]">×</span> I missed this day
+                </button>
+              )}
+            </>
           )}
         </div>
 
@@ -387,15 +404,17 @@ function MonthDots({ days, start, sel, onPick }: { days: Record<string, DayRec>;
         {Array.from({ length: 31 }, (_, i) => {
           const r = days[dateOf(i)];
           const c = r?.done ? FEELS.find((f) => f.id === r.feel)?.color ?? "rgba(221,201,142,0.45)" : undefined;
+          const missed = !r?.done && !!r?.missed;
           return (
-            <button type="button" key={i} title={`Day ${i + 1}`} aria-label={`Day ${i + 1}`} onClick={() => onPick?.(dateOf(i))} className="aspect-square rounded-full border"
-              style={{ background: c ?? "transparent", borderColor: dateOf(i) === sel ? "#EEDE80" : c ?? "rgba(221,201,142,0.3)", boxShadow: r?.done && r.where === "lab" ? "0 0 0 2px #070707, 0 0 0 3.5px #DDC98E" : undefined }} />
+            <button type="button" key={i} title={`Day ${i + 1}${missed ? ", missed" : ""}`} aria-label={`Day ${i + 1}${missed ? ", missed" : ""}`} onClick={() => onPick?.(dateOf(i))} className="flex aspect-square items-center justify-center rounded-full border text-[10px] leading-none text-[#DDC98E]"
+              style={{ background: c ?? "transparent", borderColor: dateOf(i) === sel ? "#EEDE80" : missed ? "#DDC98E" : c ?? "rgba(221,201,142,0.3)", boxShadow: r?.done && r.where === "lab" ? "0 0 0 2px #070707, 0 0 0 3.5px #DDC98E" : undefined }}>{missed ? "×" : null}</button>
           );
         })}
       </div>
       <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1.5 text-xs text-[rgba(254,252,250,0.7)]">
         {FEELS.map((f) => <span key={f.id} className="inline-flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-full" style={{ background: f.color }} />{f.label}</span>)}
         <span className="inline-flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-full border border-[#DDC98E]" />Gold ring = Practice Lab</span>
+        <span className="inline-flex items-center gap-1.5"><span className="flex h-3 w-3 items-center justify-center rounded-full border border-[#DDC98E] text-[8px] leading-none text-[#DDC98E]">×</span>Missed</span>
       </div>
       <p className="mt-2 text-xs text-[rgba(254,252,250,0.55)]">Kept on this phone only. Not even I see it.</p>
     </div>
