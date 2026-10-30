@@ -354,23 +354,26 @@ function LibraryContent() {
 
         {/* START FREE */}
         <SectionHead eyebrow="Free" title="Start here" />
+        {/* Quiz card = the website pop-up, exactly (Juliette, 30 Oct 2026) */}
         <a
           href="https://feelfullyyou.com/touch-reset-quiz"
           target="_blank"
           rel="noreferrer"
-          className="ffy-rise group relative block overflow-hidden rounded-3xl border-[1.5px] border-[rgba(221,201,142,0.7)] bg-[#0b1414]"
+          style={{ maxWidth: 460, marginLeft: "auto", marginRight: "auto" }}
+          className="ffy-rise group relative block overflow-hidden rounded-[22px] bg-[#fefcfa] text-center text-[#0D3535] shadow-[0_20px_50px_-20px_rgba(0,0,0,0.6)]"
         >
-          <div className="relative h-44 sm:h-56">
-            <Image src="/offers/touch-reset-quiz-cover.jpg" alt="The Touch Reset Quiz" fill sizes="(max-width: 768px) 100vw, 768px" className="object-cover" />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#070707] via-[#070707]/40 to-transparent" />
+          <div className="relative h-60 sm:h-64">
+            <Image src="/offers/touch-reset-quiz-popup.jpg" alt="Juliette laughing while Alex kisses her cheek" fill sizes="(max-width: 768px) 100vw, 768px" className="object-cover" style={{ objectPosition: "50% 30%" }} />
+            <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-b from-transparent via-[#fefcfa]/70 to-[#fefcfa]" />
           </div>
-          <div className="relative -mt-14 p-5 sm:p-6">
-            <p className="text-[11px] uppercase tracking-[0.16em] text-[#DDC98E]">Free · two minutes</p>
-            <h3 className="font-display mt-1 text-2xl font-light text-ffy-cream">The Touch Reset Quiz</h3>
-            <p className="mt-1 text-sm leading-relaxed text-[rgba(254,252,250,0.78)]">
-              Where did the touch go? Being touched is not the same as feeling it. Two minutes, and you find out where the touch actually went.
-            </p>
-            <span className="mt-4 inline-flex min-h-[44px] items-center rounded-full border border-[#DDC98E] px-5 text-sm text-ffy-cream transition group-hover:bg-[#DDC98E] group-hover:text-[#070707]">
+          <div className="relative -mt-6 px-6 pb-7">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-[#7a6236]">Free · two minutes</p>
+            <h3 className="font-display mt-2 text-[2rem] font-semibold leading-[1.08] text-[#0D3535]">
+              Where did
+              <em className="block italic text-[#A88538]">the touch go?</em>
+            </h3>
+            <p className="mx-auto mt-3 max-w-sm text-[15px] leading-relaxed text-[#1c1714]">Six touches. A few quick taps. Your body answers.</p>
+            <span className="mt-5 inline-flex min-h-[48px] items-center rounded-full bg-[#0D3535] px-8 text-[12px] font-semibold uppercase tracking-[0.24em] text-[#fefcfa] transition group-hover:bg-[#070707]">
               Take the quiz
             </span>
           </div>
