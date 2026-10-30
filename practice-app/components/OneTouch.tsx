@@ -351,9 +351,10 @@ function icsFor(title: string, url: string) {
 export function OneTouchDay(props: {
   slug: string; day: number; title: string; videoId: string; transcript?: string; card: string | null;
   bonus?: { url: string; label: string } | null; prompts: string[]; nextTitle?: string; alreadyDone: boolean;
+  prevHref?: string; nextHref?: string;
   onDone: () => Promise<void> | void;
 }) {
-  const { slug, day, title, videoId, transcript, card, bonus, prompts, nextTitle, alreadyDone, onDone } = props;
+  const { slug, day, title, videoId, transcript, card, bonus, prompts, nextTitle, alreadyDone, onDone, prevHref, nextHref } = props;
   const [step, setStep] = useState(0); // 0 arrive · 1 practice · 2 card · 3 done
   const [before, setBefore] = useLS<number | null>(`check-${slug}-before`, null);
   const [after, setAfter] = useLS<number | null>(`check-${slug}-after`, null);
@@ -368,8 +369,11 @@ export function OneTouchDay(props: {
   return (
     <main className="min-h-screen bg-[#070707] text-[#F6EFE0]">
       <div ref={top} className="mx-auto max-w-xl px-5 pb-20 pt-5">
-        <div className="flex items-center justify-between">
-          <Link href="/practice/one-touch" className="rounded-full border border-[#DDC98E]/40 px-4 py-1.5 text-xs text-[#DDC98E]">← One Touch</Link>
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex flex-wrap gap-2">
+            <Link href="/" className="rounded-full border border-[#DDC98E]/40 px-4 py-1.5 text-xs text-[#DDC98E]">← Your library</Link>
+            <Link href="/practice/one-touch" className="rounded-full border border-[#DDC98E]/40 px-4 py-1.5 text-xs text-[#DDC98E]">← One Touch</Link>
+          </div>
           <span className="text-[10px] uppercase tracking-[0.3em] text-[#DDC98E]">Day {day} of 7</span>
         </div>
         <h1 className="mt-6 font-display text-[32px] font-light leading-tight">{title}</h1>
@@ -445,8 +449,16 @@ export function OneTouchDay(props: {
                 <button onClick={() => icsFor(nextTitle, "https://app.feelfullyyou.com/practice/one-touch")} className="mt-4 rounded-full border border-[#DDC98E] px-5 py-2.5 text-xs uppercase tracking-[0.2em] text-[#DDC98E]">Remind me tomorrow</button>
               </div>
             ) : null}
+            <button onClick={() => go(0)} className="mt-6 block w-full rounded-full border border-[#DDC98E] py-3 text-xs uppercase tracking-[0.22em] text-[#DDC98E]">Do it again</button>
             <Link href="/practice/one-touch" className="mt-6 inline-block text-xs uppercase tracking-[0.2em] text-[#F6EFE0]/50 underline">Back to One Touch</Link>
           </section>
+        )}
+
+        {(prevHref || nextHref) && (
+          <div className="mt-10 flex items-center justify-between border-t border-[#DDC98E]/15 pt-5 text-sm">
+            {prevHref ? <Link href={prevHref} className="min-h-[44px] py-3 text-[#DDC98E]">← Day {day - 1}</Link> : <span />}
+            {nextHref ? <Link href={nextHref} className="min-h-[44px] py-3 text-[#DDC98E]">Day {day + 1} →</Link> : <span />}
+          </div>
         )}
       </div>
       <style>{`.ot-shimmer{animation:otpop .7s cubic-bezier(.2,.8,.2,1) both}@keyframes otpop{0%{transform:scale(.4);opacity:0}70%{transform:scale(1.12)}100%{transform:scale(1);opacity:1}}`}</style>

@@ -143,6 +143,7 @@ function TouchPointEntryContent() {
     return (
       <main className={`${dark} flex items-center`}>
         <div className="mx-auto max-w-xl px-6 py-20 text-center">
+          <div className="mb-8"><Link href="/" className={pill}>← Your library</Link></div>
           <p className="text-[11px] uppercase tracking-[0.18em] text-[#DDC98E]">Not yet</p>
           <h1 className="mt-3 font-display text-3xl font-light leading-snug">
             {consecutive >= thisDay - 1 && dueAt
@@ -181,9 +182,12 @@ function TouchPointEntryContent() {
   return (
     <main className={dark}>
       <div className="mx-auto max-w-2xl px-5 pb-16 pt-6">
-        <Link href="/practice/31-touch-points" className={pill}>
-          ← The month
-        </Link>
+        <div className="flex flex-wrap gap-2">
+          <Link href="/" className={pill}>← Your library</Link>
+          <Link href="/practice/31-touch-points" className={pill}>
+            ← The month
+          </Link>
+        </div>
 
         {/* The whole photo, never cropped (24 Oct 2026: heads were being cut
             off, Alex's included). It keeps its own shape on every screen. */}

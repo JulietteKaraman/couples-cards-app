@@ -93,6 +93,7 @@ function TheSacredNoEntryContent() {
   if (locked) {
     return (
       <main className="mx-auto max-w-2xl px-6 py-24 text-center">
+        <div className="mb-8"><Link href="/" className="inline-flex items-center gap-1.5 rounded-full border border-ffy-gold-deep/40 px-4 py-2 text-sm font-medium text-ffy-gold-deep">← Your library</Link></div>
         <p className="text-xs uppercase tracking-[0.15em] text-ffy-gold-deep">Not yet</p>
         <h1 className="mt-3 font-display text-3xl font-semibold text-ffy-teal">
           {consecutive >= thisDay - 1 && dueAt
@@ -195,12 +196,17 @@ function TheSacredNoEntryContent() {
       )}
 
       <div className="mx-auto max-w-2xl px-6 pb-14 pt-10">
-        <Link
-          href="/"
-          className={`inline-flex items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-medium transition ${dark ? "border-ffy-gold-pale/40 text-ffy-gold-pale hover:bg-white/5" : "border-ffy-gold-deep/40 text-ffy-gold-deep hover:bg-ffy-gold-deep/5"}`}
-        >
-          ← Your library
-        </Link>
+        <div className="flex flex-wrap gap-2">
+          <Link
+            href="/"
+            className={`inline-flex items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-medium transition ${dark ? "border-ffy-gold-pale/40 text-ffy-gold-pale hover:bg-white/5" : "border-ffy-gold-deep/40 text-ffy-gold-deep hover:bg-ffy-gold-deep/5"}`}
+          >
+            ← Your library
+          </Link>
+          <Link href="/practice/the-sacred-no" className={`inline-flex items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-medium transition ${dark ? "border-ffy-gold-pale/40 text-ffy-gold-pale hover:bg-white/5" : "border-ffy-gold-deep/40 text-ffy-gold-deep hover:bg-ffy-gold-deep/5"}`}>
+            ← The Sacred No
+          </Link>
+        </div>
 
         {entry.eyebrow && (
           <p className={`mt-6 text-xs uppercase tracking-[0.15em] ${dark ? "text-ffy-gold-pale" : "text-ffy-gold-deep"}`}>

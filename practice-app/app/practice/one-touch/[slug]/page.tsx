@@ -49,7 +49,10 @@ function OneTouchEntryContent() {
   }
 
   const back = (
-    <Link href="/practice/one-touch" className="rounded-full border border-[#DDC98E]/40 px-4 py-1.5 text-xs text-[#DDC98E]">← One Touch</Link>
+    <span className="inline-flex flex-wrap justify-center gap-2">
+      <Link href="/" className="rounded-full border border-[#DDC98E]/40 px-4 py-1.5 text-xs text-[#DDC98E]">← Your library</Link>
+      <Link href="/practice/one-touch" className="rounded-full border border-[#DDC98E]/40 px-4 py-1.5 text-xs text-[#DDC98E]">← One Touch</Link>
+    </span>
   );
 
   // Your cards, any time
@@ -144,6 +147,8 @@ function OneTouchEntryContent() {
       bonus={bonusBlock ? { url: bonusBlock.url, label: bonusBlock.label.replace(/^Bonus: /, "") } : null}
       prompts={oneTouchPrompts}
       nextTitle={nextTitle}
+      prevHref={OT_DAY_LESSON[day - 1] ? `/practice/one-touch/${OT_DAY_LESSON[day - 1]}` : undefined}
+      nextHref={nextSlug && (isAdmin || day + 1 <= unlockedThrough) ? `/practice/one-touch/${nextSlug}` : undefined}
       alreadyDone={!!doneSlugs?.includes(slug)}
       onDone={() => done(slug)}
     />

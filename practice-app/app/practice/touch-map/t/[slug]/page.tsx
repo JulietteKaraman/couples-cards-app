@@ -97,7 +97,8 @@ function TouchDetail({ slug }: { slug: string }) {
       <div className="relative mx-auto max-w-2xl md:mt-6 md:rounded-[28px] md:border md:border-[#DDC98E]/30 h-[52vh] min-h-[340px] overflow-hidden">
         <Image src={st.img} alt="" fill priority sizes="100vw" className="tm-drift object-cover" style={{ objectPosition: st.pos }} />
         <div className="absolute inset-0 bg-gradient-to-t from-[#070707] via-[#070707]/30 to-[#070707]/50" />
-        <div className="absolute inset-x-0 top-0 mx-auto max-w-2xl px-5 pt-6">
+        <div className="absolute inset-x-0 top-0 mx-auto flex max-w-2xl flex-wrap gap-2 px-5 pt-6">
+          <Link href="/" className="inline-flex min-h-[44px] items-center rounded-full border-[1.5px] border-[rgba(221,201,142,0.55)] bg-[#070707]/40 px-4 text-sm text-[#DDC98E] backdrop-blur">← Your library</Link>
           <Link href="/practice/touch-map" className="inline-flex min-h-[44px] items-center rounded-full border-[1.5px] border-[rgba(221,201,142,0.55)] bg-[#070707]/40 px-4 text-sm text-[#DDC98E] backdrop-blur">← Your Touch Map</Link>
         </div>
         <div className="absolute inset-x-0 bottom-0 mx-auto max-w-2xl px-5 pb-6">
@@ -172,7 +173,10 @@ function TouchDetail({ slug }: { slug: string }) {
             <span className="block font-display text-4xl font-light leading-none" style={{ color: "#DDC98E" }}>Done</span>
             <p className="mt-3 text-[15px]">It&rsquo;s on your map now. Let it settle.</p>
             {takeAway && <p className="mx-auto mt-5 max-w-sm font-display text-[19px] italic leading-snug text-[#f1ece2]">{takeAway}</p>}
-            <Link href="/practice/touch-map" className="mt-6 inline-flex min-h-[52px] items-center rounded-full bg-[#DDC98E] px-7 text-[15px] font-medium text-[#070707]">Back to your Touch Map</Link>
+            <div className="mt-6 flex flex-col items-center gap-3">
+              <button type="button" onClick={() => { setPhase("touch"); window.scrollTo({ top: 0, behavior: "smooth" }); }} className="inline-flex min-h-[48px] items-center rounded-full border-[1.5px] border-[#DDC98E] px-7 text-[15px] text-[#DDC98E]">Do it again</button>
+              <Link href="/practice/touch-map" className="inline-flex min-h-[52px] items-center rounded-full bg-[#DDC98E] px-7 text-[15px] font-medium text-[#070707]">Back to your Touch Map</Link>
+            </div>
           </div>
         )}
       </div>

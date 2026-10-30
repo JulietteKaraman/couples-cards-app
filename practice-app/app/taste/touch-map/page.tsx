@@ -32,7 +32,10 @@ export default function TasteTouchMap() {
   return (
     <main className="min-h-screen bg-[#070707] text-[#f1ece2] [background-image:radial-gradient(110%_55%_at_50%_0%,rgba(13,53,53,0.9)_0%,rgba(7,7,7,0)_70%)]">
       <div className="mx-auto max-w-2xl px-5 pb-20 pt-6">
-        <p className="inline-flex min-h-[44px] items-center rounded-full border-[1.5px] border-[rgba(221,201,142,0.55)] px-4 text-sm text-[#DDC98E]">
+        <a href="/" className="inline-flex min-h-[44px] items-center gap-1.5 rounded-full border-[1.5px] border-[rgba(221,201,142,0.55)] px-4 text-sm text-[#DDC98E] transition hover:border-[#DDC98E]">
+          ← Your library
+        </a>
+        <p className="mt-4 text-[11px] uppercase tracking-[0.2em] text-[#DDC98E]">
           The Touch Map · a taste
         </p>
 
@@ -53,6 +56,10 @@ export default function TasteTouchMap() {
         {s.step === "steer" && <SteerTouch place={WRIST} onDone={(steers) => save({ step: "answer", steers })} />}
         {s.step === "answer" && <Frisson onAnswer={(a, landed) => (a === "no" ? save({ ...s, step: "stop", landed }) : finish(a, landed))} />}
         {s.step === "stop" && <FullStop onContinue={() => finish("no", s.landed ?? "")} />}
+        {(s.step === "steer" || s.step === "answer") && (
+          <button type="button" onClick={() => save({ ...s, step: s.step === "answer" ? "steer" : "first" })}
+            className="mt-4 inline-flex min-h-[44px] items-center text-[14px] text-[#DDC98E] underline underline-offset-4">← Back a step</button>
+        )}
 
         <div className="mt-10">
           <p className="mb-3 text-[11px] font-medium uppercase tracking-[0.2em] text-[#DDC98E]">Your map</p>
@@ -68,6 +75,7 @@ export default function TasteTouchMap() {
           <div className="tm-done mt-8 rounded-3xl border-2 border-[#DDC98E] bg-[rgba(13,53,53,0.6)] p-6 text-center">
             <span className="block font-display text-4xl font-light leading-none text-[#DDC98E]">Done</span>
             <p className="mt-3 text-[15px]">That&rsquo;s what every day in the Touch Map feels like.</p>
+            <button type="button" onClick={() => save({ step: "first" })} className="mt-5 inline-flex min-h-[48px] items-center rounded-full border-[1.5px] border-[#DDC98E] px-6 text-[15px] text-[#DDC98E]">Try it again</button>
           </div>
         )}
 

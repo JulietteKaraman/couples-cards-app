@@ -184,7 +184,13 @@ function LibraryContent() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, entitledCollections.join(",")]);
 
-  const doneCount = (slug: string) => (completed[slug] || []).length;
+  // Count only real, distinct entries of that collection, so a renamed or
+  // repeated entry can never show "37 of 35 done" (30 Oct 2026).
+  const doneCount = (slug: string) => {
+    const c = [...PAID_COLLECTIONS, whenSheGoesQuiet, betweenTouches].find((x) => x.slug === slug);
+    const done = new Set(completed[slug] || []);
+    return c ? (c.entries as { slug?: string }[]).filter((e) => !!e.slug && done.has(e.slug)).length || Math.min(done.size, c.entries.length) : done.size;
+  };
 
   // TODAY: 31 Touch Points if owned, otherwise the owned practice with the
   // most progress. Day = days completed + 1, capped at 31.
@@ -233,15 +239,13 @@ function LibraryContent() {
             href={`/practice/${thirtyOneTouchPoints.slug}`}
             className="ffy-rise group mt-4 block overflow-hidden rounded-3xl border-2 border-[#DDC98E] bg-[rgba(13,53,53,0.6)] p-6 shadow-[0_0_70px_-20px_rgba(221,201,142,0.35)] sm:p-8"
           >
-            <p className="text-[11px] uppercase tracking-[0.18em] text-[#DDC98E]">Today</p>
+            <p className="text-[11px] uppercase tracking-[0.18em] text-[#DDC98E]">{finished31 ? "Your practice" : "Today"}</p>
             <div className="mt-3 flex items-end justify-between gap-4">
               <div>
-                <h2 className="font-display text-2xl font-light text-ffy-cream sm:text-3xl">
-                  {finished31 ? "You finished the month." : "Carry on with 31 Touch Points"}
-                </h2>
-                <p className="mt-2 text-sm text-[rgba(254,252,250,0.78)]">
-                  {finished31 ? "Every day is still here to come back to." : "One touch point a day. Nothing is lost if you miss one."}
-                </p>
+                <h2 className="font-display text-2xl font-light text-ffy-cream sm:text-3xl">31 Touch Points</h2>
+                {!finished31 && (
+                  <p className="mt-2 text-sm text-[rgba(254,252,250,0.78)]">One touch point a day. Nothing is lost if you miss one.</p>
+                )}
               </div>
               {loaded && !finished31 && (
                 <div className="shrink-0 text-right">
@@ -254,7 +258,7 @@ function LibraryContent() {
               <div className="h-full rounded-full bg-[#DDC98E] transition-all duration-700" style={{ width: `${(Math.min(days31, 31) / 31) * 100}%` }} />
             </div>
             <span className="mt-6 inline-flex min-h-[48px] items-center rounded-full bg-[#DDC98E] px-6 text-[15px] font-medium text-[#070707] transition group-hover:bg-[#EEDE80]">
-              {finished31 ? "Open the month" : loaded ? `Open day ${nextDay}` : "Carry on"}
+              {finished31 ? "Open 31 Touch Points" : loaded ? `Open day ${nextDay}` : "Carry on"}
             </span>
           </Link>
         )}

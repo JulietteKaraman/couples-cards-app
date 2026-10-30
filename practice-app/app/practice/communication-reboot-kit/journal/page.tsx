@@ -128,12 +128,15 @@ function JournalPageContent() {
   return (
     <main className="min-h-screen bg-ffy-cream">
       <div className="mx-auto max-w-xl px-6 py-10">
-        <Link
-          href="/practice/communication-reboot-kit"
-          className="inline-flex items-center gap-1.5 rounded-full border border-ffy-gold-deep/40 px-4 py-2 text-sm font-medium text-ffy-gold-deep transition hover:bg-ffy-gold-deep/5"
-        >
-          ← The Communication Reboot Kit
-        </Link>
+        <div className="flex flex-wrap gap-2">
+          <Link href="/" className="inline-flex items-center gap-1.5 rounded-full border border-ffy-gold-deep/40 px-4 py-2 text-sm font-medium text-ffy-gold-deep transition hover:bg-ffy-gold-deep/5">← Your library</Link>
+          <Link
+            href="/practice/communication-reboot-kit"
+            className="inline-flex items-center gap-1.5 rounded-full border border-ffy-gold-deep/40 px-4 py-2 text-sm font-medium text-ffy-gold-deep transition hover:bg-ffy-gold-deep/5"
+          >
+            ← The Communication Reboot Kit
+          </Link>
+        </div>
 
         <h1 className="mt-6 font-display text-3xl font-semibold text-ffy-teal">Your reflection journal</h1>
         <p className="mt-2 text-sm text-ffy-brown">

@@ -89,6 +89,28 @@ function Banner({ src, pos, eyebrow, title, children }: { src: string; pos: stri
   );
 }
 
+type TabId = "today" | "practices" | "confessions" | "cards";
+const TABS: { id: TabId; label: string }[] = [
+  { id: "today", label: "Today" },
+  { id: "practices", label: "Practices" },
+  { id: "confessions", label: "Confessions" },
+  { id: "cards", label: "Cards" },
+];
+// One line per weekly practice, newest FIRST. opens = the day it unlocks (UK date).
+const PRACTICES: { id: string; name: string; week: string; opens: string; mins: string; img: string; pos: string }[] = [
+  { id: "wrist", name: "The Wrist", week: "Week 1", opens: "2026-10-30", mins: "Three and a half minutes · with my voice", img: "/how-to-feel-like-a-woman/eso15-feather.jpg", pos: "50% 60%" },
+];
+
+function ComingNext({ next }: { next: NonNullable<Next> }) {
+  return (
+    <div className="mt-10 rounded-3xl border-2 border-[#DDC98E]/60 bg-[rgba(13,53,53,0.45)] p-6 text-center">
+      <Eyebrow>Coming {new Date(next.publish_on + "T12:00:00").toLocaleDateString("en-GB", { weekday: "long" })}</Eyebrow>
+      <p className="mt-3 font-display text-[22px] font-light">🔒 {next.kind === "card" ? "A new card" : "A new Scrumptious Confession"}</p>
+      <p className="mt-2 text-[14px] text-[#a79f90]">Come back and it&rsquo;ll be waiting.</p>
+    </div>
+  );
+}
+
 function Content() {
   const [drops, setDrops] = useState<Drop[] | null>(null);
   const [next, setNext] = useState<Next>(null);
@@ -116,6 +138,16 @@ function Content() {
 
   const cards = (drops || []).filter((d) => d.kind === "card");
   const confessions = (drops || []).filter((d) => d.kind === "confession");
+  const [tab, setTab] = useState<TabId>("today");
+  const [openPractice, setOpenPractice] = useState<string | null>(null);
+  const tabsTop = useRef<HTMLDivElement>(null);
+  const pickTab = (t: TabId) => { setTab(t); setOpenPractice(null); tabsTop.current?.scrollIntoView({ behavior: "smooth" }); };
+  const isNew: Record<TabId, boolean> = {
+    today: false,
+    practices: PRACTICES.some((p) => daysAgo(p.opens) >= 0 && daysAgo(p.opens) <= 6),
+    confessions: confessions.some((c) => daysAgo(c.publish_on) <= 3),
+    cards: cards.some((c) => daysAgo(c.publish_on) <= 3),
+  };
 
   return (
     <main className="min-h-screen bg-[#070707] text-ffy-cream [background-image:radial-gradient(110%_55%_at_50%_0%,rgba(13,53,53,0.9)_0%,rgba(7,7,7,0)_70%)]">
@@ -135,53 +167,91 @@ function Content() {
         </div>
         {WELCOME_AUDIO && <div className="mt-5"><VoicePlayer src={`${DIR}/audio/${WELCOME_AUDIO}`} label="A welcome from me" dark /></div>}
 
-        {/* 1. TODAY */}
-        <Today />
-
-        {/* 2. A CARD FROM ME. 28 Oct, Juliette: "on the photo where it says a card from me,
-            add my voice instead of in the box under it. The card(s) should sit under that and then
-            a small timer, your 5 minutes, not 2 green blocks." */}
-        <section className="mt-16">
-          <Banner src={`${DIR}/cards-table.jpg`} pos="50% 72%" eyebrow="This week's card" title="A card from me">
-            <RoundVoice src={CARD_HOWTO_AUDIO} img={`${DIR}/juliette.jpg`} label="Hear Juliette: how to use your card" />
-          </Banner>
-          <p className="mt-3 text-center text-[13px] text-[#a79f90]">Tap my photo to hear how to use your card.</p>
-          {drops === null && <p className="mt-4 text-[#8f877a]">…</p>}
-          {drops !== null && cards.length === 0 && <p className="mt-6 text-center text-[14px] text-[#a79f90]">Your first card lands here very soon.</p>}
-          {cards.map((c, i) => <DropCard key={c.id} drop={c} open={i === 0} />)}
-          <MiniTimer minutes={5} label="Your 5 minutes" />
-        </section>
-
-        {/* 3. THIS WEEK'S PRACTICE (one a week, building her library) */}
-        <Wrist />
-
-        {/* 4. SCRUMPTIOUS CONFESSIONS */}
-        <section className="mt-16">
-          <Eyebrow>My voice, just for you</Eyebrow>
-          <div className="relative mt-3 aspect-square overflow-hidden rounded-3xl border-[1.5px] border-[rgba(221,201,142,0.45)]">
-            <Image src={`${DIR}/scrumptious-confessions.jpg`} alt="Scrumptious Confessions" fill sizes="(max-width: 768px) 100vw, 672px" className="object-cover" />
-          </div>
-          {drops !== null && confessions.length === 0 && <p className="mt-4 text-center text-[14px] text-[#a79f90]">My first confession lands here very soon.</p>}
-          <div className="mt-4 space-y-4">
-            {confessions.map((c) => (
-              <div key={c.id} className="rounded-2xl border border-[#DDC98E]/30 bg-[rgba(13,53,53,0.3)] p-4">
-                <p className="flex items-center gap-2 text-[11px] uppercase tracking-[0.18em] text-[#a79f90]">
-                  {daysAgo(c.publish_on) <= 3 && <span className="h-2 w-2 rounded-full bg-[#EEDE80] shadow-[0_0_10px_#EEDE80]" />}
-                  {dayName(c.publish_on)}
-                </p>
-                {c.audio && <div className="mt-3"><VoicePlayer src={c.audio} label={c.title || "Listen"} dark /></div>}
-                {c.body && <p className="mt-3 text-[15px] text-[#cfc8bb]">{c.body}</p>}
-              </div>
+        {/* TABS, 30 Oct, Juliette: "it should be different tabs, just like the other ones".
+            Today = the daily practice. Practices = one tile per weekly practice, named
+            for what it is (The Wrist), newest on top. Confessions and Cards = every drop,
+            newest first. Add a practice by adding a line to PRACTICES. */}
+        <div ref={tabsTop} className="sticky top-0 z-20 -mx-5 mt-6 bg-[#070707]/90 px-5 py-3 backdrop-blur">
+          <div className="grid grid-cols-4 gap-1.5">
+            {TABS.map((t) => (
+              <button key={t.id} type="button" onClick={() => pickTab(t.id)}
+                className={`relative min-h-[44px] rounded-full border px-0.5 text-[12.5px] transition ${tab === t.id ? "border-[#DDC98E] bg-[#DDC98E] text-[#070707]" : "border-[#DDC98E]/30 text-[#DDC98E]"}`}>
+                {t.label}
+                {isNew[t.id] && tab !== t.id && <span className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full bg-[#EEDE80] shadow-[0_0_10px_#EEDE80]" />}
+              </button>
             ))}
           </div>
-        </section>
+        </div>
 
-        {/* 5. COMING NEXT */}
-        {next && (
-          <section className="mt-16 rounded-3xl border-2 border-[#DDC98E]/60 bg-[rgba(13,53,53,0.45)] p-6 text-center">
-            <Eyebrow>Coming {new Date(next.publish_on + "T12:00:00").toLocaleDateString("en-GB", { weekday: "long" })}</Eyebrow>
-            <p className="mt-3 font-display text-[22px] font-light">🔒 {next.kind === "card" ? "A new card" : "A new Scrumptious Confession"}</p>
-            <p className="mt-2 text-[14px] text-[#a79f90]">Come back and it&rsquo;ll be waiting.</p>
+        {tab === "today" && <Today />}
+
+        {tab === "practices" && (
+          openPractice ? (
+            <div>
+              <button type="button" onClick={() => setOpenPractice(null)} className="mt-6 inline-flex min-h-[44px] items-center text-[14px] text-[#DDC98E] underline underline-offset-4">← All practices</button>
+              {openPractice === "wrist" && <Wrist />}
+            </div>
+          ) : (
+            <section className="mt-6 space-y-3">
+              <p className="text-[15px] text-[#a79f90]">A new one lands each week. They stay here for you to come back to.</p>
+              {PRACTICES.map((p) => {
+                const fresh = daysAgo(p.opens) >= 0 && daysAgo(p.opens) <= 6;
+                const notYet = todayUK() < p.opens;
+                return (
+                  <button key={p.id} type="button" onClick={() => { setOpenPractice(p.id); tabsTop.current?.scrollIntoView({ behavior: "smooth" }); }}
+                    className="flex w-full items-center gap-4 overflow-hidden rounded-3xl border-[1.5px] border-[rgba(221,201,142,0.45)] bg-[rgba(13,53,53,0.35)] p-3 text-left">
+                    <span className="relative h-20 w-20 shrink-0 overflow-hidden rounded-2xl">
+                      <Image src={p.img} alt="" fill sizes="80px" className="object-cover" style={{ objectPosition: p.pos }} />
+                    </span>
+                    <span className="flex-1">
+                      <span className="flex items-center gap-2 text-[11px] uppercase tracking-[0.18em] text-[#DDC98E]">
+                        {fresh && <span className="h-2 w-2 rounded-full bg-[#EEDE80] shadow-[0_0_10px_#EEDE80]" />}
+                        {p.week}{fresh ? " · New" : ""}
+                      </span>
+                      <span className="mt-1 block font-display text-[24px] font-light leading-tight">{p.name}</span>
+                      <span className="mt-0.5 block text-[13px] text-[#a79f90]">{notYet ? `🔒 Opens ${new Date(p.opens + "T12:00:00").toLocaleDateString("en-GB", { weekday: "long" })}` : p.mins}</span>
+                    </span>
+                    <span className="pr-2 text-[#DDC98E]">→</span>
+                  </button>
+                );
+              })}
+            </section>
+          )
+        )}
+
+        {tab === "confessions" && (
+          <section className="mt-6">
+            <div className="relative aspect-square overflow-hidden rounded-3xl border-[1.5px] border-[rgba(221,201,142,0.45)]">
+              <Image src={`${DIR}/scrumptious-confessions.jpg`} alt="Scrumptious Confessions" fill sizes="(max-width: 768px) 100vw, 672px" className="object-cover" />
+            </div>
+            {drops !== null && confessions.length === 0 && <p className="mt-4 text-center text-[14px] text-[#a79f90]">My first confession lands here very soon.</p>}
+            <div className="mt-4 space-y-4">
+              {confessions.map((c) => (
+                <div key={c.id} className="rounded-2xl border border-[#DDC98E]/30 bg-[rgba(13,53,53,0.3)] p-4">
+                  <p className="flex items-center gap-2 text-[11px] uppercase tracking-[0.18em] text-[#a79f90]">
+                    {daysAgo(c.publish_on) <= 3 && <span className="h-2 w-2 rounded-full bg-[#EEDE80] shadow-[0_0_10px_#EEDE80]" />}
+                    {dayName(c.publish_on)}
+                  </p>
+                  {c.audio && <div className="mt-3"><VoicePlayer src={c.audio} label={c.title || "Listen"} dark /></div>}
+                  {c.body && <p className="mt-3 text-[15px] text-[#cfc8bb]">{c.body}</p>}
+                </div>
+              ))}
+            </div>
+            {next && next.kind === "confession" && <ComingNext next={next} />}
+          </section>
+        )}
+
+        {tab === "cards" && (
+          <section className="mt-6">
+            <Banner src={`${DIR}/cards-table.jpg`} pos="50% 72%" eyebrow="This week's card" title="A card from me">
+              <RoundVoice src={CARD_HOWTO_AUDIO} img={`${DIR}/juliette.jpg`} label="Hear Juliette: how to use your card" />
+            </Banner>
+            <p className="mt-3 text-center text-[13px] text-[#a79f90]">Tap my photo to hear how to use your card.</p>
+            {drops === null && <p className="mt-4 text-[#8f877a]">…</p>}
+            {drops !== null && cards.length === 0 && <p className="mt-6 text-center text-[14px] text-[#a79f90]">Your first card lands here very soon.</p>}
+            {cards.map((c, i) => <DropCard key={c.id} drop={c} open={i === 0} />)}
+            <MiniTimer minutes={5} label="Your 5 minutes" />
+            {next && next.kind === "card" && <ComingNext next={next} />}
           </section>
         )}
       </div>
@@ -216,21 +286,34 @@ function Today() {
   const [start, setStart] = useState("");
   const [labNext, setLabNext] = useState("");
   useEffect(() => { setDays(readDays()); setStart(lsGet(START_KEY)); setLabNext(nextLab()); }, []);
-  const rec = days[today] || {};
-  const save = (r: DayRec) => { const all = { ...readDays(), [today]: { ...rec, ...r } }; lsSet(DAYS_KEY, JSON.stringify(all)); setDays(all); };
-  const dayNum = start ? Math.min(31, daysBetween(start, today) + 1) : 1;
+  // 30 Oct, Juliette: every app must let you move between days. sel = the
+  // day being looked at; today unless she taps back.
+  const [sel, setSel] = useState(today);
+  const isToday = sel === today;
+  const shift = (d: string, n: number) => { const x = new Date(d + "T12:00:00"); x.setDate(x.getDate() + n); return x.toISOString().slice(0, 10); };
+  const rec = days[sel] || {};
+  const save = (r: DayRec) => { const all = { ...readDays(), [sel]: { ...rec, ...r } }; lsSet(DAYS_KEY, JSON.stringify(all)); setDays(all); };
+  const dayNum = start ? Math.min(31, Math.max(1, daysBetween(start, sel) + 1)) : 1;
+  const canBack = !!start && sel > start && daysBetween(start, sel) > 0;
+  const canFwd = sel < today;
   const markDone = () => {
     let s = start;
     if (!s) { s = today; lsSet(START_KEY, s); setStart(s); }
-    const n = Math.min(31, daysBetween(s, today) + 1);
+    const n = Math.min(31, daysBetween(s, sel) + 1);
     save({ done: true });
     count(rec.where === "lab" ? "htflaw_lab" : "htflaw_solo", n, rec.feel);
   };
   const pill = (on: boolean) => `flex min-h-[48px] items-center justify-center gap-2 rounded-full border px-3 text-[15px] ${on ? "border-[#DDC98E] bg-[rgba(221,201,142,0.15)] text-[#f1ece2]" : "border-[#DDC98E]/30 text-[#f1ece2]/80"}`;
 
   return (
-    <section className="mt-12">
-      <Banner src={`${DIR}/scrumptious-stroking.jpg`} pos="50% 40%" eyebrow={`Today · day ${dayNum} of 31`} title="Scrumptious Stroking" />
+    <section className="mt-6">
+      <Banner src={`${DIR}/scrumptious-stroking.jpg`} pos="50% 40%" eyebrow={isToday ? `Today · day ${dayNum} of 31` : `Day ${dayNum} of 31`} title="Scrumptious Stroking" />
+      {(canBack || canFwd) && (
+        <div className="mt-4 flex items-center justify-between text-sm">
+          {canBack ? <button type="button" onClick={() => setSel(shift(sel, -1))} className="min-h-[44px] py-3 text-[#DDC98E]">← Day {dayNum - 1}</button> : <span />}
+          {canFwd ? <button type="button" onClick={() => setSel(shift(sel, 1))} className="min-h-[44px] py-3 text-[#DDC98E]">{shift(sel, 1) === today ? "Today →" : `Day ${dayNum + 1} →`}</button> : <span />}
+        </div>
+      )}
       <p className="mt-5 text-[17px] leading-relaxed text-[#cfc8bb]">Fifteen minutes, every day. My bells and my voice, so you always know where you are. Press play, put the phone down.</p>
       <SlimPlayer src={`${DIR}/audio/${STROKING_AUDIO}`} label="Practise with me · 15 minutes" />
       <details className="mt-3 rounded-2xl border border-[#DDC98E]/20 px-4 py-3">
@@ -243,7 +326,7 @@ function Today() {
       </details>
 
       <div className="mt-8 rounded-3xl border border-[#DDC98E]/40 bg-[rgba(13,53,53,0.35)] p-5">
-        <Eyebrow>Where did you practise today?</Eyebrow>
+        <Eyebrow>{isToday ? "Where did you practise today?" : `Where did you practise on day ${dayNum}?`}</Eyebrow>
         <div className="mt-3 grid grid-cols-2 gap-2">
           <button type="button" onClick={() => save({ where: "solo" })} className={pill(rec.where === "solo")}>On my own</button>
           <button type="button" onClick={() => save({ where: "lab" })} className={pill(rec.where === "lab")}>In Practice Lab</button>
@@ -265,7 +348,8 @@ function Today() {
           {rec.done ? (
             <div className="ffy-done rounded-2xl border-2 border-[#DDC98E] bg-[rgba(13,53,53,0.6)] p-5 text-center">
               <span className="block font-display text-3xl font-light text-[#DDC98E]">Done</span>
-              <p className="mt-2 text-[15px]">Day {dayNum} is coloured in. See you tomorrow.</p>
+              <p className="mt-2 text-[15px]">Day {dayNum} is coloured in.{isToday ? " See you tomorrow." : ""}</p>
+              <button type="button" onClick={() => save({ done: false })} className="mt-3 inline-flex min-h-[44px] items-center text-[14px] text-[#DDC98E] underline underline-offset-4">Not done yet? Undo</button>
             </div>
           ) : (
             <button type="button" onClick={markDone}
@@ -275,7 +359,7 @@ function Today() {
           )}
         </div>
 
-        <MonthDots days={days} start={start} />
+        <MonthDots days={days} start={start} sel={sel} onPick={(d) => { if (d <= today) setSel(d); }} />
       </div>
 
       {/* Touch Base, the other daily practice. 28 Oct, Juliette: not boxy, "in Juliette's voice"
@@ -292,7 +376,7 @@ function Today() {
   );
 }
 
-function MonthDots({ days, start }: { days: Record<string, DayRec>; start: string }) {
+function MonthDots({ days, start, sel, onPick }: { days: Record<string, DayRec>; start: string; sel?: string; onPick?: (d: string) => void }) {
   const s = start || todayUK();
   const dateOf = (i: number) => { const d = new Date(s + "T12:00:00"); d.setDate(d.getDate() + i); return d.toISOString().slice(0, 10); };
   const doneCount = Array.from({ length: 31 }, (_, i) => days[dateOf(i)]?.done).filter(Boolean).length;
@@ -304,8 +388,8 @@ function MonthDots({ days, start }: { days: Record<string, DayRec>; start: strin
           const r = days[dateOf(i)];
           const c = r?.done ? FEELS.find((f) => f.id === r.feel)?.color ?? "rgba(221,201,142,0.45)" : undefined;
           return (
-            <span key={i} title={`Day ${i + 1}`} className="aspect-square rounded-full border"
-              style={{ background: c ?? "transparent", borderColor: c ?? "rgba(221,201,142,0.3)", boxShadow: r?.done && r.where === "lab" ? "0 0 0 2px #070707, 0 0 0 3.5px #DDC98E" : undefined }} />
+            <button type="button" key={i} title={`Day ${i + 1}`} aria-label={`Day ${i + 1}`} onClick={() => onPick?.(dateOf(i))} className="aspect-square rounded-full border"
+              style={{ background: c ?? "transparent", borderColor: dateOf(i) === sel ? "#EEDE80" : c ?? "rgba(221,201,142,0.3)", boxShadow: r?.done && r.where === "lab" ? "0 0 0 2px #070707, 0 0 0 3.5px #DDC98E" : undefined }} />
           );
         })}
       </div>
@@ -416,8 +500,8 @@ function Wrist() {
   useEffect(() => { setLocked(todayUK() < WRIST_OPENS); }, []);
   const opensDay = new Date(WRIST_OPENS + "T12:00:00").toLocaleDateString("en-GB", { weekday: "long" });
   return (
-    <section className="mt-16">
-      <Banner src={`${DIR}/eso15-feather.jpg`} pos="50% 60%" eyebrow="This week's practice · three minutes" title="The Wrist" />
+    <section className="mt-4">
+      <Banner src={`${DIR}/eso15-feather.jpg`} pos="50% 60%" eyebrow="Week 1 · three and a half minutes" title="The Wrist" />
       <p className="mt-5 text-[17px] leading-relaxed text-[#cfc8bb]">
         Try this and see what feels like a yes.<br />Did voicing it out loud increase sensation?
       </p>

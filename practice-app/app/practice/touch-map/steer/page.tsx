@@ -43,7 +43,8 @@ function Hero({ place, eyebrow, title }: { place?: Place; eyebrow: string; title
     <div className="relative mx-auto max-w-2xl md:mt-6 md:rounded-[28px] md:border md:border-[#DDC98E]/30 h-[46vh] min-h-[320px] overflow-hidden">
       <Image src={ph.img} alt="" fill priority sizes="100vw" className="tm-drift object-cover" style={{ objectPosition: ph.pos ?? "center", filter: "grayscale(.35)" }} />
       <div className="absolute inset-0 bg-gradient-to-t from-[#070707] via-[#070707]/30 to-[#070707]/50" />
-      <div className="absolute inset-x-0 top-0 mx-auto max-w-2xl px-5 pt-6">
+      <div className="absolute inset-x-0 top-0 mx-auto flex max-w-2xl flex-wrap gap-2 px-5 pt-6">
+        <Link href="/" className="inline-flex min-h-[44px] items-center rounded-full border-[1.5px] border-[rgba(221,201,142,0.55)] bg-[#070707]/40 px-4 text-sm text-[#DDC98E] backdrop-blur">← Your library</Link>
         <Link href="/practice/touch-map" className="inline-flex min-h-[44px] items-center rounded-full border-[1.5px] border-[rgba(221,201,142,0.55)] bg-[#070707]/40 px-4 text-sm text-[#DDC98E] backdrop-blur">← Your Touch Map</Link>
       </div>
       <div className="absolute inset-x-0 bottom-0 mx-auto max-w-2xl px-5 pb-6">
@@ -142,6 +143,23 @@ function Content() {
           )}
           <div className="mx-auto mt-8 max-w-md text-left"><SlimPlayer src={TM_AUDIO.thatsToday!} label="That's today · 30 seconds" /></div>
           <p className="mt-6 text-[15px] text-[#a79f90]">{nextInOrder ? "Your next place opens tomorrow." : "You've learned the steer. Every touch on your menu is yours now."}</p>
+          {lastPlace && (
+            <button type="button" onClick={() => setPick(lastPlace.id)}
+              className="mt-6 inline-flex min-h-[48px] w-full items-center justify-center rounded-full border-[1.5px] border-[#DDC98E] px-6 text-[15px] text-[#DDC98E]">
+              Do it again
+            </button>
+          )}
+          {finished.length > 1 && (
+            <div className="mx-auto mt-8 max-w-md text-left">
+              <p className="text-[11px] uppercase tracking-[0.2em] text-[#DDC98E]">Go back to an earlier place</p>
+              <div className="mt-3 grid gap-2">
+                {PLACES.filter((p) => finished.some((x) => x.place === p.id) && p.id !== lastPlace?.id).map((p) => (
+                  <button key={p.id} type="button" onClick={() => setPick(p.id)}
+                    className="flex min-h-[52px] items-center rounded-2xl border border-[#DDC98E]/30 px-4 text-left text-[16px]">{p.label}</button>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </>
     );

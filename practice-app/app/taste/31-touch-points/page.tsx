@@ -81,7 +81,10 @@ export default function TasteThirtyOneTouchPoints() {
   return (
     <main className="min-h-screen bg-[#070707] text-ffy-cream [background-image:radial-gradient(110%_55%_at_50%_0%,rgba(13,53,53,0.9)_0%,rgba(7,7,7,0)_70%)]">
       <div className="mx-auto max-w-2xl px-5 pb-20 pt-6">
-        <p className="inline-flex min-h-[44px] items-center rounded-full border-[1.5px] border-[rgba(221,201,142,0.55)] px-4 text-sm text-[#DDC98E]">
+        <a href="/" className="inline-flex min-h-[44px] items-center gap-1.5 rounded-full border-[1.5px] border-[rgba(221,201,142,0.55)] px-4 text-sm text-[#DDC98E] transition hover:border-[#DDC98E]">
+          ← Your library
+        </a>
+        <p className="mt-4 text-[11px] uppercase tracking-[0.2em] text-[#DDC98E]">
           31 Touch Points · a taste
         </p>
 
@@ -165,6 +168,7 @@ export default function TasteThirtyOneTouchPoints() {
             <div className="ffy-done rounded-3xl border-2 border-[#DDC98E] bg-[rgba(13,53,53,0.6)] p-6 text-center">
               <span className="block font-display text-4xl font-light leading-none text-[#DDC98E]">Done</span>
               <p className="mt-3 text-[15px] text-ffy-cream">That&rsquo;s what every day in the app feels like.</p>
+              <button type="button" onClick={() => { lsSet(DONE_KEY, ""); setDone(false); }} className="mt-5 inline-flex min-h-[48px] items-center rounded-full border-[1.5px] border-[#DDC98E] px-6 text-[15px] text-[#DDC98E]">Do it again</button>
             </div>
           ) : (
             <button

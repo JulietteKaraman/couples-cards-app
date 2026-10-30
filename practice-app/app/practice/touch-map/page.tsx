@@ -50,7 +50,7 @@ function Hub() {
   const shell = (children: React.ReactNode) => (
     <main className="min-h-screen bg-[#070707] text-[#f1ece2] [background-image:radial-gradient(110%_55%_at_50%_0%,rgba(13,53,53,0.9)_0%,rgba(7,7,7,0)_70%)]">
       <div className="mx-auto max-w-2xl px-5 pb-24 pt-6">
-        <Link href="/" className="inline-flex min-h-[44px] items-center rounded-full border-[1.5px] border-[rgba(221,201,142,0.55)] px-4 text-sm text-[#DDC98E]">← The Feel Fully You App</Link>
+        <Link href="/" className="inline-flex min-h-[44px] items-center rounded-full border-[1.5px] border-[rgba(221,201,142,0.55)] px-4 text-sm text-[#DDC98E]">← Your library</Link>
         {children}
       </div>
       <style>{QUIZ_CSS}</style>
