@@ -29,9 +29,22 @@ const KIT_BASE = "https://api.kit.com/v4";
 // app but have bought nothing" a segment Juliette can actually mail.
 const APP_SIGNUP_TAG_ID = 22701818;
 
+// The free practices ask for a first name and email before they open
+// (FreeEmailGate, 1 Nov 2026). Same tags and welcome sequences as the website
+// forms for these freebies, so both doors land in one place. Only these two
+// can be asked for, so nobody can tag themselves into anything else from here.
+const FREEBIES: Record<string, { tagId: number; sequenceId: number }> = {
+  "between-touches": { tagId: 20896291, sequenceId: 2825129 },
+  "touch-base": { tagId: 20896290, sequenceId: 2825130 },
+};
+
 export async function POST(req: Request) {
   try {
-    const { email, firstName } = await req.json();
+    const { email, firstName, freebie, website } = await req.json();
+    // The hidden bot trap on the form. People never fill it in.
+    if (website) {
+      return NextResponse.json({ ok: true, synced: false, reason: "trap" });
+    }
     if (!email || typeof email !== "string") {
       return NextResponse.json({ ok: true, synced: false, reason: "no email" });
     }
@@ -72,11 +85,24 @@ export async function POST(req: Request) {
       console.error("kit-signup: subscriber create failed", emailAddress, createRes.status);
     }
 
-    const tagRes = await fetch(`${KIT_BASE}/tags/${APP_SIGNUP_TAG_ID}/subscribers`, {
+    const free = typeof freebie === "string" ? FREEBIES[freebie] : undefined;
+
+    const tagRes = await fetch(`${KIT_BASE}/tags/${free ? free.tagId : APP_SIGNUP_TAG_ID}/subscribers`, {
       method: "POST",
       headers,
       body: JSON.stringify({ email_address: emailAddress }),
     });
+
+    if (free) {
+      const seqRes = await fetch(`${KIT_BASE}/sequences/${free.sequenceId}/subscribers`, {
+        method: "POST",
+        headers,
+        body: JSON.stringify({ email_address: emailAddress }),
+      });
+      if (!seqRes.ok) {
+        console.error("kit-signup: sequence add failed", emailAddress, seqRes.status);
+      }
+    }
 
     if (!tagRes.ok) {
       console.error("kit-signup: tag apply failed", emailAddress, tagRes.status);

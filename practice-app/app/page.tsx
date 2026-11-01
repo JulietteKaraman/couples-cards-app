@@ -41,6 +41,7 @@ const TILE_IMAGE: Record<string, string> = {
 };
 // Where each tile photo sits in its square, so heads are never cut off (Juliette, 30 Oct 2026).
 const TILE_POS: Record<string, string> = {
+  "/offers/free-cards-app.jpg": "50% 0%",
   "/offers/sales/sacred-no-quiz.jpg": "50% 6%",
   "/when-she-goes-quiet/real/hero.jpg": "50% 4%",
   "/offers/sales/repair-kit.jpg": "50% 16%",
@@ -451,8 +452,17 @@ function LibraryContent() {
             note={
               user
                 ? `Free · ${doneCount(betweenTouches.slug)} of ${betweenTouches.entries.length} done`
-                : "Free · open it now"
+                : "Free"
             }
+          />
+          {/* Her ask, 1 Nov 2026. Goes to the website sign-up, so these people land on the list too. */}
+          <Tile
+            href="https://feelfullyyou.com/cards-free-taster"
+            external
+            title="Six free cards"
+            subtitle="On your phone. Three for the two of you, three for the people you have known longest."
+            heroImage="/offers/free-cards-app.jpg"
+            note="Free · opens on the website"
           />
         </div>
 

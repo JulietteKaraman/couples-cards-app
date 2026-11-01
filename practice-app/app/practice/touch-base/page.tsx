@@ -1,6 +1,7 @@
 "use client";
 
-// Touch Base® Anchor. Free, no login, one page (27 Oct 2026 rebuild in the
+// Touch Base® Anchor. Free, no login (first name and email first, since
+// 1 Nov 2026, see FreeEmailGate), one page (27 Oct 2026 rebuild in the
 // dark hub style of When She Goes Quiet and the buyer pages).
 //
 // Every word of the practice, the "why it works" and the closing line is
@@ -17,6 +18,7 @@ import { useEffect, useState } from "react";
 import VoicePlayer from "@/components/VoicePlayer";
 import PracticeTimer from "@/components/PracticeTimer";
 import { TellMe } from "@/components/TellMe";
+import { FreeEmailGate } from "@/components/FreeEmailGate";
 
 const GOLD = "#DDC98E";
 const LOG_KEY = "ffy.touchbase.log.v1";
@@ -70,6 +72,7 @@ export default function TouchBasePage() {
         <h1 className="mt-3 font-display text-[42px] font-light leading-[1.05]">Touch Base®, the Anchor</h1>
         <p className="mt-4 text-lg text-[#a79f90]">A tiny gesture. A massive shift. Two minutes, no equipment.</p>
 
+        <FreeEmailGate freebie="touch-base">
         <a href="#try" className="mt-8 inline-flex items-center rounded-full bg-[#DDC98E] px-7 py-4 font-display text-lg font-medium text-[#1a1814]">
           Do it now →
         </a>
@@ -149,6 +152,7 @@ export default function TouchBasePage() {
         </p>
 
         <TellMe line="I just did Touch Base. What came up for me: " />
+        </FreeEmailGate>
       </div>
     </main>
   );

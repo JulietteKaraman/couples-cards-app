@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { betweenTouches } from "@/lib/content/between-touches";
 import { Blocks } from "@/components/Blocks";
 import { CollectionGate } from "@/components/auth/CollectionGate";
+import { FreeEmailGate } from "@/components/FreeEmailGate";
 import { useAuth } from "@/components/providers/AuthProvider";
 import { getCompletedSlugs, markComplete } from "@/lib/entitlements/progress";
 import { localDone, addLocalDone } from "../progressLocal";
@@ -15,7 +16,9 @@ import { localDone, addLocalDone } from "../progressLocal";
 export default function BetweenTouchesEntry() {
   return (
     <CollectionGate collectionSlug={betweenTouches.slug}>
-      <BetweenTouchesEntryContent />
+      <FreeEmailGate freebie="between-touches" fullPage>
+        <BetweenTouchesEntryContent />
+      </FreeEmailGate>
     </CollectionGate>
   );
 }
