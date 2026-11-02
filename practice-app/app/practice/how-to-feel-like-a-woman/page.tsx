@@ -96,8 +96,10 @@ const TABS: { id: TabId; label: string }[] = [
   { id: "confessions", label: "Confessions" },
   { id: "cards", label: "Cards" },
 ];
+const ELBOW_OPENS = "2026-11-06"; // Friday
 // One line per weekly practice, newest FIRST. opens = the day it unlocks (UK date).
 const PRACTICES: { id: string; name: string; week: string; opens: string; mins: string; img: string; pos: string }[] = [
+  { id: "elbow", name: "Elbow to Armpit", week: "Week 2", opens: ELBOW_OPENS, mins: "Six and a half minutes · with my voice", img: "/how-to-feel-like-a-woman/eso15-feather.jpg", pos: "50% 30%" },
   { id: "wrist", name: "The Wrist", week: "Week 1", opens: "2026-10-30", mins: "Three and a half minutes · with my voice", img: "/how-to-feel-like-a-woman/eso15-feather.jpg", pos: "50% 60%" },
 ];
 
@@ -190,6 +192,7 @@ function Content() {
             <div>
               <button type="button" onClick={() => setOpenPractice(null)} className="mt-6 inline-flex min-h-[44px] items-center text-[14px] text-[#DDC98E] underline underline-offset-4">← All practices</button>
               {openPractice === "wrist" && <Wrist />}
+              {openPractice === "elbow" && <ElbowPractice />}
             </div>
           ) : (
             <section className="mt-6 space-y-3">
@@ -559,6 +562,62 @@ function Wrist() {
           </li>
         ))}
       </ol>
+    </section>
+  );
+}
+
+/* Week 2. One recording, one arm, three pleasure languages, her voice untouched (Drive
+   "New Recording 27 armpit", 2 Nov). Juliette: "record a new one and layer things in". */
+const ELBOW_AUDIO = "elbow-to-armpit-layered.m4a";
+const ELBOW_PARTS = [
+  { lang: "Energetic", title: "The hover", note: "Hover, land, then trace up towards your armpit." },
+  { lang: "Sexual", title: "Your own mouth", note: "Say out loud what you'd love next, even if you don't give it to yourself." },
+  { lang: "Kinky", title: "Your own grip", note: "Firmer than feels polite. Make yourself wait. Then let go completely." },
+];
+const ELBOW_KEY = "ffy.htflaw.elbow.v1";
+function ElbowPractice() {
+  const [ans, setAns] = useState<Record<number, string>>({});
+  useEffect(() => { try { setAns(JSON.parse(lsGet(ELBOW_KEY) || "{}")); } catch {} }, []);
+  const [locked, setLocked] = useState(true);
+  useEffect(() => {
+    const previewOpen = process.env.NODE_ENV === "development" && new URLSearchParams(window.location.search).has("open");
+    setLocked(todayUK() < ELBOW_OPENS && !previewOpen);
+  }, []);
+  const pick = (i: number, id: string) => { const n = { ...ans, [i]: id }; setAns(n); lsSet(ELBOW_KEY, JSON.stringify(n)); };
+  const opensDay = new Date(ELBOW_OPENS + "T12:00:00").toLocaleDateString("en-GB", { weekday: "long" });
+  return (
+    <section className="mt-4">
+      <Banner src={`${DIR}/eso15-feather.jpg`} pos="50% 30%" eyebrow="Week 2 · six and a half minutes" title="Elbow to Armpit" />
+      <p className="mt-5 text-[17px] leading-relaxed text-[#cfc8bb]">
+        On your own, somewhere private. There&rsquo;s no wrong, there&rsquo;s no right.<br />Which one did your body lean into?
+      </p>
+      {locked ? (
+        <p className="mt-5 flex items-center gap-2 rounded-full border border-[#DDC98E]/40 px-4 py-2.5 text-[14px] text-[#DDC98E]">
+          <span aria-hidden="true">🔒</span> Opens {opensDay}. I&rsquo;ll take you through it.
+        </p>
+      ) : (
+        <>
+        <SlimPlayer src={`${DIR}/audio/${ELBOW_AUDIO}`} label="Do it with me · 6½ minutes" />
+        <ol className="mt-5 space-y-3">
+          {ELBOW_PARTS.map((s, i) => (
+            <li key={s.lang} className="rounded-2xl border border-[#DDC98E]/30 bg-[rgba(13,53,53,0.3)] p-4">
+              <p className="text-[11px] uppercase tracking-[0.18em] text-[#DDC98E]">{s.lang}</p>
+              <p className="mt-1 font-display text-[20px] font-light">{s.title}</p>
+              <p className="mt-1 text-[14px] text-[#a79f90]">{s.note}</p>
+              <div className="mt-3 grid grid-cols-3 gap-2">
+                {STOP.map((o) => (
+                  <button key={o.id} type="button" onClick={() => pick(i, o.id)}
+                    className={`flex min-h-[44px] items-center justify-center gap-2 rounded-full border text-[14px] ${ans[i] === o.id ? "bg-[rgba(221,201,142,0.12)] text-[#f1ece2]" : "text-[#f1ece2]/75"}`}
+                    style={{ borderColor: ans[i] === o.id ? o.c : "rgba(221,201,142,0.3)" }}>
+                    <span className="h-3 w-3 rounded-full" style={{ background: o.c }} />{o.label}
+                  </button>
+                ))}
+              </div>
+            </li>
+          ))}
+        </ol>
+        </>
+      )}
     </section>
   );
 }
