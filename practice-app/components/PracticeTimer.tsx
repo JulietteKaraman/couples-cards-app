@@ -32,11 +32,13 @@ export default function PracticeTimer({
   label,
   dark = false,
   solo = false,
+  onDone,
 }: {
   minutes: number[];
   label?: string;
   dark?: boolean;
   solo?: boolean;
+  onDone?: () => void;
 }) {
   const options = minutes.length ? minutes : [3];
   const [chosen, setChosen] = useState(options[0]);
@@ -48,6 +50,10 @@ export default function PracticeTimer({
   const tick = useRef<ReturnType<typeof setInterval> | null>(null);
   const lock = useRef<WakeLockSentinel | null>(null);
   const actx = useRef<AudioContext | null>(null);
+  const doneCb = useRef(onDone);
+  useEffect(() => {
+    doneCb.current = onDone;
+  }, [onDone]);
 
   const sleep = useCallback(() => {
     try {
@@ -116,6 +122,7 @@ export default function PracticeTimer({
     } catch {
       /* desktop */
     }
+    doneCb.current?.();
   }, [chime, sleep, stopTick]);
 
   const read = useCallback(() => {
