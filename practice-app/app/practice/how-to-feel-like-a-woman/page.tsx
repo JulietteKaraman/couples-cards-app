@@ -446,21 +446,26 @@ function DropCard({ drop, open }: { drop: Drop; open: boolean }) {
       <TapToTurn prompt={drop.body || ""} onTurned={() => setTurned(true)} />
       {turned && (
         <>
-          {/* 28 Oct: her sisterhood group (link from the course welcome page). Tapping copies the
-              card's words, then opens the group, so every answer lands with Juliette. */}
-          <a href={WHATSAPP_GROUP} target="_blank" rel="noreferrer"
-            onClick={() => { try { navigator.clipboard?.writeText(drop.body || ""); } catch {} setCopied(true); }}
-            className="inline-flex min-h-[52px] w-full items-center justify-center rounded-full bg-[#DDC98E] font-display text-[16px] font-medium text-[#070707] transition hover:bg-[#EEDE80]">
-            Answer it in our WhatsApp group
-          </a>
-          <p className="mt-2 text-center text-[13px] text-[#8f877a]">{copied ? "The card is copied. Paste it in the group with your answer." : "Opens our group. The card's words come with you."}</p>
-          <label className="mt-4 block rounded-2xl border-[1.5px] border-[#D8DFE1]/60 bg-[#D8DFE1]/[0.06] p-4">
-            <span className="text-[12px] font-medium uppercase tracking-[0.16em] text-[#D8DFE1]">Just for you</span>
-            <textarea value={note} onChange={(e) => { setNote(e.target.value); lsSet(key, e.target.value); }} rows={3}
-              placeholder="Or write it here first…"
+          {/* 2 Nov: write first, then post. The button copies her answer with the card's words and
+              opens the sisterhood group (WhatsApp can't pre-fill a group message, so she pastes).
+              Not tapping it keeps the answer private. */}
+          <label className="block rounded-2xl border-[1.5px] border-[#D8DFE1]/60 bg-[#D8DFE1]/[0.06] p-4">
+            <span className="text-[12px] font-medium uppercase tracking-[0.16em] text-[#D8DFE1]">Your answer</span>
+            <textarea value={note} onChange={(e) => { setNote(e.target.value); lsSet(key, e.target.value); setCopied(false); }} rows={4}
+              placeholder="Write it here…"
               className="mt-2 w-full resize-none bg-transparent text-[16px] leading-relaxed text-[#f1ece2] placeholder:text-[#f1ece2]/35 focus:outline-none" />
           </label>
-          <p className="mt-2 text-[13px] text-[#8f877a]">Saved on this phone only. Not even I see it.</p>
+          <p className="mb-4 mt-2 text-[13px] text-[#8f877a]">Saved on this phone. It stays private unless you post it.</p>
+          <a href={WHATSAPP_GROUP} target="_blank" rel="noreferrer"
+            onClick={() => {
+              const text = note.trim() ? `${drop.body || ""}\n\n${note.trim()}` : drop.body || "";
+              try { navigator.clipboard?.writeText(text); } catch {}
+              setCopied(true);
+            }}
+            className="inline-flex min-h-[52px] w-full items-center justify-center rounded-full bg-[#DDC98E] font-display text-[16px] font-medium text-[#070707] transition hover:bg-[#EEDE80]">
+            Post in our WhatsApp group
+          </a>
+          <p className="mt-2 text-center text-[13px] text-[#8f877a]">{copied ? (note.trim() ? "Copied. Paste it in the group." : "The card is copied. Paste it in the group with your answer.") : "Copies your answer and opens our group."}</p>
         </>
       )}
     </div>
