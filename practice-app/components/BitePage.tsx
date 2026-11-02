@@ -10,7 +10,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import PracticeTimer from "@/components/PracticeTimer";
 import { PromptCard } from "@/components/Interactive";
-import { BITE_CSS, FEELS, Html, Photo, PLAIN_GOLD, StepBar, Voice, read, write } from "@/components/BiteKit";
+import { BITE_CSS, FEELS, Html, MuteNote, Photo, PLAIN_GOLD, StepBar, Voice, read, write } from "@/components/BiteKit";
 import { count } from "@/lib/count";
 
 type PhotoB = { type: "photo"; src: string; alt: string; pos?: string; ratio?: string; maxW?: number; caption?: string };
@@ -406,6 +406,7 @@ export default function BitePage({ bite }: { bite: Bite }) {
               <p className="text-[14px] text-[#a79f90]">Tap Begin and I&rsquo;ll welcome you in.</p>
             </div>
           </div>
+          <MuteNote />
           <button type="button" onClick={begin} className="mt-6 inline-flex min-h-[52px] w-full items-center justify-center rounded-full bg-[#DDC98E] font-display text-[17px] font-medium text-[#070707]">Begin →</button>
         </section>
 

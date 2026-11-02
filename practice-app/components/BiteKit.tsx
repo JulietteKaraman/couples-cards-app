@@ -135,6 +135,16 @@ export function Html({ html, className }: { html: string; className?: string }) 
   return <div ref={ref} className={`frag ${className ?? ""}`} dangerouslySetInnerHTML={inner} />;
 }
 
+// Juliette, 2 Nov 2026, from her own iPhone: with the phone on mute nothing plays,
+// voice or video, however high the volume is.
+export function MuteNote() {
+  return (
+    <p className="mt-5 rounded-2xl border border-[#DDC98E]/40 bg-[rgba(13,53,53,0.45)] px-4 py-3 text-[14px] leading-relaxed text-[#f1ece2]">
+      <span className="text-[#DDC98E]">Sound on.</span> Make sure your phone is off mute. Even if you turn the volume up, it won&rsquo;t play while your phone is on mute.
+    </p>
+  );
+}
+
 export function StepBar({ step, total }: { step: number; total: number }) {
   return (
     <div className="mb-5 h-1 overflow-hidden rounded-full bg-[rgba(221,201,142,0.15)]" aria-hidden="true">
