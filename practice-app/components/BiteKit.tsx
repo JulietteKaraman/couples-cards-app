@@ -307,4 +307,24 @@ export const BITE_CSS = `
         .wssr .intent{margin:24px 0;padding:26px 20px;border-radius:22px;background:rgba(13,53,53,.7);font-family:var(--font-display);font-weight:300;font-size:24px;line-height:1.3;text-align:center;color:#f1ece2}
         .wssr .intent small{display:block;margin-bottom:8px;font-family:var(--font-body);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#DDC98E}
         .wssr h3{margin-top:22px}
+        .wssr .more2 p{margin:0 0 8px}
+        .wssr .seven{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin:20px 0}
+        .wssr .seven div{aspect-ratio:3/4;display:grid;place-items:center;border:1px solid rgba(221,201,142,.4);border-radius:8px;font-family:var(--font-display);color:#a79f90}
+        .wssr .seven div:first-child{background:#DDC98E;border-color:#DDC98E;color:#070707}
+        .wssr ol.watchfor{list-style:none;margin:14px 0 20px;padding:0;counter-reset:w}
+        .wssr ol.watchfor li{counter-increment:w;position:relative;padding:14px 0 14px 44px;border-bottom:1px solid rgba(221,201,142,.2);font-size:16px;color:#cfc8bb}
+        .wssr ol.watchfor li:last-child{border-bottom:0}
+        .wssr ol.watchfor li::before{content:counter(w);position:absolute;left:0;top:14px;display:grid;place-items:center;width:28px;height:28px;border:1px solid #DDC98E;border-radius:50%;font-size:13px;color:#DDC98E}
+        .wssr .stretches{margin:20px 0}
+        .wssr .st{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start;padding:16px 0;border-bottom:1px solid rgba(221,201,142,.2)}
+        .wssr .st:last-child{border-bottom:0}
+        .wssr .st .days{display:flex;flex-wrap:wrap;gap:3px;width:70px;padding-top:5px}
+        .wssr .st .days i{width:9px;height:9px;border-radius:50%;background:#DDC98E}
+        .wssr .st:nth-child(5) .days i{background:#EEDE80}
+        .wssr .st b{display:block;font-family:var(--font-display);font-weight:500;font-size:17px;color:#DDC98E}
+        .wssr .st small{display:block;margin:2px 0 6px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#a79f90}
+        .wssr .st p{margin:0;font-size:15px}
+        .wssr ul.order{list-style:none;margin:16px 0;padding:0}
+        .wssr ul.order li{padding:7px 0 7px 22px;position:relative;font-family:var(--font-display);font-weight:300;font-size:19px;color:#f1ece2}
+        .wssr ul.order li::before{content:"\\2192";position:absolute;left:0;color:#DDC98E}
       `;

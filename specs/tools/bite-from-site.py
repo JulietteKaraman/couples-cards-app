@@ -91,7 +91,10 @@ for c in cfgs:
         i=0
         while i<len(ks):
             e=ks[i];cl=cls(e);i+=1
-            if e['tag']=='figure': continue
+            if e['tag']=='figure':
+                im=re.search(r'src="(media/[^"]+)"',e['inner'])
+                if im and im.group(1) in c.get('inlinePhotos',{}): flush();out.append(photo(c['inlinePhotos'][im.group(1)]))
+                continue
             if 'media' in cl and e['tag']=='div': flush();out.extend(parse_media(e));continue
             if 'more' in cl: continue
             if 'timer' in cl: flush();out.append(dict(type='timer',min=int(attr(e,'data-min'))));continue
@@ -109,8 +112,12 @@ for c in cfgs:
             if 'path' in cl:
                 flush();lab=text(find(e['inner'],'lab') or '');opts=re.findall(r'<button type="button" data-a="(\w+)">(.*?)</button>',e['inner']);ps=dict(re.findall(r'<div data-p="(\w+)" hidden>(.*?)</div>',e['inner'],re.S))
                 out.append(dict(type='path',lab=lab,options=[dict(label=H.unescape(t),html=fix(ps.get(a,''))) for a,t in opts]));continue
-            if 'resp' in cl:
-                flush();out.append(dict(type='resp',items=[dict(b=H.unescape(a),span=H.unescape(b_),i=H.unescape(c_)) for a,b_,c_ in re.findall(r'<button><b>(.*?)</b><span>(.*?)</span><i>(.*?)</i></button>',e['inner'],re.S)]));continue
+            if 'resp' in cl or 'terr' in cl:
+                flush();items=[]
+                for k in kids(e['inner']):
+                    bb=re.search(r'<b>(.*?)</b>',k['inner'],re.S);sp=re.search(r'<span>(.*?)</span>',k['inner'],re.S);sm=re.search(r'<small>(.*?)</small>',k['inner'],re.S);ii=re.search(r'<i>(.*?)</i>',k['inner'],re.S);mo=find(k['inner'],'more2')
+                    items.append({x:y for x,y in dict(b=text(bb.group(1)),span=text(sp.group(1)),small=sm and text(sm.group(1)),i=ii and text(ii.group(1)),html=mo and fix(mo)).items() if y})
+                out.append(dict(type='resp',items=items));continue
             if 'cta' in cl:
                 flush();sm=re.search(r'<small>(.*?)</small>',e['inner'],re.S);out.append({k:v for k,v in dict(type='cta',href=attr(e,'href'),text=text(re.sub(r'<small>.*?</small>','',e['inner'],flags=re.S)),small=sm and text(sm.group(1))).items() if v});continue
             buf.append(e['html'])

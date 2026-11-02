@@ -25,7 +25,7 @@ type Block =
   | { type: "check"; items: string[]; ready?: string }
   | { type: "roles"; q: string; hint: string; tabs: [string, string][]; cards: { role: string; html: string }[] }
   | { type: "path"; lab: string; options: { label: string; html: string }[] }
-  | { type: "resp"; items: { b: string; span: string; i: string }[] }
+  | { type: "resp"; items: { b: string; span: string; small?: string; i?: string; html?: string }[] }
   | { type: "cta"; href: string; text: string; small?: string };
 type Step = { id: string; name: string; photo?: PhotoB; blocks: Block[] };
 export type Bite = { slug: string; short: string; title: string; line: string; meta: string; hero: PhotoB; me: string; checkinStep: string; doneLine: string; doorImg: string; steps: Step[] };
@@ -142,10 +142,12 @@ function Resp({ b }: { b: Extract<Block, { type: "resp" }> }) {
   return (
     <div className="my-4 grid gap-2.5">
       {b.items.map((x, i) => (
-        <button key={x.b} type="button" onClick={() => setOn((o) => (o.includes(i) ? o : [...o, i]))} className={`rounded-2xl border p-4 text-left transition ${on.includes(i) ? "border-[#DDC98E] bg-[rgba(13,53,53,0.6)] shadow-[0_0_30px_-14px_#DDC98E]" : "border-[#DDC98E]/35"}`}>
+        <button key={x.b} type="button" onClick={() => setOn((o) => (o.includes(i) ? o.filter((v) => v !== i) : [...o, i]))} className={`rounded-2xl border p-4 text-left transition ${on.includes(i) ? "border-[#DDC98E] bg-[rgba(13,53,53,0.6)] shadow-[0_0_30px_-14px_#DDC98E]" : "border-[#DDC98E]/35"}`}>
+          {x.small && <small className="float-right mt-1 text-[11px] text-[#a79f90]">{x.small}</small>}
           <span className="block font-display text-[19px] uppercase tracking-[0.06em] text-[#DDC98E]">{x.b}</span>
           <span className="mt-0.5 block text-[15px] text-[#f1ece2]">{x.span}</span>
-          {on.includes(i) && <span className="mt-3 block border-t border-[#DDC98E]/25 pt-3 text-[15px] text-[#cfc8bb]">{x.i}</span>}
+          {on.includes(i) && x.i && <span className="mt-3 block border-t border-[#DDC98E]/25 pt-3 text-[15px] text-[#cfc8bb]">{x.i}</span>}
+          {on.includes(i) && x.html && <span className="more2 mt-3 block border-t border-[#DDC98E]/25 pt-3 text-[15px] text-[#cfc8bb]" dangerouslySetInnerHTML={{ __html: x.html }} />}
         </button>
       ))}
     </div>
