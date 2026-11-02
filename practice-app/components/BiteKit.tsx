@@ -164,11 +164,11 @@ export function Voice({ id, src, label }: { id?: string; src: string; label: str
   );
 }
 
-export function Photo({ src, alt, pos = "50% 30%" }: { src: string; alt: string; pos?: string }) {
+export function Photo({ src, alt, pos = "50% 30%", ratio = "4 / 5" }: { src: string; alt: string; pos?: string; ratio?: string }) {
+  // Whole photos, each framed by hand so every head stays in. Never zoomed.
   return (
-    <div className="relative mb-7 h-56 overflow-hidden rounded-3xl border-[1.5px] border-[rgba(221,201,142,0.45)] sm:h-72">
-      <Image src={src} alt={alt} fill sizes="(max-width: 768px) 100vw, 672px" className="wssr-zoom object-cover" style={{ objectPosition: pos }} />
-      <div className="absolute inset-0 bg-gradient-to-t from-[#070707]/70 to-transparent" />
+    <div className="relative mx-auto mb-7 w-full max-w-[440px] overflow-hidden rounded-3xl border-[1.5px] border-[rgba(221,201,142,0.45)]" style={{ aspectRatio: ratio }}>
+      <Image src={src} alt={alt} fill sizes="(max-width: 768px) 100vw, 440px" className="object-cover" style={{ objectPosition: pos }} />
     </div>
   );
 }
@@ -234,8 +234,6 @@ export const BITE_CSS = `
         .wssr .examples div{padding:14px 18px;border-radius:16px;background:rgba(13,53,53,.6);font-family:var(--font-display);font-weight:300;font-size:18px;color:#f1ece2}
         .wssr > div > section:not(.hidden){animation:wssrIn .45s cubic-bezier(.2,.8,.2,1) both}
         @keyframes wssrIn{from{opacity:.25;transform:translateY(14px)}to{opacity:1;transform:none}}
-        .wssr-zoom{animation:wssrZoom 9s ease-out both}
-        @keyframes wssrZoom{from{transform:scale(1.09)}to{transform:scale(1)}}
         .wssr section:not(.hidden) .pop{animation:wssrUp .5s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i,0) * 70ms)}
         @keyframes wssrUp{from{opacity:.25;transform:translateY(14px)}to{opacity:1;transform:none}}
         .wssr p.big{font-size:29px}

@@ -255,19 +255,19 @@ export default function WhenSheStopsReaching() {
         </section>
 
         <section className={show("what")}>
-          <Photo src={`${DIR}/hub/top-what.jpg`} alt="Juliette and Alex, his kiss on her shoulder" />
+          <Photo src={`${DIR}/photos/juli-11.jpg`} alt="Juliette and Alex, his kiss on her shoulder" pos="50% 55%" ratio="4 / 5" />
           <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-[#DDC98E]">Start here</p>
           <Voice id="wssr-w1" src={`${DIR}/voice/W1.m4a`} label="A minute from me" />
           <Html html={WSSR.what} />
         </section>
 
         <section className={show("this")}>
-          <Photo src={`${DIR}/hub/top-this.jpg`} alt="Juliette and Alex dancing in the street at night" />
+          <Photo src={`${DIR}/photos/juli-17.jpg`} alt="Juliette and Alex dancing in the street at night" pos="50% 33%" ratio="4 / 5" />
           <Html html={WSSR.this} />
         </section>
 
         <section className={show("setup")}>
-          <Photo src={`${DIR}/peek-selfie.jpg`} alt="Alex's hand hovering near Juliette, not yet touching" pos="50% 35%" />
+          <Photo src={`${DIR}/photos/peek-selfie.jpg`} alt="Alex's hand hovering near Juliette, not yet touching" pos="50% 50%" ratio="4 / 5" />
           <Html html={WSSR.setupIntro} />
           <div className="mt-6 rounded-3xl border border-[#DDC98E]/40 bg-[rgba(13,53,53,0.35)] p-5">
             <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-[#DDC98E]">What did she say?</p>
@@ -305,7 +305,7 @@ export default function WhenSheStopsReaching() {
         </section>
 
         <section className={show("p1")}>
-          <Photo src={`${DIR}/hub/top-p1.jpg`} alt="Juliette, eyes soft, on her own" />
+          <Photo src={`${DIR}/photos/eso-48.jpg`} alt="Juliette, eyes soft, on her own" pos="50% 5%" ratio="4 / 5" />
           <Html html={WSSR.p1Head} />
           <WatchListen active={cur === "p1"} title="Touch Base" eyebrow="Watch once, then listen"
             video="https://player.vimeo.com/video/1223329859?speed=1&badge=0&autopause=0&player_id=0&app_id=58479" ratio="16 / 9"
@@ -333,13 +333,13 @@ export default function WhenSheStopsReaching() {
         </section>
 
         <section className={show("p3")}>
-          <Photo src={`${DIR}/peek-buda1.jpg`} alt="Juliette and Alex hugging on the terrace" pos="45% 12%" />
+          <Photo src={`${DIR}/photos/peek-buda1.jpg`} alt="Juliette and Alex hugging on the terrace" pos="50% 18%" ratio="4 / 5" />
           <Html html={WSSR.p3} />
         </section>
 
         {/* DO IT NOW. Practice and check-in sit together, nothing between them. */}
         <section className={show("now")}>
-          <Photo src={`${DIR}/hub/top-now.jpg`} alt="Juliette and Alex dancing by the Thames" />
+          <Photo src={`${DIR}/photos/juli-32.jpg`} alt="Juliette and Alex dancing by the Thames" pos="50% 55%" ratio="4 / 5" />
           <p className="partno">All three, one screen</p>
           <h2>Do it now</h2>
           {!solo && <p className="lead">Keep your phone where you can hear it. Do one, tap Done, then the next.</p>}
@@ -415,7 +415,7 @@ export default function WhenSheStopsReaching() {
         </section>
 
         <section className={show("after")}>
-          <Photo src={`${DIR}/hub/top-after.jpg`} alt="Juliette and Alex on the sofa with their dog" />
+          <Photo src={`${DIR}/photos/juli-35.jpg`} alt="Juliette and Alex on the sofa with their dog" pos="50% 70%" ratio="4 / 5" />
           <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-[#DDC98E]">Before you go</p>
           <Voice src={`${DIR}/voice/W3.m4a`} label="A last word from me" />
           <Html html={WSSR.after} />

@@ -198,29 +198,29 @@ export default function TheFullStop() {
         </section>
 
         <section className={show("what")}>
-          <Photo src={`${DIR}/hub/top-what.jpg`} alt="Juliette and Alex, his hand at her necklace, both smiling" />
+          <Photo src={`${DIR}/photos/peek-her.jpg`} alt="Juliette on a blue sofa, looking straight at you" pos="50% 45%" ratio="3 / 2" />
           <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-[#DDC98E]">Start here</p>
           <Voice id="fs-f1" src={`${DIR}/voice/F1.m4a`} label="A minute from me" />
           <Html html={FS.what} />
         </section>
 
         <section className={show("why")}>
-          <Photo src={`${DIR}/hub/top-why.jpg`} alt="Juliette and Alex in black tie" />
+          <Photo src={`${DIR}/photos/juli-03.jpg`} alt="Juliette and Alex in black tie" pos="50% 20%" ratio="4 / 5" />
           <Html html={FS.why} />
         </section>
 
         <section className={show("question")}>
-          <Photo src={`${DIR}/hub/top-question.jpg`} alt="Juliette smiling, reaching towards the camera" />
+          <Photo src={`${DIR}/photos/jp-36.jpg`} alt="Juliette smiling, reaching towards the camera" pos="50% 50%" ratio="8 / 5" />
           <Html html={FS.question} />
         </section>
 
         <section className={show("leaks")}>
-          <Photo src={`${DIR}/hub/top-leaks.jpg`} alt="Juliette, close up" />
+          <Photo src={`${DIR}/photos/jp-16.jpg`} alt="Juliette, close up" pos="50% 50%" ratio="4 / 5" />
           <Html html={FS.leaks} />
         </section>
 
         <section className={show("pairs")}>
-          <Photo src={`${DIR}/peek-kiss.jpg`} alt="Juliette and Alex hugging on the terrace, her in a white dress" pos="50% 0%" />
+          <Photo src={`${DIR}/photos/peek-kiss.jpg`} alt="Juliette and Alex hugging on the terrace, her in a white dress" pos="50% 7%" ratio="4 / 5" />
           <Html html={FS.pairsIntro} />
           <p className="mt-5 text-[11px] font-medium uppercase tracking-[0.2em] text-[#DDC98E]">Listen</p>
           <Voice src={`${DIR}/voice/F2.m4a`} label="Hear the difference" />
@@ -230,19 +230,19 @@ export default function TheFullStop() {
         </section>
 
         <section className={show("nothing")}>
-          <Photo src={`${DIR}/hub/top-nothing.jpg`} alt="Juliette in a white dress, quiet" />
+          <Photo src={`${DIR}/photos/jp-18.jpg`} alt="Juliette in a white dress, quiet" pos="50% 8%" ratio="4 / 5" />
           <Html html={FS.nothing} />
         </section>
 
         <section className={show("practise")}>
-          <Photo src={`${DIR}/peek-buda2.jpg`} alt="Juliette and Alex, a selfie in the evening" pos="50% 42%" />
+          <Photo src={`${DIR}/photos/peek-buda2.jpg`} alt="Juliette and Alex, a selfie in the evening" pos="50% 53%" ratio="4 / 5" />
           <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-[#DDC98E]">Your week</p>
           <Voice src={`${DIR}/voice/F3.m4a`} label="How to practise it" />
           <Html html={FS.practise} />
         </section>
 
         <section className={show("week")}>
-          <Photo src={`${DIR}/hub/top-week.jpg`} alt="Juliette and Alex, a selfie under the leaves" />
+          <Photo src={`${DIR}/photos/juli-24.jpg`} alt="Juliette and Alex, a selfie under the leaves" pos="50% 85%" ratio="4 / 5" />
           <Html html={FS.weekHead} />
 
           <div className="mt-6 rounded-3xl border border-[#DDC98E]/40 bg-[rgba(13,53,53,0.35)] p-5">
