@@ -117,6 +117,28 @@ function enhance(root: HTMLElement) {
 
   // Plays when the step appears, and always ends fully visible. Never tied to
   // scrolling, so her words can't get stuck hidden on a slow phone.
+  // The loop lights up one step at a time.
+  root.querySelectorAll<HTMLElement>(".loop").forEach((box) => {
+    const parts = Array.from(box.querySelectorAll<HTMLElement>(":scope > span:not(.ar)"));
+    if (parts.length < 2) return;
+    box.classList.add("tap");
+    const h = hint(box, "Tap to go round it");
+    box.addEventListener("click", () => {
+      const next = parts.find((x) => !x.classList.contains("on"));
+      if (next) next.classList.add("on");
+      else parts.forEach((x) => x.classList.remove("on"));
+      buzz();
+      h.remove();
+    });
+  });
+
+  // Seven days: the first is open, the rest arrive one morning at a time.
+  root.querySelectorAll<HTMLElement>(".seven").forEach((box) => {
+    const days = Array.from(box.querySelectorAll<HTMLElement>(":scope > div"));
+    box.classList.add("tap");
+    days.forEach((d, i) => { if (i > 0) d.classList.add("locked"); d.addEventListener("click", () => { d.classList.remove("wiggle"); void d.offsetWidth; d.classList.add("wiggle"); buzz(); }); });
+  });
+
   root.querySelectorAll<HTMLElement>(":scope > *").forEach((el, i) => {
     el.style.setProperty("--i", String(Math.min(i, 7)));
     el.classList.add("pop");
@@ -174,11 +196,11 @@ export function Voice({ id, src, label }: { id?: string; src: string; label: str
   );
 }
 
-export function Photo({ src, alt, pos = "50% 30%", ratio = "4 / 5", maxW = 440 }: { src: string; alt: string; pos?: string; ratio?: string; maxW?: number }) {
+export function Photo({ src, alt, pos = "50% 30%", ratio = "4 / 5", maxW = 440, plain = false, eager = false }: { src: string; alt: string; pos?: string; ratio?: string; maxW?: number; plain?: boolean; eager?: boolean }) {
   // Whole photos, each framed by hand so every head stays in. Never zoomed.
   return (
-    <div className="relative mx-auto mb-7 w-full overflow-hidden rounded-3xl border-[1.5px] border-[rgba(221,201,142,0.45)]" style={{ aspectRatio: ratio, maxWidth: maxW }}>
-      <Image src={src} alt={alt} fill sizes="(max-width: 768px) 100vw, 440px" className="object-cover" style={{ objectPosition: pos }} />
+    <div className={`relative mx-auto mb-7 w-full overflow-hidden ${plain ? "" : "rounded-3xl border-[1.5px] border-[rgba(221,201,142,0.45)]"}`} style={{ aspectRatio: ratio, maxWidth: maxW }}>
+      <Image src={src} alt={alt} fill sizes="(max-width: 768px) 100vw, 440px" className="object-cover" style={{ objectPosition: pos }} loading={eager ? "eager" : undefined} />
     </div>
   );
 }
@@ -327,4 +349,11 @@ export const BITE_CSS = `
         .wssr ul.order{list-style:none;margin:16px 0;padding:0}
         .wssr ul.order li{padding:7px 0 7px 22px;position:relative;font-family:var(--font-display);font-weight:300;font-size:19px;color:#f1ece2}
         .wssr ul.order li::before{content:"\\2192";position:absolute;left:0;color:#DDC98E}
+        .wssr .loop.tap{cursor:pointer}
+        .wssr .loop.tap>span:not(.ar){padding:4px 10px;border-radius:99px;transition:all .25s ease}
+        .wssr .loop.tap>span.on{background:#DDC98E;color:#070707;box-shadow:0 0 18px -4px #DDC98E}
+        .wssr .seven.tap div{cursor:pointer}
+        .wssr .seven.tap div.locked{opacity:.55}
+        .wssr .seven .wiggle{animation:wssrWiggle .35s ease}
+        @keyframes wssrWiggle{0%,100%{transform:none}30%{transform:scale(1.14)}60%{transform:scale(.96)}}
       `;

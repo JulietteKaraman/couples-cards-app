@@ -9,10 +9,11 @@ export const BITE = {
   "meta": "7 sittings · 15 minutes · In the app",
   "hero": {
     "type": "photo",
-    "src": "/bites/the-three-answers/photos/850_0254.jpg",
-    "alt": "Two pairs of hands holding the black Communication and Intimacy cards",
-    "pos": "50% 50%",
-    "ratio": "4 / 5"
+    "src": "/bites/the-three-answers/photos/three-answers-timer-iphone.png",
+    "alt": "The Three Answers in the app: the timer, with Thank you, Clarify that and Summarise that",
+    "ratio": "640 / 1309",
+    "maxW": 270,
+    "plain": true
   },
   "me": "/bites/the-three-answers/hub/me.jpg",
   "checkinStep": "prompts",
@@ -35,14 +36,7 @@ export const BITE = {
           "type": "html",
           "html": "<div class=\"kicker\">01</div>\n<h2>What is actually happening</h2>\n<p class=\"lead\">You have had this conversation before. Nine times, maybe more.</p>\n<p>It starts reasonably. Somewhere along the way one of you explains, the other one defends, and then you are no longer talking about the thing.</p>\n<p class=\"big\">You are talking about <em>who is right.</em></p>\n<p>An hour later nothing has moved, and both of you are tired in a way that sleep does not fix.</p>\n<p>So you stop trying.</p>\n<p>That is the part nobody says out loud.</p>\n<p>You do not necessarily have a row about it. You just quietly take it off the list of things you bring up.</p>\n<p>Because the conversation never seems to stay on the subject.</p>\n<p>It starts with one real thing and somehow arrives at who did not empty the dishwasher, and from there at something from three years ago that neither of you has put down.</p>\n<p>You both leave with more on the pile than you came in with.</p>\n<p>It does not mean you do not love each other.</p>\n<p>It is what can happen when two people are trying to speak and respond to each other at the same time.</p>\n<div class=\"thoughts\">\n<p>You explain.</p>\n<p>They defend.</p>\n<p>You clarify what you meant.</p>\n<p>They tell you what they meant.</p>\n<p>One of you tries to fix it.</p>\n</div>\n<p>Suddenly the thing one of you was trying to say has disappeared underneath the conversation about it.</p>\n<blockquote style=\"font-style:normal\">The moment I defend, you are no longer simply being heard. You are being answered.<br><br>The moment I fix, your experience has become a problem I am trying to solve.</blockquote>\n<p>What you are missing is not honesty.</p>\n<p>You may have plenty of honesty.</p>\n<p class=\"big\">What you are missing is a structure that lets one person speak and the other <em>actually receive it.</em></p>"
         }
-      ],
-      "photo": {
-        "type": "photo",
-        "src": "/bites/the-three-answers/photos/0151.jpg",
-        "alt": "Juliette in a green shirt, smiling",
-        "pos": "50% 5%",
-        "ratio": "4 / 5"
-      }
+      ]
     },
     {
       "id": "this",
@@ -55,10 +49,11 @@ export const BITE = {
       ],
       "photo": {
         "type": "photo",
-        "src": "/bites/the-three-answers/photos/0155.jpg",
-        "alt": "Juliette in a green shirt and a black hat",
-        "pos": "50% 0%",
-        "ratio": "4 / 5"
+        "src": "/bites/the-three-answers/photos/three-answers-agree-iphone.png",
+        "alt": "The app: For the next 15 minutes, our only aim is to understand each other. We agree. Start.",
+        "ratio": "640 / 1151",
+        "maxW": 270,
+        "plain": true
       }
     },
     {
@@ -92,15 +87,11 @@ export const BITE = {
         {
           "type": "html",
           "html": "<p style=\"margin-top:20px\">That's it.</p>\n<ul class=\"rules\">\n<li>No \"yes, but…\"</li>\n<li>No \"I felt the same when…\"</li>\n<li>No explaining your side.</li>\n<li>No question of your own.</li>\n</ul>\n<p>Then you keep going. Same prompt. Back and forth.</p>\n<div class=\"loop\"><span>One clear communication.</span><span class=\"ar\">→</span><span>Receive it.</span><span class=\"ar\">→</span><span>Thank You.</span><span class=\"ar\">→</span><span>Swap.</span></div>\n<p class=\"big\" style=\"margin-top:0\">Until the timer goes. <em>That's the practice.</em></p>"
+        },
+        {
+          "type": "appDemo"
         }
-      ],
-      "photo": {
-        "type": "photo",
-        "src": "/bites/the-three-answers/photos/0157.jpg",
-        "alt": "Juliette, arm raised, laughing",
-        "pos": "50% 0%",
-        "ratio": "4 / 5"
-      }
+      ]
     },
     {
       "id": "listen",
@@ -109,13 +100,6 @@ export const BITE = {
         {
           "type": "html",
           "html": "<div class=\"kicker\">04</div>\n<h2>Listen first, then watch</h2>\n<p>Before you do your first Dyad, there are two short pieces I want you to go through.</p>"
-        },
-        {
-          "type": "photo",
-          "src": "/bites/the-three-answers/photos/welcome.jpg",
-          "alt": "Juliette Karaman",
-          "pos": "50% 20%",
-          "ratio": "4 / 5"
         },
         {
           "type": "voice",
@@ -135,27 +119,9 @@ export const BITE = {
         },
         {
           "type": "html",
-          "html": "<p>In particular, watch for:</p>\n<ol class=\"watchfor\">\n<li>How short one clear communication actually is.</li>\n<li>How quickly we swap once the communication has been received.</li>\n<li>What happens when something tender is said and the listener doesn't immediately move in to soothe, encourage or pull more out of them.</li>\n</ol>\n<p>That last one matters.</p>\n<p>You may feel the instinct to reach across, hug them, encourage them to keep going or say something that lets them know you're there.</p>\n<p>For these fifteen minutes, stay with the structure instead.</p>\n<p class=\"big\">Let the communication land. <em>Then: Thank You. Swap.</em></p>"
-        },
-        {
-          "type": "photo",
-          "src": "/bites/the-three-answers/photos/juliette-alex-look-face-to-face.jpg",
-          "alt": "Juliette and Alex, face to face",
-          "pos": "50% 35%",
-          "ratio": "4 / 5"
-        },
-        {
-          "type": "html",
-          "html": "<h3>Why this is harder than it sounds</h3>\n<p>So often, we don't listen simply to understand.</p>\n<p>We listen and respond at the same time.</p>\n<p>Watch yourself the next time somebody tells you something real.</p>\n<p>You might nod. Agree. Disagree. Reassure them. Ask a question.</p>\n<p>Or somewhere around their third sentence, you may already be building what you're going to say the moment they stop.</p>\n<p class=\"lead\">The Dyad asks you not to do that.</p>\n<p>You may be surprised by how difficult that feels.</p>\n<p>Especially when somebody you love says something tender.</p>\n<div class=\"thoughts\">\n<p>You may want to reach across and put your arms around them.</p>\n<p>You may want to tell them it's okay.</p>\n<p>You may want to encourage them to say more, or ask another question to help them get there.</p>\n</div>\n<p>All of those impulses can come from care.</p>\n<p>But for these fifteen minutes, we're practising something different.</p>\n<p class=\"lead\">Can you let what they said land without immediately doing something with it?</p>\n<p>Can you stay with them without fixing, soothing, explaining, encouraging or making their communication about your response?</p>\n<p>You don't have to pull more out of them. You don't have to make the moment better.</p>\n<p>Receive what they actually gave you. Then use one of your three answers.</p>\n<p class=\"big\">That's the practice.</p>"
+          "html": "<p>In particular, watch for:</p>\n<ol class=\"watchfor\">\n<li>How short one clear communication actually is.</li>\n<li>How quickly we swap once the communication has been received.</li>\n<li>What happens when something tender is said and the listener doesn't immediately move in to soothe, encourage or pull more out of them.</li>\n</ol>\n<p>That last one matters.</p>\n<p>You may feel the instinct to reach across, hug them, encourage them to keep going or say something that lets them know you're there.</p>\n<p>For these fifteen minutes, stay with the structure instead.</p>\n<p class=\"big\">Let the communication land. <em>Then: Thank You. Swap.</em></p>\n<h3>Why this is harder than it sounds</h3>\n<p>So often, we don't listen simply to understand.</p>\n<p>We listen and respond at the same time.</p>\n<p>Watch yourself the next time somebody tells you something real.</p>\n<p>You might nod. Agree. Disagree. Reassure them. Ask a question.</p>\n<p>Or somewhere around their third sentence, you may already be building what you're going to say the moment they stop.</p>\n<p class=\"lead\">The Dyad asks you not to do that.</p>\n<p>You may be surprised by how difficult that feels.</p>\n<p>Especially when somebody you love says something tender.</p>\n<div class=\"thoughts\">\n<p>You may want to reach across and put your arms around them.</p>\n<p>You may want to tell them it's okay.</p>\n<p>You may want to encourage them to say more, or ask another question to help them get there.</p>\n</div>\n<p>All of those impulses can come from care.</p>\n<p>But for these fifteen minutes, we're practising something different.</p>\n<p class=\"lead\">Can you let what they said land without immediately doing something with it?</p>\n<p>Can you stay with them without fixing, soothing, explaining, encouraging or making their communication about your response?</p>\n<p>You don't have to pull more out of them. You don't have to make the moment better.</p>\n<p>Receive what they actually gave you. Then use one of your three answers.</p>\n<p class=\"big\">That's the practice.</p>"
         }
-      ],
-      "photo": {
-        "type": "photo",
-        "src": "/bites/the-three-answers/photos/img_7724.jpg",
-        "alt": "Juliette in a cream shawl, close up",
-        "pos": "50% 50%",
-        "ratio": "3 / 2"
-      }
+      ]
     },
     {
       "id": "begin",
@@ -178,10 +144,11 @@ export const BITE = {
       ],
       "photo": {
         "type": "photo",
-        "src": "/bites/the-three-answers/photos/peek-kiss.jpg",
-        "alt": "Juliette and Alex",
-        "pos": "50% 30%",
-        "ratio": "4 / 5"
+        "src": "/bites/the-three-answers/photos/three-answers-back-iphone.png",
+        "alt": "The app: Day 1 of 7, the black card waiting to be turned over",
+        "ratio": "640 / 1159",
+        "maxW": 270,
+        "plain": true
       }
     },
     {
@@ -191,6 +158,47 @@ export const BITE = {
         {
           "type": "html",
           "html": "<div class=\"kicker\">06</div>\n<h2>Your seven prompts are in the app</h2>\n<p>Seven prompts. Seven sittings. One prompt each day.</p>\n<div class=\"seven\"><div>1</div><div>2</div><div>3</div><div>4</div><div>5</div><div>6</div><div>7</div></div>\n<p>Your prompts live in the app with your fifteen-minute timer.</p>"
+        },
+        {
+          "type": "appTour",
+          "screens": [
+            {
+              "type": "photo",
+              "src": "/bites/the-three-answers/photos/three-answers-back-iphone.png",
+              "alt": "Day 1 of 7, the card face down",
+              "ratio": "640 / 1159",
+              "maxW": 270,
+              "plain": true,
+              "caption": "Tap the card to turn it over"
+            },
+            {
+              "type": "photo",
+              "src": "/bites/the-three-answers/photos/three-answers-front-iphone.png",
+              "alt": "Day 1, the card turned over, with a partner or on your own",
+              "ratio": "640 / 1257",
+              "maxW": 270,
+              "plain": true,
+              "caption": "With a partner, or on your own"
+            },
+            {
+              "type": "photo",
+              "src": "/bites/the-three-answers/photos/three-answers-agree-iphone.png",
+              "alt": "The agreement screen in the app",
+              "ratio": "640 / 1151",
+              "maxW": 270,
+              "plain": true,
+              "caption": "We agree. Start."
+            },
+            {
+              "type": "photo",
+              "src": "/bites/the-three-answers/photos/three-answers-timer-iphone.png",
+              "alt": "The timer and the three answers",
+              "ratio": "640 / 1309",
+              "maxW": 270,
+              "plain": true,
+              "caption": "Speaker two, you have three answers"
+            }
+          ]
         },
         {
           "type": "cta",
@@ -215,14 +223,7 @@ export const BITE = {
           ],
           "ready": "Seven sittings. One prompt each. You did it."
         }
-      ],
-      "photo": {
-        "type": "photo",
-        "src": "/bites/the-three-answers/photos/juliette-alex-selfie-lace.jpg",
-        "alt": "Juliette and Alex, a selfie, close",
-        "pos": "50% 37%",
-        "ratio": "4 / 5"
-      }
+      ]
     },
     {
       "id": "after",
@@ -243,10 +244,11 @@ export const BITE = {
       ],
       "photo": {
         "type": "photo",
-        "src": "/bites/the-three-answers/photos/img_8491.jpg",
-        "alt": "Juliette in a white dress under a hat",
-        "pos": "50% 30%",
-        "ratio": "4 / 5"
+        "src": "/bites/the-three-answers/photos/app.jpg",
+        "alt": "The app at the end of a sitting: Let it settle, 3 completed communications",
+        "pos": "50% 50%",
+        "ratio": "976 / 2143",
+        "maxW": 270
       }
     }
   ]

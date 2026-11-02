@@ -1,0 +1,167 @@
+[
+ {
+  "site": "the-three-answers",
+  "slug": "the-three-answers",
+  "short": "answers",
+  "checkinStep": "prompts",
+  "doneLine": "One prompt. One sitting. Fifteen minutes.",
+  "inlinePhotos": {},
+  "hero": {
+   "file": "/Users/julietteckaraman/Documents/APP builds/03 Brand Assets/Photo Library/Add photos here/App on iPhone/three-answers-timer-iphone.png",
+   "alt": "The Three Answers in the app: the timer, with Thank you, Clarify that and Summarise that"
+  },
+  "photos": {
+   "this": {
+    "file": "/Users/julietteckaraman/Documents/APP builds/03 Brand Assets/Photo Library/Add photos here/App on iPhone/three-answers-agree-iphone.png",
+    "alt": "The app: For the next 15 minutes, our only aim is to understand each other. We agree. Start."
+   },
+   "begin": {
+    "file": "/Users/julietteckaraman/Documents/APP builds/03 Brand Assets/Photo Library/Add photos here/App on iPhone/three-answers-back-iphone.png",
+    "alt": "The app: Day 1 of 7, the black card waiting to be turned over"
+   },
+   "after": {
+    "file": "/Users/julietteckaraman/Documents/APP builds/01 Site & Dev/feelfullyyou-site/the-trust-and-repair/media/app.jpg",
+    "alt": "The app at the end of a sitting: Let it settle, 3 completed communications",
+    "ratio": "976 / 2143",
+    "maxW": 270
+   }
+  },
+  "inject": {
+   "answers": [
+    {
+     "at": -1,
+     "block": {
+      "type": "appDemo"
+     }
+    }
+   ],
+   "prompts": [
+    {
+     "at": 1,
+     "block": {
+      "type": "appTour",
+      "screens": [
+       {
+        "photo": {
+         "file": "/Users/julietteckaraman/Documents/APP builds/03 Brand Assets/Photo Library/Add photos here/App on iPhone/three-answers-back-iphone.png",
+         "alt": "Day 1 of 7, the card face down"
+        },
+        "caption": "Tap the card to turn it over"
+       },
+       {
+        "photo": {
+         "file": "/Users/julietteckaraman/Documents/APP builds/03 Brand Assets/Photo Library/Add photos here/App on iPhone/three-answers-front-iphone.png",
+         "alt": "Day 1, the card turned over, with a partner or on your own"
+        },
+        "caption": "With a partner, or on your own"
+       },
+       {
+        "photo": {
+         "file": "/Users/julietteckaraman/Documents/APP builds/03 Brand Assets/Photo Library/Add photos here/App on iPhone/three-answers-agree-iphone.png",
+         "alt": "The agreement screen in the app"
+        },
+        "caption": "We agree. Start."
+       },
+       {
+        "photo": {
+         "file": "/Users/julietteckaraman/Documents/APP builds/03 Brand Assets/Photo Library/Add photos here/App on iPhone/three-answers-timer-iphone.png",
+         "alt": "The timer and the three answers"
+        },
+        "caption": "Speaker two, you have three answers"
+       }
+      ]
+     }
+    }
+   ]
+  }
+ },
+ {
+  "site": "the-31-days-closer",
+  "slug": "the-31-days-closer",
+  "short": "closer",
+  "checkinStep": "app",
+  "doneLine": "One prompt a day, for thirty one days.",
+  "hero": {
+   "file": "/Users/julietteckaraman/Documents/APP builds/03 Brand Assets/Photo Library/Add photos here/Cards App Kings Cross/cards-app-kingsx-life.jpg",
+   "alt": "Juliette's hands holding her phone, a card open in the app",
+   "y": 50
+  },
+  "photos": {
+   "what": {
+    "file": "/Users/julietteckaraman/Documents/APP builds/03 Brand Assets/Hero Images/Juliette photos /IMG_1449.jpg",
+    "alt": "Juliette in the garden",
+    "ratio": "1242 / 799"
+   },
+   "order": {
+    "file": "/Users/julietteckaraman/Documents/APP builds/03 Brand Assets/Hero Images/Juliette photos /IMG_2724.JPG",
+    "alt": "Juliette in a yellow shawl among the flowers",
+    "ratio": "3 / 2"
+   },
+   "app": {
+    "file": "app.jpg",
+    "alt": "31 Days Closer in the app: Day 1, the Seeing Each Other card turned over",
+    "ratio": "1200 / 2084",
+    "maxW": 270
+   },
+   "how": {
+    "file": "/Users/julietteckaraman/Documents/APP builds/03 Brand Assets/Photo Library/Add photos here/Juliette and Alex/juliette-alex-garden-held.jpg",
+    "alt": "Juliette and Alex holding each other in the garden",
+    "y": 53
+   },
+   "when": {
+    "file": "/Users/julietteckaraman/Documents/APP builds/03 Brand Assets/Hero Images/Juliette photos /IMG_1675.JPG",
+    "alt": "Juliette on the beach",
+    "y": 100
+   },
+   "lose": {
+    "file": "/Users/julietteckaraman/Documents/APP builds/03 Brand Assets/Photo Library/Add photos here/Juliette and Alex/juliette-alex-kitchen-dance-blazer.jpg",
+    "alt": "Juliette and Alex dancing in the kitchen",
+    "y": 100
+   }
+  }
+ },
+ {
+  "site": "the-trust-and-repair",
+  "slug": "the-trust-and-repair",
+  "short": "repair",
+  "checkinStep": "how",
+  "doneLine": "One prompt. Fifteen minutes. That's all you need.",
+  "hero": {
+   "file": "/Users/julietteckaraman/Downloads/850_0301.JPG",
+   "alt": "Juliette's hands holding one card above a fan of Communication and Intimacy cards",
+   "ratio": "3 / 2"
+  },
+  "photos": {
+   "what": {
+    "file": "/Users/julietteckaraman/Documents/APP builds/03 Brand Assets/Hero Images/Juliette photos /IMG_9721.JPG",
+    "alt": "Juliette in a grey dress",
+    "y": 30
+   },
+   "territories": {
+    "file": "/Users/julietteckaraman/Documents/APP builds/03 Brand Assets/Hero Images/Juliette photos /IMG_8494.JPG",
+    "alt": "Juliette in white by the trees",
+    "y": 30
+   },
+   "before": {
+    "file": "/Users/julietteckaraman/Documents/APP builds/03 Brand Assets/Photo Library/Add photos here/Juliette and Alex/juliette-alex-pool-foreheads.jpg",
+    "alt": "Juliette and Alex, foreheads together by the pool",
+    "y": 54
+   },
+   "app": {
+    "file": "app.jpg",
+    "alt": "The Communication and Intimacy Cards app on a phone: Let it settle, after three completed communications",
+    "ratio": "976 / 2143",
+    "maxW": 270
+   },
+   "how": {
+    "file": "/Users/julietteckaraman/Documents/APP builds/03 Brand Assets/Photo Library/Add photos here/Juliette and Alex/juliette-alex-selfie-crowd.jpg",
+    "alt": "Juliette and Alex, a selfie in a crowd, laughing"
+   },
+   "lose": {
+    "file": "/Users/julietteckaraman/Documents/APP builds/03 Brand Assets/Hero Images/Juliette photos /IMG_8492.JPG",
+    "alt": "Juliette in a white dress, by the garden",
+    "y": 0
+   }
+  }
+ }
+]

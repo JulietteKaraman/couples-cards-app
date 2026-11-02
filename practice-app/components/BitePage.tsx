@@ -13,7 +13,7 @@ import { PromptCard } from "@/components/Interactive";
 import { BITE_CSS, FEELS, Html, MuteNote, Photo, PLAIN_GOLD, StepBar, Voice, read, write } from "@/components/BiteKit";
 import { count } from "@/lib/count";
 
-type PhotoB = { type: "photo"; src: string; alt: string; pos?: string; ratio?: string; maxW?: number; caption?: string };
+type PhotoB = { type: "photo"; src: string; alt: string; pos?: string; ratio?: string; maxW?: number; caption?: string; plain?: boolean };
 type Block =
   | { type: "html"; html: string }
   | PhotoB
@@ -26,7 +26,9 @@ type Block =
   | { type: "roles"; q: string; hint: string; tabs: [string, string][]; cards: { role: string; html: string }[] }
   | { type: "path"; lab: string; options: { label: string; html: string }[] }
   | { type: "resp"; items: { b: string; span: string; small?: string; i?: string; html?: string }[] }
-  | { type: "cta"; href: string; text: string; small?: string };
+  | { type: "cta"; href: string; text: string; small?: string }
+  | { type: "appDemo" }
+  | { type: "appTour"; screens: (PhotoB & { caption: string })[] };
 type Step = { id: string; name: string; photo?: PhotoB; blocks: Block[] };
 export type Bite = { slug: string; short: string; title: string; line: string; meta: string; hero: PhotoB; me: string; checkinStep: string; doneLine: string; doorImg: string; steps: Step[] };
 type Sitting = { at: string; feel?: string };
@@ -277,10 +279,88 @@ function Dyad({ b }: { b: Extract<Block, { type: "dyad" }> }) {
   );
 }
 
+// A working copy of the real timer screen, wording from the cards app, so they
+// feel the three answers before they open the deck. Juliette, 2 Nov: "more photos
+// of the app instead of me... make it more interactive".
+function AppDemo() {
+  const [sp, setSp] = useState(1);
+  const [n, setN] = useState(0);
+  const [lit, setLit] = useState("");
+  const heard = useRef(false);
+  const vo = useRef<HTMLAudioElement | null>(null);
+  const say = (f: string) => {
+    document.querySelectorAll<HTMLAudioElement>(".wssr audio").forEach((a) => a.pause());
+    vo.current?.pause();
+    const a = new Audio(`/bites/voice/${f}.m4a`);
+    a.playbackRate = Number(read<number>("ffy.voice.rate", 1)) || 1;
+    vo.current = a;
+    a.play().catch(() => {});
+  };
+  const names = ["one", "two"];
+  const listening = names[2 - sp];
+  const tap = (id: string) => {
+    setLit(id);
+    window.setTimeout(() => setLit(""), 500);
+    if (id === "ty") {
+      setN((v) => v + 1);
+      setSp((v) => (v === 1 ? 2 : 1));
+      if (!heard.current) { heard.current = true; say("2-thank-you"); }
+    } else say(id === "cl" ? "3-clarify" : "4-summarise");
+  };
+  const row = (id: string, b: string, s: string) => (
+    <button type="button" onClick={() => tap(id)} className={`w-full rounded-2xl border p-3.5 text-left transition ${lit === id ? "scale-[0.98] border-[#DDC98E] bg-[rgba(221,201,142,0.2)]" : "border-[#DDC98E]/35 bg-black/30"}`}>
+      <span className="block font-display text-[18px] font-light text-[#f1ece2]">{b}</span>
+      <span className="block text-[13px] text-[#a79f90]">{s}</span>
+    </button>
+  );
+  return (
+    <div className="my-8 rounded-[32px] border-[6px] border-[#1c1c1c] bg-[#070707] p-4 shadow-[0_0_60px_-24px_#DDC98E]" data-testid="app-demo">
+      <p className="text-center text-[11px] uppercase tracking-[0.16em] text-[#DDC98E]">Try it. Tap an answer.</p>
+      <div className="mt-4 grid grid-cols-2 text-center">
+        {names.map((nm, i) => (
+          <div key={nm} className={`transition ${sp === i + 1 ? "opacity-100" : "opacity-45"}`}>
+            <p className={`font-display text-[17px] font-light ${sp === i + 1 ? "text-[#DDC98E]" : "text-[#cfc8bb]"}`}>Speaker {nm}</p>
+            <p className="text-[10px] uppercase tracking-[0.18em] text-[#a79f90]">{sp === i + 1 ? "Speaking" : "Listening"}</p>
+          </div>
+        ))}
+      </div>
+      <p className="mt-5 text-center text-[11px] uppercase tracking-[0.14em] text-[#cfc8bb]" data-testid="demo-who">Speaker {listening}, you have three answers</p>
+      <div className="mt-3 grid gap-2">
+        {row("ty", "Thank you", "I understood you.")}
+        {row("cl", "Clarify that", "I'm listening, I don't understand yet.")}
+        {row("su", "Summarise that", "Take a breath and give me the bottom line.")}
+      </div>
+      <p className="mt-4 text-center text-[11px] uppercase tracking-[0.14em] text-[#a79f90]" data-testid="demo-count">Completed communications: <span key={n} className="dot-pop inline-block text-[#DDC98E]">{n}</span></p>
+    </div>
+  );
+}
+
+// Tap through the real screens of the app.
+function AppTour({ screens }: { screens: (PhotoB & { caption: string })[] }) {
+  const [i, setI] = useState(0);
+  const s = screens[i];
+  const move = (d: number) => setI((v) => (v + d + screens.length) % screens.length);
+  return (
+    <div className="my-7" data-testid="app-tour">
+      <button type="button" onClick={() => move(1)} aria-label="Next screen" className="block w-full">
+        {screens.map((x, n) => <div key={x.src} className={n === i ? "wssr-flip" : "hidden"}><Photo src={x.src} alt={x.alt} ratio={x.ratio} maxW={x.maxW} plain eager /></div>)}
+      </button>
+      <p className="-mt-3 text-center font-display text-[18px] font-light text-[#EEDE80]" data-testid="tour-caption">{s.caption}</p>
+      <div className="mt-3 flex items-center justify-between">
+        <button type="button" aria-label="Previous screen" onClick={() => move(-1)} className="h-11 w-11 rounded-full border border-[#DDC98E]/40 text-[#DDC98E]">←</button>
+        <div className="flex gap-1.5" aria-hidden="true">{screens.map((_, n) => <span key={n} className={`h-2 w-2 rounded-full transition ${n === i ? "scale-125 bg-[#EEDE80]" : "bg-[rgba(221,201,142,0.3)]"}`} />)}</div>
+        <button type="button" aria-label="Next screen" onClick={() => move(1)} className="h-11 w-11 rounded-full border border-[#DDC98E]/40 text-[#DDC98E]">→</button>
+      </div>
+    </div>
+  );
+}
+
 function BlockView({ b, active }: { b: Block; active: boolean }) {
   switch (b.type) {
     case "html": return <Html html={b.html} />;
-    case "photo": return <Photo src={b.src} alt={b.alt} pos={b.pos} ratio={b.ratio} />;
+    case "photo": return <Photo src={b.src} alt={b.alt} pos={b.pos} ratio={b.ratio} maxW={b.maxW} plain={b.plain} />;
+    case "appDemo": return <AppDemo />;
+    case "appTour": return <AppTour screens={b.screens} />;
     case "voice":
       return (
         <div className="my-6">
@@ -397,7 +477,7 @@ export default function BitePage({ bite }: { bite: Bite }) {
         {!onCover && <StepBar step={step} total={last} />}
 
         <section className={onCover ? "" : "hidden"}>
-          <Photo src={bite.hero.src} alt={bite.hero.alt} pos={bite.hero.pos} ratio={bite.hero.ratio} />
+          <Photo src={bite.hero.src} alt={bite.hero.alt} pos={bite.hero.pos} ratio={bite.hero.ratio} maxW={bite.hero.maxW} plain={bite.hero.plain} />
           <p className={EYEBROW}>{bite.meta}</p>
           <h1 className="mt-2 font-display text-[36px] font-light leading-[1.08]">{bite.title}</h1>
           <div className="bite-line mt-3 text-[17px] leading-relaxed text-[#cfc8bb]" dangerouslySetInnerHTML={{ __html: bite.line }} />
@@ -416,7 +496,7 @@ export default function BitePage({ bite }: { bite: Bite }) {
           <section key={s.id} data-step={s.id} className={step === i + 1 ? "" : "hidden"}>
             {s.photo && (
               <>
-                <Photo src={s.photo.src} alt={s.photo.alt} pos={s.photo.pos} ratio={s.photo.ratio} maxW={s.photo.maxW} />
+                <Photo src={s.photo.src} alt={s.photo.alt} pos={s.photo.pos} ratio={s.photo.ratio} maxW={s.photo.maxW} plain={s.photo.plain} />
                 {s.photo.caption && <p className="-mt-3 mb-6 text-center font-display text-[17px] font-light text-[#f1ece2]">{s.photo.caption}</p>}
               </>
             )}

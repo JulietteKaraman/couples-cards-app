@@ -1,0 +1,149 @@
+[
+ {
+  "site": "the-trace-practice",
+  "slug": "the-trace",
+  "short": "trace",
+  "checkinStep": "do",
+  "doneLine": "Let it be quiet. Do not fill it.",
+  "names": {
+   "end": "A word from me"
+  },
+  "hero": {
+   "file": "trace-photo.jpg",
+   "alt": "Juliette's jaw and neck being traced slowly by her partner's fingers",
+   "y": 80
+  },
+  "photos": {
+   "what": {
+    "file": "/Users/julietteckaraman/Downloads/Essence_Sept2026_JuliettePort-3.jpg",
+    "alt": "Juliette smiling",
+    "y": 5
+   },
+   "date": {
+    "file": "/Users/julietteckaraman/Documents/APP builds/03 Brand Assets/Photo Library/Add photos here/Juliette and Alex/juliette-alex-selfie-sunset.jpg",
+    "alt": "Juliette and Alex, a selfie at sunset",
+    "y": 62
+   },
+   "start": {
+    "file": "/Users/julietteckaraman/Documents/APP builds/03 Brand Assets/Photo Library/Add photos here/Juliette and Alex/juliette-alex-hand-on-jaw.jpg",
+    "alt": "Alex's hand resting on Juliette's jaw, her eyes closed",
+    "y": 45,
+    "caption": "Both of you fully clothed. One person giving. One person receiving."
+   },
+   "do": {
+    "file": "/Users/julietteckaraman/Documents/APP builds/03 Brand Assets/Photo Library/Add photos here/Juliette and Alex/juliette-alex-selfie-striped.jpg",
+    "alt": "Juliette and Alex, a selfie, both smiling",
+    "y": 45
+   },
+   "after": {
+    "file": "/Users/julietteckaraman/Documents/APP builds/03 Brand Assets/Photo Library/Add photos here/Juliette and Alex Budapest/budapest-arches-close.jpg",
+    "alt": "Juliette and Alex close under the arches in Budapest",
+    "y": 60
+   }
+  }
+ },
+ {
+  "site": "the-fifteen-minutes-after",
+  "slug": "the-fifteen-minutes-after",
+  "short": "fifteen",
+  "checkinStep": "cards",
+  "doneLine": "One communication. Thank you. Swap.",
+  "inlinePhotos": {
+   "media/welcome.jpg": {
+    "file": "/Users/julietteckaraman/Downloads/Essence_Sept2026_JuliettePort-3.jpg",
+    "alt": "Juliette Karaman",
+    "y": 5
+   }
+  },
+  "hero": {
+   "file": "/Users/julietteckaraman/Downloads/850_0266.JPG",
+   "alt": "Two people at a table, one holding a Communication and Intimacy card",
+   "y": 50
+  },
+  "photos": {
+   "why": {
+    "file": "/Users/julietteckaraman/Downloads/Essence_Sept2026_JuliettePort-10.jpg",
+    "alt": "Juliette in a yellow top, smiling",
+    "y": 12
+   },
+   "what": {
+    "file": "/Users/julietteckaraman/Documents/APP builds/03 Brand Assets/Photo Library/Add photos here/Juliette and Alex/juliette-alex-sofa-ice-lolly.jpg",
+    "alt": "Juliette and Alex relaxing together on the garden sofa",
+    "y": 90
+   },
+   "dyad": {
+    "file": "/Users/julietteckaraman/Documents/APP builds/03 Brand Assets/Photo Library/Add photos here/Juliette and Alex/juliette-alex-train-selfie.jpg",
+    "alt": "Juliette and Alex, a selfie on the train",
+    "y": 80
+   },
+   "cards": {
+    "file": "app.jpg",
+    "alt": "The Communication and Intimacy Cards app on a phone: the timer, with Thank you, Clarify that and Summarise that",
+    "ratio": "976 / 2143",
+    "maxW": 270
+   }
+  }
+ },
+ {
+  "site": "the-45-minute-ritual",
+  "slug": "the-45-minute-ritual",
+  "short": "ritual",
+  "checkinStep": "p5",
+  "doneLine": "Let what you've experienced together settle.",
+  "inlinePhotos": {
+   "media/welcome.jpg": {
+    "file": "/Users/julietteckaraman/Downloads/Essence_Sept2026_JuliettePort-3.jpg",
+    "alt": "Juliette Karaman",
+    "y": 5
+   }
+  },
+  "names": {
+   "end": "Come back to this"
+  },
+  "hero": {
+   "file": "/Users/julietteckaraman/Documents/APP builds/03 Brand Assets/Photo Library/Add photos here/Juliette and Alex/juliette-alex-terrace-kiss.jpg",
+   "alt": "Juliette and Alex kissing on the terrace",
+   "y": 25
+  },
+  "photos": {
+   "why": {
+    "file": "/Users/julietteckaraman/Downloads/Essence_Sept2026_JuliettePort-2 (1).jpg",
+    "alt": "Juliette in a yellow top, laughing",
+    "y": 10
+   },
+   "begin": {
+    "file": "/Users/julietteckaraman/Documents/APP builds/03 Brand Assets/Hero Images/Juliette photos /IMG_8855.jpg",
+    "alt": "Juliette smiling on her sofa",
+    "y": 50,
+    "ratio": "3 / 2"
+   },
+   "p1": {
+    "file": "/Users/julietteckaraman/Documents/APP builds/03 Brand Assets/Hero Images/Juliette photos /IMG_1696.JPG",
+    "alt": "Juliette in white, arms open at the doors",
+    "y": 50,
+    "ratio": "3 / 2"
+   },
+   "p2": {
+    "file": "/Users/julietteckaraman/Documents/APP builds/03 Brand Assets/Hero Images/Juliette photos /IMG_2713.JPG",
+    "alt": "Juliette wrapped in a yellow shawl",
+    "y": 50,
+    "ratio": "3 / 2"
+   },
+   "p3": {
+    "file": "/Users/julietteckaraman/Documents/APP builds/03 Brand Assets/Photo Library/Add photos here/Juliette and Alex Budapest/budapest-arches-holding-hands.jpg",
+    "alt": "Juliette and Alex holding hands under the arches in Budapest",
+    "y": 100
+   },
+   "p4": {
+    "file": "/Users/julietteckaraman/Documents/APP builds/03 Brand Assets/Photo Library/Add photos here/Juliette and Alex/juliette-alex-terrace-laugh-dance.jpg",
+    "alt": "Juliette and Alex laughing, dancing on the terrace",
+    "y": 28
+   },
+   "p5": {
+    "file": "/Users/julietteckaraman/Documents/APP builds/03 Brand Assets/Hero Images/Juliette photos /IMG_1698.JPG",
+    "alt": "Juliette in white, smiling",
+    "y": 8
+   }
+  }
+ }
+]

@@ -50,6 +50,9 @@ for c in cfgs:
         return re.sub(r'\n\s*','\n',s).strip()
     def photo(p):
         name=p['file'].split('/')[-1].lower();t=f"{pub}/photos/{name}";os.makedirs(pub+'/photos',exist_ok=True)
+        if name.endswith('.png'):
+            im=Image.open(p['file']).convert('RGBA');im=im.resize((640,round(im.height*640/im.width)),Image.LANCZOS);im.save(t,optimize=True)
+            return {k:v for k,v in dict(type='photo',src=f"/bites/{slug}/photos/{name}",alt=p['alt'],ratio=f"{im.width} / {im.height}",maxW=p.get('maxW',270),plain=True,caption=p.get('caption')).items() if v}
         s=p['file'] if p['file'].startswith('/') else f"{src}/media/{p['file']}"
         im=ImageOps.exif_transpose(Image.open(s)).convert('RGB')
         if im.width>1000: im=im.resize((1000,round(im.height*1000/im.width)),Image.LANCZOS)
@@ -129,6 +132,11 @@ for c in cfgs:
             d+= -1 if t.group(1) else 1
             if d==0: inner=main[j:j+t.start()];break
         st=dict(id=id_,name=c.get('names',{}).get(id_) or name.get(id_) or id_,blocks=blocks(inner))
+        for inj in c.get('inject',{}).get(id_,[]):
+            bl=dict(inj['block'])
+            if bl['type']=='appTour': bl['screens']=[dict(photo(x['photo']),caption=x['caption']) for x in bl['screens']]
+            if bl['type']=='photo': bl=photo(bl)
+            st['blocks'].insert(inj['at'] if inj['at']>=0 else len(st['blocks']),bl)
         if id_ in c['photos']: st['photo']=photo(c['photos'][id_])
         steps.append(st)
     cover=h[h.index('<header class="cover"'):h.index('</header>')]
