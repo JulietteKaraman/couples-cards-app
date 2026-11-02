@@ -8,7 +8,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { BITE_CSS, FEELS, Html, Photo, PLAIN_GOLD, Voice, read, write } from "@/components/BiteKit";
+import { BITE_CSS, FEELS, Html, Photo, PLAIN_GOLD, StepBar, Voice, read, write } from "@/components/BiteKit";
 import { FS } from "@/lib/content/the-full-stop";
 import { count } from "@/lib/count";
 
@@ -45,7 +45,7 @@ function WeekDots({ days }: { days: Day[] }) {
               const d = days[r * 7 + i];
               return (
                 <div key={name} className="flex flex-col items-center gap-1.5">
-                  <span data-filled={d ? "1" : "0"} data-feel={d?.feel ?? ""} className="h-6 w-6 rounded-full border"
+                  <span data-filled={d ? "1" : "0"} data-feel={d?.feel ?? ""} className={`h-6 w-6 rounded-full border ${r * 7 + i === days.length - 1 ? "dot-pop" : ""}`}
                     style={{ background: d ? (FEELS.find((f) => f.id === d.feel)?.color ?? PLAIN_GOLD) : "transparent", borderColor: d ? "transparent" : "rgba(221,201,142,0.4)" }} />
                   <span className="text-center text-[10px] leading-tight text-[#a79f90]">{name}</span>
                 </div>
@@ -69,19 +69,28 @@ function WeekDots({ days }: { days: Day[] }) {
 function Pairs() {
   const [i, setI] = useState(0);
   const [attached, setAttached] = useState(false);
+  const [reached, setReached] = useState(1);
   const [stop, withQ] = FS.pairs[i];
   const seg = (on: boolean) => `min-h-[44px] rounded-full px-2 text-[13px] transition ${on ? "bg-[#DDC98E] text-[#070707]" : "text-[#cfc8bb]"}`;
-  const move = (n: number) => { setI((v) => (v + n + FS.pairs.length) % FS.pairs.length); setAttached(false); };
+  const move = (n: number) => {
+    const next = (i + n + FS.pairs.length) % FS.pairs.length;
+    setI(next);
+    setAttached(false);
+    setReached((r) => Math.max(r, next + 1));
+  };
   return (
     <div className="my-6">
       <div className="grid grid-cols-2 gap-1 rounded-full bg-black/40 p-1">
         <button type="button" className={seg(!attached)} aria-pressed={!attached} onClick={() => setAttached(false)}>Full stop</button>
         <button type="button" className={seg(attached)} aria-pressed={attached} onClick={() => setAttached(true)}>With something attached</button>
       </div>
-      <button type="button" data-testid="pair" onClick={() => setAttached((a) => !a)}
-        className={`mt-3 flex min-h-[170px] w-full items-center rounded-3xl border-[1.5px] p-6 text-left font-display text-[23px] font-light leading-snug transition ${attached ? "border-[#EEDE80]/60 bg-[rgba(168,133,56,0.16)] text-[#EEDE80]" : "border-[#DDC98E]/45 bg-[rgba(13,53,53,0.45)] text-[#f1ece2]"}`}>
+      <button key={`${i}-${attached}`} type="button" data-testid="pair" onClick={() => setAttached((a) => !a)}
+        className={`wssr-flip mt-3 flex min-h-[170px] w-full items-center rounded-3xl border-[1.5px] p-6 text-left font-display text-[23px] font-light leading-snug transition ${attached ? "border-[#EEDE80]/60 bg-[rgba(168,133,56,0.16)] text-[#EEDE80]" : "border-[#DDC98E]/45 bg-[rgba(13,53,53,0.45)] text-[#f1ece2]"}`}>
         {attached ? withQ : stop}
       </button>
+      <div className="mt-4 flex justify-center gap-1.5" aria-hidden="true">
+        {FS.pairs.map((p, n) => <span key={p[0]} className={`h-2 w-2 rounded-full transition ${n === i ? "scale-125 bg-[#EEDE80]" : n < reached ? "bg-[#DDC98E]" : "bg-[rgba(221,201,142,0.2)]"}`} />)}
+      </div>
       <div className="mt-3 flex items-center justify-between">
         <button type="button" aria-label="Previous pair" onClick={() => move(-1)} className="h-11 w-11 rounded-full border border-[#DDC98E]/40 text-[#DDC98E]">←</button>
         <span data-testid="pair-count" className="text-[12px] uppercase tracking-[0.18em] text-[#a79f90]">{i + 1} of {FS.pairs.length}</span>
@@ -169,6 +178,8 @@ export default function TheFullStop() {
           )}
         </div>
 
+        {cur !== "cover" && <StepBar step={step} total={STEPS.length - 1} />}
+
         <section className={show("cover")}>
           <div className="relative aspect-[3/2] overflow-hidden rounded-3xl border-[1.5px] border-[rgba(221,201,142,0.45)]">
             <Image src={`${DIR}/cover.jpg`} alt="Juliette on a sofa, looking away, quiet" fill priority sizes="(max-width: 768px) 100vw, 672px" className="object-cover" />
@@ -247,8 +258,9 @@ export default function TheFullStop() {
                 <div className="mt-3 grid grid-cols-3 gap-2">
                   {FEELS.map((f) => (
                     <button key={f.id} type="button" onClick={() => setFeel(feel === f.id ? "" : f.id)} aria-pressed={feel === f.id}
-                      className={`flex min-h-[48px] flex-col items-center justify-center gap-2 rounded-full border px-2 py-3 text-[14px] ${feel === f.id ? "border-[#DDC98E] bg-[rgba(221,201,142,0.15)] text-[#f1ece2]" : "border-[#DDC98E]/40 text-[#cfc8bb]"}`}>
-                      <span className="h-4 w-4 rounded-full" style={{ background: f.color }} />
+                      style={feel === f.id ? { boxShadow: `0 0 26px -4px ${f.color}`, borderColor: f.color } : undefined}
+                      className={`flex min-h-[48px] flex-col items-center justify-center gap-2 rounded-2xl border px-2 py-3 text-[14px] transition ${feel === f.id ? "bg-[rgba(221,201,142,0.15)] text-[#f1ece2]" : "border-[#DDC98E]/40 text-[#cfc8bb]"}`}>
+                      <span className={`h-4 w-4 rounded-full transition ${feel === f.id ? "scale-150" : ""}`} style={{ background: f.color }} />
                       {f.label}
                     </button>
                   ))}

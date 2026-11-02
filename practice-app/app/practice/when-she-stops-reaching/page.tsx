@@ -10,7 +10,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import PracticeTimer from "@/components/PracticeTimer";
-import { BITE_CSS, FEELS, Html, Photo, PLAIN_GOLD, Voice, read, write } from "@/components/BiteKit";
+import { BITE_CSS, FEELS, Html, Photo, PLAIN_GOLD, StepBar, Voice, read, write } from "@/components/BiteKit";
 import { WSSR } from "@/lib/content/when-she-stops-reaching";
 import { count } from "@/lib/count";
 
@@ -84,7 +84,7 @@ function Dots({ sittings }: { sittings: Sitting[] }) {
             data-solo={s.solo ? "1" : "0"}
             data-feel={s.feel ?? ""}
             title={`Sitting ${i + 1}`}
-            className="h-4 w-4 rounded-full"
+            className={`h-4 w-4 rounded-full ${i === sittings.length - 1 ? "dot-pop" : ""}`}
             style={{
               background: FEELS.find((f) => f.id === s.feel)?.color ?? PLAIN_GOLD,
               boxShadow: s.solo ? "0 0 0 2px #070707, 0 0 0 3.5px #DDC98E" : undefined,
@@ -231,6 +231,8 @@ export default function WhenSheStopsReaching() {
           )}
         </div>
 
+        {!onCover && <StepBar step={run.step} total={STEPS.length - 1} />}
+
         {/* HERO */}
         <section className={show("cover")}>
           <div className="relative aspect-[3/2] overflow-hidden rounded-3xl border-[1.5px] border-[rgba(221,201,142,0.45)]">
@@ -306,7 +308,7 @@ export default function WhenSheStopsReaching() {
           <Photo src={`${DIR}/hub/top-p1.jpg`} alt="Juliette, eyes soft, on her own" />
           <Html html={WSSR.p1Head} />
           <WatchListen active={cur === "p1"} title="Touch Base" eyebrow="Watch once, then listen"
-            video="https://player.vimeo.com/video/1223329859?speed=1&badge=0&autopause=0&player_id=0&app_id=58479" ratio="9 / 14"
+            video="https://player.vimeo.com/video/1223329859?speed=1&badge=0&autopause=0&player_id=0&app_id=58479" ratio="16 / 9"
             watchLabel="▶ Watch" listenLabel="🎧 Listen · 5 min"
             watchNote="Watch it once so you can see exactly what I'm doing with my hands. After that, the audio is all you need."
             src={`${DIR}/touch-base.mp3`} voiceLabel="Touch Base" />
@@ -396,8 +398,9 @@ export default function WhenSheStopsReaching() {
                 <div className="mt-3 grid grid-cols-3 gap-2">
                   {FEELS.map((f) => (
                     <button key={f.id} type="button" onClick={() => setFeel(feel === f.id ? "" : f.id)} aria-pressed={feel === f.id}
-                      className={`flex min-h-[48px] flex-col items-center justify-center gap-2 rounded-full border px-2 py-3 text-[14px] ${feel === f.id ? "border-[#DDC98E] bg-[rgba(221,201,142,0.15)] text-[#f1ece2]" : "border-[#DDC98E]/40 text-[#cfc8bb]"}`}>
-                      <span className="h-4 w-4 rounded-full" style={{ background: f.color }} />
+                      style={feel === f.id ? { boxShadow: `0 0 26px -4px ${f.color}`, borderColor: f.color } : undefined}
+                      className={`flex min-h-[48px] flex-col items-center justify-center gap-2 rounded-2xl border px-2 py-3 text-[14px] transition ${feel === f.id ? "bg-[rgba(221,201,142,0.15)] text-[#f1ece2]" : "border-[#DDC98E]/40 text-[#cfc8bb]"}`}>
+                      <span className={`h-4 w-4 rounded-full transition ${feel === f.id ? "scale-150" : ""}`} style={{ background: f.color }} />
                       {f.label}
                     </button>
                   ))}

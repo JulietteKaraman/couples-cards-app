@@ -21,6 +21,8 @@ R12. One door: 31 Touch Points, £27, https://feelfullyyou.com/31-touch-points.
 R13. Anonymous counts only: opened, day done with day number and feel.
 R14. Going live: feelfullyyou.com/the-full-stop 301s to the app page.
 
+R15. Both bites, Juliette 2 Nov: voice notes have speed up to 1.5x. More interactive and poppy without changing her words: tap moments, progress bar, gentle motion, always ending fully readable. New hint lines are listed for her approval.
+
 ## Out of scope
 New recordings. Any change to Stripe or Miles's funnel. Sign-in.
 

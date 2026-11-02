@@ -4,8 +4,8 @@
 // 2 Nov 2026: the look Juliette approved.
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
-import { SlimPlayer } from "@/components/SlimPlayer";
+import { useEffect, useMemo, useRef, useState } from "react";
+import VoicePlayer from "@/components/VoicePlayer";
 
 // The same three colours as Scrumptious Stroking. About him, never about her distance.
 export const FEELS = [
@@ -32,11 +32,118 @@ export function write(key: string, value: unknown) {
   }
 }
 
-export function Html({ html, className }: { html: string; className?: string }) {
-  return <div className={`frag ${className ?? ""}`} dangerouslySetInnerHTML={{ __html: html }} />;
+// A little buzz under the thumb, where the phone allows it.
+const buzz = () => {
+  try {
+    navigator.vibrate?.(12);
+  } catch {
+    /* not every phone */
+  }
+};
+
+function hint(before: Element, text: string) {
+  const h = document.createElement("p");
+  h.className = "taphint";
+  h.textContent = text;
+  before.parentElement?.insertBefore(h, before);
+  return h;
 }
 
-// Her slim player. If a recording can't load, it doesn't show (E4).
+// Her words stay exactly as written. This only makes some of them something to
+// touch: 2 Nov 2026, Juliette wanted the bites "more interactive and poppy", like
+// 31 Touch Points. Runs once per fragment after the page is on the phone.
+function enhance(root: HTMLElement) {
+  if (root.dataset.enhanced) return;
+  root.dataset.enhanced = "1";
+
+  // Thoughts arrive one tap at a time.
+  root.querySelectorAll<HTMLElement>(".thoughts").forEach((box) => {
+    const lines = Array.from(box.querySelectorAll("p"));
+    if (lines.length < 2) return;
+    box.classList.add("tap");
+    lines[0].classList.add("on");
+    const h = hint(box, "Tap for the next one");
+    box.addEventListener("click", () => {
+      const next = lines.find((l) => !l.classList.contains("on"));
+      if (!next) return;
+      next.classList.add("on");
+      buzz();
+      if (lines.every((l) => l.classList.contains("on"))) h.remove();
+    });
+  });
+
+  // The stories he tells himself get crossed out.
+  root.querySelectorAll<HTMLElement>("ul.no").forEach((list) => {
+    const items = Array.from(list.querySelectorAll("li"));
+    list.classList.add("tap");
+    const h = hint(list, "Tap each one to cross it out");
+    items.forEach((li) => li.addEventListener("click", () => {
+      li.classList.toggle("gone");
+      buzz();
+      if (items.every((x) => x.classList.contains("gone"))) {
+        h.remove();
+        list.parentElement?.querySelector("p.last")?.classList.add("glow");
+      }
+    }));
+  });
+
+  // Steps tick off as he goes.
+  root.querySelectorAll<HTMLElement>("ol.steps").forEach((list) => {
+    list.classList.add("tap");
+    hint(list, "Tap each one as you do it");
+    list.querySelectorAll("li").forEach((li) => li.addEventListener("click", () => { li.classList.toggle("done"); buzz(); }));
+  });
+
+  // The mantra lights up line by line.
+  root.querySelectorAll<HTMLElement>(".mantra").forEach((box) => {
+    const lines = Array.from(box.querySelectorAll("div"));
+    box.classList.add("tap");
+    const h = hint(box, "Tap to light each one");
+    lines.forEach((l) => l.addEventListener("click", () => {
+      l.classList.add("on");
+      buzz();
+      if (lines.every((x) => x.classList.contains("on"))) h.remove();
+    }));
+  });
+
+  // The question comes off the end of the sentence.
+  root.querySelectorAll<HTMLElement>(".ex s").forEach((q) => {
+    const ex = q.closest(".ex");
+    if (!ex) return;
+    ex.classList.add("tap");
+    const h = hint(ex, "Tap the question to take it off");
+    q.addEventListener("click", () => { q.classList.add("gone"); buzz(); h.remove(); });
+  });
+
+  // Plays when the step appears, and always ends fully visible. Never tied to
+  // scrolling, so her words can't get stuck hidden on a slow phone.
+  root.querySelectorAll<HTMLElement>(":scope > *").forEach((el, i) => {
+    el.style.setProperty("--i", String(Math.min(i, 7)));
+    el.classList.add("pop");
+  });
+}
+
+export function Html({ html, className }: { html: string; className?: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  // Same object every render, or React rewrites the text and undoes every tap.
+  const inner = useMemo(() => ({ __html: html }), [html]);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    enhance(el);
+  }, []);
+  return <div ref={ref} className={`frag ${className ?? ""}`} dangerouslySetInnerHTML={inner} />;
+}
+
+export function StepBar({ step, total }: { step: number; total: number }) {
+  return (
+    <div className="mb-5 h-1 overflow-hidden rounded-full bg-[rgba(221,201,142,0.15)]" aria-hidden="true">
+      <div className="h-full rounded-full bg-[#DDC98E] shadow-[0_0_12px_#DDC98E] transition-all duration-500" style={{ width: `${(step / total) * 100}%` }} />
+    </div>
+  );
+}
+
+// Her voice player, the 31 Touch Points one, with the speed button up to 1.5x. If a recording can't load, it doesn't show (E4).
 export function Voice({ id, src, label }: { id?: string; src: string; label: string }) {
   const [ok, setOk] = useState(true);
   useEffect(() => {
@@ -52,7 +159,7 @@ export function Voice({ id, src, label }: { id?: string; src: string; label: str
   if (!ok) return null;
   return (
     <div id={id} className="my-5">
-      <SlimPlayer src={src} label={label} />
+      <VoicePlayer src={src} label={label} dark />
     </div>
   );
 }
@@ -60,7 +167,7 @@ export function Voice({ id, src, label }: { id?: string; src: string; label: str
 export function Photo({ src, alt, pos = "50% 30%" }: { src: string; alt: string; pos?: string }) {
   return (
     <div className="relative mb-7 h-56 overflow-hidden rounded-3xl border-[1.5px] border-[rgba(221,201,142,0.45)] sm:h-72">
-      <Image src={src} alt={alt} fill sizes="(max-width: 768px) 100vw, 672px" className="object-cover" style={{ objectPosition: pos }} />
+      <Image src={src} alt={alt} fill sizes="(max-width: 768px) 100vw, 672px" className="wssr-zoom object-cover" style={{ objectPosition: pos }} />
       <div className="absolute inset-0 bg-gradient-to-t from-[#070707]/70 to-transparent" />
     </div>
   );
@@ -125,4 +232,43 @@ export const BITE_CSS = `
         .wssr .leak .ex s{text-decoration:none;color:#EEDE80;font-style:italic}
         .wssr .examples{display:grid;gap:8px;margin:18px 0 26px}
         .wssr .examples div{padding:14px 18px;border-radius:16px;background:rgba(13,53,53,.6);font-family:var(--font-display);font-weight:300;font-size:18px;color:#f1ece2}
+        .wssr > div > section:not(.hidden){animation:wssrIn .45s cubic-bezier(.2,.8,.2,1) both}
+        @keyframes wssrIn{from{opacity:.25;transform:translateY(14px)}to{opacity:1;transform:none}}
+        .wssr-zoom{animation:wssrZoom 9s ease-out both}
+        @keyframes wssrZoom{from{transform:scale(1.09)}to{transform:scale(1)}}
+        .wssr section:not(.hidden) .pop{animation:wssrUp .5s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i,0) * 70ms)}
+        @keyframes wssrUp{from{opacity:.25;transform:translateY(14px)}to{opacity:1;transform:none}}
+        .wssr p.big{font-size:29px}
+        .wssr p.taphint{font-size:11px!important;letter-spacing:.16em;text-transform:uppercase;color:#DDC98E!important;margin:18px 0 6px!important;animation:wssrHint 2.2s ease-in-out infinite}
+        @keyframes wssrHint{0%,100%{opacity:.55}50%{opacity:1}}
+        .wssr button{transition:transform .12s ease}
+        .wssr button:active{transform:scale(.96)}
+        .wssr .thoughts.tap{cursor:pointer;margin-top:6px;padding:16px 18px;border:1px solid rgba(221,201,142,.4);border-left-width:1px;border-radius:20px;background:rgba(13,53,53,.4)}
+        .wssr .thoughts.tap p{opacity:.1;filter:blur(4px);font-family:var(--font-display);font-weight:300;font-size:19px;line-height:1.4;color:#f1ece2;transition:opacity .35s ease,filter .35s ease,transform .35s ease;transform:translateY(6px)}
+        .wssr .thoughts.tap p.on{opacity:1;filter:none;transform:none}
+        .wssr ul.no.tap li{cursor:pointer;min-height:44px;font-size:17px;color:#f1ece2;transition:color .25s ease,opacity .25s ease}
+        .wssr ul.no.tap li.gone{text-decoration:line-through;text-decoration-color:#DDC98E;opacity:.45}
+        .wssr p.last{transition:color .4s ease}
+        .wssr p.last.glow{font-family:var(--font-display);font-weight:300;font-size:22px;line-height:1.35;color:#EEDE80}
+        .wssr ol.steps.tap li{cursor:pointer;transition:opacity .25s ease}
+        .wssr ol.steps.tap .n{display:flex;align-items:center;justify-content:center;width:36px;height:36px;border:1.5px solid rgba(221,201,142,.7);border-radius:50%;font-size:17px;transition:all .25s ease}
+        .wssr ol.steps.tap li.done .n{background:#DDC98E;border-color:#DDC98E;color:transparent;box-shadow:0 0 18px -2px #DDC98E;position:relative}
+        .wssr ol.steps.tap li.done .n::after{content:"\\2713";position:absolute;color:#070707;font-size:17px}
+        .wssr ol.steps.tap li.done b{color:#DDC98E}
+        .wssr .mantra.tap div{cursor:pointer;margin-bottom:8px;padding:12px 16px;border:1px solid rgba(221,201,142,.3);border-radius:16px;opacity:.7;transition:all .25s ease}
+        .wssr .mantra.tap div.on{opacity:1;background:#DDC98E;color:#070707;border-color:#DDC98E;box-shadow:0 0 22px -6px #DDC98E}
+        .wssr .ex.tap s{cursor:pointer;border-bottom:1px dashed #EEDE80;transition:all .3s ease}
+        .wssr .ex.tap s.gone{text-decoration:line-through;border-bottom-color:transparent;opacity:.35}
+        .wssr .say{box-shadow:0 0 40px -22px rgba(221,201,142,.7)}
+        .wssr ol.parts li{margin-bottom:12px;padding:18px;border:1px solid rgba(221,201,142,.3)!important;border-radius:20px;background:rgba(13,53,53,.28)}
+        .wssr details{margin:12px 0;padding:6px 18px;border:1px solid rgba(221,201,142,.4)!important;border-radius:20px;background:rgba(168,133,56,.09)}
+        .wssr details[open]{box-shadow:0 0 40px -22px rgba(221,201,142,.7)}
+        .wssr .dot-pop{animation:wssrDot .7s cubic-bezier(.2,1.6,.4,1) both}
+        @keyframes wssrDot{0%{transform:scale(0)}60%{transform:scale(1.5);box-shadow:0 0 22px #EEDE80}100%{transform:scale(1)}}
+        .wssr-done{position:relative}
+        .wssr-done::before{content:"";position:absolute;inset:0;border-radius:inherit;border:2px solid #EEDE80;animation:wssrBurst 1s ease-out both;pointer-events:none}
+        @keyframes wssrBurst{from{transform:scale(1);opacity:1}to{transform:scale(1.14);opacity:0}}
+        .wssr-flip{animation:wssrFlip .32s cubic-bezier(.2,.8,.2,1) both}
+        @keyframes wssrFlip{from{transform:rotateX(35deg) scale(.97);opacity:.3}to{transform:none;opacity:1}}
+        @media (prefers-reduced-motion:reduce){.wssr *,.wssr *::before{animation:none!important;transition:none!important}}
       `;
