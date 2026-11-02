@@ -29,6 +29,7 @@ export const localAudioSrc = (id: string) => `/31-touch-points/audio/${id}.m4a`;
 // 2026 (Juliette: "all those Google files, because they're videos, go in
 // there properly"). Re-encoded to 720p for phones; poster = a frame at 4s.
 export const LOCAL_VIDEO = new Set<string>([
+  "1RVRhUZU8RTirAaNRQ0EN0xaKOpWdkA58", // One Touch Day 3 bonus follow-along (2 Nov 2026)
   "182L01c5FYbPJ8YBqSH48wQKAA-r2vaXJ",
   "14uK4B3K4-Hl44Rm4MlsLHTi1x1tud3YF",
   "1Rvuo5_Ote8UbofjTLt7cMMGnJlxMI3SN",

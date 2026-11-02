@@ -14,6 +14,7 @@ import { lsSet, whenItOpens, adminBypassActive } from "@/lib/content/31-touch-po
 import { OT_ADV_KEY, OT_DAY_LESSON, computeOneTouchDrip, otDayOf, otMovesClock } from "@/lib/content/one-touch-drip";
 import { ADMIN_EMAIL } from "@/lib/entitlements/admin";
 import { OneTouchDay, OneTouchDeck, OT_DAY_CARD } from "@/components/OneTouch";
+import { LOCAL_VIDEO, localVideoSrc, localVideoPoster } from "@/lib/content/local-audio";
 
 export default function OneTouchEntry() {
   return (
@@ -133,6 +134,8 @@ function OneTouchEntryContent() {
 
   const vid = (entry.body.find((b) => b.kind === "video") as { vimeoId: string } | undefined)?.vimeoId ?? "";
   const bonusBlock = entry.body.find((b) => b.kind === "driveVideo") as { url: string; label: string } | undefined;
+  const bonusId = bonusBlock?.url.match(/\/d\/([^/]+)/)?.[1];
+  const bonusVideo = bonusId && LOCAL_VIDEO.has(bonusId) ? { src: localVideoSrc(bonusId), poster: localVideoPoster(bonusId) } : {};
   const nextSlug = OT_DAY_LESSON[day + 1];
   const nextTitle = nextSlug ? oneTouch.entries.find((e) => e.slug === nextSlug)?.title : undefined;
 
@@ -144,7 +147,7 @@ function OneTouchEntryContent() {
       videoId={vid}
       transcript={(entry as { transcript?: string }).transcript}
       card={OT_DAY_CARD[slug] ?? null}
-      bonus={bonusBlock ? { url: bonusBlock.url, label: bonusBlock.label.replace(/^Bonus: /, "") } : null}
+      bonus={bonusBlock ? { url: bonusBlock.url, label: bonusBlock.label.replace(/^Bonus: /, ""), ...bonusVideo } : null}
       prompts={oneTouchPrompts}
       nextTitle={nextTitle}
       prevHref={OT_DAY_LESSON[day - 1] ? `/practice/one-touch/${OT_DAY_LESSON[day - 1]}` : undefined}

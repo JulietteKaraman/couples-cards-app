@@ -350,7 +350,7 @@ function icsFor(title: string, url: string) {
 
 export function OneTouchDay(props: {
   slug: string; day: number; title: string; videoId: string; transcript?: string; card: string | null;
-  bonus?: { url: string; label: string } | null; prompts: string[]; nextTitle?: string; alreadyDone: boolean;
+  bonus?: { url: string; label: string; src?: string; poster?: string } | null; prompts: string[]; nextTitle?: string; alreadyDone: boolean;
   prevHref?: string; nextHref?: string;
   onDone: () => Promise<void> | void;
 }) {
@@ -360,6 +360,7 @@ export function OneTouchDay(props: {
   const [after, setAfter] = useLS<number | null>(`check-${slug}-after`, null);
   const [answer, setAnswer] = useLS<string>(`answer-${slug}`, "");
   const [view, setView] = useState<"watch" | "read">("watch");
+  const [bonusOpen, setBonusOpen] = useState(false);
   const [drawn] = useState(() => { if (card) return card; const used = Object.values(OT_DAY_CARD); const pool = prompts.filter((p) => !used.includes(p)); const from = pool.length ? pool : prompts; return from[Math.floor(Math.random() * from.length)]; });
   const top = useRef<HTMLDivElement>(null);
   const go = (s: number) => { setStep(s); top.current?.scrollIntoView({ behavior: "smooth" }); };
@@ -407,7 +408,16 @@ export function OneTouchDay(props: {
             {view === "watch" ? <Video id={videoId} /> : (
               <div className="max-h-[60vh] overflow-y-auto rounded-2xl border border-[#DDC98E]/15 bg-white/[0.02] p-5 text-[15px] leading-relaxed text-[#F6EFE0]/80 whitespace-pre-line">{transcript}</div>
             )}
-            {bonus && (
+            {bonus?.src ? (
+              <div className="mt-4 rounded-2xl border border-[#DDC98E]/20">
+                <button onClick={() => setBonusOpen((o) => !o)} aria-expanded={bonusOpen} className="block w-full px-4 py-3 text-left text-sm text-[#DDC98E]">Bonus · {bonus.label} {bonusOpen ? "↑" : "↓"}</button>
+                {bonusOpen && (
+                  <div className="flex justify-center px-3 pb-3">
+                    <video src={bonus.src} poster={bonus.poster} controls playsInline preload="metadata" controlsList="nodownload" className="block h-auto max-h-[70vh] w-auto max-w-full rounded-xl bg-black" />
+                  </div>
+                )}
+              </div>
+            ) : bonus && (
               <a href={bonus.url} target="_blank" rel="noreferrer" className="mt-4 block rounded-2xl border border-[#DDC98E]/20 px-4 py-3 text-sm text-[#DDC98E]">Bonus · {bonus.label} →</a>
             )}
             <button onClick={() => go(2)} className="mt-8 w-full rounded-full bg-[#DDC98E] py-3.5 text-xs font-medium uppercase tracking-[0.22em] text-[#070707]">I&rsquo;ve done the practice</button>
