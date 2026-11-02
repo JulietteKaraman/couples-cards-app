@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { DROP_COLLECTIONS, DROPS_BUCKET, canSee, todayUK, userFromRequest } from "@/lib/drops-server";
+import { HTFLAW_CARDS } from "@/lib/content/htflaw-cards";
 
 // GET /api/drops?c=how-to-feel-like-a-woman
 // What a signed-in owner sees: every drop dated today or earlier (UK), newest
@@ -48,5 +49,19 @@ export async function GET(req: Request) {
     .order("publish_on", { ascending: true })
     .limit(1);
 
-  return NextResponse.json({ today, drops, next: next?.[0] ?? null });
+  // Cards that live in code (lib/content/htflaw-cards.ts). A card already on the
+  // drop page with the same words is not shown twice.
+  const codeCards = collection === "how-to-feel-like-a-woman" ? HTFLAW_CARDS : [];
+  const haveBody = new Set(drops.map((d) => d.body));
+  const opened = codeCards
+    .filter((c) => c.publish_on <= today && !haveBody.has(c.body))
+    .map((c) => ({ id: `code-${c.publish_on}`, kind: "card", title: null, body: c.body, audio: null, publish_on: c.publish_on }));
+  const allDrops = [...drops, ...opened].sort((a, b) => b.publish_on.localeCompare(a.publish_on));
+
+  const upcoming = codeCards
+    .filter((c) => c.publish_on > today)
+    .map((c) => ({ kind: "card", publish_on: c.publish_on }));
+  const nextDrop = [...(next || []), ...upcoming].sort((a, b) => a.publish_on.localeCompare(b.publish_on))[0] ?? null;
+
+  return NextResponse.json({ today, drops: allDrops, next: nextDrop });
 }
