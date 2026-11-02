@@ -8,8 +8,7 @@
 //   meant, what could be better.
 // - Her voice notes BT1 (welcome, on the hub) and BT2 (part 4) are never
 //   repeated on the page. The text around them goes deeper or stays out.
-// - One prompt, not four, plus a link to her free cards.
-// - The one paid door is Trust & Repair (£15), at the end.
+// - One prompt, not four. One door at the end: 31 Touch Points (2 Nov 2026).
 // - Every word below is hers (from the guide, her approved lunch story, her
 //   recorded scripts) except short labels, which are marked // MINE.
 //
@@ -105,21 +104,13 @@ export const betweenTouches: PracticeCollection = {
         { kind: "promptCard", deck: "Couples", prompt: "Tell me how our relationship has changed you." },
         { kind: "timer", minutes: [15], label: "Your fifteen minutes" },
         { kind: "quote", text: "Three responses. Fifteen minutes. One prompt. That is all it takes for two people to find each other again." },
-        { kind: "link", text: "Want another prompt? Try my free cards \u2192", href: "https://feelfullyyou.com/cards-free-taster" },
+        // One door only (Juliette, 2 Nov 2026: one funnel, one direction).
         {
           kind: "nextCard",
           image: "/31-touch-points/hero.jpg",
           title: "31 Touch Points",
           line: "A whole month of small, playful touch, one a day, in the app.",
           href: "https://feelfullyyou.com/31-touch-points",
-          cta: "Have a look \u2192",
-        },
-        {
-          kind: "nextCard",
-          image: "/offers/31-days-closer-cover.jpg",
-          title: "31 Days Closer",
-          line: "Thirty-one days. One prompt a morning. Fifteen minutes.",
-          href: "https://feelfullyyou.com/31-days-closer",
           cta: "Have a look \u2192",
         },
       ],
