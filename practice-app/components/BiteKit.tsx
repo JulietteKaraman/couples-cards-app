@@ -164,10 +164,10 @@ export function Voice({ id, src, label }: { id?: string; src: string; label: str
   );
 }
 
-export function Photo({ src, alt, pos = "50% 30%", ratio = "4 / 5" }: { src: string; alt: string; pos?: string; ratio?: string }) {
+export function Photo({ src, alt, pos = "50% 30%", ratio = "4 / 5", maxW = 440 }: { src: string; alt: string; pos?: string; ratio?: string; maxW?: number }) {
   // Whole photos, each framed by hand so every head stays in. Never zoomed.
   return (
-    <div className="relative mx-auto mb-7 w-full max-w-[440px] overflow-hidden rounded-3xl border-[1.5px] border-[rgba(221,201,142,0.45)]" style={{ aspectRatio: ratio }}>
+    <div className="relative mx-auto mb-7 w-full overflow-hidden rounded-3xl border-[1.5px] border-[rgba(221,201,142,0.45)]" style={{ aspectRatio: ratio, maxWidth: maxW }}>
       <Image src={src} alt={alt} fill sizes="(max-width: 768px) 100vw, 440px" className="object-cover" style={{ objectPosition: pos }} />
     </div>
   );
@@ -269,4 +269,32 @@ export const BITE_CSS = `
         .wssr-flip{animation:wssrFlip .32s cubic-bezier(.2,.8,.2,1) both}
         @keyframes wssrFlip{from{transform:rotateX(35deg) scale(.97);opacity:.3}to{transform:none;opacity:1}}
         @media (prefers-reduced-motion:reduce){.wssr *,.wssr *::before{animation:none!important;transition:none!important}}
+        .wssr .bite-line em{font-style:normal;color:#EEDE80}
+        .wssr blockquote{margin:22px 0;padding:18px;border-left:2px solid #DDC98E;background:rgba(13,53,53,.45);border-radius:0 16px 16px 0;font-family:var(--font-display);font-weight:300;font-size:19px;line-height:1.4;color:#f1ece2}
+        .wssr blockquote cite{display:block;margin-top:8px;font-family:var(--font-body);font-style:normal;font-size:12px;color:#a79f90}
+        .wssr h4{margin:18px 0 6px;font-family:var(--font-display);font-weight:500;font-size:16px;color:#DDC98E}
+        .wssr .rolecard{margin:14px 0;padding:20px;border:1px solid rgba(221,201,142,.45);border-radius:22px;background:rgba(13,53,53,.4)}
+        .wssr .rolecard .tag{display:inline-block;margin-bottom:10px;padding:4px 12px;border-radius:99px;background:#DDC98E;color:#070707;font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+        .wssr .story{margin:28px 0;padding:22px 20px;border:1px solid rgba(221,201,142,.3);border-radius:24px;background:rgba(13,53,53,.28)}
+        .wssr .story .reel{max-width:240px;margin:0 auto 22px;border-radius:20px;overflow:hidden}
+        .wssr .story .reel img{display:block;width:100%;height:auto}
+        .wssr ul.said{list-style:none;margin:12px 0 18px;padding:0}
+        .wssr ul.said li{padding:6px 0;font-family:var(--font-display);font-weight:300;font-size:20px;color:#EEDE80}
+        .wssr .loop{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px;margin:28px 0;padding:22px 14px;border-radius:22px;background:rgba(13,53,53,.7);font-family:var(--font-display);font-weight:300;font-size:18px;color:#f1ece2}
+        .wssr .loop .ar{color:#DDC98E}
+        .wssr ol.three{list-style:none;margin:16px 0;padding:0}
+        .wssr ol.three li{display:grid;grid-template-columns:36px 1fr;gap:12px;padding:14px 0;border-bottom:1px solid rgba(221,201,142,.2);font-size:17px;line-height:1.5;color:#cfc8bb}
+        .wssr ol.three li:last-child{border-bottom:0}
+        .wssr .quiet{color:#a79f90}
+        .wssr .tap{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#DDC98E}
+        .wssr .trio{display:grid;gap:8px;margin:16px 0}
+        .wssr .trio div{padding:13px 16px;border:1px solid rgba(221,201,142,.3);border-radius:14px;background:rgba(13,53,53,.3);font-size:15px;color:#cfc8bb}
+        .wssr .trio b{margin-right:8px;font-family:var(--font-display);font-weight:500;letter-spacing:.04em;color:#DDC98E}
+        .wssr .ab{display:flex;gap:10px;margin:18px 0}
+        .wssr .ab div{flex:1;padding:14px;border:1px solid rgba(221,201,142,.3);border-radius:16px;text-align:center}
+        .wssr .ab b{display:block;font-family:var(--font-display);font-weight:300;font-size:28px;line-height:1.1;color:#DDC98E}
+        .wssr .ab span{font-size:14px;color:#a79f90}
+        .wssr .intent{margin:24px 0;padding:26px 20px;border-radius:22px;background:rgba(13,53,53,.7);font-family:var(--font-display);font-weight:300;font-size:24px;line-height:1.3;text-align:center;color:#f1ece2}
+        .wssr .intent small{display:block;margin-bottom:8px;font-family:var(--font-body);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#DDC98E}
+        .wssr h3{margin-top:22px}
       `;
