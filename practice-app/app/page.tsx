@@ -12,6 +12,7 @@ import { oneTouch } from "@/lib/content/one-touch";
 import { touchMap } from "@/lib/content/touch-map";
 import { dayOf } from "@/lib/content/31-touch-points-drip";
 import { useAuth } from "@/components/providers/AuthProvider";
+import { PhoneBites } from "@/components/PhoneBites";
 import { getCompletedSlugs } from "@/lib/entitlements/progress";
 import { COLLECTION_DECK_TYPES, PURCHASE_URLS, FREE_DECK_TYPES } from "@/lib/entitlements/config";
 
@@ -249,6 +250,9 @@ function LibraryContent() {
             </Link>
           </p>
         )}
+
+        {/* Funnel bites this phone has opened. They stay hidden from everyone else. */}
+        <PhoneBites />
 
         {/* TODAY, for an owner */}
         {owns31 && (

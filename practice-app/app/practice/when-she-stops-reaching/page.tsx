@@ -10,9 +10,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import PracticeTimer from "@/components/PracticeTimer";
-import { BITE_CSS, FEELS, Html, MuteNote, Photo, PLAIN_GOLD, StepBar, Voice, read, write } from "@/components/BiteKit";
+import { BITE_CSS, FEELS, HomePrompt, Html, MuteNote, Photo, PLAIN_GOLD, StepBar, Voice, read, write } from "@/components/BiteKit";
 import { WSSR } from "@/lib/content/when-she-stops-reaching";
 import { count } from "@/lib/count";
+import { rememberBite } from "@/lib/bites-on-phone";
 
 const DIR = "/when-she-stops-reaching";
 const STATE_KEY = "ffy.wssr.state.v1";
@@ -128,6 +129,7 @@ export default function WhenSheStopsReaching() {
     if (!counted.current) {
       counted.current = true;
       count("wssr_open");
+      rememberBite({ slug: "when-she-stops-reaching", title: "When She Stops Reaching", img: "/when-she-stops-reaching/cover.jpg" });
     }
   }, []);
 
@@ -252,6 +254,7 @@ export default function WhenSheStopsReaching() {
           <button type="button" onClick={begin} className="mt-6 inline-flex min-h-[52px] w-full items-center justify-center rounded-full bg-[#DDC98E] font-display text-[17px] font-medium text-[#070707]">
             Begin →
           </button>
+          <HomePrompt slug="when-she-stops-reaching" />
           {sittings.length > 0 && <Dots sittings={sittings} />}
         </section>
 

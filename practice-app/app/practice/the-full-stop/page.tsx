@@ -8,9 +8,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { BITE_CSS, FEELS, Html, MuteNote, Photo, PLAIN_GOLD, StepBar, Voice, read, write } from "@/components/BiteKit";
+import { BITE_CSS, FEELS, HomePrompt, Html, MuteNote, Photo, PLAIN_GOLD, StepBar, Voice, read, write } from "@/components/BiteKit";
 import { FS } from "@/lib/content/the-full-stop";
 import { count } from "@/lib/count";
+import { rememberBite } from "@/lib/bites-on-phone";
 
 const DIR = "/the-full-stop";
 const STATE_KEY = "ffy.fs.state.v1";
@@ -125,6 +126,7 @@ export default function TheFullStop() {
     if (!counted.current) {
       counted.current = true;
       count("fs_open");
+      rememberBite({ slug: "the-full-stop", title: "The Full Stop", img: "/the-full-stop/cover.jpg" });
     }
   }, []);
 
@@ -196,6 +198,7 @@ export default function TheFullStop() {
           </div>
           <MuteNote />
           <button type="button" onClick={begin} className="mt-6 inline-flex min-h-[52px] w-full items-center justify-center rounded-full bg-[#DDC98E] font-display text-[17px] font-medium text-[#070707]">Begin →</button>
+          <HomePrompt slug="the-full-stop" />
         </section>
 
         <section className={show("what")}>

@@ -1,0 +1,22 @@
+{
+  "name": "The 45-Minute Connection Ritual · Feel Fully You",
+  "short_name": "45-Min Ritual",
+  "description": "The 45-Minute Connection Ritual",
+  "start_url": "/practice/the-45-minute-ritual",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#070707",
+  "theme_color": "#070707",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

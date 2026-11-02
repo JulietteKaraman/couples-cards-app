@@ -10,8 +10,9 @@ import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import PracticeTimer from "@/components/PracticeTimer";
 import { PromptCard } from "@/components/Interactive";
-import { BITE_CSS, FEELS, Html, MuteNote, Photo, PLAIN_GOLD, StepBar, Voice, read, write } from "@/components/BiteKit";
+import { BITE_CSS, FEELS, HomePrompt, Html, MuteNote, Photo, PLAIN_GOLD, StepBar, Voice, read, write } from "@/components/BiteKit";
 import { count } from "@/lib/count";
+import { rememberBite } from "@/lib/bites-on-phone";
 
 type PhotoB = { type: "photo"; src: string; alt: string; pos?: string; ratio?: string; maxW?: number; caption?: string; plain?: boolean };
 type Block =
@@ -436,8 +437,9 @@ export default function BitePage({ bite }: { bite: Bite }) {
     if (!counted.current) {
       counted.current = true;
       count(`${bite.short}_open`);
+      rememberBite({ slug: bite.slug, title: bite.title, img: bite.hero.src });
     }
-  }, [STATE, SITTINGS, bite.short]);
+  }, [STATE, SITTINGS, bite.short, bite.slug, bite.title, bite.hero.src]);
 
   useEffect(() => {
     if (ready) write(STATE, { step, finished });
@@ -490,6 +492,7 @@ export default function BitePage({ bite }: { bite: Bite }) {
           </div>
           <MuteNote />
           <button type="button" onClick={begin} className="mt-6 inline-flex min-h-[52px] w-full items-center justify-center rounded-full bg-[#DDC98E] font-display text-[17px] font-medium text-[#070707]">Begin →</button>
+          <HomePrompt slug={bite.slug} />
         </section>
 
         {STEPS.map((s, i) => (

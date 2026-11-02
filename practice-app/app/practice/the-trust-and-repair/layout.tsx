@@ -4,6 +4,9 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Trust & Repair",
   robots: { index: false, follow: false },
+  // Its own home-screen icon opens this bite, not the library.
+  manifest: "/bites/manifests/the-trust-and-repair.json",
+  appleWebApp: { capable: true, statusBarStyle: "black-translucent", title: "Trust & Repair" },
 };
 
 export default function Layout({ children }: { children: React.ReactNode }) {
