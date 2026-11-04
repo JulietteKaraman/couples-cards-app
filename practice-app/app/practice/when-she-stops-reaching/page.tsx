@@ -315,7 +315,7 @@ export default function WhenSheStopsReaching() {
             video="https://player.vimeo.com/video/1223329859?speed=1&badge=0&autopause=0&player_id=0&app_id=58479" ratio="16 / 9"
             watchLabel="▶ Watch" listenLabel="🎧 Listen · 5 min"
             watchNote="Watch it once so you can see exactly what I'm doing with my hands. After that, the audio is all you need."
-            src={`${DIR}/touch-base.mp3`} voiceLabel="Touch Base" />
+            src="/touch-base/touch-base-guided-music.m4a" voiceLabel="Touch Base" />
           <Html html={WSSR.p1Steps} />
           <div className="my-6" key={`t1-${runId}`}><PracticeTimer minutes={[5]} label="Your five minutes" dark /></div>
           {!solo && goNow}
@@ -351,7 +351,7 @@ export default function WhenSheStopsReaching() {
           <div className="dstep">
             <p className="dn"><span>1</span><b>Touch Base</b><small>Five minutes, on your own</small></p>
             <p>Press play. My voice guides the five minutes.</p>
-            <Voice src={`${DIR}/touch-base.mp3`} label="Touch Base" />
+            <Voice src="/touch-base/touch-base-guided-music.m4a" label="Touch Base" />
             {doneBtn(1)}
           </div>
 
