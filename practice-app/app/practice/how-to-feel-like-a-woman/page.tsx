@@ -385,7 +385,7 @@ function Today() {
       {/* Touch Base, the other daily practice. 28 Oct, Juliette: not boxy, "in Juliette's voice"
           next to "every day, any time". The gold emblem is the play button. */}
       <div className="mt-10 flex items-center gap-4">
-        <RoundVoice src="/touch-base/touch-base-guided.m4a" img="/touch-base/emblem.png" label="Touch Base, in Juliette's voice" />
+        <RoundVoice src="/touch-base/touch-base-guided-music.m4a" img="/touch-base/emblem.png" label="Touch Base, in Juliette's voice" />
         <div>
           <Eyebrow>Every day · any time · in Juliette&rsquo;s voice</Eyebrow>
           <h3 className="mt-1 font-display text-2xl font-light">Touch Base</h3>

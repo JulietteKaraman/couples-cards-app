@@ -19,7 +19,7 @@ import { useMenuState, languageOf } from "@/components/TouchMenu";
 import { MENU } from "@/lib/content/touch-menu";
 import { ANSWERS, LANG_STYLE, TM_SLUG, type Answer, type LanguageId } from "@/lib/content/touch-map";
 
-const BASE_AUDIO = "/touch-base/touch-base-guided.m4a";
+const BASE_AUDIO = "/touch-base/touch-base-guided-music.m4a";
 const BASE_KEY = "ffy.touchmap.base.v1";
 
 export default function MenuTouchPage({ params }: { params: Promise<{ slug: string }> }) {

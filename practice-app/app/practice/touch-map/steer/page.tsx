@@ -17,7 +17,7 @@ import { PLACES, ANSWERS, STEERS, TM_AUDIO, TM_APPLY_URL, TM_SLUG, type Answer, 
 
 const KEY = "ffy.touchmap.v2";
 const BASE_KEY = "ffy.touchmap.base.v1"; // shared with every touch: Touch Base once a day
-const BASE_AUDIO = "/touch-base/touch-base-guided.m4a";
+const BASE_AUDIO = "/touch-base/touch-base-guided-music.m4a";
 const Q = "/touch-map/quiz/";
 // one photo per place (her own quiz photos)
 const PHOTO: Record<string, { img: string; pos?: string }> = {
