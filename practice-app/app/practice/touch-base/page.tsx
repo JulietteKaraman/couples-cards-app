@@ -5,17 +5,17 @@
 // dark hub style of When She Goes Quiet and the buyer pages).
 //
 // Every word of the practice, the "why it works" and the closing line is
-// Juliette's, unchanged. What is new is the doing: her 5 minute guided
-// recording, the 1 to 10 rating she already asks for (before, two minute
-// timer, after), and a 31 day morning/evening tracker, because her own copy
-// says "Thirty-one days, it becomes automatic". Saved on this phone only.
+// Juliette's, unchanged. What is new is the doing: the 1 to 10 rating she
+// already asks for (before, two minute timer, after), and a 7 day
+// morning/evening tracker. Saved on this phone only.
+// No guided audio here (4 Nov, Juliette): "it is free - they dont get this
+// version". The video stays. The music version lives in the paid apps.
 //
 // Photos: press shoot portraits used on no other page (27 Oct).
 
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import VoicePlayer from "@/components/VoicePlayer";
 import PracticeTimer from "@/components/PracticeTimer";
 import { TellMe } from "@/components/TellMe";
 import { FreeEmailGate } from "@/components/FreeEmailGate";
@@ -76,17 +76,6 @@ export default function TouchBasePage() {
         <a href="#try" className="mt-8 inline-flex items-center rounded-full bg-[#DDC98E] px-7 py-4 font-display text-lg font-medium text-[#1a1814]">
           Do it now →
         </a>
-
-        <div className="mt-6 flex items-center gap-3.5">
-          <Image src="/touch-base/me.jpg" alt="Juliette" width={58} height={58} className="h-[58px] w-[58px] rounded-full border border-[#DDC98E] object-cover shadow-[0_0_24px_-6px_rgba(221,201,142,0.6)]" />
-          <div>
-            <p className="font-display text-lg">Do it with me</p>
-            <p className="text-sm text-[#a79f90]">Press play, close your eyes, follow my voice.</p>
-          </div>
-        </div>
-        <div className="mt-4">
-          <VoicePlayer src="/touch-base/touch-base-guided.m4a" label="Touch Base, guided by me · 5 min" dark />
-        </div>
 
         <Section eyebrow="Watch">
           <div className="overflow-hidden rounded-2xl bg-black" style={{ position: "relative", paddingBottom: "56.25%" }}>
