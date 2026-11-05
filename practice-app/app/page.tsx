@@ -25,7 +25,7 @@ import { COLLECTION_DECK_TYPES, PURCHASE_URLS, FREE_DECK_TYPES } from "@/lib/ent
 //
 // Everything the old shelf did still happens here: the same purchase URLs,
 // the 31 Days Closer pin under 31 Touch Points, interest tracking on tiles
-// for things you do not own, Talk to me for Sacred No owners, and the free
+// for things you do not own, and the free
 // guide routing through sign in. History of each decision is in git (the
 // previous page.tsx, commit b398b83 and earlier).
 // ===========================================================================
@@ -383,19 +383,11 @@ function LibraryContent() {
                   title="Scrumptious Confessions"
                   subtitle="A new story every week, in my voice. Touch Base every day."
                   heroImage="/how-to-feel-like-a-woman/scrumptious-confessions.jpg"
-                  note="One story a week · a card · 31 days"
+                  note="Stories · Touch Base · a weekly card"
                 />
               )}
-              {entitledCollections.includes(theSacredNo.slug) && (
-                <Tile
-                  href="https://tidycal.com/juliette2/the-touch-reset-call"
-                  external
-                  title="Talk to me"
-                  subtitle="Somewhere in The Sacred No, or through the other side of it? Book a call and we look at where you are and what comes next."
-                  heroImage="/offers/talk-to-me.jpg"
-                  note="Touch Reset call · book a time"
-                />
-              )}
+              {/* "Talk to me" call tile removed 5 Nov 2026. Juliette: "I do not
+                  want that on- I only want qualified leads". */}
             </div>
           </>
         )}
