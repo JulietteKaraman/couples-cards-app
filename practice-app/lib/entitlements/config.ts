@@ -16,6 +16,10 @@ export const COLLECTION_DECK_TYPES: Record<string, string> = {
   // How to Feel Like a Woman, the course women, 29 Oct 2026. Granted by hand
   // from /admin for now (specs/how-to-feel-like-a-woman-app.md R1).
   "how-to-feel-like-a-woman": "how-to-feel-like-a-woman",
+  // Scrumptious Confessions membership, £97 every 3 months (4 Nov 2026,
+  // specs/scrumptious-confessions-membership.md). Add its live Stripe price id
+  // to PRICE_ID_TO_DECK_TYPE once the payment link exists.
+  "scrumptious-confessions": "scrumptious-confessions",
   // The Touch Map, £197, version 1 (29 Oct 2026, specs/touch-map.md in APP
   // builds). Add its live Stripe price id to PRICE_ID_TO_DECK_TYPE once the
   // payment link exists.
@@ -65,7 +69,7 @@ export const PRICE_ID_TO_DECK_TYPE: Record<string, string> = {
 // cancellation or a failed renewal, access continues for 48 hours past
 // the current period end, not indefinitely, which is what a bare
 // "purchase found → grant forever" match would otherwise do.
-export const SUBSCRIPTION_DECK_TYPES: string[] = ["members-app"];
+export const SUBSCRIPTION_DECK_TYPES: string[] = ["members-app", "scrumptious-confessions"];
 export const SUBSCRIPTION_GRACE_PERIOD_HOURS = 48;
 
 // Free collections: granted automatically the moment someone logs into the

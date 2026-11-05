@@ -377,6 +377,15 @@ function LibraryContent() {
                   note="Practice Lab · cards · Scrumptious Confessions"
                 />
               )}
+              {entitledCollections.includes("scrumptious-confessions") && (
+                <Tile
+                  href="/practice/scrumptious-confessions"
+                  title="Scrumptious Confessions"
+                  subtitle="A new story every week, in my voice. Touch Base every day."
+                  heroImage="/how-to-feel-like-a-woman/scrumptious-confessions.jpg"
+                  note="One story a week · a card · 31 days"
+                />
+              )}
               {entitledCollections.includes(theSacredNo.slug) && (
                 <Tile
                   href="https://tidycal.com/juliette2/the-touch-reset-call"
