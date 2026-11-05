@@ -1671,8 +1671,8 @@ export const thirtyOneTouchPoints: PracticeCollection = {
         },
         {
           kind: "link",
-          text: "Or talk to me first, and we will work out what you actually need",
-          href: "https://tidycal.com/juliette2/the-touch-reset-call",
+          text: "Or tell me where you are, and we will work out what you actually need",
+          href: "https://feelfullyyou.com/apply",
         },
       ],
     },

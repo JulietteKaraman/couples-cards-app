@@ -168,9 +168,9 @@ export const theSacredNo: PracticeCollection = {
         },
         {
           kind: "p",
-          text: "If you'd like to talk through where you are with your no, and what could come next, you can book a call with me.",
+          text: "If you'd like to work with me on where you are with your no, and what could come next, tell me a little about you here.",
         },
-        { kind: "link", text: "Book a Touch Reset call", href: "https://tidycal.com/juliette2/the-touch-reset-call" },
+        { kind: "link", text: "Apply to work with me", href: "https://feelfullyyou.com/apply" },
       ],
     },
     {
