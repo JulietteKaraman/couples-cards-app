@@ -23,7 +23,7 @@ const POOL = poolData as unknown as Block[];
 const KEY = "ffy.couples-touch-map.v2"; // never the live Touch Map's keys
 type Person = { name: string; scores?: Scores; entries: MapEntry[]; body: "female" | "male"; dates: number; lastPlaces: string[]; usedTools: string[]; usedMenu: string[] };
 type Saved = { people: Person[]; receiver?: number; lastReceiver?: number; no: string[]; have: string[]; minutes?: number; tryLang?: string | null; welcomed?: boolean; setupSeen?: boolean };
-type Stage = "doors" | "welcome" | "names" | "quiz0" | "quiz1" | "who" | "length" | "today" | "stuck" | "setup" | "giver" | "receiver" | "open" | "touchbase" | "dyad1" | "stoplight" | "touch" | "question" | "dyad2" | "ground" | "map" | "end";
+type Stage = "doors" | "welcome" | "names" | "quiz0" | "quiz1" | "who" | "nos" | "handover" | "length" | "have" | "callback" | "stuck" | "setup" | "giver" | "receiver" | "open" | "touchbase" | "dyad1" | "stoplight" | "touch" | "question" | "dyad2" | "ground" | "map" | "end";
 const person = (name = ""): Person => ({ name, entries: [], body: "female", dates: 0, lastPlaces: [], usedTools: [], usedMenu: [] });
 const EMPTY: Saved = { people: [person(), person()], no: [], have: [] };
 const TRY = [
@@ -78,6 +78,7 @@ function Frame({ id }: { id: string }) {
   const f = FRAME[id];
   if (!f) return null;
   if (f.src) return <div className="mt-5"><SlimPlayer src={f.src} label={f.label} big /></div>;
+  if (process.env.NODE_ENV !== "development") return null;
   return (
     <div className="mt-5 rounded-2xl border border-dashed border-[#DDC98E]/60 bg-[rgba(221,201,142,0.07)] p-4">
       <p className="text-[11px] uppercase tracking-[0.18em] text-[#DDC98E]">Your voice goes here</p>
@@ -312,16 +313,33 @@ function TouchPlayer({ touchDate, onDone }: { touchDate: { steps: Step[] }; onDo
   );
 }
 
-// Her set-up videos (room, Pleasure Toolkit, playlist) are shown once checked for client names.
-// Until then nothing shows, so a buyer never sees an empty box.
-const SETUP_READY = false;
-function SetupVideos({ lang }: { lang: string }) {
+// Her set-up videos, checked 9 Nov 2026 (no names, no Beginning). Partner video ends before
+// "how to get her to feel safe". Toolkit is whole: her tying and tape lines stay (Juliette: great for Kinky).
+const SETUP_READY = true;
+const SETUP_VIDEOS = [
+  { src: "/touch-map/couples/setup/room.mp4", title: "Setting up the room" },
+  { src: "/touch-map/couples/setup/room-2.mp4", title: "Setting up the room, part 2" },
+  { src: "/touch-map/couples/setup/toolkit.mp4", title: "Your Pleasure Toolkit" },
+];
+function SetupVideos({ collapsed = false }: { lang?: string; collapsed?: boolean }) {
   if (!SETUP_READY) return null;
-  return (
-    <div className="mt-5 rounded-2xl border border-dashed border-[#DDC98E]/60 bg-[rgba(221,201,142,0.07)] p-4 text-[15px]">
-      <p className="text-[11px] uppercase tracking-[0.18em] text-[#DDC98E]">Your videos go here once checked for client names</p>
-      <p className="mt-1">Setting up the room · The Pleasure Toolkit · the playlist for {lang}</p>
+  const body = (
+    <div className="mt-4 space-y-5">
+      {SETUP_VIDEOS.map((v) => (
+        <div key={v.src}>
+          <p className="text-[15px] text-[#e9e3d6]">{v.title}</p>
+          <video src={v.src} controls playsInline preload="metadata" className="mt-2 w-full rounded-2xl bg-black" />
+        </div>
+      ))}
+      <Frame id="space" />
     </div>
+  );
+  if (!collapsed) return body;
+  return (
+    <details className="mt-5 rounded-2xl border border-[#DDC98E]/30 p-4">
+      <summary className="cursor-pointer text-[15px] text-[#DDC98E]">Watch the set-up videos again</summary>
+      {body}
+    </details>
   );
 }
 
@@ -342,10 +360,10 @@ export function CouplesTouchMap() {
   const both = saved.people.every((p) => p.name && p.scores);
 
   const route = useMemo<Stage[]>(() => {
-    const pre: Stage[] = ["doors", ...(saved.welcomed ? [] : ["welcome" as Stage]), ...(both ? [] : ["names", "quiz0", "quiz1"] as Stage[]), "who", "length", "today"];
+    const pre: Stage[] = ["doors", ...(saved.welcomed ? [] : ["welcome" as Stage]), ...(both ? [] : ["names", "quiz0", "quiz1"] as Stage[]), "who", "nos", "handover", "length", ...(short ? [] : ["have" as Stage])];
     const after: Stage[] = short
-      ? [...(SETUP_READY && done === 0 && !saved.setupSeen ? ["setup" as Stage] : []), "touchbase", "stoplight", "touch", "question", "map", "end"]
-      : ["giver", "receiver", "open", "touchbase", "dyad1", "stoplight", "touch", "dyad2", "ground", "map", "end"];
+      ? [...(SETUP_READY && done === 0 && !saved.setupSeen ? ["setup" as Stage] : []), "callback", "touchbase", "stoplight", "touch", "question", "map", "end"]
+      : ["giver", "callback", "receiver", "open", "touchbase", "dyad1", "stoplight", "touch", "dyad2", "ground", "map", "end"];
     return [...pre, ...after];
   }, [saved.welcomed, saved.setupSeen, both, short, done]);
   const go = (s: Stage) => { setStage(s); try { window.scrollTo(0, 0); } catch {} };
@@ -472,7 +490,7 @@ export function CouplesTouchMap() {
 
         {stage === "length" && (
           <>
-            <Title kicker={`${rec.name} receives`}>How long today?</Title>
+            <Title kicker={`${giv.name} leads today`}>How long today?</Title>
             <p className="mt-3 text-[16px] text-[#d8d1c3]">{short ? `Touch date ${done + 1}. It starts small and grows, so it lands.` : "Choose what feels right today."}</p>
             <div className="mt-5 grid grid-cols-3 gap-2">
               {MINUTES.map((m) => {
@@ -501,37 +519,56 @@ export function CouplesTouchMap() {
                 <p className="mt-2 text-[13px] text-[#a79f90]">Just a taste, the gentle part only.</p>
               </>
             )}
+            {short ? <button type="button" className={primary + " mt-7"} onClick={makePlan}>That&apos;s today</button> : btn("Carry on")}
+          </>
+        )}
+
+        {stage === "nos" && (
+          <>
+            <Title kicker={`${rec.name} receives`}>Anything that&apos;s a no today?</Title>
+            <Picks items={NOS} on={saved.no} toggle={toggle("no")} />
+            <p className="mt-4 text-[14px] text-[#a79f90]">Only you choose these, {rec.name}.</p>
             {btn("Carry on")}
           </>
         )}
 
-        {stage === "today" && (
+        {stage === "handover" && (
           <>
-            <Title kicker={rec.name}>Anything that&apos;s a no today?</Title>
-            <Picks items={NOS} on={saved.no} toggle={toggle("no")} />
-            {short ? (
-              <p className="mt-9 text-[16px] text-[#d8d1c3]">Today it&apos;s hands only. Nothing to get ready.</p>
-            ) : (
-              <>
-                <h2 className="mt-9 font-display text-[24px] font-light">What do you have to hand?</h2>
-                <Picks items={HAVE} on={saved.have} toggle={toggle("have")} />
-              </>
-            )}
+            <Title kicker={`${rec.name}`}>Hand the phone to {giv.name}.</Title>
+            <p className="mt-3 text-[17px] leading-relaxed text-[#d8d1c3]">Then leave the room. What comes next is only for {giv.name}. Your only job now is to receive, and to notice what that brings up.</p>
+            <Frame id="leave" />
+            {btn(`I'm ${giv.name}, I have the phone`)}
+          </>
+        )}
+
+        {stage === "have" && (
+          <>
+            <Title kicker={`${giv.name} leads today`}>What do you have to hand?</Title>
+            <Picks items={HAVE} on={saved.have} toggle={toggle("have")} />
             <button type="button" className={primary + " mt-8"} onClick={makePlan}>That&apos;s today</button>
+          </>
+        )}
+
+        {stage === "callback" && (
+          <>
+            <Title kicker={`${giv.name} leads today`}>Go and get {rec.name}.</Title>
+            <p className="mt-3 text-[17px] text-[#d8d1c3]">When you&apos;re both here, carry on.</p>
+            {btn("We're both here")}
           </>
         )}
 
         {stage === "stuck" && (
           <>
             <Title kicker="Not yet">There aren&apos;t enough touches for these choices.</Title>
-            <p className="mt-3 text-[17px] text-[#d8d1c3]">Change today&apos;s nos, or choose a different length.</p>
-            {btn("Back to the choices", () => go("today"))}
+            <p className="mt-3 text-[17px] text-[#d8d1c3]">Choose a different length, or different things to hand.</p>
+            {btn("Back to the choices", () => go("length"))}
           </>
         )}
 
         {stage === "setup" && (
           <>
-            <Title kicker="Before your first touch date">Set up, together</Title>
+            <Title kicker={`${giv.name} leads today`}>Set this up for {rec.name}.</Title>
+            <p className="mt-3 text-[16px] text-[#d8d1c3]">Only one of you leads, and today it&apos;s you. The one who gives sets up.</p>
             <SetupVideos lang={LANGUAGES.find((l) => l.id === top)?.label ?? ""} />
             {btn("We're ready")}
           </>
@@ -544,7 +581,7 @@ export function CouplesTouchMap() {
             </div>
             <Title kicker={`${giv.name} gives`}>Set this up for {rec.name}.</Title>
             <Frame id="giver" />
-            <SetupVideos lang={LANGUAGES.find((l) => l.id === top)?.label ?? ""} />
+            <SetupVideos collapsed lang={LANGUAGES.find((l) => l.id === top)?.label ?? ""} />
             {needs.length > 0 && (
               <>
                 <h2 className="mt-7 font-display text-[22px] font-light">Have ready</h2>
