@@ -12,7 +12,7 @@ import { CollectionGate } from "@/components/auth/CollectionGate";
 import { useAuth } from "@/components/providers/AuthProvider";
 import { ADMIN_EMAIL } from "@/lib/entitlements/admin";
 import { getCompletedWithTimes, markComplete } from "@/lib/entitlements/progress";
-import { FeelTracker, GiverReceiverNotes } from "@/components/Interactive";
+import { FeelTracker, GiverReceiverNotes, readFeels, readNotes } from "@/components/Interactive";
 import {
   ADV_KEY,
   adminBypassActive,
@@ -40,6 +40,7 @@ function TouchPointEntryContent() {
   const slug = params.slug as string;
   const { user } = useAuth();
   const [completed, setCompleted] = useState(false);
+  const [needsFill, setNeedsFill] = useState("");
   const [doneSlugs, setDoneSlugs] = useState<string[] | null>(null);
   const [lastDone, setLastDone] = useState<number | null>(null);
   const [now, setNow] = useState(() => Date.now());
@@ -88,6 +89,23 @@ function TouchPointEntryContent() {
 
   async function handleMarkComplete() {
     if (!user || !entry) return;
+    // 9 Nov 2026, Juliette's "do the work" guarantee: a day only counts once it is
+    // filled in (how it felt, and both boxes on the giver/receiver days). The app
+    // checks THAT it is filled, never WHAT was written; the words stay on the phone.
+    const d = dayOf(entry.slug);
+    if (d > 0) {
+      const feltIt = !!readFeels()[String(d)];
+      const roles = ROLE_DAYS[d];
+      const n = readNotes()[String(d)] || {};
+      const wrote = !roles || (!!n.giver?.trim() && !!n.receiver?.trim());
+      if (!feltIt || !wrote) {
+        setNeedsFill(!feltIt && !wrote
+          ? `Before you tick it: a line each in the ${roles![0]} and ${roles![1]} boxes, and tap how it felt.`
+          : !feltIt ? "Before you tick it: tap how it felt." : `Before you tick it: a line each in the ${roles![0]} and ${roles![1]} boxes.`);
+        return;
+      }
+    }
+    setNeedsFill("");
     await markComplete(user.id, "31-touch-points", entry.slug);
     if (dayOf(entry.slug) > 0) count("day_done", dayOf(entry.slug));
     setCompleted(true);
@@ -271,6 +289,7 @@ function TouchPointEntryContent() {
                 I did it ✓
               </button>
             )}
+            {!completed && needsFill && <p className="mt-3 text-[15px] text-[#EEDE80]">{needsFill}</p>}
           </div>
         )}
 
