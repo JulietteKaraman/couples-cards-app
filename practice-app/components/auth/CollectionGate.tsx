@@ -77,6 +77,12 @@ export function CollectionGate({
   if (FREE_DECK_TYPES.includes(COLLECTION_DECK_TYPES[collectionSlug] ?? collectionSlug)) {
     return <>{children}</>;
   }
+  // Local preview only: lets Claude walk a paid product on this computer
+  // without a buyer login. Never true on the live site (NODE_ENV is
+  // "production" there and the variable is not set).
+  if (process.env.NODE_ENV === "development" && process.env.NEXT_PUBLIC_DEV_OPEN === "1") {
+    return <>{children}</>;
+  }
   return (
     <ProtectedRoute>
       <GateContent collectionSlug={collectionSlug}>{children}</GateContent>

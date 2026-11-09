@@ -126,7 +126,7 @@ function score(vals: (number | null)[], taps: (LanguageId | null)[]) {
   return { top, mix };
 }
 
-export function PleasureQuiz({ onDone, onChooseMyself }: { onDone: (langs: LanguageId[], scores: Scores) => void; onChooseMyself: () => void }) {
+export function PleasureQuiz({ onDone, onChooseMyself, doneLabel = "Open my Touch Map" }: { onDone: (langs: LanguageId[], scores: Scores) => void; onChooseMyself: () => void; doneLabel?: string }) {
   const [i, setI] = useState(-1); // -1 intro, 0..9 steps, 10 reading, 11 result
   const [vals, setVals] = useState<(number | null)[]>(PICS.map(() => null));
   const [taps, setTaps] = useState<(LanguageId | null)[]>(WIRE.map(() => null));
@@ -238,7 +238,7 @@ export function PleasureQuiz({ onDone, onChooseMyself }: { onDone: (langs: Langu
         <button type="button" onClick={() => onDone(order, mix)}
           className="mt-7 inline-flex min-h-[58px] w-full items-center justify-center rounded-full px-6 font-display text-[17px] font-medium active:scale-[0.98]"
           style={{ background: st.color, color: st.ink }}>
-          Open my Touch Map
+          {doneLabel}
         </button>
         <button type="button" onClick={() => { setVals(PICS.map(() => null)); setTaps(WIRE.map(() => null)); go(0); }} className="mt-2 inline-flex min-h-[44px] w-full items-center justify-center text-[14px] text-[#a79f90] underline underline-offset-4">Take it again</button>
       </section>

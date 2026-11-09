@@ -24,6 +24,8 @@ export const COLLECTION_DECK_TYPES: Record<string, string> = {
   // builds). Add its live Stripe price id to PRICE_ID_TO_DECK_TYPE once the
   // payment link exists.
   "touch-map": "touch-map",
+  // The couples touch dates come with the same £197 Touch Map (Juliette, 8-9 Nov 2026).
+  "couples-touch-map": "touch-map",
 };
 
 // Maps a real Stripe price ID to the deck_type it grants, so resolve-purchase

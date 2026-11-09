@@ -113,6 +113,12 @@ function Hub() {
         </div>
       </Link>
 
+      {/* The couples touch dates come with the same Touch Map (9 Nov 2026) */}
+      <Link href="/practice/couples-touch-map" className="mt-4 flex items-center justify-between rounded-[24px] border-[1.5px] border-[#DDC98E]/30 p-5">
+        <span><span className="block text-[11px] uppercase tracking-[0.18em] text-[#DDC98E]">The two of you</span><span className="mt-1 block text-[16px]">Touch dates together. One gives, one receives.</span></span>
+        <span className="text-[13px] text-[#DDC98E]">→</span>
+      </Link>
+
       {/* Your touch today */}
       <div className="mt-8">
         <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-[#DDC98E]">Your touch today</p>
