@@ -52,3 +52,32 @@ export const HAVE = [
 const COUPLES = /^(tug-of-silk|tool-|neck-|wrist-|spine-|lower-back-|thighs-|feet-)/;
 export const audioFor = (slug: string) =>
   COUPLES.test(slug) ? `/touch-map/couples/${slug}.m4a` : `/touch-map/menu/${slug}.m4a`;
+
+// Her playlists, read from the QR codes in her playlist PDFs (Drive, Bespoke resources, 9 Nov 2026).
+// Key = one language, or two joined in her order. Tidal for Kinky and Shapeshifter alone not found yet.
+const SP = (id: string) => `https://open.spotify.com/playlist/${id}`;
+const TD = (id: string) => `https://tidal.com/playlist/${id}`;
+export const PLAYLISTS: Record<string, { label: string; spotify?: string; tidal?: string }> = {
+  energetic: { label: "Energetic", spotify: SP("61wiYI05t2P6EkA5jPFoad"), tidal: TD("b93e6405-8dd3-4bba-80b2-5fef1157e8be") },
+  sensual: { label: "Sensual", spotify: SP("3TjZCXYbXFLlL25PTddCjh"), tidal: TD("a82799f9-a08e-42b6-a128-9d4fc81a0314") },
+  kinky: { label: "Kinky", spotify: SP("6MFILzcMcEa2eae5abWHdA") },
+  sexual: { label: "Sexual", spotify: SP("0gJCSTL6M2bAb2Ut0xSAu9"), tidal: TD("27c225bb-2a72-4828-83f1-0331a8163169") },
+  shapeshifter: { label: "Shapeshifter", spotify: SP("7r5rZKbKhXilRgXvfppQyq") },
+  "energetic+sensual": { label: "Energetic and Sensual", spotify: SP("753hiaa6PXsyvWdhnAxOkg"), tidal: TD("e3b270cb-d702-4128-b470-58843ab03ac5") },
+  "energetic+kinky": { label: "Energetic and Kinky", spotify: SP("3g1BBDc6NxyVegf1sCGON3"), tidal: TD("b0745747-f5c2-4b69-8302-5e8696ba04ab") },
+  "sensual+kinky": { label: "Sensual and Kinky", spotify: SP("33SIjSET799maIFUEuI98o"), tidal: TD("2352355a-d5e8-4c8a-a09a-2c24e0c1e364") },
+  "sensual+sexual": { label: "Sensual and Sexual", spotify: SP("1fLrza4SqntLXEdso6Stpc"), tidal: TD("44b3733a-43cb-49d4-b20b-46738c3e7687") },
+  "kinky+sexual": { label: "Kinky and Sexual", tidal: TD("1c4cbd7f-c7fe-470c-a16c-68a2669fb343") },
+};
+const LANG_ORDER = ["energetic", "sensual", "shapeshifter", "kinky", "sexual"];
+// The mix playlist when their second language is a real part of them (25% or more), else their main one.
+export function playlistFor(scores: Record<string, number> | undefined) {
+  if (!scores) return null;
+  const total = Object.values(scores).reduce((a, b) => a + b, 0) || 1;
+  const [a, b] = Object.entries(scores).sort((x, y) => y[1] - x[1]);
+  if (b && b[1] / total >= 0.25) {
+    const key = [a[0], b[0]].sort((x, y) => LANG_ORDER.indexOf(x) - LANG_ORDER.indexOf(y)).join("+");
+    if (PLAYLISTS[key]) return PLAYLISTS[key];
+  }
+  return PLAYLISTS[a[0]] ?? null;
+}

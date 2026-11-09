@@ -16,7 +16,7 @@ import { ANSWERS, AREAS, LANGUAGES, LANG_STYLE, type Answer, type LanguageId } f
 import { buildPlaceDate, minutesFor, MINUTES, type Block, type DatePlan, type PlayStep, type Step } from "@/lib/couples-touch/engine";
 import { useAuth } from "@/components/providers/AuthProvider";
 import { markComplete } from "@/lib/entitlements/progress";
-import { audioFor, DYAD_SECONDS, FRAME, HAVE, JOINS, PALMS, INTEGRATION_PROMPT, NOS, WARM_UP_PROMPT } from "@/lib/couples-touch/frame";
+import { audioFor, DYAD_SECONDS, FRAME, HAVE, JOINS, PALMS, playlistFor, INTEGRATION_PROMPT, NOS, WARM_UP_PROMPT } from "@/lib/couples-touch/frame";
 import poolData from "@/lib/couples-touch/pool.json";
 
 const POOL = poolData as unknown as Block[];
@@ -321,6 +321,21 @@ const SETUP_VIDEOS = [
   { src: "/touch-map/couples/setup/room-2.mp4", title: "Setting up the room, part 2" },
   { src: "/touch-map/couples/setup/toolkit.mp4", title: "Your Pleasure Toolkit" },
 ];
+function Playlist({ scores, name }: { scores?: Scores; name: string }) {
+  const p = playlistFor(scores as unknown as Record<string, number> | undefined);
+  if (!p) return null;
+  return (
+    <div className="mt-6 rounded-2xl border border-[#DDC98E]/40 p-4">
+      <p className="text-[11px] uppercase tracking-[0.18em] text-[#DDC98E]">{name}&apos;s playlist · {p.label}</p>
+      <p className="mt-1 text-[15px] text-[#d8d1c3]">Put it on before you start. It sets the tone.</p>
+      <div className="mt-3 flex flex-wrap gap-2">
+        {p.spotify && <a href={p.spotify} target="_blank" rel="noopener noreferrer" className={quiet}>Open in Spotify</a>}
+        {p.tidal && <a href={p.tidal} target="_blank" rel="noopener noreferrer" className={quiet}>Open in Tidal</a>}
+      </div>
+    </div>
+  );
+}
+
 function SetupVideos({ collapsed = false }: { lang?: string; collapsed?: boolean }) {
   if (!SETUP_READY) return null;
   const body = (
@@ -553,6 +568,7 @@ export function CouplesTouchMap() {
           <>
             <Title kicker={`${giv.name} leads today`}>Go and get {rec.name}.</Title>
             <p className="mt-3 text-[17px] text-[#d8d1c3]">When you&apos;re both here, carry on.</p>
+            {short && done > 0 && <Playlist scores={rec.scores} name={rec.name} />}
             {btn("We're both here")}
           </>
         )}
@@ -570,6 +586,7 @@ export function CouplesTouchMap() {
             <Title kicker={`${giv.name} leads today`}>Set this up for {rec.name}.</Title>
             <p className="mt-3 text-[16px] text-[#d8d1c3]">Only one of you leads, and today it&apos;s you. The one who gives sets up.</p>
             <SetupVideos lang={LANGUAGES.find((l) => l.id === top)?.label ?? ""} />
+            <Playlist scores={rec.scores} name={rec.name} />
             {btn("We're ready")}
           </>
         )}
@@ -581,6 +598,7 @@ export function CouplesTouchMap() {
             </div>
             <Title kicker={`${giv.name} gives`}>Set this up for {rec.name}.</Title>
             <Frame id="giver" />
+            <Playlist scores={rec.scores} name={rec.name} />
             <SetupVideos collapsed lang={LANGUAGES.find((l) => l.id === top)?.label ?? ""} />
             {needs.length > 0 && (
               <>
