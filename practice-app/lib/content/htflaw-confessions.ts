@@ -3,4 +3,5 @@
 // Rhythm: one confession every Monday. Audio: 44.1/48 kHz AAC with faststart only (iPhone).
 export const HTFLAW_CONFESSIONS: { publish_on: string; title: string; audio: string }[] = [
   { publish_on: "2026-11-02", title: "Tilt your beard", audio: "/how-to-feel-like-a-woman/audio/confession-2026-11-02-0944cc5b.m4a" },
+  { publish_on: "2026-11-09", title: "The Piano Tuner", audio: "/how-to-feel-like-a-woman/audio/confession-2026-11-09-d6e2cf21.m4a" },
 ];
