@@ -92,7 +92,7 @@ function Banner({ src, pos, eyebrow, title, children }: { src: string; pos: stri
 type TabId = "today" | "practices" | "confessions" | "cards";
 const TABS: { id: TabId; label: string }[] = [
   { id: "today", label: "Today" },
-  { id: "practices", label: "Practices" },
+  { id: "practices", label: "Touch Map" },
   { id: "confessions", label: "Confessions" },
   { id: "cards", label: "Cards" },
 ];
@@ -190,13 +190,15 @@ function Content() {
         {tab === "practices" && (
           openPractice ? (
             <div>
-              <button type="button" onClick={() => setOpenPractice(null)} className="mt-6 inline-flex min-h-[44px] items-center text-[14px] text-[#DDC98E] underline underline-offset-4">← All practices</button>
+              <button type="button" onClick={() => setOpenPractice(null)} className="mt-6 inline-flex min-h-[44px] items-center text-[14px] text-[#DDC98E] underline underline-offset-4">← Your Touch Map</button>
               {openPractice === "wrist" && <Wrist />}
               {openPractice === "elbow" && <ElbowPractice />}
             </div>
           ) : (
             <section className="mt-6 space-y-3">
-              <p className="text-[15px] text-[#a79f90]">A new one lands each week. They stay here for you to come back to.</p>
+              {/* 9 Nov, Juliette: the practices are their Touch Map; seed that name. */}
+              <h2 className="font-display text-[26px] font-light leading-tight">The practices of your Touch Map</h2>
+              <p className="text-[15px] text-[#a79f90]">A new one lands every Friday. Each one maps another part of your body, so you can start to titrate. They stay here for you to come back to.</p>
               {PRACTICES.map((p) => {
                 const fresh = daysAgo(p.opens) >= 0 && daysAgo(p.opens) <= 6;
                 const notYet = todayUK() < p.opens;
