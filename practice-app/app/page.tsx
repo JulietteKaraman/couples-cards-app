@@ -460,6 +460,14 @@ function LibraryContent() {
                 : "Free"
             }
           />
+          {/* Quiet Isn't Yes, the free evening for men. Juliette: "Yes, add the tile", 10 Nov 2026. */}
+          <Tile
+            href="/practice/quiet-isnt-yes"
+            title="Quiet Isn't Yes"
+            subtitle="For men who love women they can no longer reach. One evening, watched from her side."
+            heroImage="/quiet-isnt-yes/hero.jpg"
+            note="Free · for men"
+          />
           {/* Her ask, 1 Nov 2026. Goes to the website sign-up, so these people land on the list too. */}
           <Tile
             href="https://feelfullyyou.com/cards-free-taster"
