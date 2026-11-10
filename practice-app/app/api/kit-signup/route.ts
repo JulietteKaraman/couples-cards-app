@@ -36,6 +36,9 @@ const APP_SIGNUP_TAG_ID = 22701818;
 const FREEBIES: Record<string, { tagId: number; sequenceId: number }> = {
   "between-touches": { tagId: 20896291, sequenceId: 2825129 },
   "touch-base": { tagId: 20896290, sequenceId: 2825130 },
+  // Quiet Isn't Yes, the free piece for men (10 Nov 2026). Own tag and sequence. The sequence
+  // sends nothing until its emails are written, approved and published.
+  "quiet-isnt-yes": { tagId: 25673987, sequenceId: 2964949 },
 };
 
 export async function POST(req: Request) {
