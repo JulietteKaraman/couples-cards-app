@@ -14,7 +14,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/components/providers/AuthProvider";
 
-export type Freebie = "between-touches" | "touch-base" | "quiet-isnt-yes";
+export type Freebie = "between-touches" | "touch-base" | "let-her-land" | "quiet-isnt-yes";
 
 const KEY = "ffy.freebie.contact.v1";
 type Contact = { email: string; firstName: string; freebies: Freebie[] };

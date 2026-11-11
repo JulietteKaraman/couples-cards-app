@@ -36,6 +36,10 @@ const APP_SIGNUP_TAG_ID = 22701818;
 const FREEBIES: Record<string, { tagId: number; sequenceId: number }> = {
   "between-touches": { tagId: 20896291, sequenceId: 2825129 },
   "touch-base": { tagId: 20896290, sequenceId: 2825130 },
+  // Let Her Land, the free offering in the Already Her Bundle (3 Nov 2026). Its own tag and
+  // sequence; it never touches the Touch Base or Between Touches ones. The sequence stays
+  // empty and sends nothing until its email is published.
+  "let-her-land": { tagId: 25392202, sequenceId: 2956349 },
   // Quiet Isn't Yes, the free piece for men (10 Nov 2026). Own tag and sequence. The sequence
   // sends nothing until its emails are written, approved and published.
   "quiet-isnt-yes": { tagId: 25673987, sequenceId: 2964949 },
