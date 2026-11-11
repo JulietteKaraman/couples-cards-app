@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase/admin";
+import { telegramSecret } from "@/lib/telegram/secret";
 
 // Scrumptious Confessions: the Telegram bot that copies every text message in
 // Juliette's group into her questions bank (11 Nov 2026, Juliette: "The
@@ -19,7 +20,7 @@ type TgMessage = {
 };
 
 export async function POST(req: Request) {
-  const secret = process.env.TELEGRAM_WEBHOOK_SECRET;
+  const secret = telegramSecret();
   if (!secret || req.headers.get("x-telegram-bot-api-secret-token") !== secret) {
     return NextResponse.json({ ok: false }, { status: 401 });
   }

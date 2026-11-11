@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { isAdmin, userFromRequest } from "@/lib/drops-server";
+import { telegramSecret } from "@/lib/telegram/secret";
 
 // Juliette's "Connect Telegram" button. Tells Telegram to send her group's
 // messages to /api/telegram-webhook. Uses the bot key she put on Netlify;
@@ -10,7 +11,7 @@ export async function POST(req: Request) {
   if (!isAdmin(user.email)) return NextResponse.json({ error: "Not authorised" }, { status: 403 });
 
   const token = process.env.TELEGRAM_BOT_TOKEN;
-  const secret = process.env.TELEGRAM_WEBHOOK_SECRET;
+  const secret = telegramSecret();
   if (!token || !secret) {
     return NextResponse.json({ error: "The bot isn't set up on Netlify yet: TELEGRAM_BOT_TOKEN and TELEGRAM_WEBHOOK_SECRET are needed." }, { status: 400 });
   }
