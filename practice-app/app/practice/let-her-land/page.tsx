@@ -422,7 +422,10 @@ function Part2({ idx, log, saveEntry }: { idx: number; log: Entry[]; saveEntry: 
     <section data-testid={`p2-${idx}`}>
       {idx === 0 && (
         <>
-          <Photo src={PHOTOS.anchorHer.src} alt={PHOTOS.anchorHer.alt} pos={PHOTOS.anchorHer.pos} ratio={PHOTOS.anchorHer.ratio} />
+          {/* The Touch Base emblem leads Touch Base (Juliette, 11 Nov 2026) */}
+          <div className="mb-7 flex justify-center" data-testid="tb-emblem">
+            <Image src={PHOTOS.emblem.src} alt={PHOTOS.emblem.alt} width={180} height={180} className="h-[180px] w-[180px] rounded-full shadow-[0_0_60px_-8px_rgba(221,201,142,0.75)]" />
+          </div>
           <p className="kicker">Part 2 · {PARTS[1].name}</p>
           <h2 className="!mb-3">{TB_HEAD}</h2>
           <p className="lhl-lead">{TB_LINE}</p>
@@ -490,7 +493,7 @@ function Part3({ idx, landed, setLanded }: { idx: number; landed: Landed; setLan
         <>
           <Photo src={PHOTOS.grounding.src} alt={PHOTOS.grounding.alt} pos={PHOTOS.grounding.pos} ratio={PHOTOS.grounding.ratio} />
           <p className="kicker">Part 3 · {PARTS[2].name}</p>
-          <h2>{COPY.p3TouchHead}</h2>
+          <h2 className="flex items-center gap-3"><Image src={PHOTOS.emblem.src} alt="" width={44} height={44} className="h-11 w-11 shrink-0 rounded-full" />{COPY.p3TouchHead}</h2>
           <div className="grid gap-3">
             {TB_STEPS.slice(0, 3).map(([h, t], i) => (
               <div key={h} className="flex gap-3.5 rounded-[18px] border border-[#DDC98E]/30 bg-[rgba(13,53,53,0.28)] p-4">

@@ -84,7 +84,7 @@ export const COPY = {
 
 export const PARTS = [
   { n: 1, name: "Meet her", line: "Your Reinvention Journal", photo: PHOTOS.meetHer.src, pos: "50% 25%" },
-  { n: 2, name: "Anchor her", line: "Touch Base, and your first 7 days", photo: PHOTOS.anchorHer.src, pos: "35% 35%" },
+  { n: 2, name: "Anchor her", line: "Touch Base, and your first 7 days", photo: PHOTOS.emblem.src, pos: "50% 50%" },
   { n: 3, name: "The grounding touch", line: "One touch, in my voice", photo: PHOTOS.grounding.src, pos: "50% 62%" },
   { n: 4, name: "Be seen", line: "Hypnosis, then 21 prompts", photo: PHOTOS.beSeen.src, pos: "70% 40%" },
 ] as const;
