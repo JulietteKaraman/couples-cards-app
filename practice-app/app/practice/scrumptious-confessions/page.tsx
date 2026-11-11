@@ -54,11 +54,12 @@ function Eyebrow({ children }: { children: React.ReactNode }) {
 const pill = (on: boolean) =>
   `flex min-h-[48px] items-center justify-center gap-2 rounded-full border px-3 text-[15px] ${on ? "border-[#DDC98E] bg-[rgba(221,201,142,0.15)] text-[#f1ece2]" : "border-[#DDC98E]/35 text-[#f1ece2]/80"}`;
 
-type TabId = "stories" | "today" | "card";
+type TabId = "stories" | "today" | "card" | "yours";
 const TABS: { id: TabId; label: string }[] = [
   { id: "stories", label: "Stories" },
   { id: "today", label: "Today" },
   { id: "card", label: "Card" },
+  { id: "yours", label: "Your turn" },
 ];
 
 function Content() {
@@ -101,9 +102,9 @@ function Content() {
         <p className="mt-4 text-center text-[16px] text-[#cfc8bb]">A new story every week, in my voice.</p>
 
         <div ref={top} className="sticky top-0 z-10 -mx-5 mt-5 bg-[#070707]/95 px-5 py-3">
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-4 gap-2">
             {TABS.map((t) => (
-              <button key={t.id} type="button" onClick={() => pick(t.id)} className={`min-h-[44px] rounded-full border text-[14px] ${tab === t.id ? "border-[#DDC98E] bg-[#DDC98E] text-[#070707]" : "border-[#DDC98E]/40 text-[#f1ece2]"}`}>
+              <button key={t.id} type="button" onClick={() => pick(t.id)} className={`min-h-[44px] rounded-full border px-1 text-[14px] ${tab === t.id ? "border-[#DDC98E] bg-[#DDC98E] text-[#070707]" : "border-[#DDC98E]/40 text-[#f1ece2]"}`}>
                 {t.label}
               </button>
             ))}
@@ -113,6 +114,7 @@ function Content() {
         {tab === "stories" && <Stories feed={feed} />}
         {tab === "today" && <Today />}
         {tab === "card" && <Cards feed={feed} />}
+        {tab === "yours" && <YourTurn />}
       </div>
     </main>
   );
@@ -203,7 +205,7 @@ function StoryBlock({ story, open }: { story: Story; open: boolean }) {
         </div>
         <div>
           <p className="font-display text-[22px] font-light">Tell me what you&rsquo;d love next.</p>
-          <SendToMe item={story.id} notice="This one comes to me, with no name on it. I read every one." button="Send it to me" />
+          <SendToMe item={story.id} notice="This one comes to me, with no name on it." button="Send it to me" />
         </div>
       </div>
       <GroupLink />
@@ -219,15 +221,16 @@ function GroupLink() {
       <a href={TELEGRAM_GROUP} target="_blank" rel="noreferrer" className="mt-3 inline-flex min-h-[48px] w-full items-center justify-center rounded-full border border-[#DDC98E] text-[15px] text-[#DDC98E]">
         Share it in our group
       </a>
-      <p className="mt-2 text-[13px] text-[#8f877a]">Our private Telegram group. No one sees who it&rsquo;s from.</p>
+      <p className="mt-2 text-[13px] text-[#8f877a]">Our private Telegram group. No one sees who it&rsquo;s from. I keep the questions posted there, with no names, so I can answer them each week.</p>
     </div>
   );
 }
 
 /* A box whose words go to Juliette, always with no name attached. */
-function SendToMe({ item, notice, button, onType }: { item: string; notice: string; button: string; onType?: (v: string) => void }) {
+function SendToMe({ item, notice, button, onType, once }: { item: string; notice: string; button: string; onType?: (v: string) => void; once?: string }) {
   const draftKey = `ffy.confessions.draft.${item}.v1`;
-  const sentKey = `ffy.confessions.sent.${item}.v1`;
+  // once = a week id: one send per week from this phone (her weekly confession).
+  const sentKey = `ffy.confessions.sent.${item}${once ? `.${once}` : ""}.v1`;
   const [text, setText] = useState("");
   const [state, setState] = useState<"idle" | "sending" | "sent" | "failed">("idle");
   useEffect(() => { setText(lsGet(draftKey)); if (lsGet(sentKey)) setState("sent"); }, [draftKey, sentKey]);
@@ -249,7 +252,7 @@ function SendToMe({ item, notice, button, onType }: { item: string; notice: stri
     return (
       <div className="mt-3 rounded-2xl border border-[#DDC98E]/50 p-4">
         <p className="text-[16px]">It&rsquo;s with me. Thank you.</p>
-        <button type="button" onClick={() => { lsSet(sentKey, ""); setText(""); setState("idle"); }} className="mt-1 inline-flex min-h-[44px] items-center text-[14px] text-[#DDC98E] underline underline-offset-4">Send me another</button>
+        {once ? <p className="mt-1 text-[14px] text-[#cfc8bb]">Your next one opens on Monday.</p> : <button type="button" onClick={() => { lsSet(sentKey, ""); setText(""); setState("idle"); }} className="mt-1 inline-flex min-h-[44px] items-center text-[14px] text-[#DDC98E] underline underline-offset-4">Send me another</button>}
       </div>
     );
   }
@@ -265,6 +268,30 @@ function SendToMe({ item, notice, button, onType }: { item: string; notice: stri
       </button>
       {state === "failed" && <p className="mt-2 text-center text-[14px] text-[#EEDE80]">That didn&rsquo;t send. Try again.</p>}
     </div>
+  );
+}
+
+/* ================= YOUR TURN: questions and confessions (11 Nov 2026) ================= */
+// The Monday that starts this week, so a confession can go once a week.
+const weekOf = (d: string) => { const x = new Date(d + "T12:00:00"); const back = (x.getDay() + 6) % 7; x.setDate(x.getDate() - back); return x.toISOString().slice(0, 10); };
+
+function YourTurn() {
+  return (
+    <section className="mt-8">
+      <div className="rounded-3xl border-2 border-[#DDC98E]/60 bg-[rgba(13,53,53,0.45)] p-5">
+        <Eyebrow>Ask me anything</Eyebrow>
+        <p className="mt-2 font-display text-[22px] font-light">Your question about intimacy, touch, desire, sex.</p>
+        <p className="mt-2 text-[15px] text-[#cfc8bb]">I answer the questions every week.</p>
+        <SendToMe item="question" notice="This comes to me with no name on it." button="Send my question" />
+      </div>
+      <div className="mt-6 rounded-3xl border-2 border-[#DDC98E]/60 bg-[rgba(13,53,53,0.45)] p-5">
+        <Eyebrow>Your confession this week</Eyebrow>
+        <p className="mt-2 font-display text-[22px] font-light">I tell you mine every week. Tell me yours.</p>
+        <p className="mt-2 text-[15px] text-[#cfc8bb]">A fantasy, a fear, a moment your body surprised you. One a week.</p>
+        <SendToMe item="confession" once={weekOf(todayUK())} notice="This comes to me with no name on it. All of it is welcome." button="Send my confession" />
+      </div>
+      <GroupLink />
+    </section>
   );
 }
 
@@ -294,7 +321,11 @@ function Today() {
   const canBack = !!start && sel > start;
   const canFwd = sel < today;
   const isToday = sel === today;
-  const markDone = () => { if (!start) { lsSet(START_KEY, today); setStart(today); } save({ done: true, missed: false }); };
+  const markDone = () => {
+    if (!start) { lsSet(START_KEY, today); setStart(today); }
+    if (!rec.done) tally("touchbase", "touchbase_done", "yes"); // counted with no name (11 Nov 2026)
+    save({ done: true, missed: false });
+  };
   const startAgain = () => { lsSet(START_KEY, today); setStart(today); setSel(today); };
 
   return (

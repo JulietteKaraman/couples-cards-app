@@ -6,7 +6,7 @@ import { CONFESSION_CARDS, CONFESSION_STORIES } from "@/lib/content/scrumptious-
 // Scrumptious Confessions membership (specs/scrumptious-confessions-membership.md).
 //   GET                               opened stories and cards, plus what's next
 //   POST {action:"count", ...}        anonymous tally, no name, email or typed words
-//   POST {action:"send", ...}         an answer for Juliette, saved with no name
+//   POST {action:"send", ...}         an answer, question or confession for Juliette, saved with no name
 const SLUG = "scrumptious-confessions";
 const LANDED = ["ick", "nothing", "nice", "mmm", "goosebumps", "toes-curl"];
 const WHERE = ["chest", "belly", "genitals", "elsewhere", "nowhere"];
@@ -53,12 +53,18 @@ export async function POST(req: Request) {
   const today = todayUK();
   const story = CONFESSION_STORIES.find((s) => s.id === itemId && s.publish_on <= today);
   const card = CONFESSION_CARDS.find((c) => c.id === itemId && c.publish_on <= today);
-  if (!story && !card) return NextResponse.json({ error: "Unknown item" }, { status: 400 });
+  // 11 Nov 2026: members ask questions and add confessions of their own, not tied to a story.
+  const open = itemId === "question" || itemId === "confession" || itemId === "touchbase";
+  if (!story && !card && !open) return NextResponse.json({ error: "Unknown item" }, { status: 400 });
 
   if (b.action === "count") {
     const kind = String(b.kind || "");
     const value = String(b.value || "");
-    const ok = (kind === "landed" && LANDED.includes(value)) || (kind === "where" && WHERE.includes(value)) || (kind === "card_answered" && value === "yes");
+    const ok =
+      (!!story && kind === "landed" && LANDED.includes(value)) ||
+      (!!story && kind === "where" && WHERE.includes(value)) ||
+      (!!card && kind === "card_answered" && value === "yes") ||
+      (itemId === "touchbase" && kind === "touchbase_done" && value === "yes");
     if (!ok) return NextResponse.json({ error: "Invalid count" }, { status: 400 });
     await supabaseAdmin.from("confession_counts").insert({ item_id: itemId, kind, value });
     return NextResponse.json({ ok: true });
@@ -69,10 +75,12 @@ export async function POST(req: Request) {
     if (!body) return NextResponse.json({ error: "Nothing to send" }, { status: 400 });
     if (body.length > MAX) return NextResponse.json({ error: "Too long" }, { status: 400 });
     // Always anonymous (5 Nov 2026, Juliette): no name or email is stored with her words.
-    const title = story ? `${story.title}: what she'd love next` : `Card: ${card!.prompt}`;
+    if (itemId === "touchbase") return NextResponse.json({ error: "Nothing to send" }, { status: 400 });
+    const kind = story ? "love_next" : card ? "card" : itemId;
+    const title = story ? `${story.title}: what they'd love next` : card ? `Card: ${card.prompt}` : itemId === "question" ? "A question" : "A confession";
     const { error } = await supabaseAdmin
       .from("confession_messages")
-      .insert({ item_id: itemId, item_title: title, body, member_email: null });
+      .insert({ item_id: itemId, item_title: title, body, member_email: null, kind, source: "app" });
     if (error) return NextResponse.json({ error: "Could not save" }, { status: 500 });
     return NextResponse.json({ ok: true });
   }

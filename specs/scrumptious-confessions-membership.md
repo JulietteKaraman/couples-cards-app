@@ -2,6 +2,15 @@
 
 Agreed with Juliette in chat, 4 Nov 2026. Her words: "the scrumptious confessions part of this app I want to duplicate and make a membership", "I will put a teaching in every one of them", "I think we do Stripe anyway", "I will put the touch base in there so that they can do that, practise that every day, and then have a tracker in there for 31 days or so", "£97 for 3 months", "renews every 3 months", "tell me how did that land. Tell me where you felt that. Tell me what you'd love next- and that one gets emailed to me", "they also get a weekly prompt (card) and wonder how I can collect some data from it".
 
+## Version 2 (11 Nov 2026), Juliette direct
+Her words: "they get one confession from me once a week, and then they can add their own confessions... they can ask any questions about intimacy, and I will answer those once a week. That will be £97 a month", "For both men and women", "I would definitely put touch base in it... with a tracker for 31 days", "The questions are the gold... the Telegram link needs to be there", then "Yes, build it" to a questions bank with a bot in the Telegram group.
+- Price: £97 a month (replaces £97 every 3 months). Open to men and women.
+- R14. A "Your turn" section on the page: "Ask me anything about intimacy" (any time) and "Your confession this week" (once a week from that phone). Both say before sending that they reach Juliette with no name. Saved with kind question or confession.
+- R15. A Telegram bot, added to the Scrumptious Confessions group, copies every text message there into the questions bank. Only the words, the group's title and the time are stored: never a name, username or Telegram id. Voice notes and photos without words are skipped. The webhook checks Telegram's secret header.
+- R16. /admin/confessions becomes the questions bank: every question, confession and answer from the app and the group, newest first, filterable (Questions, Confessions, From Telegram, Not answered), each with "Mark answered", plus "Copy the unanswered questions" for her weekly answers and Notion. A "Connect Telegram" button points the bot at the app.
+- R17. Each Touch Base day marked done is counted anonymously (item touchbase, kind touchbase_done), and the admin page shows the total.
+- Members are told the group is collected with no names (on the page, by the group button).
+
 ## Objective
 Scrumptious Confessions becomes its own paid product in the practice app: one story a week in Juliette's voice with a teaching inside, Touch Base every day with a 31-day tracker, and a weekly prompt card. After each story the woman answers three "Tell me" prompts, which prime her for the cards. Juliette sees anonymous totals and receives what women choose to send her.
 
@@ -45,4 +54,7 @@ D6. Card tab: card turns from black back to prompt, with writing box and optiona
 D7. /api/confessions refuses a request with no sign-in, and returns 403 to someone without access.
 D8. /admin/confessions refuses anyone but Juliette, and shows totals and sent answers.
 D9. A send stores no name or email.
+D11. Question and confession send with no name; the confession box shows "next one opens [day]" after one this week.
+D12. The webhook refuses a call without the secret header and stores no Telegram id.
+D13. Admin shows the questions bank with Mark answered and Copy.
 D10. The project type-checks and the migration file adds the deck type and two tables with row security on.
