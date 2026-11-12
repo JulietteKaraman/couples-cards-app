@@ -7,6 +7,65 @@ to = "https://feelfullyyou-cards.netlify.app/free-cards/"
 status = 301
 force = true
 
+# 12 Nov 2026, Juliette: old cards-app buyers go to the new cards app.
+# Every PAGE of the old app (home, sign-in, decks, unlock, purchase, reset)
+# now lands on feelfullyyou.com/my-cards, where bought cards come back by email.
+# /api/* is deliberately NOT redirected: The Unspoken Distance and Touch Rituals
+# checkouts still run through this site's API routes.
+[[redirects]]
+from = "/"
+to = "https://feelfullyyou.com/my-cards/"
+status = 301
+force = true
+
+[[redirects]]
+from = "/login/*"
+to = "https://feelfullyyou.com/my-cards/"
+status = 301
+force = true
+
+[[redirects]]
+from = "/login"
+to = "https://feelfullyyou.com/my-cards/"
+status = 301
+force = true
+
+[[redirects]]
+from = "/app/*"
+to = "https://feelfullyyou.com/my-cards/"
+status = 301
+force = true
+
+[[redirects]]
+from = "/app"
+to = "https://feelfullyyou.com/my-cards/"
+status = 301
+force = true
+
+[[redirects]]
+from = "/free/*"
+to = "https://feelfullyyou.com/my-cards/"
+status = 301
+force = true
+
+[[redirects]]
+from = "/purchase/*"
+to = "https://feelfullyyou.com/my-cards/"
+status = 301
+force = true
+
+[[redirects]]
+from = "/reset-password/*"
+to = "https://feelfullyyou.com/my-cards/"
+status = 301
+force = true
+
+[[redirects]]
+from = "/reset-password"
+to = "https://feelfullyyou.com/my-cards/"
+status = 301
+force = true
+
 [[redirects]]
 from = "https://couplecards.netlify.app/*"
 to = "https://cards.feelfullyyou.com/:splat"
