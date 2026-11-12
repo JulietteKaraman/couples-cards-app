@@ -5,4 +5,5 @@ export const HTFLAW_CARDS: { publish_on: string; body: string }[] = [
   { publish_on: "2026-11-02", body: "Tell me what comes up for you as you practise each day." },
   { publish_on: "2026-11-05", body: "Tell me what you want more of, and feel a little embarrassed to say." },
   { publish_on: "2026-11-09", body: "Tell me what it's like to touch yourself with nowhere to get to." },
+  { publish_on: "2026-11-12", body: "Tell me what it's like to give yourself 15 minutes that are only for you." },
 ];
