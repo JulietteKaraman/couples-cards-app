@@ -8,11 +8,11 @@ import { useEffect, useRef, useState } from "react";
 // Speed, up to 1.5x and never above (Juliette, 2 Nov 2026). Remembered on this phone
 // for every player in the app.
 const SPEEDS = [1, 1.25, 1.5];
-const SPEED_KEY = "ffy.speed";
+const SPEED_KEY = "ffy.voice.rate"; // the same key as VoicePlayer, so one choice works everywhere
 export function savedSpeed() {
   try { const v = Number(localStorage.getItem(SPEED_KEY)); return SPEEDS.includes(v) ? v : 1; } catch { return 1; }
 }
-export function saveSpeed(v: number) { try { localStorage.setItem(SPEED_KEY, String(v)); } catch {} }
+export function saveSpeed(v: number) { try { localStorage.setItem(SPEED_KEY, String(v)); window.dispatchEvent(new Event("ffy-voice-rate")); } catch {} }
 
 export function SlimPlayer({ src, label, big }: { src: string; label: string; big?: boolean }) {
   const ref = useRef<HTMLAudioElement | null>(null);
