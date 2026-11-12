@@ -1240,6 +1240,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
         },
         { kind: "why", lines: [{ text: "A predicted touch is a safe touch. This is why hovering for a second before you land changes how the same hand is received.", emphasis: "accent" }] },
         {"kind": "notice", "lines": [{"text": "Every place you noticed today is a place I would put on your Touch Map.", "emphasis": "bold"}]},
+        {"kind": "link", "text": "See the Touch Map, on your own or the two of you", "href": "https://feelfullyyou.com/touch-map"},
       ],
     },
     {
@@ -1492,6 +1493,7 @@ export const thirtyOneTouchPoints: PracticeCollection = {
           ],
         },
         {"kind": "notice", "lines": [{"text": "One zone, three touches.", "emphasis": "bold"}, {"text": "Imagine this for your whole body. That is what a Touch Map is."}]},
+        {"kind": "link", "text": "See the Touch Map, on your own or the two of you", "href": "https://feelfullyyou.com/touch-map"},
       ],
     },
     {
@@ -1613,12 +1615,29 @@ export const thirtyOneTouchPoints: PracticeCollection = {
       slug: "your-next-yes",
       order: 36,
       title: "Your Next Yes",
-      eyebrow: "When you want the words back",
+      eyebrow: "What comes next",
       kind: "closing",
       image: "/rituals/31-days-closer.jpg",
       imageAlt: "31 Days Closer open on a phone at day one, beside the printed deck",
       imageSide: "left",
       body: [
+        { kind: "quote", text: "Your Touch Map" },
+        {
+          kind: "p",
+          text: "You have mapped a few inches this month. The Touch Map takes you the rest of the way: your whole body, in your own Pleasure Language, with my voice guiding every touch.",
+          emphasis: "bold",
+        },
+        {
+          kind: "p",
+          text: "On your own, or the two of you. One gives, one receives, then you swap. It starts at three minutes and grows, and every touch date is new.",
+        },
+        {
+          kind: "bigLink",
+          text: "The Touch Map, \u00a3197",
+          subtext: "On your own or together. One payment, yours for life.",
+          href: "https://feelfullyyou.com/touch-map",
+        },
+        { kind: "quote", text: "When you want the words back" },
         {
           kind: "p",
           text: "This month brought touch back into the room. 31 Days Closer is the other half of it.",
@@ -1648,9 +1667,6 @@ export const thirtyOneTouchPoints: PracticeCollection = {
           subtext: "Thirty one prompts, one a day. It opens on any phone, no account and no password, and the first card is waiting when you open it.",
           href: "https://buy.stripe.com/6oUcN47m3gty71H1Yx0co1U",
         },
-        {"kind": "quote", "text": "Your Touch Map"},
-        {"kind": "p", "text": "You have mapped a few inches this month. If you want me to map all of you, your whole body, then your Touch Language and your Pleasure Language, that is a VIP day with me.", "emphasis": "bold"},
-        {"kind": "bigLink", "text": "Map all of me", "subtext": "VIP days, in person or online", "href": "https://feelfullyyou.com/work-with-me"},
         { kind: "quote", text: "If you want to go further than a month can take you" },
         // The One Touch graphic moved OFF the hero and down here, where it
         // belongs, 30 Sep 2026. Juliette: "the next reach prob also needs a
