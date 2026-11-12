@@ -406,7 +406,7 @@ function MonthDots({ days, start, sel, onPick }: { days: Record<string, DayRec>;
       <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1.5 text-xs text-[rgba(254,252,250,0.7)]">
         {FEELS.map((f) => <span key={f.id} className="inline-flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-full" style={{ background: f.color }} />{f.label}</span>)}
       </div>
-      <p className="mt-2 text-xs text-[rgba(254,252,250,0.55)]">Kept on this phone only. Not even I see it.</p>
+      <p className="mt-2 text-xs text-[rgba(254,252,250,0.55)]">Your days stay on this phone. I only see how many days everyone did in total, never who.</p>
     </div>
   );
 }

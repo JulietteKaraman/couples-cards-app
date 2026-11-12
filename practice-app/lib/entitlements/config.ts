@@ -16,9 +16,8 @@ export const COLLECTION_DECK_TYPES: Record<string, string> = {
   // How to Feel Like a Woman, the course women, 29 Oct 2026. Granted by hand
   // from /admin for now (specs/how-to-feel-like-a-woman-app.md R1).
   "how-to-feel-like-a-woman": "how-to-feel-like-a-woman",
-  // Scrumptious Confessions membership, £97 every 3 months (4 Nov 2026,
-  // specs/scrumptious-confessions-membership.md). Add its live Stripe price id
-  // to PRICE_ID_TO_DECK_TYPE once the payment link exists.
+  // Scrumptious Confessions membership, £97 a month, women and men (11 Nov 2026,
+  // specs/scrumptious-confessions-membership.md). Price mapped below.
   "scrumptious-confessions": "scrumptious-confessions",
   // The Touch Map, £197, version 1 (29 Oct 2026, specs/touch-map.md in APP
   // builds). Add its live Stripe price id to PRICE_ID_TO_DECK_TYPE once the
@@ -62,6 +61,10 @@ export const PRICE_ID_TO_DECK_TYPE: Record<string, string> = {
   // One Touch (27 Oct 2026). Both prices grant it, so every past buyer gets in.
   price_1Tpr13CCw18geY15W6ooICYF: "one-touch", // £97
   price_1TzdQNCCw18geY15eh9S2uOe: "one-touch", // £197 (1 Aug 2026)
+  // Scrumptious Confessions, £97 a month recurring (12 Nov 2026). Payment link
+  // https://buy.stripe.com/6oU4gydKrgtybhXcDb0co2y, plink_1UavMcCCw18geY15Ook0CqRG,
+  // product prod_Vbm7ukx8Blxpy2. Each paid invoice extends access (SUBSCRIPTION_DECK_TYPES).
+  price_1UaYZICCw18geY15j9xNbIhd: "scrumptious-confessions",
 };
 
 // Deck types that are RECURRING subscriptions rather than one-time
