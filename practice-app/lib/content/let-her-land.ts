@@ -79,15 +79,56 @@ export const COPY = {
   p4AllDone: "All 21 done.",
   p4LookHead: "The ones you've done",
   p4LookEmpty: "Nothing here yet. Each day you finish will show up here.",
+  // ---- Round 2 (12 Nov 2026) NEW COPY, waits for her approval ----
+  begin: "Begin",
+  start: "Start with Part 1",
+  turnHint: "Tap to turn over",
+  turnBack: "Turn back",
+  desireWritten: "Desire written",
+  desirePlaceholder: "What you want instead.",
+  desireExtra: "Anything else you want.",
+  desiresEmpty: "Your complaints turn into cards here. Add them on the screen before this one.",
+  complaintPlaceholder: "One complaint at a time",
+  complaintAdd: "Add",
+  complaintRemove: "Remove this one",
+  eyesStart: "Close your eyes",
+  eyesSub: "2 minutes",
+  eyesSkip: "Skip",
+  eyesRunning: "Eyes closed. A soft chime tells you when it's time.",
+  eyesOpen: "Open your eyes. Take your time.",
+  sensesNext: "Next sense →",
+  sensesBefore: "What you wrote before",
+  tickDone: "Mark as done",
+  letterTitle: "Her letter",
+  letterLine: "Everything you wrote about her, in one place.",
+  letterEmpty: "Her letter fills as you write. Go back and meet her first.",
+  letterNext: "Her letter →",
+  saveImage: "Save as image",
+  imageSaved: "Saved. Look in your photos or downloads.",
+  imageFail: "Your phone wouldn't save the image. Keep a copy instead.",
   p4Next: (n: number, when: string) => `Day ${n} opens ${when}.`,
 };
 
 export const PARTS = [
-  { n: 1, name: "Meet her", line: "Your Reinvention Journal", photo: PHOTOS.meetHer.src, pos: "50% 25%" },
-  { n: 2, name: "Anchor her", line: "Touch Base, and your first 7 days", photo: PHOTOS.emblem.src, pos: "50% 50%" },
-  { n: 3, name: "The grounding touch", line: "One touch, in my voice", photo: PHOTOS.grounding.src, pos: "50% 62%" },
-  { n: 4, name: "Be seen", line: "Hypnosis, then 21 prompts", photo: PHOTOS.beSeen.src, pos: "70% 40%" },
+  { n: 1, name: "Meet her", line: "Write to the woman you are becoming.", photo: PHOTOS.meetHer.src, pos: "50% 25%" },
+  { n: 2, name: "Anchor her", line: "Learn Touch Base, then try it for 7 days.", photo: PHOTOS.emblem.src, pos: "50% 50%" },
+  { n: 3, name: "The grounding touch", line: "Do one grounding touch, led by my voice.", photo: PHOTOS.grounding.src, pos: "50% 62%" },
+  { n: 4, name: "Be seen", line: "Listen, then answer one prompt a day for 21 days.", photo: PHOTOS.beSeen.src, pos: "70% 40%" },
 ] as const;
+
+
+// ---------------------------------------------------------------------------
+// ROUND 2: the six senses (her question, split into six prompts) and the labels on Her letter.
+// Indexes are positions in JOURNAL. NEW COPY, waits for her approval (the six sense labels are in the spec).
+// ---------------------------------------------------------------------------
+export const SENSES = ["How she moves", "What she smells", "What she sees", "What she hears", "What she touches", "What she feels"];
+export const EYES_SECONDS = 120;
+export const LETTER: { group: string; rows: { q: number; label: string }[] }[] = [
+  { group: "Meet her", rows: [{ q: 7, label: "What you notice about her" }, { q: 8, label: "Where she is" }, { q: 9, label: "How she feels" }, { q: 10, label: "Who is with her" }] },
+  { group: "One year from now", rows: [{ q: 12, label: "Who is with her, a year on" }, { q: 13, label: "How she spends her time" }, { q: 14, label: "What she is most proud of" }, { q: 15, label: "Her advice to you" }, { q: 16, label: "What she says no to" }, { q: 17, label: "Her support" }, { q: 18, label: "How she thinks and feels" }] },
+  { group: "Her senses", rows: [{ q: 19, label: "" }] },
+  { group: "Today", rows: [{ q: 21, label: "3 ways to embody her" }, { q: 22, label: "3 actions to create her" }, { q: 24, label: "3 things to stop" }] },
+];
 
 // ---------------------------------------------------------------------------
 // PART 1: The Reinvention Journal, her words, in her order. k: p = read, q = a question with

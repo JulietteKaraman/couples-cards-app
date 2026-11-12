@@ -15,7 +15,7 @@ import { count } from "@/lib/count";
 import { rememberBite } from "@/lib/bites-on-phone";
 import { nextDayStart, TWELVE_H, whenItOpens } from "@/lib/content/31-touch-points-drip";
 import {
-  AUDIO, COPY, DOOR_URL, HOW_ALONE, JOURNAL, JOURNAL_SCREENS, PARTS, PHOTOS, PROMPTS,
+  AUDIO, COPY, DOOR_URL, EYES_SECONDS, HOW_ALONE, JOURNAL, JOURNAL_SCREENS, LETTER, PARTS, PHOTOS, PROMPTS, SENSES,
   TB_AUDIO_LABEL, TB_DAYS, TB_HEAD, TB_LINE, TB_STEPS, TB_WHY, TB_WITH_ME,
 } from "@/lib/content/let-her-land";
 
@@ -24,6 +24,7 @@ const K = {
   resume: "ffy.lhl.resume.v1",
   prog: "ffy.lhl.prog.v1",
   journal: "ffy.lhl.journal.v1",
+  r2: "ffy.lhl.r2.v1",
   tb: "ffy.lhl.tb.v1",
   ground: "ffy.lhl.ground.v1",
   vis: "ffy.lhl.vis.v1",
@@ -38,7 +39,7 @@ type Landed = "" | "yes" | "maybe" | "no";
 
 const PROG0: Prog = { r: [0, 0, 0, 0], d: [false, false, false, false] };
 const VIS0: Vis = { a: {}, d: {} };
-const SCREENS = [JOURNAL_SCREENS.length, 4, 3, 4];
+const SCREENS = [JOURNAL_SCREENS.length + 1, 4, 3, 4]; // + Her letter
 
 const SCREEN_NAMES: string[][] = [
   [],
@@ -85,11 +86,28 @@ function Slot({ src, label, id }: { src: string; label: string; id?: string }) {
 }
 
 // ---- Keep a copy (R12, E6) -------------------------------------------------------------------
-function journalText(journal: Record<string, string>) {
+function journalText(journal: Record<string, string>, r2: R2) {
   const out: string[] = [];
   JOURNAL.forEach((l, i) => {
+    if (l.k !== "q") return;
     const a = (journal[`q${i}`] ?? "").trim();
-    if (l.k === "q" && a) out.push(`${l.t}\n${a}`);
+    if (i === 3) {
+      const cs = complaintsOf(journal, r2);
+      if (cs.length) out.push(`${l.t}\n${cs.map((c, n) => `${n + 1}. ${c.t}`).join("\n")}`);
+    } else if (i === 4) {
+      const ds = complaintsOf(journal, r2).filter((c) => c.d.trim());
+      const parts = [...ds.map((c) => `${c.t}\n${c.d.trim()}`), ...(a ? [a] : [])];
+      if (parts.length) out.push(`${l.t}\n${parts.join("\n\n")}`);
+    } else if (i === 19) {
+      const s = sensesOf(r2);
+      const parts = [...s.map((v, n) => (v.trim() ? `${SENSES[n]}: ${v.trim()}` : "")).filter(Boolean), ...(!r2.s && a ? [a] : [])];
+      if (parts.length) out.push(`${l.t}\n${parts.join("\n")}`);
+    } else if (THREE.includes(`q${i}`)) {
+      const v = threeOf(`q${i}`, journal, r2);
+      const tk = ticksOf(`q${i}`, r2);
+      const items = v.map((t, n) => (t.trim() ? `${n + 1}. ${t.trim()}${tk[n] ? " ✓" : ""}` : "")).filter(Boolean);
+      if (items.length) out.push(`${l.t}\n${items.join("\n")}`);
+    } else if (a) out.push(`${l.t}\n${a}`);
   });
   return out.length ? `${COPY.title}. Part 1, ${PARTS[0].name}\n\n${out.join("\n\n")}` : "";
 }
@@ -102,7 +120,7 @@ function visText(vis: Vis) {
   return out.length ? `${COPY.title}. Part 4, ${PARTS[3].name}\n\n${out.join("\n\n")}` : "";
 }
 
-function KeepCopy({ text }: { text: string }) {
+function KeepCopy({ text, extra }: { text: string; extra?: React.ReactNode }) {
   const [msg, setMsg] = useState("");
   const [show, setShow] = useState(false);
   const run = async () => {
@@ -129,7 +147,10 @@ function KeepCopy({ text }: { text: string }) {
   };
   return (
     <div className="mt-8 rounded-2xl border border-[#DDC98E]/30 p-4" data-testid="keep-copy">
-      <button type="button" onClick={run} className="inline-flex min-h-[48px] items-center rounded-full border border-[#DDC98E]/60 px-6 text-[15px] text-[#DDC98E]">{COPY.keepCopy}</button>
+      <div className="flex flex-wrap items-center gap-2.5">
+        <button type="button" onClick={run} className="lhl-press inline-flex min-h-[48px] items-center rounded-full border border-[#DDC98E]/60 px-6 text-[15px] text-[#DDC98E]">{COPY.keepCopy}</button>
+        {extra}
+      </div>
       <p className="mt-3 text-[14px] leading-relaxed text-[#a79f90]">{COPY.newPhone}</p>
       {msg && <p role="status" className="mt-2 text-[14px] text-[#EEDE80]" data-testid="copy-msg">{msg}</p>}
       {show && <textarea readOnly value={text} rows={8} onFocus={(e) => e.currentTarget.select()} className="mt-2 w-full rounded-2xl border border-[#DDC98E]/40 bg-[rgba(13,53,53,0.35)] p-3 text-[14px] text-[#f1ece2]" data-testid="copy-text" />}
@@ -138,10 +159,10 @@ function KeepCopy({ text }: { text: string }) {
 }
 
 // ---- The box she writes in: saves as she types (R5, R8) ---------------------------------------
-function Box({ id, value, onChange, rows = 6 }: { id: string; value: string; onChange: (v: string) => void; rows?: number }) {
+function Box({ id, value, onChange, rows = 6, placeholder }: { id: string; value: string; onChange: (v: string) => void; rows?: number; placeholder?: string }) {
   return (
     <div className="mt-4">
-      <textarea id={id} rows={rows} value={value} placeholder={COPY.writePlaceholder} aria-label="Your answer" onChange={(e) => onChange(e.target.value)}
+      <textarea id={id} rows={rows} value={value} placeholder={placeholder ?? COPY.writePlaceholder} aria-label="Your answer" onChange={(e) => onChange(e.target.value)}
         className="w-full rounded-2xl border border-[#DDC98E]/40 bg-[rgba(13,53,53,0.35)] p-4 text-[16px] leading-relaxed text-[#f1ece2] outline-none placeholder:text-[#8f877a] focus:border-[#DDC98E]" />
       <p className="mt-1.5 text-[12px] text-[#8f877a]">{value ? COPY.savedLine : ""}&nbsp;</p>
     </div>
@@ -272,10 +293,415 @@ function SoloSitting({ day }: { day: number }) {
   );
 }
 
+// ---- Round 2: what she writes beyond a single box ---------------------------------------------------
+// Lists, desires, senses and the 3-boxes are kept under their own key (ffy.lhl.r2.v1). The old
+// journal keys (q3, q19, q21, q22, q24) are never wiped: if the new key has nothing yet, the
+// old text is read and split into the new shape, and every edit writes the old key as well.
+type Cmp = { id: string; t: string; d: string };
+type R2 = { c?: Cmp[]; s?: string[]; t?: Record<string, string[]>; k?: Record<string, boolean[]> };
+const THREE = ["q21", "q22", "q24"];
+const uid = () => Math.random().toString(36).slice(2, 9);
+const lines = (s: string) => (s ?? "").split(/\r?\n/).map((x) => x.replace(/^\s*(?:[-•*]|\d+[.)])\s*/, "").trim()).filter(Boolean);
+
+function complaintsOf(journal: Record<string, string>, r2: R2): Cmp[] {
+  if (r2.c) return r2.c;
+  return lines(journal.q3 ?? "").map((t, i) => ({ id: `m${i}`, t, d: "" }));
+}
+function threeOf(key: string, journal: Record<string, string>, r2: R2): string[] {
+  const got = r2.t?.[key];
+  if (got) return [got[0] ?? "", got[1] ?? "", got[2] ?? ""];
+  const raw = (journal[key] ?? "").trim();
+  if (!raw) return ["", "", ""];
+  const ls = lines(raw);
+  if (ls.length >= 3) return [ls[0], ls[1], ls.slice(2).join("\n")];
+  if (ls.length === 2) return [ls[0], ls[1], ""];
+  return [raw, "", ""];
+}
+const sensesOf = (r2: R2): string[] => SENSES.map((_, i) => r2.s?.[i] ?? "");
+const ticksOf = (key: string, r2: R2): boolean[] => [0, 1, 2].map((i) => !!r2.k?.[key]?.[i]);
+
+type LRow = { label: string; text?: string; items?: { t: string; done: boolean }[] };
+type LGroup = { group: string; rows: LRow[] };
+function letterOf(journal: Record<string, string>, r2: R2): LGroup[] {
+  const out: LGroup[] = [];
+  LETTER.forEach((g) => {
+    const rows: LRow[] = [];
+    g.rows.forEach(({ q, label }) => {
+      if (q === 19) {
+        const s = sensesOf(r2);
+        s.forEach((v, i) => { if (v.trim()) rows.push({ label: SENSES[i], text: v.trim() }); });
+        const old = (journal.q19 ?? "").trim();
+        if (old && !s.some((v) => v.trim())) rows.push({ label: "Her senses", text: old });
+      } else if (THREE.includes(`q${q}`)) {
+        const k = `q${q}`;
+        const v = threeOf(k, journal, r2);
+        const tk = ticksOf(k, r2);
+        const items = v.map((t, i) => ({ t: t.trim(), done: tk[i] })).filter((x) => x.t);
+        if (items.length) rows.push({ label, items });
+      } else {
+        const a = (journal[`q${q}`] ?? "").trim();
+        if (a) rows.push({ label, text: a });
+      }
+    });
+    if (rows.length) out.push({ group: g.group, rows });
+  });
+  return out;
+}
+function letterText(journal: Record<string, string>, r2: R2) {
+  const gs = letterOf(journal, r2);
+  if (!gs.length) return "";
+  const body = gs.map((g) => `${g.group.toUpperCase()}\n\n` + g.rows.map((r) => `${r.label}\n` + (r.items ? r.items.map((x, i) => `${i + 1}. ${x.t}${x.done ? " ✓" : ""}`).join("\n") : r.text)).join("\n\n")).join("\n\n");
+  return `${COPY.letterTitle}\n${COPY.title}\n\n${body}`;
+}
+
+function Tick({ on }: { on: boolean }) {
+  return <span key={on ? "on" : "off"} className={on ? "lhl-pop inline-block" : "inline-block"} aria-hidden="true">{on ? "✓" : ""}</span>;
+}
+
+/** R17. The complaints question collects a list: one line at a time, each its own row, removable. */
+function ComplaintList({ items, onChange }: { items: Cmp[]; onChange: (n: Cmp[]) => void }) {
+  const [text, setText] = useState("");
+  const ref = useRef<HTMLInputElement>(null);
+  const add = () => {
+    const t = text.trim();
+    if (!t) return;
+    onChange([...items, { id: uid(), t, d: "" }]);
+    setText("");
+    ref.current?.focus();
+  };
+  return (
+    <div className="mt-4" data-testid="complaints">
+      {items.length > 0 && (
+        <ul className="mb-3 grid gap-2" data-testid="complaint-rows">
+          {items.map((c, i) => (
+            <li key={c.id} data-testid="complaint-row" className="lhl-rowin flex items-center gap-3 rounded-2xl border border-[#DDC98E]/35 bg-[rgba(13,53,53,0.35)] py-2 pl-4 pr-2">
+              <span className="font-display text-[15px] text-[#DDC98E]">{i + 1}</span>
+              <span className="min-w-0 flex-1 break-words text-[16px] leading-snug text-[#f1ece2]">{c.t}</span>
+              <button type="button" aria-label={COPY.complaintRemove} onClick={() => onChange(items.filter((x) => x.id !== c.id))} className="lhl-press flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-[18px] text-[#a79f90]">×</button>
+            </li>
+          ))}
+        </ul>
+      )}
+      <div className="flex items-center gap-2">
+        <input ref={ref} data-testid="complaint-input" value={text} onChange={(e) => setText(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); add(); } }}
+          enterKeyHint="done" placeholder={COPY.complaintPlaceholder} aria-label={COPY.complaintPlaceholder}
+          className="min-h-[52px] min-w-0 flex-1 rounded-full border border-[#DDC98E]/40 bg-[rgba(13,53,53,0.35)] px-5 text-[16px] text-[#f1ece2] outline-none placeholder:text-[#8f877a] focus:border-[#DDC98E]" />
+        <button type="button" data-testid="complaint-add" onClick={add} className="lhl-press inline-flex min-h-[52px] shrink-0 items-center rounded-full bg-[#DDC98E] px-6 font-display text-[16px] font-medium text-[#070707]">{COPY.complaintAdd}</button>
+      </div>
+    </div>
+  );
+}
+
+/** R17. Each complaint is a card: tap to turn it over and write its desire on the back. */
+function DesireCard({ c, i, onDesire }: { c: Cmp; i: number; onDesire: (v: string) => void }) {
+  const [back, setBack] = useState(false);
+  const [flip, setFlip] = useState(false);
+  const turn = () => {
+    setFlip(true);
+    setTimeout(() => setBack((b) => !b), 210);
+    setTimeout(() => setFlip(false), 460);
+  };
+  useEffect(() => {
+    if (back) document.getElementById(`lhl-desire-${c.id}`)?.focus({ preventScroll: true });
+  }, [back, c.id]);
+  const has = c.d.trim().length > 0;
+  return (
+    <div className={`lhl-turn lhl-dcard ${flip ? "flip2" : ""}`} data-testid={`desire-card-${i}`} data-side={back ? "back" : "front"}>
+      {!back ? (
+        <div role="button" tabIndex={0} aria-label={`${c.t}. ${COPY.turnHint}`} onClick={turn} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); turn(); } }}
+          className="lhl-dface flex min-h-[132px] flex-col justify-between rounded-3xl border-[1.5px] border-[rgba(221,201,142,0.55)] bg-[rgba(13,53,53,0.45)] p-5 text-left">
+          <p className="font-display text-[22px] font-light leading-snug text-[#f1ece2]">{c.t}</p>
+          <p className="mt-3 flex items-center justify-between text-[13px] text-[#a79f90]"><span>{COPY.turnHint}</span>{has && <span className="flex items-center gap-1.5 text-[#DDC98E]"><Tick on /> {COPY.desireWritten}</span>}</p>
+        </div>
+      ) : (
+        <div className="lhl-dface rounded-3xl border-[1.5px] border-[#DDC98E] bg-[linear-gradient(160deg,rgba(13,53,53,0.85),rgba(7,7,7,0.9))] p-5 shadow-[0_0_34px_-14px_rgba(221,201,142,0.7)]">
+          <p className="text-[13px] leading-snug text-[#a79f90] line-through decoration-[#a79f90]/50">{c.t}</p>
+          <textarea id={`lhl-desire-${c.id}`} data-testid={`desire-box-${i}`} rows={3} value={c.d} placeholder={COPY.desirePlaceholder} aria-label={`${COPY.desirePlaceholder} ${c.t}`} onChange={(e) => onDesire(e.target.value)}
+            className="resize-none mt-3 w-full rounded-2xl border border-[#DDC98E]/40 bg-[rgba(7,7,7,0.35)] p-3 text-[16px] leading-relaxed text-[#f1ece2] outline-none placeholder:text-[#8f877a] focus:border-[#DDC98E]" />
+          <button type="button" data-testid={`desire-back-${i}`} onClick={turn} className="lhl-press mt-3 inline-flex min-h-[44px] items-center text-[14px] text-[#DDC98E] underline underline-offset-4">{COPY.turnBack}</button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/** R18. "Close your eyes": two minutes, soft chime, can be skipped, never blocks Next. */
+function EyesTimer() {
+  const [st, setSt] = useState<"idle" | "run" | "done">("idle");
+  const [left, setLeft] = useState(EYES_SECONDS);
+  const endAt = useRef(0);
+  const actx = useRef<AudioContext | null>(null);
+  const chime = () => {
+    const ctx = actx.current;
+    if (!ctx) return;
+    const t = ctx.currentTime;
+    const master = ctx.createGain();
+    master.gain.value = 0.22;
+    master.connect(ctx.destination);
+    ([[196, 1, 5], [392, 0.45, 4], [588, 0.2, 3]] as [number, number, number][]).forEach(([f, v, d]) => {
+      const o = ctx.createOscillator();
+      const g = ctx.createGain();
+      o.type = "sine";
+      o.frequency.value = f;
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(v, t + 0.04);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + d);
+      o.connect(g).connect(master);
+      o.start(t);
+      o.stop(t + d + 0.1);
+    });
+  };
+  useEffect(() => {
+    if (st !== "run") return;
+    const id = setInterval(() => {
+      const r = Math.max(0, Math.round((endAt.current - Date.now()) / 1000));
+      setLeft(r);
+      if (r === 0) { clearInterval(id); chime(); try { navigator.vibrate?.([150, 80, 150]); } catch {} setSt("done"); }
+    }, 250);
+    return () => clearInterval(id);
+  }, [st]);
+  useEffect(() => () => { try { actx.current?.close(); } catch {} }, []);
+  const start = () => {
+    try {
+      const AC = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+      actx.current = actx.current ?? new AC();
+      void actx.current.resume();
+    } catch { /* silent is fine */ }
+    endAt.current = Date.now() + EYES_SECONDS * 1000;
+    setLeft(EYES_SECONDS);
+    setSt("run");
+  };
+  const mm = `${Math.floor(left / 60)}:${String(left % 60).padStart(2, "0")}`;
+  const ring = 2 * Math.PI * 54;
+  return (
+    <div className="my-6 rounded-3xl border-[1.5px] border-[rgba(221,201,142,0.45)] bg-[rgba(13,53,53,0.35)] px-5 py-5 text-center" data-testid="eyes">
+      {st === "idle" && (
+        <button type="button" data-testid="eyes-start" onClick={start} className="lhl-pick lhl-press">{COPY.eyesStart}<small>{COPY.eyesSub}</small></button>
+      )}
+      {st === "run" && (
+        <div data-testid="eyes-run" className="lhl-rowin">
+          <div className="relative mx-auto h-[140px] w-[140px]">
+            <svg viewBox="0 0 120 120" className="h-full w-full -rotate-90"><circle cx="60" cy="60" r="54" fill="none" stroke="rgba(221,201,142,.18)" strokeWidth="5" />
+              <circle cx="60" cy="60" r="54" fill="none" stroke="#DDC98E" strokeWidth="5" strokeLinecap="round" strokeDasharray={ring} strokeDashoffset={ring * (1 - left / EYES_SECONDS)} style={{ transition: "stroke-dashoffset .3s linear" }} /></svg>
+            <span className="absolute inset-0 flex items-center justify-center font-display text-[32px] font-light" data-testid="eyes-time">{mm}</span>
+          </div>
+          <p className="mt-3 text-[15px] text-[#cfc8bb]">{COPY.eyesRunning}</p>
+          <button type="button" data-testid="eyes-skip" onClick={() => setSt("done")} className="lhl-press mt-2 inline-flex min-h-[44px] items-center text-[14px] text-[#DDC98E] underline underline-offset-4">{COPY.eyesSkip}</button>
+        </div>
+      )}
+      {st === "done" && (
+        <div data-testid="eyes-done" className="lhl-rowin">
+          <span className="lhl-tickbig lhl-pop" aria-hidden="true">✓</span>
+          <p className="mt-2 font-display text-[22px] font-light">{COPY.eyesOpen}</p>
+          <button type="button" onClick={() => setSt("idle")} className="lhl-press mt-1 inline-flex min-h-[44px] items-center text-[14px] text-[#DDC98E] underline underline-offset-4">{COPY.eyesStart}</button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/** R19. Her senses question as she wrote it, then six tap-through prompts, one box each. */
+function Senses({ vals, onChange, legacy, onLegacy }: { vals: string[]; onChange: (i: number, v: string) => void; legacy: string; onLegacy: (v: string) => void }) {
+  const [open, setOpen] = useState(0);
+  const go = (i: number) => {
+    setOpen(i);
+    setTimeout(() => document.getElementById(`lhl-sense-${i}`)?.focus({ preventScroll: true }), 260);
+  };
+  return (
+    <div className="mt-4 grid gap-2.5" data-testid="senses">
+      {SENSES.map((label, i) => {
+        const on = open === i;
+        const filled = vals[i].trim().length > 0;
+        return (
+          <div key={label} data-testid={`sense-row-${i}`} data-open={on ? "1" : "0"} className={`rounded-2xl border transition-colors ${on ? "border-[#DDC98E] bg-[rgba(13,53,53,0.5)]" : "border-[#DDC98E]/35 bg-[rgba(13,53,53,0.28)]"}`}>
+            <button type="button" aria-expanded={on} data-testid={`sense-head-${i}`} onClick={() => (on ? setOpen(-1) : go(i))} className="lhl-press flex min-h-[56px] w-full items-center gap-3 px-4 text-left">
+              <span className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full border text-[14px] ${filled ? "border-[#DDC98E] bg-[#DDC98E] text-[#070707]" : "border-[#DDC98E]/50 text-[#DDC98E]"}`}>{filled ? <Tick on /> : i + 1}</span>
+              <span className="font-display text-[20px] font-light">{label}</span>
+            </button>
+            <div className={`lhl-collapse ${on ? "open" : ""}`}>
+              <div className="min-h-0 overflow-hidden">
+                <div className="px-4 pb-4">
+                  <textarea id={`lhl-sense-${i}`} data-testid={`sense-${i}`} rows={3} value={vals[i]} placeholder={COPY.writePlaceholder} aria-label={label} tabIndex={on ? 0 : -1} onChange={(e) => onChange(i, e.target.value)}
+                    className="resize-none w-full rounded-2xl border border-[#DDC98E]/40 bg-[rgba(7,7,7,0.35)] p-3 text-[16px] leading-relaxed text-[#f1ece2] outline-none placeholder:text-[#8f877a] focus:border-[#DDC98E]" />
+                  {i < SENSES.length - 1 && <button type="button" tabIndex={on ? 0 : -1} data-testid={`sense-next-${i}`} onClick={() => go(i + 1)} className="lhl-press mt-2 inline-flex min-h-[44px] items-center rounded-full border border-[#DDC98E]/60 px-5 text-[14px] text-[#DDC98E]">{COPY.sensesNext}</button>}
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      })}
+      {legacy.trim() && (
+        <div className="mt-2" data-testid="senses-before">
+          <p className="text-[13px] text-[#a79f90]">{COPY.sensesBefore}</p>
+          <textarea rows={3} value={legacy} aria-label={COPY.sensesBefore} onChange={(e) => onLegacy(e.target.value)} className="mt-1.5 w-full rounded-2xl border border-[#DDC98E]/30 bg-[rgba(13,53,53,0.28)] p-3 text-[16px] leading-relaxed text-[#f1ece2] outline-none focus:border-[#DDC98E]" />
+        </div>
+      )}
+    </div>
+  );
+}
+
+/** R20. Three numbered boxes, each with a tick she sets when it is done. */
+function ThreeBoxes({ k, vals, ticks, onText, onTick }: { k: string; vals: string[]; ticks: boolean[]; onText: (i: number, v: string) => void; onTick: (i: number) => void }) {
+  return (
+    <div className="mt-4 grid gap-3" data-testid={`three-${k}`}>
+      {[0, 1, 2].map((i) => (
+        <div key={i} className={`flex items-start gap-3 rounded-2xl border p-3 transition-colors ${ticks[i] ? "border-[#DDC98E] bg-[rgba(221,201,142,0.08)]" : "border-[#DDC98E]/35 bg-[rgba(13,53,53,0.28)]"}`}>
+          <span className="mt-2 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[#DDC98E]/60 font-display text-[16px] text-[#DDC98E]">{i + 1}</span>
+          <textarea data-testid={`three-${k}-${i}`} rows={2} value={vals[i]} placeholder={COPY.writePlaceholder} aria-label={`${i + 1}`} onChange={(e) => onText(i, e.target.value)}
+            className="resize-none min-w-0 flex-1 rounded-xl border border-transparent bg-transparent p-2 text-[16px] leading-relaxed text-[#f1ece2] outline-none placeholder:text-[#8f877a] focus:border-[#DDC98E]/50" />
+          <button type="button" data-testid={`tick-${k}-${i}`} aria-pressed={ticks[i]} aria-label={COPY.tickDone} onClick={() => onTick(i)}
+            className={`lhl-press mt-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-[1.5px] text-[18px] ${ticks[i] ? "border-[#DDC98E] bg-[#DDC98E] text-[#070707]" : "border-[#DDC98E]/50 text-transparent"}`}><Tick on={ticks[i]} /></button>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/** R21. Her letter: everything she wrote about her future self, as one designed card. */
+function wrapText(ctx: CanvasRenderingContext2D, text: string, maxW: number) {
+  const out: string[] = [];
+  text.split(/\r?\n/).forEach((para) => {
+    if (!para.trim()) { out.push(""); return; }
+    let cur = "";
+    para.split(/\s+/).forEach((w) => {
+      const tryLine = cur ? `${cur} ${w}` : w;
+      if (ctx.measureText(tryLine).width > maxW && cur) { out.push(cur); cur = w; } else cur = tryLine;
+    });
+    if (cur) out.push(cur);
+  });
+  return out;
+}
+async function letterImage(groups: LGroup[], family: string): Promise<Blob | null> {
+  try { await document.fonts?.ready; } catch {}
+  const W = 1080, P = 88, MW = W - P * 2;
+  const meas = document.createElement("canvas").getContext("2d");
+  if (!meas) return null;
+  type Cmd = { y: number; t: string; f: string; c: string; sp?: number };
+  const cmds: Cmd[] = [];
+  let y = P + 20;
+  const add = (t: string, f: string, c: string, lh: number, sp?: number) => {
+    meas.font = f;
+    wrapText(meas, t, MW).forEach((ln) => { y += lh; cmds.push({ y, t: ln, f, c, sp }); });
+  };
+  add(COPY.title.toUpperCase(), `500 24px ${family}`, "#DDC98E", 30, 6);
+  add(COPY.letterTitle, `300 72px ${family}`, "#f1ece2", 84);
+  y += 24;
+  groups.forEach((g) => {
+    y += 36;
+    add(g.group.toUpperCase(), `500 24px ${family}`, "#DDC98E", 30, 5);
+    g.rows.forEach((r) => {
+      y += 22;
+      add(r.label, `500 26px ${family}`, "#a79f90", 34);
+      if (r.items) r.items.forEach((x, i) => add(`${i + 1}. ${x.t}${x.done ? "  ✓" : ""}`, `400 34px ${family}`, "#f1ece2", 46));
+      else add(r.text ?? "", `400 34px ${family}`, "#f1ece2", 46);
+    });
+  });
+  const H = Math.min(y + P + 20, 9000);
+  const cv = document.createElement("canvas");
+  cv.width = W; cv.height = H;
+  const ctx = cv.getContext("2d");
+  if (!ctx) return null;
+  const bg = ctx.createLinearGradient(0, 0, W, H);
+  bg.addColorStop(0, "#0d3535"); bg.addColorStop(1, "#070707");
+  ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
+  ctx.strokeStyle = "rgba(221,201,142,.7)"; ctx.lineWidth = 3; ctx.strokeRect(36, 36, W - 72, H - 72);
+  cmds.forEach((c) => {
+    ctx.font = c.f; ctx.fillStyle = c.c;
+    if (c.sp) (ctx as unknown as { letterSpacing: string }).letterSpacing = `${c.sp}px`; else (ctx as unknown as { letterSpacing: string }).letterSpacing = "0px";
+    ctx.fillText(c.t, P, c.y);
+  });
+  return new Promise((res) => cv.toBlob((b) => res(b), "image/png"));
+}
+
+function SaveImage({ groups }: { groups: LGroup[] }) {
+  const [msg, setMsg] = useState("");
+  const run = async () => {
+    setMsg("");
+    const fam = (document.querySelector("[data-letter-title]") ? getComputedStyle(document.querySelector("[data-letter-title]") as Element).fontFamily : "serif") || "serif";
+    const blob = await letterImage(groups, fam).catch(() => null);
+    if (!blob) { setMsg(COPY.imageFail); return; }
+    const file = new File([blob], "her-letter.png", { type: "image/png" });
+    try {
+      if (typeof navigator.canShare === "function" && navigator.canShare({ files: [file] }) && typeof navigator.share === "function") {
+        await navigator.share({ files: [file], title: COPY.shareTitle });
+        return;
+      }
+    } catch (e) {
+      if (e instanceof Error && e.name === "AbortError") return;
+    }
+    try {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url; a.download = "her-letter.png";
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 4000);
+      setMsg(COPY.imageSaved);
+    } catch { setMsg(COPY.imageFail); }
+  };
+  return (
+    <>
+      <button type="button" data-testid="save-image" onClick={run} className="lhl-press inline-flex min-h-[48px] items-center rounded-full bg-[#DDC98E] px-6 font-display text-[15px] font-medium text-[#070707]">{COPY.saveImage}</button>
+      {msg && <p role="status" data-testid="image-msg" className="mt-2 w-full text-[14px] text-[#EEDE80]">{msg}</p>}
+    </>
+  );
+}
+
+function Letter({ journal, r2 }: { journal: Record<string, string>; r2: R2 }) {
+  const groups = letterOf(journal, r2);
+  return (
+    <>
+      <div className="rounded-[28px] border-[1.5px] border-[rgba(221,201,142,0.7)] bg-[linear-gradient(160deg,rgba(13,53,53,0.9),rgba(7,7,7,0.95))] px-5 py-7 shadow-[0_0_50px_-20px_rgba(221,201,142,0.7)]" data-testid="letter">
+        <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-[#DDC98E]">{COPY.title}</p>
+        <h2 data-letter-title="1" className="!mb-2 !mt-1">{COPY.letterTitle}</h2>
+        <p className="mb-2 text-[15px] text-[#a79f90]">{COPY.letterLine}</p>
+        {groups.length === 0 && <p className="mt-4 text-[16px] text-[#cfc8bb]" data-testid="letter-empty">{COPY.letterEmpty}</p>}
+        {groups.map((g) => (
+          <div key={g.group} className="mt-7">
+            <p className="border-b border-[#DDC98E]/30 pb-1.5 text-[11px] font-medium uppercase tracking-[0.2em] text-[#DDC98E]">{g.group}</p>
+            {g.rows.map((r) => (
+              <div key={r.label} className="mt-4">
+                <p className="text-[13px] text-[#a79f90]">{r.label}</p>
+                {r.items ? (
+                  <ol className="mt-1 grid gap-1.5">
+                    {r.items.map((x, i) => (
+                      <li key={i} data-letter="1" className="flex gap-2.5 text-[17px] leading-snug text-[#f1ece2]"><span className="font-display text-[#DDC98E]">{i + 1}</span><span className="whitespace-pre-wrap">{x.t}</span>{x.done && <span className="text-[#DDC98E]">✓</span>}</li>
+                    ))}
+                  </ol>
+                ) : (
+                  <p data-letter="1" className="mt-1 whitespace-pre-wrap text-[17px] leading-relaxed text-[#f1ece2]">{r.text}</p>
+                )}
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+      <KeepCopy text={letterText(journal, r2)} extra={groups.length ? <SaveImage groups={groups} /> : null} />
+    </>
+  );
+}
+
 // ---- Part 1: Meet her ------------------------------------------------------------------------
-function Part1({ idx, journal, setAnswer }: { idx: number; journal: Record<string, string>; setAnswer: (k: string, v: string) => void }) {
+type Act = {
+  setComplaints: (c: Cmp[]) => void;
+  setDesire: (id: string, v: string) => void;
+  setSense: (i: number, v: string) => void;
+  setLegacy: (v: string) => void;
+  setThree: (k: string, i: number, v: string) => void;
+  tick: (k: string, i: number) => void;
+};
+
+function Part1({ idx, journal, setAnswer, r2, act }: { idx: number; journal: Record<string, string>; setAnswer: (k: string, v: string) => void; r2: R2; act: Act }) {
+  if (idx >= JOURNAL_SCREENS.length) {
+    return (
+      <section data-testid="p1-letter">
+        <p className="kicker">Part 1 · {PARTS[0].name}</p>
+        <Letter journal={journal} r2={r2} />
+      </section>
+    );
+  }
   const lines = JOURNAL_SCREENS[idx];
   const last = idx === JOURNAL_SCREENS.length - 1;
+  const complaints = complaintsOf(journal, r2);
   return (
     <section data-testid={`p1-${idx}`}>
       {idx === 0 && <Photo src={PHOTOS.meetHer.src} alt={PHOTOS.meetHer.alt} pos={PHOTOS.meetHer.pos} ratio={PHOTOS.meetHer.ratio} />}
@@ -284,22 +710,41 @@ function Part1({ idx, journal, setAnswer }: { idx: number; journal: Record<strin
         {lines.map((li) => {
           const L = JOURNAL[li];
           if (L.k === "q") {
+            const key = `q${li}`;
+            let control: React.ReactNode;
+            if (li === 3) control = <ComplaintList items={complaints} onChange={act.setComplaints} />;
+            else if (li === 4) control = null; // the cards and the extra box come after the tip, below
+            else if (li === 19) control = <Senses vals={sensesOf(r2)} onChange={act.setSense} legacy={r2.s ? "" : journal.q19 ?? ""} onLegacy={act.setLegacy} />;
+            else if (THREE.includes(key)) control = <ThreeBoxes k={key} vals={threeOf(key, journal, r2)} ticks={ticksOf(key, r2)} onText={(i, v) => act.setThree(key, i, v)} onTick={(i) => act.tick(key, i)} />;
+            else control = <Box id={`lhl-q${li}`} value={journal[key] ?? ""} onChange={(v) => setAnswer(key, v)} />;
             return (
               <div key={li} className="lhl-block">
                 <p data-journal="1" className="lhl-q">{L.t}</p>
-                <Box id={`lhl-q${li}`} value={journal[`q${li}`] ?? ""} onChange={(v) => setAnswer(`q${li}`, v)} />
+                {control}
               </div>
             );
           }
           if (L.k === "tip") {
             return (
-              <p key={li} data-journal="1" className="lhl-tip"><span>TIP:</span> {L.t.slice(5)}</p>
+              <div key={li}>
+                <p data-journal="1" className="lhl-tip"><span>TIP:</span> {L.t.slice(5)}</p>
+                <div className="grid gap-3" data-testid="desire-cards">
+                  {complaints.length === 0 && <p className="text-[15px] leading-relaxed text-[#a79f90]" data-testid="desires-empty">{COPY.desiresEmpty}</p>}
+                  {complaints.map((c, i) => <DesireCard key={c.id} c={c} i={i} onDesire={(v) => act.setDesire(c.id, v)} />)}
+                </div>
+                <Box id="lhl-q4" value={journal.q4 ?? ""} onChange={(v) => setAnswer("q4", v)} rows={4} placeholder={COPY.desireExtra} />
+              </div>
             );
           }
-          return <p key={li} data-journal="1" className={idx === 0 && li === 0 ? "lhl-lead" : "lhl-p"}>{L.t}</p>;
+          return (
+            <div key={li}>
+              <p data-journal="1" className={idx === 0 && li === 0 ? "lhl-lead" : "lhl-p"}>{L.t}</p>
+              {li === 6 && <EyesTimer />}
+            </div>
+          );
         })}
       </div>
-      {last && <KeepCopy text={journalText(journal)} />}
+      {last && <KeepCopy text={journalText(journal, r2)} />}
       {last && <SacredNoDoor line={COPY.doorAfterJournal} testid="door-journal" />}
     </section>
   );
@@ -618,6 +1063,13 @@ function Part4({ idx, vis, setAnswer, markDone, doneDays, curDay, opensIn }: {
 
 // ---- Cover (before the gate): name, one line, the four parts ------------------------------------
 function Cover() {
+  // R15: one tap to the name box. Scroll to it and focus it inside the tap so the keyboard comes up.
+  const begin = () => {
+    const el = document.querySelector<HTMLInputElement>('input[name="firstName"]');
+    if (!el) return;
+    el.scrollIntoView({ behavior: "smooth", block: "center" });
+    el.focus({ preventScroll: true });
+  };
   return (
     <section data-testid="cover">
       <div className="relative mx-auto w-full overflow-hidden rounded-3xl border-[1.5px] border-[rgba(221,201,142,0.45)]" style={{ aspectRatio: "4 / 5", maxWidth: 440 }}>
@@ -630,6 +1082,7 @@ function Cover() {
       </div>
       <div className="mx-auto mt-5" style={{ maxWidth: 440 }}>
         <p className="text-[18px] leading-relaxed text-[#cfc8bb]">{COPY.tagline}</p>
+        <button type="button" data-testid="begin" onClick={begin} className="lhl-press lhl-begin mt-5 flex min-h-[56px] w-full items-center justify-center gap-2 rounded-full bg-[#DDC98E] font-display text-[18px] font-medium text-[#070707]">{COPY.begin}<span aria-hidden="true">↓</span></button>
         <ol className="mt-6 grid gap-2" data-testid="cover-parts">
           {PARTS.map((p) => (
             <li key={p.n} className="flex items-center gap-4 rounded-2xl border border-[#DDC98E]/30 bg-[rgba(13,53,53,0.28)] px-4 py-3">
@@ -685,8 +1138,14 @@ function Hub({ name, fracs, dones, resume, open, partLabel }: {
         </div>
       )}
 
+      {!resume && (
+        <button type="button" data-testid="start" onClick={() => open(1, 0)} className="lhl-press lhl-begin mt-6 flex min-h-[64px] w-full items-center justify-between gap-3 rounded-full bg-[#DDC98E] px-6 text-left text-[#070707]">
+          <span><span className="block font-display text-[17px] font-medium leading-tight">{COPY.start}</span><span className="block text-[13px] opacity-75">{partLabel(1)}</span></span>
+          <span className="text-xl">→</span>
+        </button>
+      )}
       {resume && (
-        <button type="button" data-testid="resume" onClick={() => open(resume.part, resume.i)} className="mt-6 flex min-h-[64px] w-full items-center justify-between gap-3 rounded-full bg-[#DDC98E] px-6 text-left text-[#070707]">
+        <button type="button" data-testid="resume" onClick={() => open(resume.part, resume.i)} className="lhl-press mt-6 flex min-h-[64px] w-full items-center justify-between gap-3 rounded-full bg-[#DDC98E] px-6 text-left text-[#070707]">
           <span><span className="block font-display text-[17px] font-medium leading-tight">{COPY.resume}</span><span className="block text-[13px] opacity-75">{partLabel(resume.part)}</span></span>
           <span className="text-xl">→</span>
         </button>
@@ -732,6 +1191,7 @@ export default function LetHerLand() {
   const [resume, setResume, loadResume] = useStore<Pos | null>(K.resume, null);
   const [prog, setProg, loadProg] = useStore<Prog>(K.prog, PROG0);
   const [journal, setJournal, loadJournal] = useStore<Record<string, string>>(K.journal, {});
+  const [r2, setR2, loadR2] = useStore<R2>(K.r2, {});
   const [log, setLog, loadLog] = useStore<Entry[]>(K.tb, []);
   const [landed, setLandedS, loadLanded] = useStore<Landed>(K.ground, "");
   const [vis, setVis, loadVis] = useStore<Vis>(K.vis, VIS0);
@@ -739,7 +1199,7 @@ export default function LetHerLand() {
 
   useEffect(() => {
     /* eslint-disable react-hooks/set-state-in-effect -- phone storage is only readable after mount */
-    loadResume(); loadProg(); loadJournal(); loadLog(); loadLanded(); loadVis();
+    loadResume(); loadProg(); loadJournal(); loadR2(); loadLog(); loadLanded(); loadVis();
     setNow(Date.now());
     try {
       localStorage.setItem("ffy.lhl.test", "1");
@@ -832,10 +1292,28 @@ export default function LetHerLand() {
     count("lhl_day", day);
   };
 
+  // ---- Round 2 answers: written to the new shape AND mirrored to the old journal keys, so nothing is ever wiped (R22)
+  const mirror = (k: string, arr: string[]) => setJournal((j) => ({ ...j, [k]: arr.map((x) => x.trim()).filter(Boolean).join("\n") }));
+  const act: Act = {
+    setComplaints: (c) => {
+      setR2((x) => ({ ...x, c }));
+      mirror("q3", c.map((y) => y.t));
+    },
+    setDesire: (id, v) => setR2((x) => ({ ...x, c: complaintsOf(journal, x).map((y) => (y.id === id ? { ...y, d: v } : y)) })),
+    setSense: (i, v) => setR2((x) => ({ ...x, s: sensesOf(x).map((y, n) => (n === i ? v : y)) })),
+    setLegacy: (v) => setJournal((j) => ({ ...j, q19: v })),
+    setThree: (k, i, v) => {
+      const next = threeOf(k, journal, r2).map((y, n) => (n === i ? v : y));
+      setR2((x) => ({ ...x, t: { ...x.t, [k]: next } }));
+      mirror(k, next);
+    },
+    tick: (k, i) => setR2((x) => ({ ...x, k: { ...x.k, [k]: ticksOf(k, x).map((y, n) => (n === i ? !y : y)) } })),
+  };
+
   const inPart = opened && pos.part > 0;
   const total = inPart ? SCREENS[pos.part - 1] : 0;
   const last = inPart && pos.i === total - 1;
-  const nextLabel = !inPart ? "" : last ? COPY.finishPart : pos.part === 1 ? "Next →" : `${SCREEN_NAMES[pos.part - 1][pos.i + 1]} →`;
+  const nextLabel = !inPart ? "" : last ? COPY.finishPart : pos.part === 1 ? (pos.i === JOURNAL_SCREENS.length - 1 ? COPY.letterNext : "Next →") : `${SCREEN_NAMES[pos.part - 1][pos.i + 1]} →`;
   const forward = () => (last ? finishPart(pos.part) : open(pos.part, pos.i + 1));
 
   return (
@@ -858,7 +1336,7 @@ export default function LetHerLand() {
               </div>
               <StepBar step={pos.i + 1} total={total} />
               <div key={`${pos.part}-${pos.i}`} className="lhl-screen">
-                {pos.part === 1 && <Part1 idx={pos.i} journal={journal} setAnswer={(k, v) => setJournal((j) => ({ ...j, [k]: v }))} />}
+                {pos.part === 1 && <Part1 idx={pos.i} journal={journal} r2={r2} act={act} setAnswer={(k, v) => setJournal((j) => ({ ...j, [k]: v }))} />}
                 {pos.part === 2 && <Part2 idx={pos.i} log={log} saveEntry={saveEntry} />}
                 {pos.part === 3 && <Part3 idx={pos.i} landed={landed} setLanded={setLanded} />}
                 {pos.part === 4 && <Part4 idx={pos.i} vis={vis} setAnswer={setVisAnswer} markDone={markDone} doneDays={doneDays} curDay={curDay} opensIn={opensIn} />}
@@ -923,6 +1401,22 @@ const LHL_CSS = `
   .lhl-vcard-text p{margin:0;color:#000;line-height:1.32}
   .lhl-vcard-text p.b{font-weight:500;font-size:max(5.6cqw,9px)}
   .lhl-vcard-text p.n{font-weight:400;font-size:max(5cqw,8.5px);margin-top:.7em}
+  .wssr .lhl-press{transition:transform .12s ease,background-color .2s ease,border-color .2s ease}
+  .wssr .lhl-press:active{transform:scale(.96)}
+  .wssr .lhl-begin{box-shadow:0 0 34px -10px rgba(221,201,142,.7);animation:lhlglow 2.8s ease-in-out infinite}
+  @keyframes lhlglow{0%,100%{box-shadow:0 0 22px -12px rgba(221,201,142,.55)}50%{box-shadow:0 0 38px -8px rgba(221,201,142,.85)}}
+  .wssr .lhl-pop{animation:lhlpop .42s cubic-bezier(.3,1.7,.5,1) both}
+  @keyframes lhlpop{0%{transform:scale(.2);opacity:0}100%{transform:scale(1);opacity:1}}
+  .wssr .lhl-tickbig{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:9999px;background:#DDC98E;color:#070707;font-size:22px}
+  .wssr .lhl-rowin{animation:lhlrow .35s cubic-bezier(.2,.8,.2,1) both}
+  @keyframes lhlrow{0%{transform:translateY(8px) scale(.97);opacity:0}100%{transform:none;opacity:1}}
+  .wssr .lhl-turn.lhl-dcard{cursor:default}
+  .wssr .lhl-turn.lhl-dcard .lhl-dface[role=button]{cursor:pointer}
+  .lhl-turn.flip2{animation:lhlflip2 .46s cubic-bezier(.45,.05,.25,1)}
+  @keyframes lhlflip2{0%{transform:rotateY(0) scale(1)}50%{transform:rotateY(90deg) scale(1.03)}100%{transform:rotateY(0) scale(1)}}
+  .wssr .lhl-collapse{display:grid;grid-template-rows:0fr;transition:grid-template-rows .3s cubic-bezier(.2,.8,.2,1),visibility 0s linear .3s;visibility:hidden}
+  .wssr .lhl-collapse.open{grid-template-rows:1fr;visibility:visible;transition-delay:0s}
+  @media (prefers-reduced-motion:reduce){.lhl-turn.flip2,.wssr .lhl-begin,.wssr .lhl-pop,.wssr .lhl-rowin{animation:none}.wssr .lhl-collapse{transition:none}}
   .wssr .lhl-fill{transition:width .8s cubic-bezier(.2,.8,.2,1)}
   .wssr details summary{padding:6px 0}
   .wssr details summary small{display:block;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#DDC98E;margin-bottom:2px}
