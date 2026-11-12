@@ -9,7 +9,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { PleasureQuiz, QUIZ_CSS, type Scores } from "@/components/PleasureQuiz";
-import { SlimPlayer } from "@/components/SlimPlayer";
+import { SlimPlayer, savedSpeed, saveSpeed } from "@/components/SlimPlayer";
 import { OneTouchCardFace } from "@/components/OneTouch";
 import { BodyMap, todayStr, type MapEntry } from "@/components/TouchMap";
 import { ANSWERS, AREAS, LANGUAGES, LANG_STYLE, type Answer, type LanguageId } from "@/lib/content/touch-map";
@@ -227,11 +227,13 @@ function TouchPlayer({ touchDate, onDone }: { touchDate: { steps: Step[] }; onDo
     if (!a || pendingAt.current === null) return;
     a.currentTime = pendingAt.current;
     pendingAt.current = null;
+    a.defaultPlaybackRate = rate; // iPhone resets the speed when a new recording loads
     a.playbackRate = rate;
     a.muted = false;
     if (want.current) a.play().catch(() => { want.current = false; setPlaying(false); });
   };
-  useEffect(() => { if (ref.current) ref.current.playbackRate = rate; }, [rate]);
+  useEffect(() => { setRate(savedSpeed()); }, []);
+  useEffect(() => { const a = ref.current; if (a) { a.defaultPlaybackRate = rate; a.playbackRate = rate; } saveSpeed(rate); }, [rate]);
   // "Not today" can remove everything that was left.
   useEffect(() => {
     if (i >= steps.length) finish();
@@ -308,7 +310,7 @@ function TouchPlayer({ touchDate, onDone }: { touchDate: { steps: Step[] }; onDo
         <button type="button" className={quiet} onClick={() => { if (want.current) unlock(); go(i - 1); }} disabled={i === 0} style={{ opacity: i === 0 ? 0.4 : 1 }}>← Part</button>
         <button type="button" className={quiet} onClick={() => { if (want.current) unlock(); go(i + 1); }}>{i + 1 >= steps.length ? "Finish" : "Part →"}</button>
       </div>
-      <audio ref={ref} preload="auto" onLoadedMetadata={seek} onTimeUpdate={onTime} onEnded={() => go(i + 1)} onPlay={() => setPlaying(true)} onPause={() => setPlaying(false)} />
+      <audio ref={ref} preload="auto" onLoadedMetadata={seek} onTimeUpdate={onTime} onEnded={() => go(i + 1)} onPlay={() => { const a = ref.current; if (a && a.playbackRate !== rate) a.playbackRate = rate; setPlaying(true); }} onPause={() => setPlaying(false)} />
     </div>
   );
 }
