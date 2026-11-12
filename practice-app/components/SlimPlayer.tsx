@@ -4,6 +4,7 @@
 // Same look as How to Feel Like a Woman and the approved Touch Map touch page.
 
 import { useEffect, useRef, useState } from "react";
+import { nextSpeed, readSpeed, saveSpeedFor } from "@/lib/voice-speed";
 
 // Speed, up to 1.5x and never above (Juliette, 2 Nov 2026). Remembered on this phone
 // for every player in the app.
@@ -20,9 +21,10 @@ export function SlimPlayer({ src, label, big }: { src: string; label: string; bi
   const [cur, setCur] = useState(0);
   const [dur, setDur] = useState(0);
   const [rate, setRate] = useState(1);
-  useEffect(() => { setRate(savedSpeed()); }, []); // eslint-disable-line react-hooks/set-state-in-effect
+  useEffect(() => { setRate(readSpeed(src)); }, [src]); // eslint-disable-line react-hooks/set-state-in-effect
   const apply = (r: number) => { const a = ref.current; if (a) { a.defaultPlaybackRate = r; a.playbackRate = r; } };
-  const cycle = () => { const r = SPEEDS[(SPEEDS.indexOf(rate) + 1) % SPEEDS.length]; setRate(r); saveSpeed(r); apply(r); };
+  // Touch Base stops at 1.2x, everything else at 1.5x (lib/voice-speed).
+  const cycle = () => { const r = nextSpeed(src, rate); setRate(r); saveSpeedFor(src, r); apply(r); };
   const fmt = (s: number) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, "0")}`;
   return (
     <div className="flex items-center gap-4">

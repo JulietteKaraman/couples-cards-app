@@ -1,18 +1,14 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { nextSpeed, readSpeed, saveSpeedFor } from "@/lib/voice-speed";
 
 // Juliette's recordings, played from the app itself (24 Oct 2026). Replaces
 // the Google Drive boxes: a gold play button, her label, a progress line you
 // can tap to move through it, and the time. Started by a tap, so it keeps
 // playing with the phone locked.
 
-// Listening speed, shared by every player and remembered on this phone.
-const RATES = [1, 1.25, 1.5];
-const RATE_KEY = "ffy.voice.rate";
-const readRate = () => {
-  try { const r = Number(localStorage.getItem(RATE_KEY)); return RATES.includes(r) ? r : 1; } catch { return 1; }
-};
+// Listening speed, remembered on this phone: lib/voice-speed (Touch Base has its own, up to 1.2x).
 
 const fmt = (s: number) => {
   if (!isFinite(s) || s < 0) s = 0;
@@ -38,21 +34,21 @@ export default function VoicePlayer({
   const [rate, setRate] = useState(1);
 
   useEffect(() => {
-    setRate(readRate());
-    const onRate = () => setRate(readRate());
+    setRate(readSpeed(src));
+    const onRate = () => setRate(readSpeed(src));
     window.addEventListener("ffy-voice-rate", onRate);
     return () => window.removeEventListener("ffy-voice-rate", onRate);
-  }, []);
+  }, [src]);
 
   useEffect(() => {
     if (ref.current) ref.current.playbackRate = rate;
   }, [rate]);
 
   const nextRate = () => {
-    const n = RATES[(RATES.indexOf(rate) + 1) % RATES.length];
-    try { localStorage.setItem(RATE_KEY, String(n)); } catch {}
+    // Touch Base stops at 1.2x, everything else at 1.5x (lib/voice-speed).
+    const n = nextSpeed(src, rate);
     setRate(n);
-    window.dispatchEvent(new Event("ffy-voice-rate"));
+    saveSpeedFor(src, n);
   };
 
   useEffect(() => {
@@ -60,7 +56,7 @@ export default function VoicePlayer({
     if (!a) return;
     const onTime = () => setT(a.currentTime);
     const onMeta = () => setDur(a.duration);
-    const onPlay = () => { a.playbackRate = readRate(); setPlaying(true); setLoading(false); };
+    const onPlay = () => { a.playbackRate = readSpeed(src); setPlaying(true); setLoading(false); };
     const onPause = () => setPlaying(false);
     const onWait = () => setLoading(true);
     const onCan = () => setLoading(false);

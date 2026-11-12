@@ -10,6 +10,7 @@
 // per screen, one thing to notice, no buttons on every step. Phone only.
 
 import Image from "next/image";
+import { SlimPlayer as SpeedPlayer } from "@/components/SlimPlayer";
 import Link from "next/link";
 import { use, useEffect, useRef, useState } from "react";
 import { CollectionGate } from "@/components/auth/CollectionGate";
@@ -129,7 +130,7 @@ function TouchDetail({ slug }: { slug: string }) {
               </div>
               {!baseDone && (
                 <>
-                  <div className="mt-4"><SlimPlayer src={BASE_AUDIO} label="Touch Base, with me · 5 min" /></div>
+                  <div className="mt-4"><SpeedPlayer src={BASE_AUDIO} label="Touch Base, with me · 5 min" /></div>
                   <button type="button" onClick={tickBase} className="mt-4 inline-flex min-h-[44px] items-center rounded-full border border-[#DDC98E]/50 px-5 text-[14px] text-[#DDC98E]">I&rsquo;ve done my Touch Base</button>
                 </>
               )}

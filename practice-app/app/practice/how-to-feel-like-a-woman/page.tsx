@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import VoicePlayer from "@/components/VoicePlayer";
+import { isTouchBase, nextSpeed, readSpeed, saveSpeedFor } from "@/lib/voice-speed";
 import { useRef } from "react";
 import { PromptCard } from "@/components/Interactive";
 import { CollectionGate } from "@/components/auth/CollectionGate";
@@ -625,13 +626,20 @@ function ElbowPractice() {
 }
 
 /* A round photo or emblem that IS the play button, with a gold ring that fills as it plays. */
+// Touch Base gets a speed button, 1x, 1.1x or 1.2x (lib/voice-speed, 12 Nov 2026).
 function RoundVoice({ src, img, label }: { src: string; img: string; label: string }) {
   const ref = useRef<HTMLAudioElement | null>(null);
   const [playing, setPlaying] = useState(false);
   const [p, setP] = useState(0);
+  const [rate, setRate] = useState(1);
+  const tb = isTouchBase(src);
+  useEffect(() => { if (tb) setRate(readSpeed(src)); }, [src, tb]);
+  useEffect(() => { if (ref.current) ref.current.playbackRate = rate; }, [rate]);
+  const cycle = () => { const v = nextSpeed(src, rate); setRate(v); saveSpeedFor(src, v); };
   return (
+    <div className="flex shrink-0 flex-col items-center gap-2">
     <button type="button" aria-label={playing ? "Pause" : label}
-      onClick={() => { const a = ref.current; if (!a) return; if (a.paused) playVoice(a); else a.pause(); }}
+      onClick={() => { const a = ref.current; if (!a) return; if (a.paused) { a.playbackRate = rate; playVoice(a); } else a.pause(); }}
       className="relative h-[72px] w-[72px] shrink-0 rounded-full">
       <Image src={img} alt="" width={72} height={72} className="h-[72px] w-[72px] rounded-full object-cover object-[60%_20%]" />
       <svg viewBox="0 0 36 36" className="absolute inset-0 h-full w-full -rotate-90" aria-hidden="true">
@@ -639,10 +647,16 @@ function RoundVoice({ src, img, label }: { src: string; img: string; label: stri
         <circle cx="18" cy="18" r="16.5" fill="none" stroke="#DDC98E" strokeWidth="2" strokeDasharray={`${p * 1.037} 200`} />
       </svg>
       <span className="absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full bg-[#DDC98E] text-[11px] text-[#070707] shadow">{playing ? "❚❚" : "▶"}</span>
-      <audio ref={ref} src={src} preload="none" onPlay={() => setPlaying(true)} onPause={() => setPlaying(false)}
+      <audio ref={ref} src={src} preload="none" onPlay={(e) => { e.currentTarget.playbackRate = rate; setPlaying(true); }} onPause={() => setPlaying(false)}
         onEnded={() => { setPlaying(false); setP(0); }}
         onTimeUpdate={(e) => { const a = e.currentTarget; if (a.duration) setP((a.currentTime / a.duration) * 100); }} />
     </button>
+    {tb && (
+      <button type="button" onClick={cycle} aria-label={`Speed ${rate}x. Tap to change`} className="min-h-[32px] min-w-[52px] rounded-full border border-[#DDC98E]/50 px-2 text-[12px] text-[#DDC98E]">
+        {rate}×
+      </button>
+    )}
+    </div>
   );
 }
 
