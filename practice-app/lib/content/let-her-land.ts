@@ -48,6 +48,8 @@ export const COPY = {
   coverKicker: "A free practice from Juliette",
   title: "Let Her Land",
   tagline: "Meet the woman you're becoming on the page. Then let her land in your body.",
+  priceWas: "Worth £77 / $97",
+  priceFree: "Free for the Already Her bundle",
   keepLine: "What you write stays on your phone. Not even I see it.",
   hello: (name: string) => (name ? `Hello, ${name}.` : "Hello."),
   ringOf: "of 4",

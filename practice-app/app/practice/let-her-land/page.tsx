@@ -1082,6 +1082,7 @@ function Cover() {
       </div>
       <div className="mx-auto mt-5" style={{ maxWidth: 440 }}>
         <p className="text-[18px] leading-relaxed text-[#cfc8bb]">{COPY.tagline}</p>
+        <p data-testid="cover-price" className="mt-3 flex flex-wrap items-baseline gap-x-2 text-[15px]"><s className="text-[#a79f90]">{COPY.priceWas}</s><span className="font-medium text-[#DDC98E]">{COPY.priceFree}</span></p>
         <button type="button" data-testid="begin" onClick={begin} className="lhl-press lhl-begin mt-5 flex min-h-[56px] w-full items-center justify-center gap-2 rounded-full bg-[#DDC98E] font-display text-[18px] font-medium text-[#070707]">{COPY.begin}<span aria-hidden="true">↓</span></button>
         <ol className="mt-6 grid gap-2" data-testid="cover-parts">
           {PARTS.map((p) => (
