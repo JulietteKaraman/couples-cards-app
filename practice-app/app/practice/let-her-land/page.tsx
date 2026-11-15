@@ -15,7 +15,7 @@ import { count } from "@/lib/count";
 import { rememberBite } from "@/lib/bites-on-phone";
 import { nextDayStart, TWELVE_H, whenItOpens } from "@/lib/content/31-touch-points-drip";
 import {
-  AUDIO, COPY, DOOR_URL, EYES_SECONDS, HOW_ALONE, JOURNAL, JOURNAL_SCREENS, LETTER, PARTS, PHOTOS, PROMPTS, SENSES,
+  AUDIO, CONFESSIONS_URL, COPY, DOOR_URL, EYES_SECONDS, HOW_ALONE, JOURNAL, JOURNAL_SCREENS, LETTER, PARTS, PHOTOS, PROMPTS, SENSES,
   TB_AUDIO_LABEL, TB_DAYS, TB_HEAD, TB_LINE, TB_STEPS, TB_WHY, TB_WITH_ME,
 } from "@/lib/content/let-her-land";
 
@@ -184,6 +184,24 @@ function SacredNoDoor({ line, testid }: { line: string; testid: string }) {
           <span className="mt-4 inline-flex min-h-[52px] w-full items-center justify-center rounded-full bg-[#DDC98E] font-display text-[17px] font-medium text-[#070707]">{COPY.doorButton}</span>
         </span>
       </a>
+  );
+}
+
+// ---- Second door: a taste of Scrumptious Confessions, on the hub (15 Nov 2026) ----------------------
+function ConfessionsDoor() {
+  return (
+    <div data-testid="confessions" className="mt-8 overflow-hidden rounded-3xl border-[1.5px] border-[rgba(221,201,142,0.4)] bg-[rgba(13,53,53,0.35)]">
+      <span className="relative block w-full overflow-hidden" style={{ aspectRatio: "1 / 1" }}>
+        <Image src={PHOTOS.confessions.src} alt={PHOTOS.confessions.alt} fill sizes="(max-width: 768px) 100vw, 672px" className="object-cover" />
+      </span>
+      <div className="px-5 pb-6 pt-4">
+        <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-[#DDC98E]">{COPY.confKicker}</p>
+        <p className="mt-1 font-display text-[28px] font-light leading-tight">{COPY.confTitle}</p>
+        <p className="mt-2 text-[16px] text-[#cfc8bb]">{COPY.confLine}</p>
+        <div className="mt-4"><Slot src={AUDIO.confessions} label={COPY.confListen} id="lhl-confessions" /></div>
+        <a href={CONFESSIONS_URL} data-testid="confessions-link" onClick={() => count("lhl_confessions_click")} className="lhl-press mt-4 inline-flex min-h-[52px] w-full items-center justify-center rounded-full border-[1.5px] border-[#DDC98E] font-display text-[17px] font-medium text-[#DDC98E]">{COPY.confButton}</a>
+      </div>
+    </div>
   );
 }
 
@@ -1177,6 +1195,7 @@ function Hub({ name, fracs, dones, resume, open, partLabel }: {
       <HomePrompt slug="let-her-land" />
 
       <SacredNoDoor line={COPY.doorLine} testid="door" />
+      <ConfessionsDoor />
     </section>
   );
 }

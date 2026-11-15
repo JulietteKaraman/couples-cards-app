@@ -18,11 +18,15 @@ export const AUDIO = {
   grounding: "/touch-map/audio/taste/sensual.m4a",
   /** Part 4: the hypnosis. */
   hypnosis: "/let-her-land/audio/hypnosis.m4a",
+  /** Hub: a taste of Scrumptious Confessions (her Confessions teaser reel, 2 Nov 2026). */
+  confessions: "/let-her-land/audio/confessions-taster.m4a",
 };
 
 // The one door, 4 Nov 2026 (Juliette: "Yes, build it"). The waitlist comes later, by email.
 export const DOOR_URL = "https://feelfullyyou.com/sacred-no";
 export const DIR = "/let-her-land";
+// Second door, 15 Nov 2026 (Juliette: "best upsell is scrumptious confessions... a taster of that in the app").
+export const CONFESSIONS_URL = "https://feelfullyyou.com/scrumptious-confessions";
 
 // ---------------------------------------------------------------------------
 // PHOTOS. All hers, all solo. Swap a path here to change one.
@@ -38,6 +42,7 @@ export const PHOTOS = {
   door: { src: `${DIR}/photos/sacred-no.jpg`, alt: "The Sacred No", pos: "50% 30%", ratio: "4 / 5" },
   /** The Part 4 card: her printed Visibility Challenge card, 827 x 1181. Never redrawn. */
   card: { src: `${DIR}/card-template.png`, w: 827, h: 1181 },
+  confessions: { src: `${DIR}/photos/confessions.jpg`, alt: "Scrumptious Confessions cover art" },
   emblem: { src: `${DIR}/photos/emblem.png`, alt: "The Touch Base emblem: thumb pressed to forefinger" },
 };
 
@@ -70,6 +75,11 @@ export const COPY = {
   doorLine: "You've said yes when your body whispered no. You're no longer available for that.",
   doorAfterJournal: "You've just written what you're stopping. These seven days teach your body to hold that no.",
   doorButton: "See The Sacred No · £17 →",
+  confKicker: "A taste of what's next",
+  confTitle: "Scrumptious Confessions",
+  confLine: "People tell me they could listen to my voice for hours. So I built an app where you can.",
+  confListen: "Listen to a taste",
+  confButton: "Join the waitlist →",
   p3TouchHead: "Touch Base first",
   p3ListenHead: "Now my voice",
   p3ListenLine: "Keep the touch going and press play.",
