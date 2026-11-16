@@ -8,6 +8,7 @@ import { PromptCard } from "@/components/Interactive";
 import { CollectionGate } from "@/components/auth/CollectionGate";
 import { supabaseBrowser } from "@/lib/supabase/client";
 import { MEMBERSHIP_UNLOCKS, membershipMonth, monthOpensOn } from "@/lib/entitlements/config";
+import { ADMIN_EMAIL } from "@/lib/entitlements/admin";
 
 // SCRUMPTIOUS CONFESSIONS, the membership (specs/scrumptious-confessions-membership.md).
 // One story a week with a teaching in it, Touch Base every day with 31 dots, a
@@ -255,21 +256,26 @@ function GroupLink() {
 /* What opens the longer you stay (MEMBERSHIP_UNLOCKS, Juliette 16 Nov 2026). */
 function Library() {
   const [since, setSince] = useState<string | null>(null);
+  // Local preview only shows the answers open; never true on the live site.
+  const [paid, setPaid] = useState(process.env.NODE_ENV === "development");
   useEffect(() => {
     (async () => {
       const { data } = await supabaseBrowser.auth.getSession();
       const uid = data.session?.user.id;
       if (!uid) return;
+      if ((data.session?.user.email || "").toLowerCase() === ADMIN_EMAIL) setPaid(true);
       const { data: row } = await supabaseBrowser.from("user_decks").select("purchased_at, stripe_checkout_session_id").eq("user_id", uid).eq("deck_type", "scrumptious-confessions").maybeSingle();
       // Free fortnight days don't count: months start with the first payment.
       const free = String(row?.stripe_checkout_session_id || "").startsWith("free-");
-      if (row?.purchased_at && !free) setSince(row.purchased_at as string);
+      if (row?.purchased_at && !free) { setSince(row.purchased_at as string); setPaid(true); }
     })();
   }, []);
   const month = since ? membershipMonth(since) : 1;
   return (
-    <section className="mt-6 space-y-3">
-      <Eyebrow>Your library</Eyebrow>
+    <>
+    <Answers paid={paid} />
+    <section className="mt-10 space-y-3">
+      <Eyebrow>Opening month by month</Eyebrow>
       <h2 className="font-display text-[28px] font-light leading-tight">Something new opens every month you stay</h2>
       {MEMBERSHIP_UNLOCKS.map((u) => {
         const open = u.month <= month;
@@ -288,6 +294,73 @@ function Library() {
           <div key={u.title} className="rounded-3xl border border-[#DDC98E]/20 p-4 opacity-70">{inner}</div>
         );
       })}
+    </section>
+    </>
+  );
+}
+
+/* Every question Juliette has answered, searchable (Juliette 16 Nov 2026: "a library of
+   questions that I have answered that the members get answers to after they pay").
+   Seeded from her published answer pages; grows with members' own questions.
+   Free-fortnight people see the questions, and the answers open once they stay. */
+type Answer = { slug: string; q: string; audio?: string; blocks: { t: "h" | "p" | "li"; x: string }[] };
+type Shelf = "answers" | "essays" | "podcast";
+const SHELVES: { id: Shelf; label: string; title: string; unit: string }[] = [
+  { id: "answers", label: "Answers", title: "Every question I\u2019ve answered", unit: "questions" },
+  { id: "essays", label: "Essays", title: "Every essay I\u2019ve written", unit: "essays" },
+  { id: "podcast", label: "Podcast", title: "Every episode, to listen here", unit: "episodes" },
+];
+// Juliette 16 Nov: answers, then "all the substacks, and the podcast". Seeded from her
+// published pages (answers, essays, episodes), so every word is hers.
+function Answers({ paid }: { paid: boolean }) {
+  const [shelf, setShelf] = useState<Shelf>("answers");
+  const [data, setData] = useState<Record<Shelf, Answer[] | null>>({ answers: null, essays: null, podcast: null });
+  const [find, setFind] = useState("");
+  const [open, setOpen] = useState<string | null>(null);
+  useEffect(() => {
+    if (data[shelf]) return;
+    fetch(`/scrumptious-confessions/${shelf}.json`).then((r) => r.json()).then((d) => setData((x) => ({ ...x, [shelf]: d }))).catch(() => setData((x) => ({ ...x, [shelf]: [] })));
+  }, [shelf, data]);
+  const all = data[shelf];
+  const meta = SHELVES.find((x) => x.id === shelf)!;
+  const words = find.toLowerCase().split(/\s+/).filter(Boolean);
+  const inQ = (a: Answer) => words.every((w) => a.q.toLowerCase().includes(w));
+  const shown = (all || [])
+    .filter((a) => words.every((w) => (a.q + " " + a.blocks.map((b) => b.x).join(" ")).toLowerCase().includes(w)))
+    .sort((a, b) => Number(inQ(b)) - Number(inQ(a)));
+  return (
+    <section className="mt-6">
+      <Eyebrow>Your library</Eyebrow>
+      <div className="mt-3 grid grid-cols-3 gap-2">
+        {SHELVES.map((x) => (
+          <button key={x.id} type="button" onClick={() => { setShelf(x.id); setOpen(null); }}
+            className={`min-h-[44px] rounded-full border text-[14px] ${shelf === x.id ? "border-[#DDC98E] bg-[rgba(221,201,142,0.15)] text-[#f1ece2]" : "border-[#DDC98E]/35 text-[#f1ece2]/75"}`}>{x.label}</button>
+        ))}
+      </div>
+      <h2 className="mt-5 font-display text-[28px] font-light leading-tight">{meta.title}</h2>
+      <p className="mt-2 text-[15px] text-[#a79f90]">{all ? `${all.length} ${meta.unit} so far, and it grows every week.` : "Opening\u2026"}</p>
+      <input value={find} onChange={(e) => setFind(e.target.value)} placeholder="Search: touch, menopause, desire…"
+        className="mt-4 w-full rounded-full border border-[#DDC98E]/40 bg-transparent px-5 py-3 text-[16px] text-[#f1ece2] placeholder:text-[#8f877a]" />
+      {!paid && <p className="mt-3 text-[14px] text-[#DDC98E]">🔒 These open when you stay, from Monday 7 December.</p>}
+      <ul className="mt-4 space-y-2">
+        {shown.slice(0, find ? 40 : 12).map((a) => (
+          <li key={a.slug} className="rounded-2xl border border-[#DDC98E]/25">
+            <button type="button" onClick={() => paid && setOpen(open === a.slug ? null : a.slug)} className="flex w-full items-start justify-between gap-3 p-4 text-left">
+              <span className="text-[16px] leading-snug text-[#f1ece2]">{a.q}</span>
+              <span className="shrink-0 text-[#DDC98E]">{paid ? (open === a.slug ? "\u2212" : "+") : "🔒"}</span>
+            </button>
+            {paid && open === a.slug && (
+              <div className="space-y-3 px-4 pb-5 text-[15px] leading-relaxed text-[#cfc8bb]">
+                {a.audio && <audio controls preload="none" src={a.audio} className="w-full" />}
+                {a.blocks.map((b, i) => b.t === "h"
+                  ? <p key={i} className="pt-2 font-display text-[19px] text-[#f1ece2]">{b.x}</p>
+                  : <p key={i} className={b.t === "li" ? "pl-4" : ""}>{b.t === "li" && <span className="-ml-4 mr-2 text-[#DDC98E]">&bull;</span>}{b.x}</p>)}
+              </div>
+            )}
+          </li>
+        ))}
+      </ul>
+      {!find && all && all.length > 12 && <p className="mt-3 text-[13px] text-[#8f877a]">Search to see all {all.length}.</p>}
     </section>
   );
 }
