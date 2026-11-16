@@ -23,7 +23,10 @@ export const AUDIO = {
 };
 
 // The one door, 4 Nov 2026 (Juliette: "Yes, build it"). The waitlist comes later, by email.
-export const DOOR_URL = "https://feelfullyyou.com/sacred-no";
+// Already Her price, 16 Nov 2026 (Juliette: "do both, cards first, then the sacred no at 7"):
+// the same £17 link with the £10-off code LETHERLAND (Stripe coupon, ends 12 Dec 2026 23:59).
+// After 12 Dec, set back to "https://feelfullyyou.com/sacred-no" and the button back to £17.
+export const DOOR_URL = "https://buy.stripe.com/dRm6oG7m39162Lr6eN0co1Q?prefilled_promo_code=LETHERLAND";
 export const DIR = "/let-her-land";
 // Second door, 15 Nov 2026 (Juliette: "best upsell is scrumptious confessions... a taster of that in the app").
 export const CONFESSIONS_URL = "https://feelfullyyou.com/scrumptious-confessions";
@@ -74,7 +77,7 @@ export const COPY = {
   doorTitle: "The Sacred No",
   doorLine: "You've said yes when your body whispered no. You're no longer available for that.",
   doorAfterJournal: "You've just written what you're stopping. These seven days teach your body to hold that no.",
-  doorButton: "See The Sacred No · £17 →",
+  doorButton: "Start it for £7 · usually £17 →",
   confKicker: "A taste of what's next",
   confTitle: "Scrumptious Confessions",
   confLine: "People tell me they could listen to my voice for hours. So I built an app where you can.",
