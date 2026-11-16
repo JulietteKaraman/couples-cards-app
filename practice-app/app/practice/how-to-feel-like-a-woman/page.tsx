@@ -100,6 +100,8 @@ const TABS: { id: TabId; label: string }[] = [
 const ELBOW_OPENS = "2026-11-06"; // Friday
 // One line per weekly practice, newest FIRST. opens = the day it unlocks (UK date).
 const PRACTICES: { id: string; name: string; week: string; opens: string; mins: string; img: string; pos: string }[] = [
+  { id: "shapeshifter", name: "The Layered Sensation Ritual", week: "Week 4 · the finale", opens: "2026-11-20", mins: "Just under seven minutes · with my voice", img: "/how-to-feel-like-a-woman/eso15-feather.jpg", pos: "50% 45%" },
+  { id: "kinky", name: "Your Own Rules", week: "Week 3", opens: "2026-11-16", mins: "Seven and a half minutes · with my voice", img: "/how-to-feel-like-a-woman/eso15-feather.jpg", pos: "50% 75%" },
   { id: "elbow", name: "Elbow to Armpit", week: "Week 2", opens: ELBOW_OPENS, mins: "Six and a half minutes · with my voice", img: "/how-to-feel-like-a-woman/eso15-feather.jpg", pos: "50% 30%" },
   { id: "wrist", name: "The Wrist", week: "Week 1", opens: "2026-10-30", mins: "Three and a half minutes · with my voice", img: "/how-to-feel-like-a-woman/eso15-feather.jpg", pos: "50% 60%" },
 ];
@@ -194,6 +196,8 @@ function Content() {
               <button type="button" onClick={() => setOpenPractice(null)} className="mt-6 inline-flex min-h-[44px] items-center text-[14px] text-[#DDC98E] underline underline-offset-4">← Your Touch Map</button>
               {openPractice === "wrist" && <Wrist />}
               {openPractice === "elbow" && <ElbowPractice />}
+              {openPractice === "kinky" && <GuidedPractice {...KINKY} />}
+              {openPractice === "shapeshifter" && <GuidedPractice {...SHAPESHIFTER} />}
             </div>
           ) : (
             <section className="mt-6 space-y-3">
@@ -604,6 +608,83 @@ function ElbowPractice() {
         <ol className="mt-5 space-y-3">
           {ELBOW_PARTS.map((s, i) => (
             <li key={s.lang} className="rounded-2xl border border-[#DDC98E]/30 bg-[rgba(13,53,53,0.3)] p-4">
+              <p className="text-[11px] uppercase tracking-[0.18em] text-[#DDC98E]">{s.lang}</p>
+              <p className="mt-1 font-display text-[20px] font-light">{s.title}</p>
+              <p className="mt-1 text-[14px] text-[#a79f90]">{s.note}</p>
+              <div className="mt-3 grid grid-cols-3 gap-2">
+                {STOP.map((o) => (
+                  <button key={o.id} type="button" onClick={() => pick(i, o.id)}
+                    className={`flex min-h-[44px] items-center justify-center gap-2 rounded-full border text-[14px] ${ans[i] === o.id ? "bg-[rgba(221,201,142,0.12)] text-[#f1ece2]" : "text-[#f1ece2]/75"}`}
+                    style={{ borderColor: ans[i] === o.id ? o.c : "rgba(221,201,142,0.3)" }}>
+                    <span className="h-3 w-3 rounded-full" style={{ background: o.c }} />{o.label}
+                  </button>
+                ))}
+              </div>
+            </li>
+          ))}
+        </ol>
+        </>
+      )}
+    </section>
+  );
+}
+
+/* Week 3 and the Week 4 finale. Same shape as Elbow to Armpit: her voice, then green, orange or red per part.
+   Kinky: her new solo recording, 16 Nov ("Kinky solo", script on the drops page). Juliette: "lets add something kinky".
+   Shapeshifter: Touch Menu "Shapeshifter solo layered sensation ritual". Juliette 16 Nov: "this friday will be the shapeshifter". */
+type Guided = { opens: string; audio: string; storeKey: string; eyebrow: string; title: string; pos: string; intro: string; label: string; parts: { lang: string; title: string; note: string }[] };
+const KINKY: Guided = {
+  opens: "2026-11-16", audio: "kinky-your-own-rules.m4a", storeKey: "ffy.htflaw.kinky.v1", pos: "50% 75%",
+  eyebrow: "Week 3 · seven and a half minutes", title: "Your Own Rules",
+  intro: "Kinky, on your own, somewhere private. Have a soft scarf or a tie with you, silk if you have it.",
+  label: "Do it with me · 7½ minutes",
+  parts: [
+    { lang: "Anticipation", title: "Wait for it", note: "The scarf in your lap, untouched. Eyes closed. Don't do anything yet." },
+    { lang: "Restraint", title: "Bound, loosely", note: "Silk around both wrists. Just enough to signal containment." },
+    { lang: "Impact", title: "The intention", note: "A playful tap, then the same tap as if you're punishing yourself." },
+    { lang: "Instruction", title: "Look down", note: "Said low, to yourself. Then whispered: good girl." },
+  ],
+};
+const SHAPESHIFTER: Guided = {
+  opens: "2026-11-20", audio: "shapeshifter-layered-sensation.m4a", storeKey: "ffy.htflaw.shapeshifter.v1", pos: "50% 45%",
+  eyebrow: "Week 4 · the finale · just under seven minutes", title: "The Layered Sensation Ritual",
+  intro: "Standing in front of a mirror, clothed or wrapped in something luxurious. Have a soft scarf and a piece of fruit with you.",
+  label: "Do it with me · 7 minutes",
+  parts: [
+    { lang: "Energetic", title: "The hover", note: "Hands a centimetre above your skin, face down to your belly. No contact." },
+    { lang: "Sensual", title: "Silk", note: "The scarf across your face, your throat, your chest, your hips." },
+    { lang: "Kinky", title: "The tease", note: "A light nail drag from under your ear, down your jaw, to your throat." },
+    { lang: "Sensual", title: "Scent and taste", note: "Breathe in the fruit. Across your lips. Then a slow bite." },
+    { lang: "Sexual", title: "Yes, out loud", note: "Every touch you feel a yes, say it." },
+    { lang: "Shapeshifter", title: "What more do I want?", note: "One hand on your heart, one on your belly. Ask, and receive the answer." },
+  ],
+};
+function GuidedPractice(g: Guided) {
+  const [ans, setAns] = useState<Record<number, string>>({});
+  useEffect(() => { try { setAns(JSON.parse(lsGet(g.storeKey) || "{}")); } catch {} }, [g.storeKey]);
+  const [locked, setLocked] = useState(true);
+  useEffect(() => {
+    const previewOpen = process.env.NODE_ENV === "development" && new URLSearchParams(window.location.search).has("open");
+    setLocked(todayUK() < g.opens && !previewOpen);
+  }, [g.opens]);
+  const pick = (i: number, id: string) => { const n = { ...ans, [i]: id }; setAns(n); lsSet(g.storeKey, JSON.stringify(n)); };
+  const opensDay = new Date(g.opens + "T12:00:00").toLocaleDateString("en-GB", { weekday: "long" });
+  return (
+    <section className="mt-4">
+      <Banner src={`${DIR}/eso15-feather.jpg`} pos={g.pos} eyebrow={g.eyebrow} title={g.title} />
+      <p className="mt-5 text-[17px] leading-relaxed text-[#cfc8bb]">
+        {g.intro} There&rsquo;s no wrong, there&rsquo;s no right.
+      </p>
+      {locked ? (
+        <p className="mt-5 flex items-center gap-2 rounded-full border border-[#DDC98E]/40 px-4 py-2.5 text-[14px] text-[#DDC98E]">
+          <span aria-hidden="true">🔒</span> Opens {opensDay}. I&rsquo;ll take you through it.
+        </p>
+      ) : (
+        <>
+        <SlimPlayer src={`${DIR}/audio/${g.audio}`} label={g.label} />
+        <ol className="mt-5 space-y-3">
+          {g.parts.map((s, i) => (
+            <li key={i} className="rounded-2xl border border-[#DDC98E]/30 bg-[rgba(13,53,53,0.3)] p-4">
               <p className="text-[11px] uppercase tracking-[0.18em] text-[#DDC98E]">{s.lang}</p>
               <p className="mt-1 font-display text-[20px] font-light">{s.title}</p>
               <p className="mt-1 text-[14px] text-[#a79f90]">{s.note}</p>
