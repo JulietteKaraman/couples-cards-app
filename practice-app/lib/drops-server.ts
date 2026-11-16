@@ -1,6 +1,6 @@
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { ADMIN_EMAIL } from "@/lib/entitlements/admin";
-import { COLLECTION_DECK_TYPES } from "@/lib/entitlements/config";
+import { COLLECTION_DECK_TYPES, HTFLAW_FREE_CONFESSIONS, freeConfessionsActive } from "@/lib/entitlements/config";
 
 // Server-only helpers for the drops (cards + Scrumptious Confessions),
 // specs/how-to-feel-like-a-woman-app.md R7, R10, R11. Same trust model as
@@ -37,5 +37,11 @@ export async function canSee(userId: string, email: string | undefined, collecti
     .select("deck_type, expires_at")
     .eq("user_id", userId)
     .eq("deck_type", deckType);
-  return (data || []).some((r: { expires_at: string | null }) => !r.expires_at || new Date(r.expires_at) > new Date());
+  const live = (data || []).some((r: { expires_at: string | null }) => !r.expires_at || new Date(r.expires_at) > new Date());
+  if (live) return true;
+  if (deckType === HTFLAW_FREE_CONFESSIONS.grantsDeck && freeConfessionsActive()) {
+    const { data: owner } = await supabaseAdmin.from("user_decks").select("deck_type").eq("user_id", userId).eq("deck_type", HTFLAW_FREE_CONFESSIONS.ownerDeck).limit(1);
+    return (owner || []).length > 0;
+  }
+  return false;
 }

@@ -9,6 +9,7 @@ import { PromptCard } from "@/components/Interactive";
 import { CollectionGate } from "@/components/auth/CollectionGate";
 import { supabaseBrowser } from "@/lib/supabase/client";
 import { count } from "@/lib/count";
+import { HTFLAW_FREE_CONFESSIONS } from "@/lib/entitlements/config";
 
 // HOW TO FEEL LIKE A WOMAN, IN THE APP. specs/how-to-feel-like-a-woman-app.md.
 // Rebuilt 28 Oct night in the 31 Touch Points order after Juliette:
@@ -632,7 +633,7 @@ function ElbowPractice() {
 /* Week 3 and the Week 4 finale. Same shape as Elbow to Armpit: her voice, then green, orange or red per part.
    Kinky: her new solo recording, 16 Nov ("Kinky solo", script on the drops page). Juliette: "lets add something kinky".
    Shapeshifter: Touch Menu "Shapeshifter solo layered sensation ritual". Juliette 16 Nov: "this friday will be the shapeshifter". */
-type Guided = { opens: string; audio: string; storeKey: string; eyebrow: string; title: string; pos: string; intro: string; label: string; parts: { lang: string; title: string; note: string }[] };
+type Guided = { door?: boolean; opens: string; audio: string; storeKey: string; eyebrow: string; title: string; pos: string; intro: string; label: string; parts: { lang: string; title: string; note: string }[] };
 const KINKY: Guided = {
   opens: "2026-11-16", audio: "kinky-your-own-rules.m4a", storeKey: "ffy.htflaw.kinky.v1", pos: "50% 75%",
   eyebrow: "Week 3 · seven and a half minutes", title: "Your Own Rules",
@@ -646,7 +647,7 @@ const KINKY: Guided = {
   ],
 };
 const SHAPESHIFTER: Guided = {
-  opens: "2026-11-20", audio: "shapeshifter-layered-sensation.m4a", storeKey: "ffy.htflaw.shapeshifter.v1", pos: "50% 45%",
+  door: true, opens: "2026-11-20", audio: "shapeshifter-layered-sensation.m4a", storeKey: "ffy.htflaw.shapeshifter.v1", pos: "50% 45%",
   eyebrow: "Week 4 · the finale · just under seven minutes", title: "The Layered Sensation Ritual",
   intro: "Standing in front of a mirror, clothed or wrapped in something luxurious. Have a soft scarf and a piece of fruit with you.",
   label: "Do it with me · 7 minutes",
@@ -700,9 +701,53 @@ function GuidedPractice(g: Guided) {
             </li>
           ))}
         </ol>
+        {g.door && <ConfessionsDoor />}
         </>
       )}
     </section>
+  );
+}
+
+/* The door into the membership, under the finale only (Juliette 16 Nov: "I want to leave them with
+   something so they come into my memberships"; "Yes, build it"). £111 a month, her live Stripe link.
+   Same email = it opens in this same app (webhook maps the price to the scrumptious-confessions deck). */
+const CONFESSIONS_JOIN = "https://buy.stripe.com/cNi8wOfSzfpucm11Yx0co2z"; // £111/month, plink_1UcVo0CCw18geY15ifq2MyD0 (16 Nov)
+function ConfessionsDoor() {
+  const payOpen = todayUK() >= HTFLAW_FREE_CONFESSIONS.payFrom;
+  return (
+    <div className="mt-10 overflow-hidden rounded-3xl border-2 border-[#DDC98E]/60 bg-[rgba(13,53,53,0.45)]">
+      <div className="relative aspect-square">
+        <Image src={`${DIR}/scrumptious-confessions.jpg`} alt="Scrumptious Confessions" fill sizes="(max-width: 768px) 100vw, 672px" className="object-cover" />
+      </div>
+      <div className="p-6">
+        <Eyebrow>What comes next</Eyebrow>
+        <h3 className="mt-2 font-display text-[28px] font-light leading-tight">Keep my voice in your ear</h3>
+        <div className="mt-4 space-y-3 text-[16px] leading-relaxed text-[#cfc8bb]">
+          <p>This is where our four weeks end.<br />The confessions don&rsquo;t have to.</p>
+          <p>Scrumptious Confessions is my membership. A new confession from me every Monday. Your questions, asked with no name on them, answered every week. Five minutes of Touch Base a day, with your tracker. A private Telegram group where you can share your own. Something new opens every month you stay, starting with my Holiday Survival Kit.</p>
+          <p className="text-[#f1ece2]">Your first two weeks are on me.</p>
+          <p><span className="text-[#f1ece2]">Until Sunday 6 December:</span> it&rsquo;s yours, free. No card. Tap below to go in.</p>
+          <p><span className="text-[#f1ece2]">From Monday 7 December:</span> if you want to stay, it&rsquo;s &pound;111 a month. The button to join appears right here that day. Stop any time.</p>
+        </div>
+        {payOpen ? (
+          <>
+            <a href={CONFESSIONS_JOIN} target="_blank" rel="noopener noreferrer"
+              className="mt-6 flex min-h-[52px] items-center justify-center rounded-full bg-[#DDC98E] px-6 text-[16px] font-medium text-[#070707]">
+              Stay in Scrumptious Confessions
+            </a>
+            <p className="mt-3 text-center text-[13px] text-[#8f877a]">Use the same email as this app, so it keeps opening right here.</p>
+          </>
+        ) : (
+          <>
+            <a href="/practice/scrumptious-confessions"
+              className="mt-6 flex min-h-[52px] items-center justify-center rounded-full bg-[#DDC98E] px-6 text-[16px] font-medium text-[#070707]">
+              Open Scrumptious Confessions
+            </a>
+            
+          </>
+        )}
+      </div>
+    </div>
   );
 }
 

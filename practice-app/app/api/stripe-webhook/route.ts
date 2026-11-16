@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { grantEntitlement } from "@/lib/entitlements/grant";
 import {
-  PRICE_ID_TO_DECK_TYPE,
+  PRICE_ID_TO_DECK_TYPE, PRODUCT_ID_TO_DECK_TYPE,
   SUBSCRIPTION_DECK_TYPES,
   SUBSCRIPTION_GRACE_PERIOD_HOURS,
 } from "@/lib/entitlements/config";
@@ -69,7 +69,11 @@ export async function POST(req: Request) {
 
       const priceField = invoice.lines.data[0]?.pricing?.price_details?.price;
       const priceId = typeof priceField === "string" ? priceField : priceField?.id;
-      const deckType = priceId ? PRICE_ID_TO_DECK_TYPE[priceId] : undefined;
+      // A product can also stand for its deck, so a new price on it (e.g. the
+      // £111 Scrumptious Confessions price, 16 Nov 2026) works with no price id.
+      const productField = invoice.lines.data[0]?.pricing?.price_details?.product;
+      const productId = typeof productField === "string" ? productField : (productField as { id?: string } | undefined)?.id;
+      const deckType = (priceId ? PRICE_ID_TO_DECK_TYPE[priceId] : undefined) ?? (productId ? PRODUCT_ID_TO_DECK_TYPE[productId] : undefined);
       if (!deckType || !SUBSCRIPTION_DECK_TYPES.includes(deckType)) {
         return NextResponse.json({ received: true, skipped: "price not a known subscription deck_type" });
       }

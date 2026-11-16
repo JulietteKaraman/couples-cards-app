@@ -22,7 +22,7 @@ export async function POST(req: Request) {
       body: JSON.stringify({
         url: "https://app.feelfullyyou.com/api/telegram-webhook",
         secret_token: secret,
-        allowed_updates: ["message"],
+        allowed_updates: ["message", "chat_member"], // chat_member: gatekeeper, 16 Nov 2026
       }),
     });
     const json = (await res.json()) as { ok?: boolean; description?: string };

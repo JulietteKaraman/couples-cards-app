@@ -136,3 +136,54 @@ export function collectionSlugForDeckType(deckType: string): string | null {
   );
   return entry ? entry[0] : null;
 }
+
+// Free fortnight for the How to Feel Like a Woman women (Juliette 16 Nov 2026: "add that it is free
+// the first 2 weeks- and then paying starts"). Anyone who owns that course also sees Scrumptious
+// Confessions from Friday 20 Nov (the finale) to the end of Monday 7 Dec, no card. Paying starts
+// Mon 7 Dec, when the "stay in" button appears under the finale. Checked in AuthProvider and canSee.
+export const HTFLAW_FREE_CONFESSIONS = {
+  ownerDeck: "how-to-feel-like-a-woman",
+  grantsDeck: "scrumptious-confessions",
+  from: "2026-11-20T00:00:00Z",
+  until: "2026-12-08T00:00:00Z",
+  payFrom: "2026-12-07",
+};
+export function freeConfessionsActive(now: Date = new Date()) {
+  return now >= new Date(HTFLAW_FREE_CONFESSIONS.from) && now < new Date(HTFLAW_FREE_CONFESSIONS.until);
+}
+
+// Scrumptious Confessions membership: what opens the longer someone stays
+// (Juliette 16 Nov 2026: "they get access to most of my things, but open after
+// ... months"; order hers, same day). Month 1 = from the first day. Counted from
+// the membership's first payment (user_decks.purchased_at, kept across renewals
+// in grant.ts). Product list from CANON only: never 10 Touch Rituals (retired).
+// When She Goes Quiet lives on as Quiet Isn't Yes. The Touch Map stays its own £197 product.
+export type MembershipUnlock = { month: number; title: string; line: string; deck?: string; href: string };
+export const MEMBERSHIP_UNLOCKS: MembershipUnlock[] = [
+  { month: 1, title: "Holiday Survival Kit", line: "Cards for the season: the drive there, the table, who isn't here.", href: "https://feelfullyyou.com/my-cards/?unlock=holiday" },
+  // Juliette 16 Nov: "I reinstated when she goes quiet but it is called something else now- and they should get access to that immediately". Free guide for men.
+  { month: 1, title: "Quiet Isn't Yes", line: "For men: when she goes quiet, and what it really means.", href: "/practice/quiet-isnt-yes" },
+  { month: 2, title: "31 Touch Points", line: "A touch a day for a month.", deck: "31-touch-points", href: "/practice/31-touch-points" },
+  { month: 3, title: "One Touch", line: "One touch, learned properly.", deck: "one-touch", href: "/practice/one-touch" },
+  { month: 4, title: "The Sacred No", line: "The no that lets your yes mean something.", deck: "sacred-no", href: "/practice/the-sacred-no" },
+  { month: 5, title: "The Unspoken Distance", line: "Written for men, worth reading for women.", deck: "unspoken-distance", href: "/practice/the-unspoken-distance" },
+  { month: 6, title: "Communication Reboot Kit", line: "The talking side of being close.", deck: "communication-reboot-kit", href: "/practice/communication-reboot-kit" },
+];
+/** Which month of membership someone is in: 1 from the first day. */
+export function membershipMonth(since: string | Date, now: Date = new Date()): number {
+  const s = new Date(since);
+  let m = (now.getUTCFullYear() - s.getUTCFullYear()) * 12 + (now.getUTCMonth() - s.getUTCMonth());
+  if (now.getUTCDate() < s.getUTCDate()) m -= 1;
+  return Math.max(1, m + 1);
+}
+/** The date a given month opens for someone who joined on `since`. */
+export function monthOpensOn(since: string | Date, month: number): Date {
+  const s = new Date(since);
+  return new Date(Date.UTC(s.getUTCFullYear(), s.getUTCMonth() + month - 1, s.getUTCDate()));
+}
+
+// Product -> deck_type, for subscriptions whose newer prices aren't listed above.
+// Scrumptious Confessions product (both the £97 and the £111 prices live on it).
+export const PRODUCT_ID_TO_DECK_TYPE: Record<string, string> = {
+  prod_Vbm7ukx8Blxpy2: "scrumptious-confessions",
+};

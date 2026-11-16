@@ -72,6 +72,21 @@ export async function grantEntitlement(
   };
   if (expiresAt !== undefined) row.expires_at = expiresAt;
 
+  // Subscriptions: keep the ORIGINAL join date while the membership runs
+  // unbroken, so monthly unlocks count from the first payment (16 Nov 2026,
+  // Scrumptious Confessions). Only a member whose access had already ended
+  // starts again from today.
+  if (expiresAt !== undefined) {
+    const { data: existing } = await supabaseAdmin
+      .from("user_decks")
+      .select("purchased_at, expires_at")
+      .eq("user_id", userId)
+      .eq("deck_type", deckType)
+      .maybeSingle();
+    const stillMember = existing && (!existing.expires_at || new Date(existing.expires_at) > new Date());
+    if (stillMember && existing.purchased_at) row.purchased_at = existing.purchased_at;
+  }
+
   const { error: grantError } = await supabaseAdmin
     .from("user_decks")
     .upsert(row, { onConflict: "user_id,deck_type" });

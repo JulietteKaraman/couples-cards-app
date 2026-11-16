@@ -7,6 +7,7 @@ import { isTouchBase, nextSpeed, readSpeed, saveSpeedFor } from "@/lib/voice-spe
 import { PromptCard } from "@/components/Interactive";
 import { CollectionGate } from "@/components/auth/CollectionGate";
 import { supabaseBrowser } from "@/lib/supabase/client";
+import { MEMBERSHIP_UNLOCKS, membershipMonth, monthOpensOn } from "@/lib/entitlements/config";
 
 // SCRUMPTIOUS CONFESSIONS, the membership (specs/scrumptious-confessions-membership.md).
 // One story a week with a teaching in it, Touch Base every day with 31 dots, a
@@ -16,7 +17,6 @@ import { supabaseBrowser } from "@/lib/supabase/client";
 const SLUG = "scrumptious-confessions";
 const DIR = "/how-to-feel-like-a-woman";
 const MAX = 2000;
-const TELEGRAM_GROUP = "https://t.me/+LSZ6WOIzwqFkMzM0";
 
 type Story = { id: string; publish_on: string; title: string; line: string; audio: string };
 type Card = { id: string; publish_on: string; prompt: string };
@@ -55,12 +55,13 @@ function Eyebrow({ children }: { children: React.ReactNode }) {
 const pill = (on: boolean) =>
   `flex min-h-[48px] items-center justify-center gap-2 rounded-full border px-3 text-[15px] ${on ? "border-[#DDC98E] bg-[rgba(221,201,142,0.15)] text-[#f1ece2]" : "border-[#DDC98E]/35 text-[#f1ece2]/80"}`;
 
-type TabId = "stories" | "today" | "card" | "yours";
+type TabId = "stories" | "today" | "card" | "yours" | "library";
 const TABS: { id: TabId; label: string }[] = [
-  { id: "stories", label: "Stories" },
+  { id: "stories", label: "Mondays" },
   { id: "today", label: "Today" },
   { id: "card", label: "Card" },
   { id: "yours", label: "Your turn" },
+  { id: "library", label: "Library" },
 ];
 
 function Content() {
@@ -100,12 +101,12 @@ function Content() {
         <div className="relative aspect-square overflow-hidden rounded-3xl border-[1.5px] border-[rgba(221,201,142,0.45)]">
           <Image src={`${DIR}/scrumptious-confessions.jpg`} alt="Scrumptious Confessions" fill priority sizes="(max-width: 768px) 100vw, 672px" className="object-cover" />
         </div>
-        <p className="mt-4 text-center text-[16px] text-[#cfc8bb]">A new story every week, in my voice.</p>
+        <p className="mt-4 text-center text-[16px] text-[#cfc8bb]">Every Monday, a confession in my voice. What people bring me, what I&rsquo;ve learned, and the things I don&rsquo;t say on Instagram.</p>
 
         <div ref={top} className="sticky top-0 z-10 -mx-5 mt-5 bg-[#070707]/95 px-5 py-3">
-          <div className="grid grid-cols-4 gap-2">
+          <div className="grid grid-cols-5 gap-1.5">
             {TABS.map((t) => (
-              <button key={t.id} type="button" onClick={() => pick(t.id)} className={`min-h-[44px] rounded-full border px-1 text-[14px] ${tab === t.id ? "border-[#DDC98E] bg-[#DDC98E] text-[#070707]" : "border-[#DDC98E]/40 text-[#f1ece2]"}`}>
+              <button key={t.id} type="button" onClick={() => pick(t.id)} className={`min-h-[44px] rounded-full border px-0.5 text-[13px] ${tab === t.id ? "border-[#DDC98E] bg-[#DDC98E] text-[#070707]" : "border-[#DDC98E]/40 text-[#f1ece2]"}`}>
                 {t.label}
               </button>
             ))}
@@ -116,6 +117,7 @@ function Content() {
         {tab === "today" && <Today />}
         {tab === "card" && <Cards feed={feed} />}
         {tab === "yours" && <YourTurn />}
+        {tab === "library" && <Library />}
       </div>
     </main>
   );
@@ -215,15 +217,76 @@ function StoryBlock({ story, open }: { story: Story; open: boolean }) {
 }
 
 /* Her Telegram group, where members post with no name (5 Nov 2026). */
+// R1, R2 (specs/telegram-gatekeeper.md): each member gets their own one-use
+// link from the bot, never the old shared link.
 function GroupLink() {
+  const [link, setLink] = useState<string | null>(null);
+  const [err, setErr] = useState(false);
+  useEffect(() => {
+    let live = true;
+    (async () => {
+      const { data } = await supabaseBrowser.auth.getSession();
+      const token = data.session?.access_token;
+      if (!token) return;
+      const res = await fetch("/api/telegram/invite", { method: "POST", headers: { Authorization: `Bearer ${token}` } });
+      const json = await res.json().catch(() => ({}));
+      if (!live) return;
+      if (res.ok && json.link) setLink(json.link); else setErr(true);
+    })();
+    return () => { live = false; };
+  }, []);
   return (
     <div className="mt-6 rounded-2xl border border-[#DDC98E]/40 p-4 text-center">
       <p className="text-[15px] text-[#cfc8bb]">A question, or a confession of your own? I&rsquo;ll riff on it.</p>
-      <a href={TELEGRAM_GROUP} target="_blank" rel="noreferrer" className="mt-3 inline-flex min-h-[48px] w-full items-center justify-center rounded-full border border-[#DDC98E] text-[15px] text-[#DDC98E]">
-        Share it in our group
-      </a>
+      {link ? (
+        <a href={link} target="_blank" rel="noreferrer" className="mt-3 inline-flex min-h-[48px] w-full items-center justify-center rounded-full border border-[#DDC98E] text-[15px] text-[#DDC98E]">
+          Share it in our group
+        </a>
+      ) : (
+        <p className="mt-3 inline-flex min-h-[48px] w-full items-center justify-center rounded-full border border-[#DDC98E]/40 text-[14px] text-[#8f877a]">
+          {err ? "Your group link isn't ready. Come back in a minute." : "Getting your link\u2026"}
+        </p>
+      )}
       <p className="mt-2 text-[13px] text-[#8f877a]">Our private Telegram group. No one sees who it&rsquo;s from. I keep the questions posted there, with no names, so I can answer them each week.</p>
     </div>
+  );
+}
+
+/* What opens the longer you stay (MEMBERSHIP_UNLOCKS, Juliette 16 Nov 2026). */
+function Library() {
+  const [since, setSince] = useState<string | null>(null);
+  useEffect(() => {
+    (async () => {
+      const { data } = await supabaseBrowser.auth.getSession();
+      const uid = data.session?.user.id;
+      if (!uid) return;
+      const { data: row } = await supabaseBrowser.from("user_decks").select("purchased_at").eq("user_id", uid).eq("deck_type", "scrumptious-confessions").maybeSingle();
+      if (row?.purchased_at) setSince(row.purchased_at as string);
+    })();
+  }, []);
+  const month = since ? membershipMonth(since) : 1;
+  return (
+    <section className="mt-6 space-y-3">
+      <Eyebrow>Your library</Eyebrow>
+      <h2 className="font-display text-[28px] font-light leading-tight">Something new opens every month you stay</h2>
+      {MEMBERSHIP_UNLOCKS.map((u) => {
+        const open = u.month <= month;
+        const when = since ? monthOpensOn(since, u.month).toLocaleDateString("en-GB", { day: "numeric", month: "long" }) : null;
+        const inner = (
+          <>
+            <span className="text-[11px] uppercase tracking-[0.18em] text-[#DDC98E]">Month {u.month}{open ? " · open" : ""}</span>
+            <span className="mt-1 block font-display text-[22px] font-light leading-tight">{u.title}</span>
+            <span className="mt-0.5 block text-[14px] text-[#a79f90]">{open ? u.line : `🔒 Opens ${when ?? `in your month ${u.month}`}`}</span>
+          </>
+        );
+        return open ? (
+          <a key={u.title} href={u.href} target={u.href.startsWith("http") ? "_blank" : undefined} rel="noreferrer"
+            className="block rounded-3xl border-[1.5px] border-[rgba(221,201,142,0.55)] bg-[rgba(13,53,53,0.35)] p-4">{inner}</a>
+        ) : (
+          <div key={u.title} className="rounded-3xl border border-[#DDC98E]/20 p-4 opacity-70">{inner}</div>
+        );
+      })}
+    </section>
   );
 }
 

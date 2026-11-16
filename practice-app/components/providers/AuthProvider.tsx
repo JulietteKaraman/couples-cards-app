@@ -3,7 +3,7 @@
 import { createContext, useContext, useEffect, useState, useCallback } from "react";
 import { User } from "@supabase/supabase-js";
 import { supabaseBrowser } from "@/lib/supabase/client";
-import { deckTypesForApp, COLLECTION_DECK_TYPES } from "@/lib/entitlements/config";
+import { deckTypesForApp, COLLECTION_DECK_TYPES, HTFLAW_FREE_CONFESSIONS, freeConfessionsActive, MEMBERSHIP_UNLOCKS, membershipMonth } from "@/lib/entitlements/config";
 import { ADMIN_EMAIL } from "@/lib/entitlements/admin";
 
 interface AuthContextType {
@@ -47,7 +47,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // without this check).
     const { data, error } = await supabaseBrowser
       .from("user_decks")
-      .select("deck_type")
+      .select("deck_type, purchased_at")
       .eq("user_id", userId)
       .in("deck_type", deckTypesForApp())
       .or(`expires_at.is.null,expires_at.gt.${new Date().toISOString()}`);
@@ -62,6 +62,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // One purchase can open more than one collection: the £197 Touch Map opens
     // both "touch-map" and "couples-touch-map" (12 Nov 2026).
     const decks = new Set((data ?? []).map((row) => row.deck_type as string));
+    if (decks.has(HTFLAW_FREE_CONFESSIONS.ownerDeck) && freeConfessionsActive()) decks.add(HTFLAW_FREE_CONFESSIONS.grantsDeck);
+    // Paying Scrumptious Confessions members: one more product opens each month (MEMBERSHIP_UNLOCKS).
+    const member = (data ?? []).find((r) => r.deck_type === "scrumptious-confessions" && r.purchased_at);
+    if (member) {
+      const month = membershipMonth(member.purchased_at as string);
+      for (const u of MEMBERSHIP_UNLOCKS) if (u.deck && u.month <= month) decks.add(u.deck);
+    }
     const slugs = Object.entries(COLLECTION_DECK_TYPES).filter(([, dt]) => decks.has(dt)).map(([slug]) => slug);
     setEntitledCollections(slugs);
     setEntitlementsReady(true);
