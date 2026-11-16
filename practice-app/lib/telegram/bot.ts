@@ -30,3 +30,21 @@ export async function rememberChatId(chatId: number) {
 }
 
 export const GROUP_SLUG = "scrumptious-confessions";
+
+const NO_RIGHTS = {
+  can_manage_chat: false, can_delete_messages: false, can_manage_video_chats: false,
+  can_restrict_members: false, can_promote_members: false, can_change_info: false,
+  can_invite_users: false, can_post_stories: false, can_edit_stories: false,
+  can_delete_stories: false, can_pin_messages: false, can_manage_topics: false,
+};
+
+/** Make a member anonymous: an admin whose ONLY setting is "Remain Anonymous"
+ *  (exactly what Juliette did by hand). Needs the bot's "Add New Admins" right. */
+export async function makeAnonymous(chatId: number, userId: number) {
+  return tg("promoteChatMember", { chat_id: chatId, user_id: userId, is_anonymous: true, ...NO_RIGHTS });
+}
+
+/** Undo that, so the member can be removed. */
+export async function undoAnonymous(chatId: number, userId: number) {
+  return tg("promoteChatMember", { chat_id: chatId, user_id: userId, is_anonymous: false, ...NO_RIGHTS });
+}

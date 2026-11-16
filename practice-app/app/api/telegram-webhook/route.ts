@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { telegramSecret } from "@/lib/telegram/secret";
-import { rememberChatId } from "@/lib/telegram/bot";
+import { makeAnonymous, rememberChatId } from "@/lib/telegram/bot";
 
 // Scrumptious Confessions: the Telegram bot that copies every text message in
 // Juliette's group into her questions bank (11 Nov 2026, Juliette: "The
@@ -74,6 +74,10 @@ async function onChatMember(cm: TgChatMember, wantedTitle: string) {
   const status = cm.new_chat_member?.status;
   if (!tgUser?.id || tgUser.is_bot) return;
   if (status === "member" && cm.invite_link?.invite_link) {
+    // Anonymous from the moment they join (Juliette 16 Nov: "how are we sure
+    // that they are anonymous in telegram? fix that too").
+    const anon = await makeAnonymous(cm.chat.id, tgUser.id);
+    if (!anon.ok) console.error("telegram: could not make member anonymous:", anon.description);
     await supabaseAdmin
       .from("telegram_members")
       .update({ telegram_user_id: tgUser.id, joined_at: new Date().toISOString(), left_at: null })
