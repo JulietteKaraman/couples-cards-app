@@ -187,3 +187,17 @@ export function monthOpensOn(since: string | Date, month: number): Date {
 export const PRODUCT_ID_TO_DECK_TYPE: Record<string, string> = {
   prod_Vbm7ukx8Blxpy2: "scrumptious-confessions",
 };
+
+// The public free fortnight (Juliette 16 Nov 2026: free Mon 23 Nov to Sun 6 Dec,
+// email only, no card; free places close Sun 29 Nov). Claimed by signing in at
+// /practice/scrumptious-confessions/free. Access runs to the end of Mon 7 Dec,
+// the day paying starts, so nobody is cut off before they can press "stay".
+export const FREE_FORTNIGHT = {
+  opens: "2026-11-23T00:00:00Z",
+  closes: "2026-11-30T00:00:00Z",
+  until: "2026-12-08T00:00:00Z",
+  marker: "free-fortnight",
+  kitTag: 25487963, // "Scrumptious Confessions: Waitlist", the list the closing emails go to
+  // Testers who may claim before 23 Nov, to try the way in and the Telegram group early.
+  earlyTesters: ["charleneappleid1@gmail.com"] as string[], // Charlene, Juliette 16 Nov
+};

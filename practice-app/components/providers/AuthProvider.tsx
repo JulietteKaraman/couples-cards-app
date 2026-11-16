@@ -47,7 +47,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // without this check).
     const { data, error } = await supabaseBrowser
       .from("user_decks")
-      .select("deck_type, purchased_at")
+      .select("deck_type, purchased_at, stripe_checkout_session_id")
       .eq("user_id", userId)
       .in("deck_type", deckTypesForApp())
       .or(`expires_at.is.null,expires_at.gt.${new Date().toISOString()}`);
@@ -64,7 +64,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const decks = new Set((data ?? []).map((row) => row.deck_type as string));
     if (decks.has(HTFLAW_FREE_CONFESSIONS.ownerDeck) && freeConfessionsActive()) decks.add(HTFLAW_FREE_CONFESSIONS.grantsDeck);
     // Paying Scrumptious Confessions members: one more product opens each month (MEMBERSHIP_UNLOCKS).
-    const member = (data ?? []).find((r) => r.deck_type === "scrumptious-confessions" && r.purchased_at);
+    const member = (data ?? []).find((r) => r.deck_type === "scrumptious-confessions" && r.purchased_at && !String(r.stripe_checkout_session_id || "").startsWith("free-"));
     if (member) {
       const month = membershipMonth(member.purchased_at as string);
       for (const u of MEMBERSHIP_UNLOCKS) if (u.deck && u.month <= month) decks.add(u.deck);

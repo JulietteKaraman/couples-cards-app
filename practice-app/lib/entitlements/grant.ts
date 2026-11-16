@@ -79,12 +79,15 @@ export async function grantEntitlement(
   if (expiresAt !== undefined) {
     const { data: existing } = await supabaseAdmin
       .from("user_decks")
-      .select("purchased_at, expires_at")
+      .select("purchased_at, expires_at, stripe_checkout_session_id")
       .eq("user_id", userId)
       .eq("deck_type", deckType)
       .maybeSingle();
     const stillMember = existing && (!existing.expires_at || new Date(existing.expires_at) > new Date());
-    if (stillMember && existing.purchased_at) row.purchased_at = existing.purchased_at;
+    // Free fortnight days never count towards paid months: the first real
+    // payment after a free claim starts the clock.
+    const wasFree = (existing?.stripe_checkout_session_id || "").startsWith("free-");
+    if (stillMember && existing.purchased_at && !wasFree) row.purchased_at = existing.purchased_at;
   }
 
   const { error: grantError } = await supabaseAdmin

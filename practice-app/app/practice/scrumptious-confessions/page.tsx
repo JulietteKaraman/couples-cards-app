@@ -260,8 +260,10 @@ function Library() {
       const { data } = await supabaseBrowser.auth.getSession();
       const uid = data.session?.user.id;
       if (!uid) return;
-      const { data: row } = await supabaseBrowser.from("user_decks").select("purchased_at").eq("user_id", uid).eq("deck_type", "scrumptious-confessions").maybeSingle();
-      if (row?.purchased_at) setSince(row.purchased_at as string);
+      const { data: row } = await supabaseBrowser.from("user_decks").select("purchased_at, stripe_checkout_session_id").eq("user_id", uid).eq("deck_type", "scrumptious-confessions").maybeSingle();
+      // Free fortnight days don't count: months start with the first payment.
+      const free = String(row?.stripe_checkout_session_id || "").startsWith("free-");
+      if (row?.purchased_at && !free) setSince(row.purchased_at as string);
     })();
   }, []);
   const month = since ? membershipMonth(since) : 1;
