@@ -63,7 +63,7 @@ const PAID_COLLECTIONS = [thirtyOneTouchPoints, oneTouch, touchMap, theUnspokenD
 // What stays on show: the quiz, Between Touches and Touch Base (free; Touch Base back 30 Oct, her call), 31 Touch Points, 31 Days Closer,
 // One Touch, The Unspoken Distance, How to Feel Like a Woman.
 const PARKED = new Set<string>([
-  "touch-map",
+  // "touch-map" back on show 15 Nov 2026, Juliette: "Open it in the app library too"
   "the-sacred-no",
   "sacred-no-quiz",
   "when-she-goes-quiet",
