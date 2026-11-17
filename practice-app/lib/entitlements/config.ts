@@ -199,5 +199,5 @@ export const FREE_FORTNIGHT = {
   marker: "free-fortnight",
   kitTag: 25487963, // "Scrumptious Confessions: Waitlist", the list the closing emails go to
   // Testers who may claim before 23 Nov, to try the way in and the Telegram group early.
-  earlyTesters: ["charleneappleid1@gmail.com"] as string[], // Charlene, Juliette 16 Nov
+  earlyTesters: ["charleneappleid1@gmail.com", "kiera@feelfullyyou.com"] as string[], // Charlene (16 Nov), Kiera (17 Nov), Juliette
 };
