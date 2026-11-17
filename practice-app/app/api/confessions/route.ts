@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase/admin";
-import { canSee, todayUK, userFromRequest } from "@/lib/drops-server";
+import { canSee, isAdmin, todayUK, userFromRequest } from "@/lib/drops-server";
 import { CONFESSION_CARDS, CONFESSION_STORIES } from "@/lib/content/scrumptious-confessions";
 
 // Scrumptious Confessions membership (specs/scrumptious-confessions-membership.md).
@@ -25,7 +25,13 @@ const opened = <T extends { publish_on: string }>(items: T[], today: string) =>
 export async function GET(req: Request) {
   const m = await member(req);
   if (m.err) return m.err;
-  const today = todayUK();
+  let today = todayUK();
+  // Owner preview (Juliette 17 Nov 2026, to film the app): she sees the app as it will look
+  // on the next confession's Monday. Members always see only what has opened.
+  if (isAdmin(m.user!.email)) {
+    const next = CONFESSION_STORIES.map((s) => s.publish_on).filter((d) => d > today).sort()[0];
+    if (next) today = next;
+  }
   const upcoming = [
     ...CONFESSION_STORIES.filter((s) => s.publish_on > today).map((s) => ({ kind: "story", publish_on: s.publish_on })),
     ...CONFESSION_CARDS.filter((c) => c.publish_on > today).map((c) => ({ kind: "card", publish_on: c.publish_on })),
