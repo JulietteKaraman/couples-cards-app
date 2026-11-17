@@ -604,6 +604,15 @@ function Cards({ feed }: { feed: Feed | null }) {
   if (!feed) return <p className="mt-6 text-[#8f877a]">…</p>;
   return (
     <section className="mt-4">
+      {/* Juliette 17 Nov: her voice explaining the card, on your own or together (same recordings as the cards app). */}
+      <div className="mb-5 rounded-3xl border border-[#DDC98E]/40 p-5">
+        <Eyebrow>How to use your card</Eyebrow>
+        <div className="mt-4 flex items-start justify-center gap-8">
+          <RoundVoice src="/one-touch/voice/on-your-own.m4a" img={`${DIR}/juliette.jpg`} label="On your own" />
+          <RoundVoice src="/one-touch/voice/with-someone.m4a" img={`${DIR}/juliette-gold.jpg`} label="With someone" />
+        </div>
+        <p className="mt-3 text-center text-[13px] text-[#a79f90]">Tap my photo to hear how. The 5 and 15 minute timer is under Today.</p>
+      </div>
       {feed.cards.length === 0 && <p className="mt-6 text-center text-[15px] text-[#a79f90]">Your first card lands here very soon.</p>}
       {feed.cards.map((c, i) => <CardBlock key={c.id} card={c} open={i === 0} />)}
       {feed.nextCard && <Coming day={feed.nextCard} what="A new card" />}
