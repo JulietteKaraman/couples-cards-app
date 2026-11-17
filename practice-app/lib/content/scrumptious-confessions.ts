@@ -16,4 +16,8 @@ export const CONFESSION_CARDS: ConfessionCard[] = [
   { id: "touch-you-put-up-with", publish_on: "2026-11-23", prompt: "Tell me a kind of touch you put up with, and what you'd rather have instead." },
   { id: "no-never-said", publish_on: "2026-11-30", prompt: "Tell me about a no you never said out loud." },
   { id: "take-off-you", publish_on: "2026-12-07", prompt: "Tell me what you'd love someone to take off you, even for a minute." }, // her line from Tilt your beard
+  // Thursday cards (Juliette 17 Nov: "maybe 2 different cards"): Monday's echoes the confession, Thursday's moves them on.
+  { id: "safe-enough", publish_on: "2026-11-26", prompt: "Tell me what makes you feel safe enough to be touched." },
+  { id: "need-to-hear", publish_on: "2026-12-03", prompt: "Tell me what you need to hear before you can say yes." },
+  { id: "fifteen-perfect", publish_on: "2026-12-10", prompt: "Tell me what fifteen minutes of perfect touch would look like for you." },
 ];
