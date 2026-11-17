@@ -724,7 +724,7 @@ function ConfessionsDoor() {
         <h3 className="mt-2 font-display text-[28px] font-light leading-tight">Keep my voice in your ear</h3>
         <div className="mt-4 space-y-3 text-[16px] leading-relaxed text-[#cfc8bb]">
           <p>This is where our four weeks end.<br />The confessions don&rsquo;t have to.</p>
-          <p>Scrumptious Confessions is my membership. A new confession from me every Monday. Your questions, asked with no name on them, answered every week. Five minutes of Touch Base a day, with your tracker. A private Telegram group where you&rsquo;re anonymous from the moment you join: no one can see who asks the questions. Something new opens every month you stay, starting with my Holiday Survival Kit.</p>
+          <p>Scrumptious Confessions is my membership. A new confession from me every Monday. Your questions, asked with no name on them, answered every week. Five minutes of Touch Base a day, with your tracker. A private Telegram channel where no one can see who else is in it: you post through my bot, with no name on it. Something new opens every month you stay, starting with my Holiday Survival Kit.</p>
           <p className="text-[#f1ece2]">Your first two weeks are on me.</p>
           <p><span className="text-[#f1ece2]">Until Sunday 6 December:</span> it&rsquo;s yours, free. No card. Tap below to go in.</p>
           <p><span className="text-[#f1ece2]">From Monday 7 December:</span> if you want to stay, it&rsquo;s &pound;111 a month. The button to join appears right here that day. Stop any time.</p>
