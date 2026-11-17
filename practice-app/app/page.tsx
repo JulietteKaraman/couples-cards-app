@@ -381,9 +381,9 @@ function LibraryContent() {
                 <Tile
                   href="/practice/scrumptious-confessions"
                   title="Scrumptious Confessions"
-                  subtitle="A new story every week, in my voice. Touch Base every day."
+                  subtitle="Every Monday, a confession in my voice. Your questions answered with no name on them. Something new opens every month you stay."
                   heroImage="/how-to-feel-like-a-woman/scrumptious-confessions.jpg"
-                  note="Stories · Touch Base · a weekly card"
+                  note="Confessions · anonymous channel · Touch Base · cards · library"
                 />
               )}
               {/* "Talk to me" call tile removed 5 Nov 2026. Juliette: "I do not
