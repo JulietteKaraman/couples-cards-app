@@ -1,93 +1,137 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { telegramSecret } from "@/lib/telegram/secret";
-import { makeAnonymous, rememberChatId } from "@/lib/telegram/bot";
+import { rememberChatId, groupChatId, tg, GROUP_SLUG } from "@/lib/telegram/bot";
+import { canSee } from "@/lib/drops-server";
 
-// Scrumptious Confessions: the Telegram bot that copies every text message in
-// Juliette's group into her questions bank (11 Nov 2026, Juliette: "The
-// questions are the gold"). No name, username or Telegram id is ever stored:
-// only the words, the group's title and the time.
-//
-// Telegram calls this address for each new message once Juliette presses
-// "Connect Telegram" on /admin/confessions. The secret header proves the call
-// came from Telegram. Only the group named in TELEGRAM_GROUP_TITLE is kept.
-const MAX = 4000;
+// Scrumptious Confessions on Telegram, v2 FULL ANONYMITY (specs/telegram-gatekeeper.md R8-R15,
+// Juliette 17 Nov 2026: "Build full anonymity").
+// - The space is a private CHANNEL: subscribers can't see each other.
+// - Members post by messaging the bot privately; the bot posts their words into the channel
+//   with no name and saves them to the questions bank with no name. Text only.
+// - Joins through personal links are recorded (who they are in the app), never what they write.
+// Telegram calls this address once Juliette presses "Connect Telegram" on /admin/confessions.
+const MAX = 3500;
 
+type TgUser = { id?: number; is_bot?: boolean };
+type TgChat = { id?: number; type?: string; title?: string };
 type TgMessage = {
   text?: string;
   caption?: string;
-  chat?: { id?: number; type?: string; title?: string };
-  from?: { is_bot?: boolean };
+  chat?: TgChat;
+  from?: TgUser;
 };
+type TgChatMember = {
+  chat?: TgChat;
+  new_chat_member?: { status?: string; user?: TgUser };
+  invite_link?: { invite_link?: string };
+};
+
+const wantedTitle = () => (process.env.TELEGRAM_GROUP_TITLE || "Scrumptious Confessions").trim();
+const isOurChannel = (c?: TgChat) => !!c?.id && c.type === "channel" && c.title === wantedTitle();
 
 export async function POST(req: Request) {
   const secret = telegramSecret();
   if (!secret || req.headers.get("x-telegram-bot-api-secret-token") !== secret) {
     return NextResponse.json({ ok: false }, { status: 401 });
   }
-  let update: { message?: TgMessage; chat_member?: TgChatMember };
+  let update: { message?: TgMessage; channel_post?: TgMessage; chat_member?: TgChatMember };
   try {
     update = await req.json();
   } catch {
     return NextResponse.json({ ok: true });
   }
-  const wantedTitle = (process.env.TELEGRAM_GROUP_TITLE || "Scrumptious Confessions").trim();
-  // Gatekeeper (specs/telegram-gatekeeper.md R3, R6): who joined with which personal link.
-  if (update.chat_member) {
-    await onChatMember(update.chat_member, wantedTitle);
-    return NextResponse.json({ ok: true });
+
+  try {
+    // R14: the bot learns the channel from any post in it (Juliette posts once after connecting).
+    if (update.channel_post && isOurChannel(update.channel_post.chat)) {
+      await rememberChatId(update.channel_post.chat!.id!);
+    } else if (update.chat_member) {
+      await onChatMember(update.chat_member);
+    } else if (update.message?.chat?.type === "private") {
+      await onPrivateMessage(update.message);
+    }
+  } catch (e) {
+    console.error("telegram-webhook error:", e instanceof Error ? e.message : e);
   }
-
-  const m = update.message;
-  if (m?.chat?.id && m.chat.title === wantedTitle) await rememberChatId(m.chat.id);
-  const words = (m?.text || m?.caption || "").trim();
-  const chatTitle = m?.chat?.title || "";
-  const wanted = (process.env.TELEGRAM_GROUP_TITLE || "Scrumptious Confessions").trim();
-  const isGroup = m?.chat?.type === "group" || m?.chat?.type === "supergroup";
-  // Voice notes, photos without words, bots and other chats are skipped.
-  if (!m || !words || !isGroup || chatTitle !== wanted || m.from?.is_bot) return NextResponse.json({ ok: true });
-
-  await supabaseAdmin.from("confession_messages").insert({
-    item_id: "telegram",
-    item_title: `From the Telegram group`,
-    body: words.slice(0, MAX),
-    member_email: null,
-    kind: words.includes("?") ? "question" : "telegram",
-    source: "telegram",
-  });
-  // Always answer 200 so Telegram doesn't keep resending.
+  // Always 200 so Telegram doesn't keep resending.
   return NextResponse.json({ ok: true });
 }
 
-type TgChatMember = {
-  chat?: { id?: number; title?: string };
-  new_chat_member?: { status?: string; user?: { id?: number; is_bot?: boolean } };
-  invite_link?: { invite_link?: string };
-};
-
-// R3: a join through a personal link ties that Telegram account to the app
-// account that link was made for. Nothing about messages is stored here.
-async function onChatMember(cm: TgChatMember, wantedTitle: string) {
-  if (!cm.chat?.id || cm.chat.title !== wantedTitle) return;
-  await rememberChatId(cm.chat.id);
-  const tgUser = cm.new_chat_member?.user;
+// R3/R13: a join through a personal link ties that Telegram account to the app account.
+async function onChatMember(cm: TgChatMember) {
+  if (!isOurChannel(cm.chat)) return;
+  await rememberChatId(cm.chat!.id!);
+  const u = cm.new_chat_member?.user;
   const status = cm.new_chat_member?.status;
-  if (!tgUser?.id || tgUser.is_bot) return;
+  if (!u?.id || u.is_bot) return;
   if (status === "member" && cm.invite_link?.invite_link) {
-    // Anonymous from the moment they join (Juliette 16 Nov: "how are we sure
-    // that they are anonymous in telegram? fix that too").
-    const anon = await makeAnonymous(cm.chat.id, tgUser.id);
-    if (!anon.ok) console.error("telegram: could not make member anonymous:", anon.description);
     await supabaseAdmin
       .from("telegram_members")
-      .update({ telegram_user_id: tgUser.id, joined_at: new Date().toISOString(), left_at: null })
+      .update({ telegram_user_id: u.id, joined_at: new Date().toISOString(), left_at: null })
       .eq("invite_link", cm.invite_link.invite_link);
   } else if (status === "left") {
     await supabaseAdmin
       .from("telegram_members")
       .update({ left_at: new Date().toISOString() })
-      .eq("telegram_user_id", tgUser.id)
+      .eq("telegram_user_id", u.id)
       .is("removed_at", null)
       .is("left_at", null);
   }
+}
+
+async function reply(chatId: number, text: string) {
+  await tg("sendMessage", { chat_id: chatId, text });
+}
+
+// R9-R11: the relay. The sender's id is only used to check membership, never stored with the words.
+async function onPrivateMessage(m: TgMessage) {
+  const from = m.from?.id;
+  const dm = m.chat?.id;
+  if (!from || !dm || m.from?.is_bot) return;
+
+  const { data: rows } = await supabaseAdmin
+    .from("telegram_members")
+    .select("user_id")
+    .eq("telegram_user_id", from)
+    .is("removed_at", null)
+    .is("left_at", null)
+    .limit(1);
+  const member = rows?.[0]?.user_id as string | undefined;
+  if (!member || !(await canSee(member, undefined, GROUP_SLUG))) {
+    await reply(dm, "This is the private door into Scrumptious Confessions. Join the channel from the app first (Mondays tab, \"Join our channel\"), then message me here and I'll post it for you, with no name on it.");
+    return;
+  }
+
+  const text = (m.text || "").trim();
+  if (text === "/start") {
+    await reply(dm, "Welcome. Anything you send me here, I post into Scrumptious Confessions with no name on it. Nobody can see who you are, not even the other members. Text only, so your voice stays yours.");
+    return;
+  }
+  if (!text) {
+    await reply(dm, "Text only, please. A voice or a photo could give you away, and this space is anonymous. Type it, and I'll post it with no name.");
+    return;
+  }
+
+  const channel = await groupChatId();
+  if (!channel) {
+    await reply(dm, "The channel isn't connected yet. Try again in a little while.");
+    return;
+  }
+  const isQuestion = text.includes("?");
+  const posted = await tg("sendMessage", { chat_id: channel, text: `${isQuestion ? "A question" : "A confession"}, no name:\n\n${text.slice(0, MAX)}` });
+  if (!posted.ok) {
+    console.error("telegram relay failed:", posted.description);
+    await reply(dm, "That didn't post. Try again in a minute.");
+    return;
+  }
+  await supabaseAdmin.from("confession_messages").insert({
+    item_id: "telegram",
+    item_title: "From the Telegram channel",
+    body: text.slice(0, MAX),
+    member_email: null,
+    kind: isQuestion ? "question" : "telegram",
+    source: "telegram",
+  });
+  await reply(dm, "Posted, with no name on it.");
 }

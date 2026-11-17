@@ -26,7 +26,13 @@ export async function groupChatId(): Promise<number | null> {
 }
 
 export async function rememberChatId(chatId: number) {
+  const { data: prev } = await supabaseAdmin.from("telegram_group").select("chat_id").eq("id", 1).maybeSingle();
   await supabaseAdmin.from("telegram_group").upsert({ id: 1, chat_id: chatId, updated_at: new Date().toISOString() });
+  // R14 (17 Nov 2026): moving to a new chat (the group became a channel) retires every old
+  // link, so each member is handed a fresh one for the new place on their next app visit.
+  if (prev?.chat_id && Number(prev.chat_id) !== chatId) {
+    await supabaseAdmin.from("telegram_members").update({ removed_at: new Date().toISOString() }).is("removed_at", null);
+  }
 }
 
 export const GROUP_SLUG = "scrumptious-confessions";

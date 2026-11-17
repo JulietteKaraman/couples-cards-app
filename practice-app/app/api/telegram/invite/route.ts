@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { canSee, userFromRequest } from "@/lib/drops-server";
 import { supabaseAdmin } from "@/lib/supabase/admin";
-import { GROUP_SLUG, groupChatId, makeAnonymous, tg } from "@/lib/telegram/bot";
+import { GROUP_SLUG, groupChatId, tg } from "@/lib/telegram/bot";
 
 // R1: a member's OWN one-use invite link to the Telegram group. Only someone
 // with Scrumptious Confessions access gets one. Their latest link is handed back
@@ -22,19 +22,8 @@ export async function POST(req: Request) {
     .is("left_at", null)
     .order("created_at", { ascending: false })
     .limit(1);
-  if (open && open[0]?.invite_link) {
-    // Already in the group: make sure they're anonymous (self-heals a join that
-    // happened before the bot had the right to do it, 17 Nov 2026).
-    const tgId = open[0].telegram_user_id as number | null;
-    if (tgId) {
-      const chat = await groupChatId();
-      if (chat) {
-        const anon = await makeAnonymous(chat, tgId);
-        if (!anon.ok) console.error("telegram: re-anonymise failed:", anon.description);
-      }
-    }
-    return NextResponse.json({ link: open[0].invite_link });
-  }
+  // v2 (channel): members are invisible to each other by design, nothing to promote.
+  if (open && open[0]?.invite_link) return NextResponse.json({ link: open[0].invite_link });
 
   const chatId = await groupChatId();
   if (!chatId) return NextResponse.json({ error: "The group isn't connected yet" }, { status: 503 });

@@ -238,17 +238,20 @@ function GroupLink() {
   }, []);
   return (
     <div className="mt-6 rounded-2xl border border-[#DDC98E]/40 p-4 text-center">
-      <p className="text-[15px] text-[#cfc8bb]">A question, or a confession of your own? I&rsquo;ll riff on it.</p>
+      <p className="text-[15px] text-[#cfc8bb]">Our private Telegram channel. No one can see who&rsquo;s in it, and no one can see who asks.</p>
       {link ? (
         <a href={link} target="_blank" rel="noreferrer" className="mt-3 inline-flex min-h-[48px] w-full items-center justify-center rounded-full border border-[#DDC98E] text-[15px] text-[#DDC98E]">
-          Share it in our group
+          Join our channel
         </a>
       ) : (
         <p className="mt-3 inline-flex min-h-[48px] w-full items-center justify-center rounded-full border border-[#DDC98E]/40 text-[14px] text-[#8f877a]">
-          {err ? "Your group link isn't ready. Come back in a minute." : "Getting your link\u2026"}
+          {err ? "Your channel link isn't ready. Come back in a minute." : "Getting your link\u2026"}
         </p>
       )}
-      <p className="mt-2 text-[13px] text-[#8f877a]">Our private Telegram group. No one sees who it&rsquo;s from. I keep the questions posted there, with no names, so I can answer them each week.</p>
+      <a href="https://t.me/SConfessionsBot" target="_blank" rel="noreferrer" className="mt-3 inline-flex min-h-[48px] w-full items-center justify-center rounded-full bg-[#DDC98E] text-[15px] font-medium text-[#070707]">
+        Post a question or confession
+      </a>
+      <p className="mt-2 text-[13px] text-[#8f877a]">Message my Confessions bot and it posts your words into the channel with no name on it. Text only, so your voice stays yours. I answer there every week.</p>
     </div>
   );
 }
