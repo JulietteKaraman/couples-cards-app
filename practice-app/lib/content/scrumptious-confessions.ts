@@ -6,6 +6,9 @@ export type ConfessionStory = { id: string; publish_on: string; title: string; l
 export type ConfessionCard = { id: string; publish_on: string; prompt: string };
 
 export const CONFESSION_STORIES: ConfessionStory[] = [
+  // Recorded 17 Nov 2026 from the new-direction scripts (confessions that teach).
+  { id: "tolerated-touch", publish_on: "2026-11-23", title: "The touch you tolerate", line: "The one about the touch you just put up with, and what it teaches your body.", audio: "/scrumptious-confessions/audio/confession-2026-11-23-74f992ba.m4a" },
+  { id: "no-is-complete", publish_on: "2026-11-30", title: "No is a complete sentence", line: "The one about what happens in your body when you hear no.", audio: "/scrumptious-confessions/audio/confession-2026-11-30-dd4e2afd.m4a" },
   // Her own recording, 2 Nov 2026. Moved to Mon 7 Dec as confession 3 (Juliette 17 Nov: "confession 3 should be tilt your beard").
   { id: "tilt-your-beard", publish_on: "2026-12-07", title: "Tilt your beard", line: "The one where I confess who's really in charge.", audio: "/how-to-feel-like-a-woman/audio/confession-2026-11-02-0944cc5b.m4a" },
 ];
