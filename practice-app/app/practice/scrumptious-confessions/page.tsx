@@ -9,6 +9,7 @@ import { CollectionGate } from "@/components/auth/CollectionGate";
 import { supabaseBrowser } from "@/lib/supabase/client";
 import { MEMBERSHIP_UNLOCKS, membershipMonth, monthOpensOn } from "@/lib/entitlements/config";
 import { ADMIN_EMAIL } from "@/lib/entitlements/admin";
+import PracticeTimer from "@/components/PracticeTimer";
 
 // SCRUMPTIOUS CONFESSIONS, the membership (specs/scrumptious-confessions-membership.md).
 // One story a week with a teaching in it, Touch Base every day with 31 dots, a
@@ -519,6 +520,13 @@ function Today() {
           )}
         </div>
         <MonthDots days={days} start={start} sel={sel} onPick={(d) => { if (d <= today) setSel(d); }} />
+      </div>
+      {/* Juliette 17 Nov 2026: "there is a 15 minute and a 5 minute timer in the app. So make sure that is included".
+          Same clock-based, chiming, screen-awake timer as her other apps. */}
+      <div className="mt-6 rounded-3xl border border-[#DDC98E]/40 p-5">
+        <Eyebrow>Your timer</Eyebrow>
+        <p className="mt-2 text-[15px] text-[#cfc8bb]">Five minutes for Touch Base or a yes and no game. Fifteen minutes for a card conversation. A bell tells you when it ends.</p>
+        <div className="mt-4"><PracticeTimer minutes={[5, 15]} dark /></div>
       </div>
     </section>
   );

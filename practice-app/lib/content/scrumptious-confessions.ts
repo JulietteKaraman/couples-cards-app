@@ -6,8 +6,8 @@ export type ConfessionStory = { id: string; publish_on: string; title: string; l
 export type ConfessionCard = { id: string; publish_on: string; prompt: string };
 
 export const CONFESSION_STORIES: ConfessionStory[] = [
-  // Her own recording, 2 Nov 2026, the same file How to Feel Like a Woman plays.
-  { id: "tilt-your-beard", publish_on: "2026-11-02", title: "Tilt your beard", line: "The one where I confess who's really in charge.", audio: "/how-to-feel-like-a-woman/audio/confession-2026-11-02-0944cc5b.m4a" },
+  // Her own recording, 2 Nov 2026. Moved to Mon 7 Dec as confession 3 (Juliette 17 Nov: "confession 3 should be tilt your beard").
+  { id: "tilt-your-beard", publish_on: "2026-12-07", title: "Tilt your beard", line: "The one where I confess who's really in charge.", audio: "/how-to-feel-like-a-woman/audio/confession-2026-11-02-0944cc5b.m4a" },
 ];
 
 export const CONFESSION_CARDS: ConfessionCard[] = [
@@ -15,5 +15,5 @@ export const CONFESSION_CARDS: ConfessionCard[] = [
   // Juliette's new cards for the membership (17 Nov 2026), one each Monday, paired with that week's confession.
   { id: "touch-you-put-up-with", publish_on: "2026-11-23", prompt: "Tell me a kind of touch you put up with, and what you'd rather have instead." },
   { id: "no-never-said", publish_on: "2026-11-30", prompt: "Tell me about a no you never said out loud." },
-  { id: "bracing-for", publish_on: "2026-12-07", prompt: "Tell me what you're bracing for when someone reaches for you." },
+  { id: "take-off-you", publish_on: "2026-12-07", prompt: "Tell me what you'd love someone to take off you, even for a minute." }, // her line from Tilt your beard
 ];
