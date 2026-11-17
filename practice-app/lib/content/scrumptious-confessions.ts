@@ -12,4 +12,8 @@ export const CONFESSION_STORIES: ConfessionStory[] = [
 
 export const CONFESSION_CARDS: ConfessionCard[] = [
   { id: "body-said-yes", publish_on: "2026-11-02", prompt: "Tell me the last time your body said yes before your head got involved." },
+  // Juliette's new cards for the membership (17 Nov 2026), one each Monday, paired with that week's confession.
+  { id: "touch-you-put-up-with", publish_on: "2026-11-23", prompt: "Tell me a kind of touch you put up with, and what you'd rather have instead." },
+  { id: "no-never-said", publish_on: "2026-11-30", prompt: "Tell me about a no you never said out loud." },
+  { id: "bracing-for", publish_on: "2026-12-07", prompt: "Tell me what you're bracing for when someone reaches for you." },
 ];
