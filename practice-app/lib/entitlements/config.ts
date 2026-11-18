@@ -160,16 +160,19 @@ export function freeConfessionsActive(now: Date = new Date()) {
 // When She Goes Quiet lives on as Quiet Isn't Yes. The Touch Map stays its own £197 product.
 export type MembershipUnlock = { month: number; title: string; line: string; deck?: string; href: string };
 export const MEMBERSHIP_UNLOCKS: MembershipUnlock[] = [
+  // Order re-set by Juliette 18 Nov 2026 ("let's actually relook at those months").
   { month: 1, title: "Holiday Survival Kit", line: "Cards for the season: the drive there, the table, who isn't here.", href: "https://feelfullyyou.com/my-cards/?unlock=holiday" },
   // Juliette 16 Nov: "I reinstated when she goes quiet but it is called something else now- and they should get access to that immediately". Free guide for men.
   { month: 1, title: "Quiet Isn't Yes", line: "For men: when she goes quiet, and what it really means.", href: "/practice/quiet-isnt-yes" },
+  { month: 2, title: "Between Touches", line: "What happens in the moments between.", deck: "between-touches", href: "/practice/between-touches" },
   { month: 2, title: "31 Touch Points", line: "A touch a day for a month.", deck: "31-touch-points", href: "/practice/31-touch-points" },
-  { month: 3, title: "One Touch", line: "One touch, learned properly.", deck: "one-touch", href: "/practice/one-touch" },
+  // The 31 Days Closer cards live in the cards app (my-cards). TO WIRE before the first member reaches month 3
+  // (early March 2027): a cards-app grant for members, like the Holiday Survival Kit unlock.
+  { month: 3, title: "31 Days Closer", line: "31 cards, one a day, to bring you closer.", href: "https://feelfullyyou.com/my-cards/" },
   { month: 4, title: "The Sacred No", line: "The no that lets your yes mean something.", deck: "sacred-no", href: "/practice/the-sacred-no" },
-  { month: 5, title: "The Unspoken Distance", line: "Written for men, worth reading for women.", deck: "unspoken-distance", href: "/practice/the-unspoken-distance" },
-  { month: 6, title: "Communication Reboot Kit", line: "The talking side of being close.", deck: "communication-reboot-kit", href: "/practice/communication-reboot-kit" },
-  // Juliette 18 Nov 2026: 31 Days Closer joins at month 7. The cards live in the cards app (my-cards); the grant there is still to wire before the first member reaches month 7 (June 2027 at the earliest).
-  { month: 7, title: "31 Days Closer", line: "31 cards, one a day, to bring you closer.", href: "https://feelfullyyou.com/my-cards/" },
+  { month: 5, title: "One Touch", line: "One touch, learned properly.", deck: "one-touch", href: "/practice/one-touch" },
+  { month: 6, title: "The Unspoken Distance", line: "Written for men, worth reading for women.", deck: "unspoken-distance", href: "/practice/the-unspoken-distance" },
+  { month: 7, title: "Communication Reboot Kit", line: "The talking side of being close.", deck: "communication-reboot-kit", href: "/practice/communication-reboot-kit" },
 ];
 /** Which month of membership someone is in: 1 from the first day. */
 export function membershipMonth(since: string | Date, now: Date = new Date()): number {
