@@ -87,6 +87,8 @@ const CARDS_COMPANION = {
 // to a sales page. Card decks live in the cards app, so a signed-in person goes
 // straight there; it shows what they own and offers the rest. The owner gets every
 // deck unlocked on that phone.
+// How to Feel Like a Woman is closed to new buyers (Juliette, 18 Nov 2026). Never re-run.
+const HTFLAW_ON_SALE = false;
 const CARDS_APP = "https://feelfullyyou.com/my-cards/";
 const CARDS_APP_ALL = CARDS_APP + "?unlock=31-days-closer,couples,friends-family,trust-repair,repair-kit,touch-languages,holiday,three-answers,fifteen-after,essence,reconnect,one-touch";
 
@@ -480,12 +482,13 @@ function LibraryContent() {
         </div>
 
         {/* MORE WAYS IN */}
-        {(lockedPaid.length > 0 || externalShown.length > 0 || !entitledCollections.includes("how-to-feel-like-a-woman")) && (
+        {(lockedPaid.length > 0 || externalShown.length > 0) && (
           <>
             <SectionHead eyebrow="When you want more" title="More ways in" />
             <div className="grid gap-3">
-              {/* 28 Oct, Juliette: show it to everyone so they can click through and join. */}
-              {!entitledCollections.includes("how-to-feel-like-a-woman") && (
+              {/* 18 Nov 2026, Juliette: the course has finished and is closed to new buyers
+                  ("we need to stop that now"). Owners still reach it from their own row above. */}
+              {HTFLAW_ON_SALE && !entitledCollections.includes("how-to-feel-like-a-woman") && (
                 <Tile
                   href={PURCHASE_URLS["how-to-feel-like-a-woman"]}
                   external
