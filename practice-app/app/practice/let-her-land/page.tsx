@@ -15,7 +15,7 @@ import { count } from "@/lib/count";
 import { rememberBite } from "@/lib/bites-on-phone";
 import { nextDayStart, TWELVE_H, whenItOpens } from "@/lib/content/31-touch-points-drip";
 import {
-  AUDIO, CONFESSIONS_URL, COPY, DOOR_URL, EYES_SECONDS, HOW_ALONE, JOURNAL, JOURNAL_SCREENS, LETTER, PARTS, PHOTOS, PROMPTS, SENSES,
+  AUDIO, CONFESSIONS_URL, COPY, DOOR_URL_FULL, DOOR_URL_OFFER, EYES_SECONDS, HOW_ALONE, JOURNAL, JOURNAL_SCREENS, LETTER, PARTS, PHOTOS, PROMPTS, SENSES, lhlOfferOn,
   TB_AUDIO_LABEL, TB_DAYS, TB_HEAD, TB_LINE, TB_STEPS, TB_WHY, TB_WITH_ME,
 } from "@/lib/content/let-her-land";
 
@@ -171,8 +171,12 @@ function Box({ id, value, onChange, rows = 6, placeholder }: { id: string; value
 
 // ---- The one door: The Sacred No, at the end of the journal and on the hub ------------------------
 function SacredNoDoor({ line, testid }: { line: string; testid: string }) {
+  // Checked in her browser, not at build time, so a page built before 13 Dec can never keep the £17 offer.
+  const [offer, setOffer] = useState(true);
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- read the clock once, after the page is in her browser
+  useEffect(() => { setOffer(lhlOfferOn()); }, []);
   return (
-      <a href={DOOR_URL} data-testid={testid} onClick={() => count("lhl_sacred_click")} className="mt-10 block overflow-hidden rounded-3xl border-[1.5px] border-[rgba(221,201,142,0.55)] bg-[rgba(13,53,53,0.45)] shadow-[0_0_40px_-18px_rgba(221,201,142,0.6)]">
+      <a href={offer ? DOOR_URL_OFFER : DOOR_URL_FULL} data-testid={testid} onClick={() => count("lhl_sacred_click")} className="mt-10 block overflow-hidden rounded-3xl border-[1.5px] border-[rgba(221,201,142,0.55)] bg-[rgba(13,53,53,0.45)] shadow-[0_0_40px_-18px_rgba(221,201,142,0.6)]">
         <span className="relative block w-full overflow-hidden" style={{ aspectRatio: "16 / 10" }}>
           <Image src={PHOTOS.door.src} alt={PHOTOS.door.alt} fill sizes="(max-width: 768px) 100vw, 672px" className="object-cover" style={{ objectPosition: PHOTOS.door.pos }} />
           <span className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-[rgba(13,53,53,0.95)] to-transparent" />
@@ -181,7 +185,7 @@ function SacredNoDoor({ line, testid }: { line: string; testid: string }) {
           <span className="block text-[11px] font-medium uppercase tracking-[0.2em] text-[#DDC98E]">{COPY.doorKicker}</span>
           <span className="mt-1 block font-display text-[28px] font-light leading-tight">{COPY.doorTitle}</span>
           <span className="mt-2 block text-[16px] text-[#cfc8bb]">{line}</span>
-          <span className="mt-4 inline-flex min-h-[52px] w-full items-center justify-center rounded-full bg-[#DDC98E] font-display text-[17px] font-medium text-[#070707]">{COPY.doorButton}</span>
+          <span className="mt-4 inline-flex min-h-[52px] w-full items-center justify-center rounded-full bg-[#DDC98E] font-display text-[17px] font-medium text-[#070707]">{offer ? COPY.doorButton : COPY.doorButtonFull}</span>
         </span>
       </a>
   );

@@ -166,10 +166,9 @@ export const MEMBERSHIP_UNLOCKS: MembershipUnlock[] = [
   { month: 1, title: "Quiet Isn't Yes", line: "For men: when she goes quiet, and what it really means.", href: "/practice/quiet-isnt-yes" },
   { month: 2, title: "Between Touches", line: "What happens in the moments between.", deck: "between-touches", href: "/practice/between-touches" },
   { month: 2, title: "31 Touch Points", line: "A touch a day for a month.", deck: "31-touch-points", href: "/practice/31-touch-points" },
-  // The 31 Days Closer cards live in the cards app (my-cards). TO WIRE before the first member reaches month 3
-  // (mid-January 2027: months count from the first payment, and the first members paid mid-November):
-  // a cards-app grant for members, like the Holiday Survival Kit unlock. In her diary for Mon 4 Jan 2027.
-  { month: 3, title: "31 Days Closer", line: "31 cards, one a day, to bring you closer.", href: "https://feelfullyyou.com/my-cards/" },
+  // The 31 Days Closer cards live in the cards app (my-cards), which opens a set from ?unlock=<set> in that
+  // browser. Same as the Holiday Survival Kit: the link only appears once the member's month 3 is open.
+  { month: 3, title: "31 Days Closer", line: "31 cards, one a day, to bring you closer.", href: "https://feelfullyyou.com/my-cards/?unlock=31-days-closer" },
   { month: 4, title: "The Sacred No", line: "The no that lets your yes mean something.", deck: "sacred-no", href: "/practice/the-sacred-no" },
   { month: 5, title: "One Touch", line: "One touch, learned properly.", deck: "one-touch", href: "/practice/one-touch" },
   { month: 6, title: "The Unspoken Distance", line: "Written for men, worth reading for women.", deck: "unspoken-distance", href: "/practice/the-unspoken-distance" },

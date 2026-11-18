@@ -30,7 +30,14 @@ export const AUDIO = {
 // The £17 link is switched off; the £7 Already Her deal ends with it. New £55 link, no code.
 // 18 Nov 2026, Juliette: "I think I will make it 17 for them". Already Her price: the £55 link with code
 // LETHERLAND17 (£38 off, The Sacred No only, ends 12 Dec 2026 23:59). After 12 Dec, drop the code and set the button to £55.
-export const DOOR_URL = "https://buy.stripe.com/8x28wO8q79161HndHf0co2A?prefilled_promo_code=LETHERLAND17";
+// 18 Nov 2026, Juliette: "what needs to happen for all of this to happen automatically". The switch is by date:
+// until the end of Sat 12 Dec (UK time, which is UTC in December) the button carries the code and says £17;
+// from Sun 13 Dec it is the plain £55 link. The Stripe code also stops working on its own at the same moment.
+export const LHL_OFFER_ENDS = "2026-12-13T00:00:00Z";
+export const DOOR_URL_FULL = "https://buy.stripe.com/8x28wO8q79161HndHf0co2A";
+export const DOOR_URL_OFFER = DOOR_URL_FULL + "?prefilled_promo_code=LETHERLAND17";
+export function lhlOfferOn(now: Date = new Date()) { return now < new Date(LHL_OFFER_ENDS); }
+export const DOOR_URL = lhlOfferOn() ? DOOR_URL_OFFER : DOOR_URL_FULL;
 export const DIR = "/let-her-land";
 // Second door, 15 Nov 2026 (Juliette: "best upsell is scrumptious confessions... a taster of that in the app").
 export const CONFESSIONS_URL = "https://feelfullyyou.com/scrumptious-confessions";
@@ -82,6 +89,7 @@ export const COPY = {
   doorLine: "You've said yes when your body whispered no. You're no longer available for that.",
   doorAfterJournal: "You've just written what you're stopping. These seven days teach your body to hold that no.",
   doorButton: "Start it for £17 · usually £55 →",
+  doorButtonFull: "Start it for £55 →",
   confKicker: "A taste of what's next",
   confTitle: "Scrumptious Confessions",
   confLine: "People tell me they could listen to my voice for hours. So I built an app where you can.",
