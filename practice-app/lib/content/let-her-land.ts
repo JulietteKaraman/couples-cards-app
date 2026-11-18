@@ -26,7 +26,11 @@ export const AUDIO = {
 // Already Her price, 16 Nov 2026 (Juliette: "do both, cards first, then the sacred no at 7"):
 // the same £17 link with the £10-off code LETHERLAND (Stripe coupon, ends 12 Dec 2026 23:59).
 // After 12 Dec, set back to "https://feelfullyyou.com/sacred-no" and the button back to £17.
-export const DOOR_URL = "https://buy.stripe.com/dRm6oG7m39162Lr6eN0co1Q?prefilled_promo_code=LETHERLAND";
+// 18 Nov 2026, Juliette: The Sacred No goes back to £55 ("everything should be cheap... it just actually doesn't work").
+// The £17 link is switched off; the £7 Already Her deal ends with it. New £55 link, no code.
+// 18 Nov 2026, Juliette: "I think I will make it 17 for them". Already Her price: the £55 link with code
+// LETHERLAND17 (£38 off, The Sacred No only, ends 12 Dec 2026 23:59). After 12 Dec, drop the code and set the button to £55.
+export const DOOR_URL = "https://buy.stripe.com/8x28wO8q79161HndHf0co2A?prefilled_promo_code=LETHERLAND17";
 export const DIR = "/let-her-land";
 // Second door, 15 Nov 2026 (Juliette: "best upsell is scrumptious confessions... a taster of that in the app").
 export const CONFESSIONS_URL = "https://feelfullyyou.com/scrumptious-confessions";
@@ -77,7 +81,7 @@ export const COPY = {
   doorTitle: "The Sacred No",
   doorLine: "You've said yes when your body whispered no. You're no longer available for that.",
   doorAfterJournal: "You've just written what you're stopping. These seven days teach your body to hold that no.",
-  doorButton: "Start it for £7 · usually £17 →",
+  doorButton: "Start it for £17 · usually £55 →",
   confKicker: "A taste of what's next",
   confTitle: "Scrumptious Confessions",
   confLine: "People tell me they could listen to my voice for hours. So I built an app where you can.",

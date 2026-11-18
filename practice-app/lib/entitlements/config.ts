@@ -168,6 +168,8 @@ export const MEMBERSHIP_UNLOCKS: MembershipUnlock[] = [
   { month: 4, title: "The Sacred No", line: "The no that lets your yes mean something.", deck: "sacred-no", href: "/practice/the-sacred-no" },
   { month: 5, title: "The Unspoken Distance", line: "Written for men, worth reading for women.", deck: "unspoken-distance", href: "/practice/the-unspoken-distance" },
   { month: 6, title: "Communication Reboot Kit", line: "The talking side of being close.", deck: "communication-reboot-kit", href: "/practice/communication-reboot-kit" },
+  // Juliette 18 Nov 2026: 31 Days Closer joins at month 7. The cards live in the cards app (my-cards); the grant there is still to wire before the first member reaches month 7 (June 2027 at the earliest).
+  { month: 7, title: "31 Days Closer", line: "31 cards, one a day, to bring you closer.", href: "https://feelfullyyou.com/my-cards/" },
 ];
 /** Which month of membership someone is in: 1 from the first day. */
 export function membershipMonth(since: string | Date, now: Date = new Date()): number {
