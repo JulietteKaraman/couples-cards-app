@@ -12,7 +12,7 @@ import { supabaseBrowser } from "@/lib/supabase/client";
 
 const SLUG = "scrumptious-confessions";
 
-type Poem = { id: string; publish_on: string; title: string; chapter: string; stanzas: string[][]; audio: string };
+type Poem = { id: string; publish_on: string; title: string; chapter: string; stanzas: string[][]; audio: string; video?: string | null };
 type Feed = { poems: Poem[]; next: string | null };
 
 const dayName = (d: string) => new Date(d + "T12:00:00").toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long" });
@@ -22,7 +22,12 @@ function PoemBody({ p }: { p: Poem }) {
     <article data-testid="poem">
       {p.chapter && <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-[#DDC98E]">{p.chapter}</p>}
       <h2 className="font-display mt-2 text-[28px] font-light leading-[1.15] text-[#f1ece2]">{p.title}</h2>
-      {p.audio && (
+      {p.video ? (
+        <div className="mt-5 overflow-hidden rounded-3xl border-[1.5px] border-[rgba(221,201,142,0.45)] bg-black">
+          {/* Charlene's video of Juliette reading the poem (Juliette 19 Nov 2026). The words sit underneath. */}
+          <video src={p.video} controls playsInline preload="metadata" className="block aspect-[9/16] w-full bg-black object-cover" />
+        </div>
+      ) : p.audio && (
         <div className="mt-4">
           <VoicePlayer src={p.audio} label={p.title} dark />
         </div>

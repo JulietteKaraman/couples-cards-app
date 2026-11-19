@@ -26,9 +26,20 @@ export async function GET(req: Request) {
     const next = CONFESSION_POEMS.map((p) => p.publish_on).filter((d) => d > today).sort()[0];
     if (next) today = next;
   }
-  const opened = CONFESSION_POEMS.filter((p) => p.publish_on <= today)
-    .sort((a, b) => b.publish_on.localeCompare(a.publish_on))
-    .map(({ id, publish_on, title, chapter, stanzas, audio }) => ({ id, publish_on, title, chapter, stanzas, audio }));
+  const list = CONFESSION_POEMS.filter((p) => p.publish_on <= today)
+    .sort((a, b) => b.publish_on.localeCompare(a.publish_on));
+  // Charlene's videos live in the private "drops" store: each opened one gets a play link that lasts 2 hours.
+  // No file there yet (not uploaded) means no link, and the poem plays its audio instead.
+  const videoUrl = async (path?: string): Promise<string | null> => {
+    if (!path || preview) return null;
+    const { supabaseAdmin } = await import("@/lib/supabase/admin");
+    const { DROPS_BUCKET } = await import("@/lib/drops-server");
+    const { data } = await supabaseAdmin.storage.from(DROPS_BUCKET).createSignedUrl(path, 60 * 60 * 2);
+    return data?.signedUrl ?? null;
+  };
+  const opened = await Promise.all(
+    list.map(async ({ id, publish_on, title, chapter, stanzas, audio, video }) => ({ id, publish_on, title, chapter, stanzas, audio, video: await videoUrl(video) }))
+  );
   const next = CONFESSION_POEMS.map((p) => p.publish_on).filter((d) => d > today).sort()[0] ?? null;
   return NextResponse.json({ today, poems: opened, next });
 }

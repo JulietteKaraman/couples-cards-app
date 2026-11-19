@@ -7,6 +7,8 @@ import { supabaseBrowser } from "@/lib/supabase/client";
 import { ADMIN_EMAIL } from "@/lib/entitlements/admin";
 import { MEDITATIONS } from "@/lib/content/meditations";
 
+type PoemRow = { id: string; uploaded: boolean };
+
 // JULIETTE'S MEDITATION UPLOAD (specs/living-library.md). One time: choose every file in the
 // "meditations-for-app" folder at once. Each file goes to the private store under its own name,
 // and opens in the app on its day. Uploading again replaces a file; nothing else changes.
@@ -43,12 +45,14 @@ function Gate() {
 
 function Upload() {
   const [uploaded, setUploaded] = useState<Set<string>>(new Set());
+  const [poems, setPoems] = useState<PoemRow[]>([]);
+  const [pLog, setPLog] = useState<string[]>([]);
   const [busy, setBusy] = useState(false);
   const [log, setLog] = useState<string[]>([]);
   const [err, setErr] = useState<string | null>(null);
 
   const load = useCallback(async () => {
-    try { setUploaded(new Set((await call("GET")).uploaded as string[])); } catch (e) { setErr((e as Error).message); }
+    try { const j = await call("GET"); setUploaded(new Set(j.uploaded as string[])); setPoems((j.poems || []) as PoemRow[]); } catch (e) { setErr((e as Error).message); }
   }, []);
   useEffect(() => { load(); }, [load]);
 
@@ -73,6 +77,26 @@ function Upload() {
     load();
   }
 
+  async function sendPoems(files: FileList | null) {
+    if (!files?.length) return;
+    setBusy(true); setErr(null); setPLog([]);
+    const known = new Set(poems.map((p) => p.id));
+    for (const file of Array.from(files)) {
+      const slug = file.name.replace(/\.[^.]+$/, "");
+      if (!known.has(slug)) { setPLog((l) => [...l, `Skipped ${file.name} (not on the list)`]); continue; }
+      try {
+        const up = await call("POST", { action: "upload-url", slug, kind: "poem" });
+        const { error } = await supabaseBrowser.storage.from("drops").uploadToSignedUrl(up.path, up.token, file, { contentType: "video/mp4", upsert: true });
+        if (error) throw new Error(error.message);
+        setPLog((l) => [...l, `\u2713 ${file.name}`]);
+      } catch (e) {
+        setPLog((l) => [...l, `\u2717 ${file.name}: ${(e as Error).message}`]);
+      }
+    }
+    setBusy(false);
+    load();
+  }
+
   const done = MEDITATIONS.filter((m) => uploaded.has(m.slug)).length;
   return (
     <main className="min-h-screen bg-[#070707] px-5 py-10 text-[#f1ece2]">
@@ -86,7 +110,16 @@ function Upload() {
         <p className="mt-4 text-[16px] text-[#DDC98E]">{done} of {MEDITATIONS.length} uploaded</p>
         {err && <p className="mt-2 text-[14px] text-[#EEDE80]">{err}</p>}
         <ul className="mt-4 space-y-1 text-[14px] text-[#cfc8bb]">{log.map((l, i) => <li key={i}>{l}</li>)}</ul>
-        <ul className="mt-8 space-y-1 text-[14px]">
+        <h2 className="mt-12 font-display text-[26px] font-light">Poem videos</h2>
+        <p className="mt-2 text-[15px] text-[#cfc8bb]">Choose every file in the <b>poem-videos-for-app</b> folder at once. Each one plays on its poem&rsquo;s Wednesday.</p>
+        <label className="mt-4 flex min-h-[56px] cursor-pointer items-center justify-center rounded-full border-[1.5px] border-[#DDC98E] font-display text-[17px] font-medium text-[#DDC98E]">
+          {busy ? "Uploading\u2026" : "Choose the poem videos"}
+          <input data-testid="poem-input" type="file" accept="video/*,.mp4" multiple className="hidden" disabled={busy} onChange={(e) => sendPoems(e.target.files)} />
+        </label>
+        <p className="mt-4 text-[16px] text-[#DDC98E]">{poems.filter((p) => p.uploaded).length} of {poems.length} poem videos uploaded</p>
+        <ul className="mt-2 space-y-1 text-[14px] text-[#cfc8bb]">{pLog.map((l, i) => <li key={i}>{l}</li>)}</ul>
+        <h2 className="mt-12 font-display text-[26px] font-light">Meditations</h2>
+        <ul className="mt-4 space-y-1 text-[14px]">
           {MEDITATIONS.map((m) => (
             <li key={m.slug} className="flex justify-between gap-3 border-b border-[#DDC98E]/15 py-2">
               <span>{uploaded.has(m.slug) ? "✓" : "·"} {m.title}</span>
