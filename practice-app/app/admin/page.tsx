@@ -11,6 +11,7 @@ type Buyer = {
   email: string;
   deck_type: string;
   purchased_at: string;
+  status?: string;
   completed_count: number;
 };
 
@@ -196,7 +197,8 @@ function AdminContent() {
                 <tr>
                   <th className="px-4 py-3">Email</th>
                   <th className="px-4 py-3">Product</th>
-                  <th className="px-4 py-3">Purchased</th>
+                  <th className="px-4 py-3">Joined</th>
+                  <th className="px-4 py-3">Status</th>
                   <th className="px-4 py-3">Progress</th>
                 </tr>
               </thead>
@@ -210,6 +212,7 @@ function AdminContent() {
                     <td className="px-4 py-3">
                       {new Date(b.purchased_at).toLocaleDateString()}
                     </td>
+                    <td className="px-4 py-3">{b.status ?? ""}</td>
                     <td className="px-4 py-3">{b.completed_count} entries done</td>
                   </tr>
                 ))}

@@ -24,7 +24,7 @@ export async function GET(req: Request) {
 
   const { data: decks, error: decksError } = await supabaseAdmin
     .from("user_decks")
-    .select("user_id, deck_type, purchased_at")
+    .select("user_id, deck_type, purchased_at, stripe_checkout_session_id, expires_at")
     .in("deck_type", deckTypesForApp());
 
   if (decksError) {
@@ -56,6 +56,12 @@ export async function GET(req: Request) {
     email: emailsByUserId[d.user_id] ?? "(unknown)",
     deck_type: d.deck_type,
     purchased_at: d.purchased_at,
+    // How they hold it (19 Nov 2026): free week, paying, given by Juliette, old free place, or ended.
+    status: d.expires_at && new Date(d.expires_at) <= new Date() ? "Ended"
+      : String(d.stripe_checkout_session_id || "").startsWith("trial-") ? "Free week"
+      : String(d.stripe_checkout_session_id || "").startsWith("admin-grant-") ? "Given by you"
+      : String(d.stripe_checkout_session_id || "").startsWith("free-") ? "Old free place"
+      : "Paying",
     completed_count: progressCount[`${d.user_id}:${d.deck_type}`] ?? 0,
   }));
 
