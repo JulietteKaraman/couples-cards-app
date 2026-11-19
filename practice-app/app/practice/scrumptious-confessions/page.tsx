@@ -271,7 +271,9 @@ function Library() {
       const uid = data.session?.user.id;
       if (!uid) return;
       if ((data.session?.user.email || "").toLowerCase() === ADMIN_EMAIL) setPaid(true);
-      const { data: row } = await supabaseBrowser.from("user_decks").select("purchased_at, stripe_checkout_session_id").eq("user_id", uid).eq("deck_type", "scrumptious-confessions").maybeSingle();
+      const { data: row } = await supabaseBrowser.from("user_decks").select("purchased_at, stripe_checkout_session_id, expires_at").eq("user_id", uid).eq("deck_type", "scrumptious-confessions").maybeSingle();
+      // When they stop, access ends with what they paid for: an expired row opens nothing (19 Nov 2026).
+      if (row?.expires_at && new Date(row.expires_at as string) <= new Date()) return;
       // Free fortnight days don't count: months start with the first payment.
       // The 7 free days ("trial-") are a taste: answers stay locked until day 8 (Juliette 19 Nov 2026).
       const sid = String(row?.stripe_checkout_session_id || "");
@@ -281,6 +283,34 @@ function Library() {
   }, []);
   const month = since ? membershipMonth(since) : 1;
   const [door, setDoor] = useState<Door | null>(null);
+  if (door === "months") {
+    return (
+      <>
+        <button type="button" onClick={() => setDoor(null)} className="mt-6 min-h-[44px] text-[15px] text-[#DDC98E]">&larr; Back to the library</button>
+    <section className="mt-4 space-y-3">
+      <Eyebrow>Opening month by month</Eyebrow>
+      <h2 className="font-display text-[28px] font-light leading-tight">Something new opens every month you stay</h2>
+      {MEMBERSHIP_UNLOCKS.map((u) => {
+        const open = u.month <= month;
+        const when = since ? monthOpensOn(since, u.month).toLocaleDateString("en-GB", { day: "numeric", month: "long" }) : null;
+        const inner = (
+          <>
+            <span className="text-[11px] uppercase tracking-[0.18em] text-[#DDC98E]">Month {u.month}{open ? " · open" : ""}</span>
+            <span className="mt-1 block font-display text-[22px] font-light leading-tight">{u.title}</span>
+            <span className="mt-0.5 block text-[14px] text-[#a79f90]">{open ? u.line : `🔒 Opens ${when ?? `in your month ${u.month}`}`}</span>
+          </>
+        );
+        return open ? (
+          <a key={u.title} href={u.href} target={u.href.startsWith("http") ? "_blank" : undefined} rel="noreferrer"
+            className="block rounded-3xl border-[1.5px] border-[rgba(221,201,142,0.55)] bg-[rgba(13,53,53,0.35)] p-4">{inner}</a>
+        ) : (
+          <div key={u.title} className="rounded-3xl border border-[#DDC98E]/20 p-4 opacity-70">{inner}</div>
+        );
+      })}
+    </section>
+      </>
+    );
+  }
   if (door) {
     const d = DOORS.find((x) => x.id === door)!;
     return (
@@ -301,33 +331,12 @@ function Library() {
           <span className="text-[13px] text-[#a79f90]">{paid ? "All 103 pages" : "Ten pages to start"}</span>
         </Link>
         {DOORS.map((x) => (
-          <button key={x.id} type="button" onClick={() => setDoor(x.id)} className={`${x.id === "read" ? "col-span-2 min-h-[96px]" : "min-h-[132px]"} flex flex-col justify-between rounded-3xl border-[1.5px] border-[rgba(221,201,142,0.55)] bg-[rgba(13,53,53,0.35)] p-4 text-left`}>
+          <button key={x.id} type="button" onClick={() => setDoor(x.id)} className={`min-h-[132px] flex flex-col justify-between rounded-3xl border-[1.5px] border-[rgba(221,201,142,0.55)] bg-[rgba(13,53,53,0.35)] p-4 text-left`}>
             <span className="font-display text-[21px] font-light leading-tight text-[#f1ece2]">{x.title}</span>
             <span className="text-[13px] text-[#a79f90]">{x.line}</span>
           </button>
         ))}
       </div>
-    </section>
-    <section className="mt-10 space-y-3">
-      <Eyebrow>Opening month by month</Eyebrow>
-      <h2 className="font-display text-[28px] font-light leading-tight">Something new opens every month you stay</h2>
-      {MEMBERSHIP_UNLOCKS.map((u) => {
-        const open = u.month <= month;
-        const when = since ? monthOpensOn(since, u.month).toLocaleDateString("en-GB", { day: "numeric", month: "long" }) : null;
-        const inner = (
-          <>
-            <span className="text-[11px] uppercase tracking-[0.18em] text-[#DDC98E]">Month {u.month}{open ? " · open" : ""}</span>
-            <span className="mt-1 block font-display text-[22px] font-light leading-tight">{u.title}</span>
-            <span className="mt-0.5 block text-[14px] text-[#a79f90]">{open ? u.line : `🔒 Opens ${when ?? `in your month ${u.month}`}`}</span>
-          </>
-        );
-        return open ? (
-          <a key={u.title} href={u.href} target={u.href.startsWith("http") ? "_blank" : undefined} rel="noreferrer"
-            className="block rounded-3xl border-[1.5px] border-[rgba(221,201,142,0.55)] bg-[rgba(13,53,53,0.35)] p-4">{inner}</a>
-        ) : (
-          <div key={u.title} className="rounded-3xl border border-[#DDC98E]/20 p-4 opacity-70">{inner}</div>
-        );
-      })}
     </section>
     </>
   );
@@ -359,11 +368,12 @@ const TOPICS: { id: string; label: string; words: string[] }[] = [
 ];
 // The library's doors (Juliette 19 Nov 2026: "the library is really not very clear at all").
 // Nobody lands on a list: they pick a door first. The Journal door is a link of its own.
-type Door = "meditations" | "answers" | "read";
+type Door = "meditations" | "answers" | "read" | "months";
 const DOORS: { id: Door; title: string; line: string; shelves: Shelf[] }[] = [
   { id: "meditations", title: "Meditations", line: "In my voice, a new one every Friday", shelves: ["meditations"] },
   { id: "answers", title: "Answers to your questions", line: "Start with five, or search them all", shelves: ["answers"] },
   { id: "read", title: "Essays and podcast", line: "Read or listen", shelves: ["essays", "podcast"] },
+  { id: "months", title: "Practices and programmes", line: "Something new every month you stay", shelves: [] },
 ];
 // Five to start with. Juliette can swap these for her own five favourites.
 const STARTERS = ["why-dont-i-feel-anything", "never-in-the-mood-but-enjoy-it", "why-can-i-feel-it-with-someone-else", "sleep-in-same-bed-never-touch", "why-doesnt-my-wife-want-me"];
@@ -604,13 +614,6 @@ function Today() {
         </div>
         <MonthDots days={days} start={start} sel={sel} onPick={(d) => { if (d <= today) setSel(d); }} />
       </div>
-      {/* Juliette 17 Nov 2026: "there is a 15 minute and a 5 minute timer in the app. So make sure that is included".
-          Same clock-based, chiming, screen-awake timer as her other apps. */}
-      <div className="mt-6 rounded-3xl border border-[#DDC98E]/40 p-5">
-        <Eyebrow>Your timer</Eyebrow>
-        <p className="mt-2 text-[15px] text-[#cfc8bb]">Five minutes for Touch Base or a yes and no game. Fifteen minutes for a card conversation. A bell tells you when it ends.</p>
-        <div className="mt-4"><PracticeTimer minutes={[5, 15]} dark /></div>
-      </div>
     </section>
   );
 }
@@ -687,18 +690,30 @@ function Cards({ feed }: { feed: Feed | null }) {
   if (!feed) return <p className="mt-6 text-[#8f877a]">…</p>;
   return (
     <section className="mt-4">
-      {/* Juliette 17 Nov: her voice explaining the card, on your own or together (same recordings as the cards app). */}
-      <div className="mb-5 rounded-3xl border border-[#DDC98E]/40 p-5">
-        <Eyebrow>How to use your card</Eyebrow>
-        <div className="mt-4 flex items-start justify-center gap-8">
-          <RoundVoice src="/one-touch/voice/on-your-own.m4a" img={`${DIR}/juliette.jpg`} label="On your own" />
-          <RoundVoice src="/one-touch/voice/with-someone.m4a" img={`${DIR}/juliette-gold.jpg`} label="With someone" />
-        </div>
-        <p className="mt-3 text-center text-[13px] text-[#a79f90]">Tap my photo to hear how. The 5 and 15 minute timer is under Today.</p>
-      </div>
       {feed.cards.length === 0 && <p className="mt-6 text-center text-[15px] text-[#a79f90]">Your first card lands here very soon.</p>}
       {feed.cards.map((c, i) => <CardBlock key={c.id} card={c} open={i === 0} />)}
       {feed.nextCard && <Coming day={feed.nextCard} what="A new card" />}
+      {/* Juliette 19 Nov 2026: "it has two audios, which is weird... the 15-minute timer there... and the
+          5-minute timer there as well, so that they understand it's solo or it's together". */}
+      <div className="mt-10 space-y-3">
+        <Eyebrow>How to use your card</Eyebrow>
+        {[
+          { who: "On your own", line: "Five minutes, just you and the card.", src: "/one-touch/voice/on-your-own.m4a", img: `${DIR}/juliette.jpg`, min: 5 },
+          { who: "Together", line: "Fifteen minutes, the two of you, with the Dyad.", src: "/one-touch/voice/with-someone.m4a", img: `${DIR}/juliette-gold.jpg`, min: 15 },
+        ].map((w) => (
+          <div key={w.who} className="rounded-3xl border border-[#DDC98E]/40 bg-[rgba(13,53,53,0.35)] p-5">
+            <div className="flex items-center gap-4">
+              <RoundVoice src={w.src} img={w.img} label={`${w.who}: how to use your card`} />
+              <div>
+                <p className="font-display text-[24px] font-light leading-tight">{w.who}</p>
+                <p className="mt-1 text-[14px] text-[#cfc8bb]">{w.line}</p>
+                <p className="mt-1 text-[12px] text-[#a79f90]">Tap my photo to hear how.</p>
+              </div>
+            </div>
+            <div className="mt-4"><PracticeTimer minutes={[w.min]} dark solo={w.min === 5} label={w.min === 5 ? "Your five minutes" : "Your fifteen minutes"} /></div>
+          </div>
+        ))}
+      </div>
     </section>
   );
 }
