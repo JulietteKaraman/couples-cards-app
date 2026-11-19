@@ -64,7 +64,7 @@ export const CONFESSION_POEMS: ConfessionPoem[] = [
  },
  {
   "id": "the-memory-of-touch",
-  "publish_on": "2026-11-25",
+  "publish_on": "2026-12-02",
   "added_on": "2026-11-25",
   "title": "The Memory of Touch",
   "chapter": "The Touch of Life",
@@ -131,7 +131,7 @@ export const CONFESSION_POEMS: ConfessionPoem[] = [
  },
  {
   "id": "a-mirror-of-grace",
-  "publish_on": "2026-11-25",
+  "publish_on": "2026-12-09",
   "added_on": "2026-11-25",
   "title": "A Mirror of Grace",
   "chapter": "The Heart of Resilience",
@@ -201,7 +201,7 @@ export const CONFESSION_POEMS: ConfessionPoem[] = [
  },
  {
   "id": "the-embodied-spark",
-  "publish_on": "2026-12-02",
+  "publish_on": "2026-12-16",
   "added_on": "2026-12-02",
   "title": "The Embodied Spark",
   "chapter": "Timeless Joy and Strength",
@@ -246,7 +246,7 @@ export const CONFESSION_POEMS: ConfessionPoem[] = [
  },
  {
   "id": "the-dance-of-pleasure",
-  "publish_on": "2026-12-02",
+  "publish_on": "2026-12-23",
   "added_on": "2026-12-02",
   "title": "The Dance of Pleasure",
   "chapter": "The Art of Scrumptious Living",
@@ -280,7 +280,7 @@ export const CONFESSION_POEMS: ConfessionPoem[] = [
  },
  {
   "id": "awakening-you",
-  "publish_on": "2026-12-02",
+  "publish_on": "2026-12-30",
   "added_on": "2026-12-02",
   "title": "Awakening You",
   "chapter": "The Art of Scrumptious Living",
@@ -321,7 +321,7 @@ export const CONFESSION_POEMS: ConfessionPoem[] = [
  },
  {
   "id": "the-tender-ache",
-  "publish_on": "2026-12-09",
+  "publish_on": "2027-01-06",
   "added_on": "2026-12-09",
   "title": "The Tender Ache",
   "chapter": "The Art of Scrumptious Living",
@@ -356,7 +356,7 @@ export const CONFESSION_POEMS: ConfessionPoem[] = [
  },
  {
   "id": "your-journey-home",
-  "publish_on": "2026-12-09",
+  "publish_on": "2027-01-13",
   "added_on": "2026-12-09",
   "title": "Your Journey Home",
   "chapter": "The Art of Scrumptious Living",
@@ -399,7 +399,7 @@ export const CONFESSION_POEMS: ConfessionPoem[] = [
  },
  {
   "id": "your-eyes-hold-the-secret",
-  "publish_on": "2026-12-09",
+  "publish_on": "2027-01-20",
   "added_on": "2026-12-09",
   "title": "Your Eyes Hold the Secret",
   "chapter": "Reflections in the Mirror",
@@ -445,7 +445,7 @@ export const CONFESSION_POEMS: ConfessionPoem[] = [
  },
  {
   "id": "a-woman-awake",
-  "publish_on": "2026-12-16",
+  "publish_on": "2027-01-27",
   "added_on": "2026-12-16",
   "title": "A Woman Awake",
   "chapter": "The Embodied Woman",
@@ -525,7 +525,7 @@ export const CONFESSION_POEMS: ConfessionPoem[] = [
  },
  {
   "id": "the-art-of-returning",
-  "publish_on": "2026-12-16",
+  "publish_on": "2027-02-03",
   "added_on": "2026-12-16",
   "title": "The Art of Returning",
   "chapter": "",
@@ -564,7 +564,7 @@ export const CONFESSION_POEMS: ConfessionPoem[] = [
  },
  {
   "id": "the-electrifying-yes",
-  "publish_on": "2026-12-16",
+  "publish_on": "2027-02-10",
   "added_on": "2026-12-16",
   "title": "The Electrifying Yes",
   "chapter": "",
@@ -611,7 +611,7 @@ export const CONFESSION_POEMS: ConfessionPoem[] = [
  },
  {
   "id": "the-gift-of-seeing",
-  "publish_on": "2026-12-23",
+  "publish_on": "2027-02-17",
   "added_on": "2026-12-23",
   "title": "The Gift of Seeing",
   "chapter": "Reflections in the Mirror",
@@ -698,7 +698,7 @@ export const CONFESSION_POEMS: ConfessionPoem[] = [
  },
  {
   "id": "the-dress-the-memories-and-her",
-  "publish_on": "2026-12-23",
+  "publish_on": "2027-02-24",
   "added_on": "2026-12-23",
   "title": "The Dress, the Memories and Her",
   "chapter": "",
@@ -746,7 +746,7 @@ export const CONFESSION_POEMS: ConfessionPoem[] = [
  },
  {
   "id": "the-freedom-in-no",
-  "publish_on": "2026-12-23",
+  "publish_on": "2027-03-03",
   "added_on": "2026-12-23",
   "title": "The Freedom in No",
   "chapter": "The Power of No",
@@ -791,7 +791,7 @@ export const CONFESSION_POEMS: ConfessionPoem[] = [
  },
  {
   "id": "her-strength-is-yours",
-  "publish_on": "2026-12-30",
+  "publish_on": "2027-03-10",
   "added_on": "2026-12-30",
   "title": "Her Strength Is Yours",
   "chapter": "Women Who Rise",
@@ -834,7 +834,7 @@ export const CONFESSION_POEMS: ConfessionPoem[] = [
  },
  {
   "id": "the-aligned-yes",
-  "publish_on": "2026-12-30",
+  "publish_on": "2027-03-17",
   "added_on": "2026-12-30",
   "title": "The Aligned Yes",
   "chapter": "",
@@ -880,7 +880,7 @@ export const CONFESSION_POEMS: ConfessionPoem[] = [
  },
  {
   "id": "the-woman-you-are-becoming",
-  "publish_on": "2026-12-30",
+  "publish_on": "2027-03-24",
   "added_on": "2026-12-30",
   "title": "The Woman You Are Becoming",
   "chapter": "",
@@ -975,7 +975,7 @@ export const CONFESSION_POEMS: ConfessionPoem[] = [
  },
  {
   "id": "the-beauty-of-her-joy",
-  "publish_on": "2027-01-06",
+  "publish_on": "2027-03-31",
   "added_on": "2027-01-06",
   "title": "The Beauty of Her Joy",
   "chapter": "Timeless Joy and Strength",
@@ -1016,7 +1016,7 @@ export const CONFESSION_POEMS: ConfessionPoem[] = [
  },
  {
   "id": "embodying-your-sensual-compass",
-  "publish_on": "2027-01-06",
+  "publish_on": "2027-04-07",
   "added_on": "2027-01-06",
   "title": "Embodying Your Sensual Compass",
   "chapter": "The Art of Scrumptious Living",
