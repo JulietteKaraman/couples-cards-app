@@ -1,0 +1,34 @@
+import { NextResponse } from "next/server";
+import { CONFESSION_POEMS } from "@/lib/content/confession-poems";
+
+// A page of poems each Wednesday for Scrumptious Confessions members. Juliette, 19 Nov 2026: "I can add a
+// poem each week to the membership instead of putting the whole book in." Same lock as the confessions:
+// signed in, holding scrumptious-confessions (including the free fortnight), checked here on the server.
+// Poems, their dates and their audio paths never reach anyone who has not opened them.
+const SLUG = "scrumptious-confessions";
+const todayUK = () => new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/London" }).format(new Date());
+
+export async function GET(req: Request) {
+  // Local preview only (never true on the live site): there is no database here, so show the poems as the owner sees them.
+  const preview = process.env.NODE_ENV === "development";
+  let admin = false;
+  if (!preview) {
+    const { canSee, isAdmin, userFromRequest } = await import("@/lib/drops-server");
+    const user = await userFromRequest(req);
+    if (!user) return NextResponse.json({ error: "Not signed in" }, { status: 401 });
+    if (!(await canSee(user.id, user.email, SLUG))) return NextResponse.json({ error: "Not on your account" }, { status: 403 });
+    admin = isAdmin(user.email);
+  }
+
+  let today = todayUK();
+  // Owner preview, the same as the confessions: Juliette sees the next Wednesday's poems early.
+  if (preview || admin) {
+    const next = CONFESSION_POEMS.map((p) => p.publish_on).filter((d) => d > today).sort()[0];
+    if (next) today = next;
+  }
+  const opened = CONFESSION_POEMS.filter((p) => p.publish_on <= today)
+    .sort((a, b) => b.publish_on.localeCompare(a.publish_on))
+    .map(({ id, publish_on, title, chapter, stanzas, audio }) => ({ id, publish_on, title, chapter, stanzas, audio }));
+  const next = CONFESSION_POEMS.map((p) => p.publish_on).filter((d) => d > today).sort()[0] ?? null;
+  return NextResponse.json({ today, poems: opened, next });
+}
