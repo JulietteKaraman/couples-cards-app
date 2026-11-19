@@ -160,19 +160,27 @@ export function freeConfessionsActive(now: Date = new Date()) {
 // When She Goes Quiet lives on as Quiet Isn't Yes. The Touch Map stays its own £197 product.
 export type MembershipUnlock = { month: number; title: string; line: string; deck?: string; href: string };
 export const MEMBERSHIP_UNLOCKS: MembershipUnlock[] = [
-  // Order re-set by Juliette 18 Nov 2026 ("let's actually relook at those months").
+  // Order re-set by Juliette 19 Nov 2026: the small, quick pieces first, the bigger programmes later
+  // ("those are actually things that should go in the first few months... much more than the higher-price things").
+  // The bites open from a plain link in the app, so the link only appearing in its month is the unlock.
   { month: 1, title: "Holiday Survival Kit", line: "Cards for the season: the drive there, the table, who isn't here.", href: "https://feelfullyyou.com/my-cards/?unlock=holiday" },
   // Juliette 16 Nov: "I reinstated when she goes quiet but it is called something else now- and they should get access to that immediately". Free guide for men.
   { month: 1, title: "Quiet Isn't Yes", line: "For men: when she goes quiet, and what it really means.", href: "/practice/quiet-isnt-yes" },
+  { month: 1, title: "The Trace", line: "Fully clothed. Non-sexual. Touch that isn't going to lead anywhere.", href: "/practice/the-trace" },
+  { month: 2, title: "The Approach Ritual", line: "You approach. She decides the distance.", href: "/practice/when-she-stops-reaching" },
+  { month: 2, title: "The Fifteen Minutes After", line: "One communication. Thank you. Swap.", href: "/practice/the-fifteen-minutes-after" },
   { month: 2, title: "Between Touches", line: "What happens in the moments between.", deck: "between-touches", href: "/practice/between-touches" },
-  { month: 2, title: "31 Touch Points", line: "A touch a day for a month.", deck: "31-touch-points", href: "/practice/31-touch-points" },
-  // The 31 Days Closer cards live in the cards app (my-cards), which opens a set from ?unlock=<set> in that
-  // browser. Same as the Holiday Survival Kit: the link only appears once the member's month 3 is open.
-  { month: 3, title: "31 Days Closer", line: "31 cards, one a day, to bring you closer.", href: "https://feelfullyyou.com/my-cards/?unlock=31-days-closer" },
-  { month: 4, title: "The Sacred No", line: "The no that lets your yes mean something.", deck: "sacred-no", href: "/practice/the-sacred-no" },
-  { month: 5, title: "One Touch", line: "One touch, learned properly.", deck: "one-touch", href: "/practice/one-touch" },
-  { month: 6, title: "The Unspoken Distance", line: "Written for men, worth reading for women.", deck: "unspoken-distance", href: "/practice/the-unspoken-distance" },
-  { month: 7, title: "Communication Reboot Kit", line: "The talking side of being close.", deck: "communication-reboot-kit", href: "/practice/communication-reboot-kit" },
+  { month: 3, title: "31 Touch Points", line: "A touch a day for a month.", deck: "31-touch-points", href: "/practice/31-touch-points" },
+  { month: 3, title: "The Full Stop", line: "One true thing. No question on the end.", href: "/practice/the-full-stop" },
+  { month: 4, title: "The Three Answers", line: "One prompt. Fifteen minutes. Seven sittings.", href: "/practice/the-three-answers" },
+  // 31 Days Closer lives in the cards app (my-cards), which opens a set from ?unlock=<set> in that browser.
+  { month: 4, title: "31 Days Closer", line: "31 cards, one a day, to bring you closer.", href: "https://feelfullyyou.com/my-cards/?unlock=31-days-closer" },
+  { month: 5, title: "The 45-Minute Connection Ritual", line: "From co-existing to connecting, in 45 minutes.", href: "/practice/the-45-minute-ritual" },
+  { month: 5, title: "Trust & Repair", line: "Fifty prompts for when something happened between you.", href: "/practice/the-trust-and-repair" },
+  { month: 6, title: "The Sacred No", line: "The no that lets your yes mean something.", deck: "sacred-no", href: "/practice/the-sacred-no" },
+  { month: 7, title: "One Touch", line: "One touch, learned properly.", deck: "one-touch", href: "/practice/one-touch" },
+  { month: 8, title: "The Unspoken Distance", line: "Written for men, worth reading for women.", deck: "unspoken-distance", href: "/practice/the-unspoken-distance" },
+  { month: 9, title: "Communication Reboot Kit", line: "The talking side of being close.", deck: "communication-reboot-kit", href: "/practice/communication-reboot-kit" },
 ];
 /** Which month of membership someone is in: 1 from the first day. */
 export function membershipMonth(since: string | Date, now: Date = new Date()): number {
