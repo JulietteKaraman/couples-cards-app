@@ -330,8 +330,12 @@ function Library() {
           <span className="font-display text-[21px] font-light leading-tight text-[#f1ece2]">The Scrumptiousness Journal</span>
           <span className="text-[13px] text-[#a79f90]">{paid ? "All 103 pages" : "Ten pages to start"}</span>
         </Link>
+        <Link href="/practice/scrumptious-poems" className="flex min-h-[132px] flex-col justify-between rounded-3xl border-[1.5px] border-[rgba(221,201,142,0.55)] bg-[rgba(13,53,53,0.35)] p-4">
+          <span className="font-display text-[21px] font-light leading-tight text-[#f1ece2]">Poems</span>
+          <span className="text-[13px] text-[#a79f90]">From my book, new every Wednesday</span>
+        </Link>
         {DOORS.map((x) => (
-          <button key={x.id} type="button" onClick={() => setDoor(x.id)} className={`min-h-[132px] flex flex-col justify-between rounded-3xl border-[1.5px] border-[rgba(221,201,142,0.55)] bg-[rgba(13,53,53,0.35)] p-4 text-left`}>
+          <button key={x.id} type="button" onClick={() => setDoor(x.id)} className={`${x.id === "months" ? "col-span-2 min-h-[96px]" : "min-h-[132px]"} flex flex-col justify-between rounded-3xl border-[1.5px] border-[rgba(221,201,142,0.55)] bg-[rgba(13,53,53,0.35)] p-4 text-left`}>
             <span className="font-display text-[21px] font-light leading-tight text-[#f1ece2]">{x.title}</span>
             <span className="text-[13px] text-[#a79f90]">{x.line}</span>
           </button>
