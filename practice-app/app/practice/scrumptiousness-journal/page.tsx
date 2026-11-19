@@ -300,7 +300,8 @@ export default function ScrumptiousnessJournal() {
         if (uid) {
           if ((data.session?.user.email || "").toLowerCase() === ADMIN_EMAIL) ok = true;
           const { data: row } = await supabaseBrowser.from("user_decks").select("purchased_at, stripe_checkout_session_id").eq("user_id", uid).eq("deck_type", "scrumptious-confessions").maybeSingle();
-          if (row?.purchased_at && !String(row.stripe_checkout_session_id || "").startsWith("free-")) ok = true;
+          // "free-" (the old free fortnight) and "trial-" (the 7-day trial) are not paying members: they get the taster.
+          if (row?.purchased_at && !/^(free|trial)-/.test(String(row.stripe_checkout_session_id || ""))) ok = true;
         }
       } catch {
         /* not signed in, or no connection: she sees the taster */
