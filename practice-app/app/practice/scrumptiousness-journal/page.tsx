@@ -11,6 +11,8 @@ import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { HomePrompt, Voice, read, write } from "@/components/BiteKit";
 import { count } from "@/lib/count";
+import { supabaseBrowser } from "@/lib/supabase/client";
+import { ADMIN_EMAIL } from "@/lib/entitlements/admin";
 import VoicePlayer from "@/components/VoicePlayer";
 import { COVER, JOURNAL_AUDIO, JOURNAL_BOX_TOTAL, JOURNAL_PAGES, type JItem } from "@/lib/content/scrumptiousness-journal";
 
@@ -36,6 +38,13 @@ const UI = {
   marked: "Marked to come back to",
 };
 
+// A TASTER for people who are not paying members (Juliette, 19 Nov 2026: "only give a taster of the journal",
+// and "the 10 pages is more beautiful and gives a real feel of it"). Pages 4 to 13 of the book: the preface,
+// how to use it, the first writing pages and the playlist. Paying Scrumptious Confessions members and the
+// admin see every page. Same member check as the Library: a scrumptious-confessions row whose checkout
+// session does not start with "free-", or the admin email. The free fortnight does not unlock it.
+const TASTER_PAGES = 10;
+const MEMBER_URL = "https://feelfullyyou.com/scrumptious-confessions-membership";
 const clamp = (n: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, n));
 
 // The first words of a page, for the contents list.
@@ -254,6 +263,8 @@ export default function ScrumptiousnessJournal() {
   const [ready, setReady] = useState(false);
   const [blocked, setBlocked] = useState(false);
   const [book, setBook] = useState(true);
+  const [paid, setPaid] = useState(false);
+  const [memberKnown, setMemberKnown] = useState(false);
   const answersRef = useRef<Record<string, string>>({});
   const counted = useRef<Set<string>>(new Set());
 
@@ -279,6 +290,26 @@ export default function ScrumptiousnessJournal() {
     count("sj_open");
   }, []);
 
+  useEffect(() => {
+    (async () => {
+      let ok = false;
+      try {
+        if (process.env.NODE_ENV === "development" && localStorage.getItem("ffy.sj.member") === "1") ok = true; // local preview only
+        const { data } = await supabaseBrowser.auth.getSession();
+        const uid = data.session?.user.id;
+        if (uid) {
+          if ((data.session?.user.email || "").toLowerCase() === ADMIN_EMAIL) ok = true;
+          const { data: row } = await supabaseBrowser.from("user_decks").select("purchased_at, stripe_checkout_session_id").eq("user_id", uid).eq("deck_type", "scrumptious-confessions").maybeSingle();
+          if (row?.purchased_at && !String(row.stripe_checkout_session_id || "").startsWith("free-")) ok = true;
+        }
+      } catch {
+        /* not signed in, or no connection: she sees the taster */
+      }
+      setPaid(ok);
+      setMemberKnown(true);
+    })();
+  }, []);
+
   const setAnswer = useCallback((id: string, v: string) => {
     const next = { ...answersRef.current, [id]: v };
     answersRef.current = next;
@@ -294,7 +325,8 @@ export default function ScrumptiousnessJournal() {
   const pageDone = (i: number) => JOURNAL_PAGES[i].items.some((it) => it.t === "box" && (answers[it.id] ?? "").trim());
   const frac = JOURNAL_BOX_TOTAL ? answered / JOURNAL_BOX_TOTAL : 0;
 
-  const open = (i: number) => {
+  const open = (rawI: number) => {
+    const i = paid ? rawI : Math.min(rawI, TASTER_PAGES);
     setPos(i);
     write(K.pos, i);
     setView("page");
@@ -314,7 +346,8 @@ export default function ScrumptiousnessJournal() {
   const wrap = "ffy-sj mx-auto w-full max-w-[560px] px-5 pb-28 pt-6 text-[#f1ece2]";
   const bg = "min-h-screen bg-[#070707] [background-image:radial-gradient(120%_60%_at_50%_0%,rgba(13,53,53,0.55),transparent_70%)]";
 
-  if (!ready) return <main className={bg} />;
+  if (!ready || !memberKnown) return <main className={bg} />;
+  const locked = !paid && pos >= TASTER_PAGES;
 
   // ---- Contents --------------------------------------------------------------------------------
   if (view === "contents") {
@@ -330,6 +363,7 @@ export default function ScrumptiousnessJournal() {
                 <button type="button" onClick={() => open(i)} className="flex min-h-[48px] w-full items-center gap-3 border-b border-[rgba(221,201,142,0.15)] py-2 text-left" data-testid={`toc-${p.n}`}>
                   <span className="font-display w-9 shrink-0 text-[15px] text-[#DDC98E]">{p.n}</span>
                   <span className="min-w-0 flex-1 truncate text-[15px] text-[#cfc8bb]">{pageHeading(p.items)}</span>
+                  {!paid && i >= TASTER_PAGES && <span className="text-[12px] text-[#a79f90]">Members</span>}
                   {marks.includes(p.n) && <span aria-label={UI.marked} title={UI.marked} className="text-[#EEDE80]">★</span>}
                   {pageDone(i) && <span aria-label="Answered" className="text-[#DDC98E]">✓</span>}
                 </button>
@@ -378,6 +412,27 @@ export default function ScrumptiousnessJournal() {
     );
   }
 
+  // ---- The lock, after the taster -------------------------------------------------------------------
+  if (locked) {
+    return (
+      <main className={bg}>
+        <div className={wrap}>
+          <div className="flex items-center justify-between">
+            <button type="button" onClick={() => setView("cover")} className="min-h-[44px] text-[14px] text-[#DDC98E]">← Journal</button>
+            <button type="button" onClick={() => setView("contents")} className="min-h-[44px] text-[14px] text-[#DDC98E]">Contents</button>
+          </div>
+          <div className="mt-8 rounded-3xl border-[1.5px] border-[rgba(221,201,142,0.55)] bg-[rgba(13,53,53,0.45)] p-7 text-center shadow-[0_0_40px_-18px_rgba(221,201,142,0.6)]" data-testid="locked">
+            <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-[#DDC98E]">The Scrumptiousness Journal</p>
+            <h1 className="font-display mt-3 text-[28px] font-light leading-[1.2]">The rest opens when you join Scrumptious Confessions</h1>
+            <a href={MEMBER_URL} data-testid="join" onClick={() => count("sj_join_click")} className="mt-7 inline-flex min-h-[52px] w-full items-center justify-center rounded-full bg-[#DDC98E] px-6 font-display text-[16px] font-medium text-[#070707]">See Scrumptious Confessions</a>
+            <button type="button" onClick={() => open(TASTER_PAGES - 1)} className="mt-4 inline-flex min-h-[48px] items-center text-[15px] text-[#DDC98E] underline underline-offset-4">Back to the last page</button>
+          </div>
+          <p className="mt-6 text-center text-[13px] text-[#8f877a]">{UI.privacy}</p>
+        </div>
+      </main>
+    );
+  }
+
   // ---- A page ----------------------------------------------------------------------------------
   const pg = JOURNAL_PAGES[pos];
   const audio = JOURNAL_AUDIO[pg.n];
@@ -421,7 +476,7 @@ export default function ScrumptiousnessJournal() {
 
         <div className="mt-8 flex gap-3">
           <button type="button" disabled={pos === 0} onClick={() => open(pos - 1)} data-testid="prev" className="inline-flex min-h-[52px] flex-1 items-center justify-center rounded-full border border-[#DDC98E]/40 text-[16px] text-[#cfc8bb] disabled:opacity-30">Back</button>
-          <button type="button" disabled={pos === JOURNAL_PAGES.length - 1} onClick={() => open(pos + 1)} data-testid="next" className="inline-flex min-h-[52px] flex-1 items-center justify-center rounded-full border-[1.5px] border-[#DDC98E] font-display text-[17px] font-medium text-[#DDC98E] disabled:opacity-30">Next</button>
+          <button type="button" disabled={pos === JOURNAL_PAGES.length - 1 || (!paid && pos >= TASTER_PAGES)} onClick={() => open(pos + 1)} data-testid="next" className="inline-flex min-h-[52px] flex-1 items-center justify-center rounded-full border-[1.5px] border-[#DDC98E] font-display text-[17px] font-medium text-[#DDC98E] disabled:opacity-30">Next</button>
         </div>
         <p className="mt-6 text-center text-[13px] text-[#8f877a]">{UI.privacy}</p>
       </div>
