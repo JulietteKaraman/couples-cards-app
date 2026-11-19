@@ -9,7 +9,7 @@ import { isTouchBase, nextSpeed, readSpeed, saveSpeedFor } from "@/lib/voice-spe
 import { PromptCard } from "@/components/Interactive";
 import { CollectionGate } from "@/components/auth/CollectionGate";
 import { supabaseBrowser } from "@/lib/supabase/client";
-import { MEMBERSHIP_UNLOCKS, membershipMonth, monthOpensOn } from "@/lib/entitlements/config";
+import { MEMBERSHIP_UNLOCKS, membershipMonth } from "@/lib/entitlements/config";
 import { PLACES } from "@/lib/content/touch-map";
 import { ADMIN_EMAIL } from "@/lib/entitlements/admin";
 import PracticeTimer from "@/components/PracticeTimer";
@@ -283,7 +283,9 @@ function GroupLink() {
 }
 
 /* What opens the longer you stay (MEMBERSHIP_UNLOCKS, Juliette 16 Nov 2026). */
-function Library() {
+/* Who this person is in the membership: paying since when, in the free week, or not in (shared by the
+   library and the Today tab). Admin counts as paying. */
+function useMembership() {
   const [since, setSince] = useState<string | null>(null);
   const [trial, setTrial] = useState(false);
   // Local preview only shows the answers open; never true on the live site.
@@ -304,36 +306,15 @@ function Library() {
       else if (row?.purchased_at && !sid.startsWith("free-")) { setSince(row.purchased_at as string); setPaid(true); }
     })();
   }, []);
-  const month = since ? membershipMonth(since) : 1;
+  return { since, trial, paid };
+}
+
+/* Juliette 19 Nov 2026: "the library is too big and difficult to navigate... it will also be for people in the
+   Scrumptious Touch Reset and private clients". Four doors, nothing else. */
+const doorCls = "flex min-h-[132px] flex-col justify-between rounded-3xl border-[1.5px] border-[rgba(221,201,142,0.55)] bg-[rgba(13,53,53,0.35)] p-4 text-left";
+function Library() {
+  const { trial, paid } = useMembership();
   const [door, setDoor] = useState<Door | null>(null);
-  if (door === "months") {
-    return (
-      <>
-        <button type="button" onClick={() => setDoor(null)} className="mt-6 min-h-[44px] text-[15px] text-[#DDC98E]">&larr; Back to the library</button>
-    <section className="mt-4 space-y-3">
-      <Eyebrow>Opening month by month</Eyebrow>
-      <h2 className="font-display text-[28px] font-light leading-tight">Something new opens every month you stay</h2>
-      {MEMBERSHIP_UNLOCKS.map((u) => {
-        const open = u.month <= month;
-        const when = since ? monthOpensOn(since, u.month).toLocaleDateString("en-GB", { day: "numeric", month: "long" }) : null;
-        const inner = (
-          <>
-            <span className="text-[11px] uppercase tracking-[0.18em] text-[#DDC98E]">Month {u.month}{open ? " · open" : ""}</span>
-            <span className="mt-1 block font-display text-[22px] font-light leading-tight">{u.title}</span>
-            <span className="mt-0.5 block text-[14px] text-[#a79f90]">{open ? u.line : `🔒 Opens ${when ?? `in your month ${u.month}`}`}</span>
-          </>
-        );
-        return open ? (
-          <a key={u.title} href={u.href} target={u.href.startsWith("http") ? "_blank" : undefined} rel="noreferrer"
-            className="block rounded-3xl border-[1.5px] border-[rgba(221,201,142,0.55)] bg-[rgba(13,53,53,0.35)] p-4">{inner}</a>
-        ) : (
-          <div key={u.title} className="rounded-3xl border border-[#DDC98E]/20 p-4 opacity-70">{inner}</div>
-        );
-      })}
-    </section>
-      </>
-    );
-  }
   if (door) {
     const d = DOORS.find((x) => x.id === door)!;
     return (
@@ -344,28 +325,51 @@ function Library() {
     );
   }
   return (
-    <>
     <section className="mt-6">
       <Eyebrow>Your library</Eyebrow>
-      <h2 className="mt-3 font-display text-[28px] font-light leading-tight">Where would you like to start?</h2>
       <div className="mt-4 grid grid-cols-2 gap-3">
-        <Link href="/practice/scrumptiousness-journal" className="col-span-2 flex min-h-[96px] flex-col justify-between rounded-3xl border-[1.5px] border-[rgba(221,201,142,0.55)] bg-[rgba(13,53,53,0.35)] p-4">
-          <span className="font-display text-[21px] font-light leading-tight text-[#f1ece2]">The Scrumptiousness Journal</span>
-          <span className="text-[13px] text-[#a79f90]">{paid ? "All 103 pages" : "Ten pages to start"}</span>
-        </Link>
-        <Link href="/practice/scrumptious-poems" className="flex min-h-[132px] flex-col justify-between rounded-3xl border-[1.5px] border-[rgba(221,201,142,0.55)] bg-[rgba(13,53,53,0.35)] p-4">
-          <span className="font-display text-[21px] font-light leading-tight text-[#f1ece2]">Poems</span>
-          <span className="text-[13px] text-[#a79f90]">From my book, new every Wednesday</span>
-        </Link>
         {DOORS.map((x) => (
-          <button key={x.id} type="button" onClick={() => setDoor(x.id)} className={`${x.id === "months" ? "col-span-2 min-h-[96px]" : "min-h-[132px]"} flex flex-col justify-between rounded-3xl border-[1.5px] border-[rgba(221,201,142,0.55)] bg-[rgba(13,53,53,0.35)] p-4 text-left`}>
+          <button key={x.id} type="button" onClick={() => setDoor(x.id)} className={doorCls}>
             <span className="font-display text-[21px] font-light leading-tight text-[#f1ece2]">{x.title}</span>
             <span className="text-[13px] text-[#a79f90]">{x.line}</span>
           </button>
         ))}
+        <Link href="/practice/scrumptious-poems" className={doorCls}>
+          <span className="font-display text-[21px] font-light leading-tight text-[#f1ece2]">Poems</span>
+          <span className="text-[13px] text-[#a79f90]">A new one every Wednesday</span>
+        </Link>
+        <Link href="/practice/scrumptiousness-journal" className={doorCls}>
+          <span className="font-display text-[21px] font-light leading-tight text-[#f1ece2]">The Journal</span>
+          <span className="text-[13px] text-[#a79f90]">Scrumptiousness, {paid ? "all 103 pages" : "ten pages to start"}</span>
+        </Link>
       </div>
     </section>
-    </>
+  );
+}
+
+/* The practices that have opened for this member, on the Today tab. Only what is open: no locked list. */
+function OpenedForYou() {
+  const { since, trial, paid } = useMembership();
+  if (!paid) {
+    return trial ? <p className="mt-6 text-center text-[14px] text-[#a79f90]">Your first practices open with your first month, on day 8.</p> : null;
+  }
+  const month = since ? membershipMonth(since) : 1;
+  const open = MEMBERSHIP_UNLOCKS.filter((u) => u.month <= month);
+  if (!open.length) return null;
+  return (
+    <div className="mt-6" data-testid="opened-for-you">
+      <Eyebrow>Opened for you</Eyebrow>
+      <div className="mt-3 space-y-2">
+        {open.map((u) => (
+          <a key={u.title} href={u.href} target={u.href.startsWith("http") ? "_blank" : undefined} rel="noreferrer"
+            className="block rounded-2xl border border-[#DDC98E]/40 bg-[rgba(13,53,53,0.35)] p-4">
+            <span className="block font-display text-[19px] font-light leading-tight">{u.title}</span>
+            <span className="mt-0.5 block text-[13px] text-[#a79f90]">{u.line}</span>
+          </a>
+        ))}
+      </div>
+      <p className="mt-2 text-[12px] text-[#8f877a]">Something new opens every month you stay.</p>
+    </div>
   );
 }
 
@@ -395,12 +399,10 @@ const TOPICS: { id: string; label: string; words: string[] }[] = [
 ];
 // The library's doors (Juliette 19 Nov 2026: "the library is really not very clear at all").
 // Nobody lands on a list: they pick a door first. The Journal door is a link of its own.
-type Door = "meditations" | "answers" | "read" | "months";
+type Door = "meditations" | "answers";
 const DOORS: { id: Door; title: string; line: string; shelves: Shelf[] }[] = [
-  { id: "meditations", title: "Meditations", line: "In my voice, a new one every Friday", shelves: ["meditations"] },
-  { id: "answers", title: "Answers to your questions", line: "Start with five, or search them all", shelves: ["answers"] },
-  { id: "read", title: "Essays and podcast", line: "Read or listen", shelves: ["essays", "podcast"] },
-  { id: "months", title: "Practices and programmes", line: "Something new every month you stay", shelves: [] },
+  { id: "answers", title: "Your questions, answered", line: "Search, or start with five", shelves: ["answers"] },
+  { id: "meditations", title: "Meditations", line: "A new one every Friday", shelves: ["meditations"] },
 ];
 // Five to start with. Juliette can swap these for her own five favourites.
 const STARTERS = ["why-dont-i-feel-anything", "never-in-the-mood-but-enjoy-it", "why-can-i-feel-it-with-someone-else", "sleep-in-same-bed-never-touch", "why-doesnt-my-wife-want-me"];
@@ -460,13 +462,6 @@ function Answers({ paid, trial, start, shelves }: { paid: boolean; trial?: boole
       <p className="mt-2 text-[15px] text-[#a79f90]">{all ? `${all.length} ${meta.unit} so far, and it grows every week.` : "Opening\u2026"}</p>
       <input value={find} onChange={(e) => setFind(e.target.value)} placeholder="Search: touch, menopause, desire…"
         className="mt-4 w-full rounded-full border border-[#DDC98E]/40 bg-transparent px-5 py-3 text-[16px] text-[#f1ece2] placeholder:text-[#8f877a]" />
-      <p className="mt-4 text-[13px] uppercase tracking-[0.18em] text-[#DDC98E]">What&rsquo;s on your mind?</p>
-      <div className="mt-2 flex flex-wrap gap-2">
-        {TOPICS.map((t) => (
-          <button key={t.id} type="button" onClick={() => { setTopic(topic === t.id ? null : t.id); setOpen(null); }}
-            className={`min-h-[40px] rounded-full border px-4 text-[14px] ${topic === t.id ? "border-[#DDC98E] bg-[rgba(221,201,142,0.15)] text-[#f1ece2]" : "border-[#DDC98E]/35 text-[#f1ece2]/75"}`}>{t.label}</button>
-        ))}
-      </div>
       {!paid && <p className="mt-3 text-[14px] text-[#DDC98E]">{trial ? "🔒 In your free week you see every question. The answers open with your first month, on day 8. Three meditations are yours now." : "🔒 These open when you start your 7 days free."}</p>}
       {starter && list.length > 0 && <p className="mt-5 font-display text-[20px] text-[#f1ece2]">Five to start with</p>}
       <ul className="mt-4 space-y-2">
@@ -645,6 +640,7 @@ function Today() {
         <MonthDots days={days} start={start} sel={sel} onPick={(d) => { if (d <= today) setSel(d); }} />
       </div>
       <TouchMapMonth />
+      <OpenedForYou />
     </section>
   );
 }
@@ -678,6 +674,8 @@ function TouchMapMonth() {
             {p.touch.map((l, i) => <p key={i} className="text-[16px] leading-relaxed text-[#f1ece2]">{l}</p>)}
           </div>
           {next && <p className="mt-4 text-[13px] text-[#8f877a]">The next place opens on {dayName(next.on)}.</p>}
+          {/* Juliette 19 Nov 2026: a way to buy the whole map, without leaving the app. */}
+          <p className="mt-4 text-[14px] text-[#cfc8bb]">This is one place from The Touch Map. Want the whole map? <Link href="/practice/touch-map" className="text-[#DDC98E] underline underline-offset-4">Open it here, &pound;197</Link>.</p>
         </>
       ) : (
         <p className="mt-2 text-[16px] text-[#cfc8bb]">One place on your body, once a month, in my voice. The first one opens on {next ? dayName(next.on) : "the first Monday of the month"}.</p>
