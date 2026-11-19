@@ -50,5 +50,8 @@ export async function GET(req: Request) {
   );
   // Newest first, so this Friday's sits at the top.
   items.sort((a, b) => (a.publish_on < b.publish_on ? 1 : a.publish_on > b.publish_on ? -1 : 0));
-  return NextResponse.json({ member, trial, items, next: next ? { publish_on: next.publish_on } : null, total: MEDITATIONS.length });
+  // Juliette 19 Nov 2026: "show what the list of meditations are that open so that will entice them to stay".
+  // Titles and dates only, never the audio.
+  const upcoming = MEDITATIONS.filter((m) => m.publish_on > today).slice(0, 8).map((m) => ({ title: m.title, minutes: m.minutes, publish_on: m.publish_on }));
+  return NextResponse.json({ member, trial, items, next: next ? { publish_on: next.publish_on } : null, upcoming, total: MEDITATIONS.length });
 }

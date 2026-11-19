@@ -418,7 +418,13 @@ async function loadMeditations(): Promise<Answer[]> {
     slug: m.slug, q: `${m.title} \u00b7 ${m.minutes} min`, audio: m.audio || undefined, shelves: m.shelves, locked: !m.audio,
     blocks: [{ t: "p" as const, x: "Put your headphones in, and give yourself this time." }],
   }));
-  if (next) items.push({ slug: "next", q: `The next one opens on ${next}.`, locked: true, blocks: [] });
+  // What's coming, so people see what they'd stay for: the next Fridays, by title.
+  const up = (json.upcoming || []) as { title: string; minutes: number; publish_on: string }[];
+  for (const u of up) {
+    const day = new Date(u.publish_on + "T12:00:00").toLocaleDateString("en-GB", { day: "numeric", month: "long" });
+    items.push({ slug: `next-${u.publish_on}`, q: `${u.title} \u00b7 ${u.minutes} min \u00b7 opens ${day}`, locked: true, blocks: [] });
+  }
+  if (!up.length && next) items.push({ slug: "next", q: `The next one opens on ${next}.`, locked: true, blocks: [] });
   return items;
 }
 // Juliette 16 Nov: answers, then "all the substacks, and the podcast". Seeded from her
@@ -443,7 +449,7 @@ function Answers({ paid, trial, start, shelves }: { paid: boolean; trial?: boole
   const words = norm(find).split(/\s+/).filter(Boolean);
   const inQ = (a: Answer) => words.every((w) => norm(a.q).includes(w));
   const tp = TOPICS.find((t) => t.id === topic);
-  const onShelf = (a: Answer) => !tp || a.slug === "next" || (a.shelves ? a.shelves.includes(tp.id) : tp.words.some((w) => (" " + a.q + " " + a.blocks.map((b) => b.x).join(" ") + " ").toLowerCase().includes(w)));
+  const onShelf = (a: Answer) => !tp || a.slug.startsWith("next") || (a.shelves ? a.shelves.includes(tp.id) : tp.words.some((w) => (" " + a.q + " " + a.blocks.map((b) => b.x).join(" ") + " ").toLowerCase().includes(w)));
   const shown = (all || [])
     .filter(onShelf)
     .filter((a) => { const t = norm(a.q + " " + a.blocks.map((b) => b.x).join(" ")); return words.every((w) => t.includes(w)); })
@@ -459,17 +465,17 @@ function Answers({ paid, trial, start, shelves }: { paid: boolean; trial?: boole
         ))}
       </div>}
       <h2 className="mt-5 font-display text-[28px] font-light leading-tight">{meta.title}</h2>
-      <p className="mt-2 text-[15px] text-[#a79f90]">{all ? `${all.length} ${meta.unit} so far, and it grows every week.` : "Opening\u2026"}</p>
+      <p className="mt-2 text-[15px] text-[#a79f90]">{all ? `${all.filter((a) => !a.slug.startsWith("next")).length} ${meta.unit} so far, and it grows every week.` : "Opening\u2026"}</p>
       <input value={find} onChange={(e) => setFind(e.target.value)} placeholder="Search: touch, menopause, desire…"
         className="mt-4 w-full rounded-full border border-[#DDC98E]/40 bg-transparent px-5 py-3 text-[16px] text-[#f1ece2] placeholder:text-[#8f877a]" />
       {!paid && <p className="mt-3 text-[14px] text-[#DDC98E]">{trial ? "🔒 In your free week you see every question. The answers open with your first month, on day 8. Three meditations are yours now." : "🔒 These open when you start your 7 days free."}</p>}
       {starter && list.length > 0 && <p className="mt-5 font-display text-[20px] text-[#f1ece2]">Five to start with</p>}
       <ul className="mt-4 space-y-2">
-        {(starter ? list : shown.slice(0, find || topic ? 60 : 12)).map((a) => (
+        {(starter ? list : shelf === "meditations" ? shown : shown.slice(0, find || topic ? 60 : 12)).map((a) => (
           <li key={a.slug} className="rounded-2xl border border-[#DDC98E]/25">
             <button type="button" onClick={() => (paid || (trial && shelf === "meditations")) && !a.locked && setOpen(open === a.slug ? null : a.slug)} className="flex w-full items-start justify-between gap-3 p-4 text-left">
               <span className="text-[16px] leading-snug text-[#f1ece2]">{a.q}</span>
-              <span className="shrink-0 text-[#DDC98E]">{a.slug === "next" ? "" : (paid || (trial && shelf === "meditations")) && !a.locked ? (open === a.slug ? "\u2212" : "+") : "🔒"}</span>
+              <span className="shrink-0 text-[#DDC98E]">{a.slug.startsWith("next") ? <span className="text-[12px] uppercase tracking-[0.14em] text-[#a79f90]">Soon</span> : (paid || (trial && shelf === "meditations")) && !a.locked ? (open === a.slug ? "\u2212" : "+") : "🔒"}</span>
             </button>
             {(paid || (trial && shelf === "meditations")) && !a.locked && open === a.slug && (
               <div className="space-y-3 px-4 pb-5 text-[15px] leading-relaxed text-[#cfc8bb]">
