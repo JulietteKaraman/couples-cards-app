@@ -412,13 +412,16 @@ function Answers({ paid, trial, start, shelves }: { paid: boolean; trial?: boole
   const raw = data[shelf];
   const all = raw && shelf === "answers" ? raw.filter((a) => !HIDE.has(a.slug)) : raw;
   const meta = SHELVES.find((x) => x.id === shelf)!;
-  const words = find.toLowerCase().split(/\s+/).filter(Boolean);
-  const inQ = (a: Answer) => words.every((w) => a.q.toLowerCase().includes(w));
+  // Phones type curly apostrophes ("don’t"); the library has straight ones. Search ignores
+  // apostrophes and punctuation, so "why don't i feel anything" always finds it (19 Nov 2026).
+  const norm = (x: string) => x.toLowerCase().replace(/['\u2018\u2019`]/g, "").replace(/[^a-z0-9\s]/g, " ");
+  const words = norm(find).split(/\s+/).filter(Boolean);
+  const inQ = (a: Answer) => words.every((w) => norm(a.q).includes(w));
   const tp = TOPICS.find((t) => t.id === topic);
   const onShelf = (a: Answer) => !tp || a.slug === "next" || (a.shelves ? a.shelves.includes(tp.id) : tp.words.some((w) => (" " + a.q + " " + a.blocks.map((b) => b.x).join(" ") + " ").toLowerCase().includes(w)));
   const shown = (all || [])
     .filter(onShelf)
-    .filter((a) => words.every((w) => (a.q + " " + a.blocks.map((b) => b.x).join(" ")).toLowerCase().includes(w)))
+    .filter((a) => { const t = norm(a.q + " " + a.blocks.map((b) => b.x).join(" ")); return words.every((w) => t.includes(w)); })
     .sort((a, b) => Number(inQ(b)) - Number(inQ(a)));
   const starter = shelf === "answers" && !find && !topic;
   const list = starter ? STARTERS.map((id) => (all || []).find((a) => a.slug === id)).filter((a): a is Answer => !!a) : shown;
