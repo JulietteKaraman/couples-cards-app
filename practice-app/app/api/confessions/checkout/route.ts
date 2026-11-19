@@ -32,6 +32,14 @@ export async function GET() {
       // The site's webhook sends the welcome email by payment link; this names the one it stands for.
       metadata: { payment_link: PAYMENT_LINK },
       subscription_data: { trial_end: trialEnd, metadata: { payment_link: PAYMENT_LINK } },
+      // Stripe counts free days from today ("10 days free"); this says plainly when the week starts.
+      custom_text: {
+        submit: {
+          message: now < FIRST_CHARGE - 7 * 24 * 60 * 60
+            ? "Nothing is charged today. Doors open Monday 23 November and your 7 free days start then, with Juliette's first confession. Your first £111 is on Monday 30 November. Stop before then and you pay nothing."
+            : "Nothing is charged today. Your 7 free days start now. Stop before your first payment and you pay nothing.",
+        },
+      },
       success_url: `${APP}?joined=1`,
       cancel_url: SALES,
     });
