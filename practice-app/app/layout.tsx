@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Poppins, Inter } from "next/font/google";
 import { AuthProvider } from "@/components/providers/AuthProvider";
 import { AudioPlayback } from "@/components/AudioPlayback";
+import { BackToConfessions } from "@/components/BackToConfessions";
 import "./globals.css";
 
 const poppins = Poppins({
@@ -38,7 +39,7 @@ export default function RootLayout({
     <html lang="en" className={`${poppins.variable} ${inter.variable}`}>
       <body>
         <AudioPlayback />
-        <AuthProvider>{children}</AuthProvider>
+        <AuthProvider>{children}<BackToConfessions /></AuthProvider>
       </body>
     </html>
   );
