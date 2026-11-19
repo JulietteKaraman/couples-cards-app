@@ -86,7 +86,8 @@ export async function grantEntitlement(
     const stillMember = existing && (!existing.expires_at || new Date(existing.expires_at) > new Date());
     // Free fortnight days never count towards paid months: the first real
     // payment after a free claim starts the clock.
-    const wasFree = (existing?.stripe_checkout_session_id || "").startsWith("free-");
+    // The 7-day trial ("trial-") counts the same way: paid months start at the first real payment.
+    const wasFree = /^(free|trial)-/.test(existing?.stripe_checkout_session_id || "");
     if (stillMember && existing.purchased_at && !wasFree) row.purchased_at = existing.purchased_at;
   }
 

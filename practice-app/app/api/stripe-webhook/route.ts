@@ -94,7 +94,11 @@ export async function POST(req: Request) {
         periodEndSeconds * 1000 + SUBSCRIPTION_GRACE_PERIOD_HOURS * 60 * 60 * 1000
       ).toISOString();
 
-      await grantEntitlement(email, deckType, invoice.id ?? subscriptionId, undefined, expiresAt);
+      // 19 Nov 2026, Juliette: the 7-day trial is a taste, not the whole membership. Stripe sends a
+      // paid £0 invoice for the trial; mark it "trial-" so the app can tell. The first real payment
+      // (day 8) overwrites this with the plain invoice id, and the paid months start from that day.
+      const marker = invoice.amount_paid === 0 ? `trial-${invoice.id ?? subscriptionId}` : (invoice.id ?? subscriptionId);
+      await grantEntitlement(email, deckType, marker, undefined, expiresAt);
 
       return NextResponse.json({ received: true, granted: deckType, expires_at: expiresAt });
     }

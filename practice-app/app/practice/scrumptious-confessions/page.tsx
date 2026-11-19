@@ -260,6 +260,7 @@ function GroupLink() {
 /* What opens the longer you stay (MEMBERSHIP_UNLOCKS, Juliette 16 Nov 2026). */
 function Library() {
   const [since, setSince] = useState<string | null>(null);
+  const [trial, setTrial] = useState(false);
   // Local preview only shows the answers open; never true on the live site.
   const [paid, setPaid] = useState(process.env.NODE_ENV === "development");
   useEffect(() => {
@@ -270,14 +271,16 @@ function Library() {
       if ((data.session?.user.email || "").toLowerCase() === ADMIN_EMAIL) setPaid(true);
       const { data: row } = await supabaseBrowser.from("user_decks").select("purchased_at, stripe_checkout_session_id").eq("user_id", uid).eq("deck_type", "scrumptious-confessions").maybeSingle();
       // Free fortnight days don't count: months start with the first payment.
-      const free = String(row?.stripe_checkout_session_id || "").startsWith("free-");
-      if (row?.purchased_at && !free) { setSince(row.purchased_at as string); setPaid(true); }
+      // The 7 free days ("trial-") are a taste: answers stay locked until day 8 (Juliette 19 Nov 2026).
+      const sid = String(row?.stripe_checkout_session_id || "");
+      if (row?.purchased_at && sid.startsWith("trial-")) setTrial(true);
+      else if (row?.purchased_at && !sid.startsWith("free-")) { setSince(row.purchased_at as string); setPaid(true); }
     })();
   }, []);
   const month = since ? membershipMonth(since) : 1;
   return (
     <>
-    <Answers paid={paid} />
+    <Answers paid={paid} trial={trial} />
     <section className="mt-10 space-y-3">
       <Eyebrow>Opening month by month</Eyebrow>
       <h2 className="font-display text-[28px] font-light leading-tight">Something new opens every month you stay</h2>
@@ -307,35 +310,66 @@ function Library() {
    questions that I have answered that the members get answers to after they pay").
    Seeded from her published answer pages; grows with members' own questions.
    Free-fortnight people see the questions, and the answers open once they stay. */
-type Answer = { slug: string; q: string; audio?: string; blocks: { t: "h" | "p" | "li"; x: string }[] };
-type Shelf = "answers" | "essays" | "podcast";
+type Answer = { slug: string; q: string; audio?: string; shelves?: string[]; locked?: boolean; blocks: { t: "h" | "p" | "li"; x: string }[] };
+type Shelf = "answers" | "essays" | "podcast" | "meditations";
 const SHELVES: { id: Shelf; label: string; title: string; unit: string }[] = [
   { id: "answers", label: "Answers", title: "Every question I\u2019ve answered", unit: "questions" },
   { id: "essays", label: "Essays", title: "Every essay I\u2019ve written", unit: "essays" },
   { id: "podcast", label: "Podcast", title: "Every episode, to listen here", unit: "episodes" },
+  { id: "meditations", label: "Meditations", title: "My meditations, a new one every Friday", unit: "meditations" },
 ];
+// The living library's shelves (specs/living-library.md, names locked by Juliette 19 Nov 2026).
+// Meditations carry their shelves; everything else is matched on its own words.
+const TOPICS: { id: string; label: string; words: string[] }[] = [
+  { id: "numb", label: "Feeling nothing", words: ["numb", "nothing", "flat", "shut down", "don't want to be touched", "dont want", "no desire", "disconnected"] },
+  { id: "touch", label: "Touch and the body", words: ["touch", "body", "skin", "trace", "hug", "hands"] },
+  { id: "desire", label: "Desire and pleasure", words: ["desire", "pleasure", "orgasm", "turn on", "turned on", "sex", "erotic", "libido", "want"] },
+  { id: "us", label: "Him, her, us", words: ["partner", "husband", "wife", "marriage", "couple", "him", "relationship", "reaching", "distance"] },
+  { id: "safe", label: "Safety and trust", words: ["safe", "safety", "trust", "boundar", "saying no", "the no", "consent", "brace"] },
+  { id: "shame", label: "Shame and the past", words: ["shame", "past", "trauma", "child", "guilt", "abuse", "mother", "father"] },
+  { id: "men", label: "For men", words: [" men", " man ", "for men", "masculin"] },
+  { id: "calm", label: "Calm, sleep and clarity", words: ["anxiety", "sleep", "calm", "stress", "breath", "overwhelm", "clarity", "nervous"] },
+];
+async function loadMeditations(): Promise<Answer[]> {
+  const { data } = await supabaseBrowser.auth.getSession();
+  const token = data.session?.access_token;
+  const res = await fetch("/api/meditations", { headers: token ? { Authorization: `Bearer ${token}` } : {} });
+  const json = await res.json();
+  const next = json.next?.publish_on ? new Date(json.next.publish_on + "T12:00:00").toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long" }) : null;
+  const items: Answer[] = (json.items || []).map((m: { slug: string; title: string; minutes: number; shelves: string[]; audio: string | null }) => ({
+    slug: m.slug, q: `${m.title} \u00b7 ${m.minutes} min`, audio: m.audio || undefined, shelves: m.shelves, locked: !m.audio,
+    blocks: [{ t: "p" as const, x: "Put your headphones in, and give yourself this time." }],
+  }));
+  if (next) items.push({ slug: "next", q: `The next one opens on ${next}.`, locked: true, blocks: [] });
+  return items;
+}
 // Juliette 16 Nov: answers, then "all the substacks, and the podcast". Seeded from her
 // published pages (answers, essays, episodes), so every word is hers.
-function Answers({ paid }: { paid: boolean }) {
+function Answers({ paid, trial }: { paid: boolean; trial?: boolean }) {
   const [shelf, setShelf] = useState<Shelf>("answers");
-  const [data, setData] = useState<Record<Shelf, Answer[] | null>>({ answers: null, essays: null, podcast: null });
+  const [data, setData] = useState<Record<Shelf, Answer[] | null>>({ answers: null, essays: null, podcast: null, meditations: null });
   const [find, setFind] = useState("");
+  const [topic, setTopic] = useState<string | null>(null);
   const [open, setOpen] = useState<string | null>(null);
   useEffect(() => {
     if (data[shelf]) return;
-    fetch(`/scrumptious-confessions/${shelf}.json`).then((r) => r.json()).then((d) => setData((x) => ({ ...x, [shelf]: d }))).catch(() => setData((x) => ({ ...x, [shelf]: [] })));
+    const get = shelf === "meditations" ? loadMeditations() : fetch(`/scrumptious-confessions/${shelf}.json`).then((r) => r.json());
+    get.then((d) => setData((x) => ({ ...x, [shelf]: d }))).catch(() => setData((x) => ({ ...x, [shelf]: [] })));
   }, [shelf, data]);
   const all = data[shelf];
   const meta = SHELVES.find((x) => x.id === shelf)!;
   const words = find.toLowerCase().split(/\s+/).filter(Boolean);
   const inQ = (a: Answer) => words.every((w) => a.q.toLowerCase().includes(w));
+  const tp = TOPICS.find((t) => t.id === topic);
+  const onShelf = (a: Answer) => !tp || a.slug === "next" || (a.shelves ? a.shelves.includes(tp.id) : tp.words.some((w) => (" " + a.q + " " + a.blocks.map((b) => b.x).join(" ") + " ").toLowerCase().includes(w)));
   const shown = (all || [])
+    .filter(onShelf)
     .filter((a) => words.every((w) => (a.q + " " + a.blocks.map((b) => b.x).join(" ")).toLowerCase().includes(w)))
     .sort((a, b) => Number(inQ(b)) - Number(inQ(a)));
   return (
     <section className="mt-6">
       <Eyebrow>Your library</Eyebrow>
-      <div className="mt-3 grid grid-cols-3 gap-2">
+      <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
         {SHELVES.map((x) => (
           <button key={x.id} type="button" onClick={() => { setShelf(x.id); setOpen(null); }}
             className={`min-h-[44px] rounded-full border text-[14px] ${shelf === x.id ? "border-[#DDC98E] bg-[rgba(221,201,142,0.15)] text-[#f1ece2]" : "border-[#DDC98E]/35 text-[#f1ece2]/75"}`}>{x.label}</button>
@@ -345,15 +379,22 @@ function Answers({ paid }: { paid: boolean }) {
       <p className="mt-2 text-[15px] text-[#a79f90]">{all ? `${all.length} ${meta.unit} so far, and it grows every week.` : "Opening\u2026"}</p>
       <input value={find} onChange={(e) => setFind(e.target.value)} placeholder="Search: touch, menopause, desire…"
         className="mt-4 w-full rounded-full border border-[#DDC98E]/40 bg-transparent px-5 py-3 text-[16px] text-[#f1ece2] placeholder:text-[#8f877a]" />
-      {!paid && <p className="mt-3 text-[14px] text-[#DDC98E]">🔒 These open when you stay, from Monday 7 December.</p>}
+      <p className="mt-4 text-[13px] uppercase tracking-[0.18em] text-[#DDC98E]">What&rsquo;s on your mind?</p>
+      <div className="mt-2 flex flex-wrap gap-2">
+        {TOPICS.map((t) => (
+          <button key={t.id} type="button" onClick={() => { setTopic(topic === t.id ? null : t.id); setOpen(null); }}
+            className={`min-h-[40px] rounded-full border px-4 text-[14px] ${topic === t.id ? "border-[#DDC98E] bg-[rgba(221,201,142,0.15)] text-[#f1ece2]" : "border-[#DDC98E]/35 text-[#f1ece2]/75"}`}>{t.label}</button>
+        ))}
+      </div>
+      {!paid && <p className="mt-3 text-[14px] text-[#DDC98E]">{trial ? "🔒 In your free week you see every question. The answers open with your first month, on day 8. Three meditations are yours now." : "🔒 These open when you start your 7 days free."}</p>}
       <ul className="mt-4 space-y-2">
         {shown.slice(0, find ? 40 : 12).map((a) => (
           <li key={a.slug} className="rounded-2xl border border-[#DDC98E]/25">
-            <button type="button" onClick={() => paid && setOpen(open === a.slug ? null : a.slug)} className="flex w-full items-start justify-between gap-3 p-4 text-left">
+            <button type="button" onClick={() => (paid || (trial && shelf === "meditations")) && !a.locked && setOpen(open === a.slug ? null : a.slug)} className="flex w-full items-start justify-between gap-3 p-4 text-left">
               <span className="text-[16px] leading-snug text-[#f1ece2]">{a.q}</span>
-              <span className="shrink-0 text-[#DDC98E]">{paid ? (open === a.slug ? "\u2212" : "+") : "🔒"}</span>
+              <span className="shrink-0 text-[#DDC98E]">{a.slug === "next" ? "" : (paid || (trial && shelf === "meditations")) && !a.locked ? (open === a.slug ? "\u2212" : "+") : "🔒"}</span>
             </button>
-            {paid && open === a.slug && (
+            {(paid || (trial && shelf === "meditations")) && !a.locked && open === a.slug && (
               <div className="space-y-3 px-4 pb-5 text-[15px] leading-relaxed text-[#cfc8bb]">
                 {a.audio && <audio controls preload="none" src={a.audio} className="w-full" />}
                 {a.blocks.map((b, i) => b.t === "h"
@@ -496,7 +537,7 @@ function Today() {
           {canFwd ? <button type="button" onClick={() => setSel(shift(sel, 1))} className="min-h-[44px] text-[#DDC98E]">Forward →</button> : <span />}
         </div>
         <div className="mt-3"><Eyebrow>How much did you feel?</Eyebrow></div>
-        <div className="mt-3 grid grid-cols-3 gap-2">
+        <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
           {FEELS.map((f) => (
             <button key={f.id} type="button" onClick={() => save({ feel: f.id })} className={pill(rec.feel === f.id) + " flex-col py-3 text-[14px]"}>
               <span className="h-4 w-4 rounded-full" style={{ background: f.color }} />{f.label}

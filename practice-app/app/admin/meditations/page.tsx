@@ -1,0 +1,100 @@
+"use client";
+
+import { useCallback, useEffect, useState } from "react";
+import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
+import { useAuth } from "@/components/providers/AuthProvider";
+import { supabaseBrowser } from "@/lib/supabase/client";
+import { ADMIN_EMAIL } from "@/lib/entitlements/admin";
+import { MEDITATIONS } from "@/lib/content/meditations";
+
+// JULIETTE'S MEDITATION UPLOAD (specs/living-library.md). One time: choose every file in the
+// "meditations-for-app" folder at once. Each file goes to the private store under its own name,
+// and opens in the app on its day. Uploading again replaces a file; nothing else changes.
+
+async function call(method: "GET" | "POST", body?: unknown) {
+  const { data } = await supabaseBrowser.auth.getSession();
+  const token = data.session?.access_token;
+  if (!token) throw new Error("Your session expired. Refresh and sign in again.");
+  const res = await fetch("/api/admin/meditations", {
+    method,
+    headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+    body: body ? JSON.stringify(body) : undefined,
+  });
+  const json = await res.json();
+  if (!res.ok) throw new Error(json.error || "Something went wrong");
+  return json;
+}
+
+export default function MeditationsAdminPage() {
+  return (
+    <ProtectedRoute>
+      <Gate />
+    </ProtectedRoute>
+  );
+}
+
+function Gate() {
+  const { user } = useAuth();
+  if (user?.email?.toLowerCase() !== ADMIN_EMAIL) {
+    return <main className="flex min-h-screen items-center justify-center bg-[#070707] text-[#f1ece2]">This page is only for Juliette.</main>;
+  }
+  return <Upload />;
+}
+
+function Upload() {
+  const [uploaded, setUploaded] = useState<Set<string>>(new Set());
+  const [busy, setBusy] = useState(false);
+  const [log, setLog] = useState<string[]>([]);
+  const [err, setErr] = useState<string | null>(null);
+
+  const load = useCallback(async () => {
+    try { setUploaded(new Set((await call("GET")).uploaded as string[])); } catch (e) { setErr((e as Error).message); }
+  }, []);
+  useEffect(() => { load(); }, [load]);
+
+  async function send(files: FileList | null) {
+    if (!files?.length) return;
+    setBusy(true); setErr(null); setLog([]);
+    const known = new Set(MEDITATIONS.map((m) => m.slug));
+    for (const file of Array.from(files)) {
+      const slug = file.name.replace(/\.[^.]+$/, "");
+      if (!known.has(slug)) { setLog((l) => [...l, `Skipped ${file.name} (not on the list)`]); continue; }
+      try {
+        const up = await call("POST", { action: "upload-url", slug });
+        const { error } = await supabaseBrowser.storage.from("drops").uploadToSignedUrl(up.path, up.token, file, { contentType: "audio/mp4", upsert: true });
+        if (error) throw new Error(error.message);
+        setLog((l) => [...l, `✓ ${file.name}`]);
+        setUploaded((u) => new Set(u).add(slug));
+      } catch (e) {
+        setLog((l) => [...l, `✗ ${file.name}: ${(e as Error).message}`]);
+      }
+    }
+    setBusy(false);
+    load();
+  }
+
+  const done = MEDITATIONS.filter((m) => uploaded.has(m.slug)).length;
+  return (
+    <main className="min-h-screen bg-[#070707] px-5 py-10 text-[#f1ece2]">
+      <div className="mx-auto max-w-xl">
+        <h1 className="font-display text-[30px] font-light">Your meditations</h1>
+        <p className="mt-2 text-[15px] text-[#cfc8bb]">Choose every file in the <b>meditations-for-app</b> folder at once. They go to the private store, and each one opens in the app on its day.</p>
+        <label className="mt-6 flex min-h-[56px] cursor-pointer items-center justify-center rounded-full bg-[#DDC98E] font-display text-[17px] font-medium text-[#070707]">
+          {busy ? "Uploading…" : "Choose the files"}
+          <input type="file" accept="audio/*,.m4a" multiple className="hidden" disabled={busy} onChange={(e) => send(e.target.files)} />
+        </label>
+        <p className="mt-4 text-[16px] text-[#DDC98E]">{done} of {MEDITATIONS.length} uploaded</p>
+        {err && <p className="mt-2 text-[14px] text-[#EEDE80]">{err}</p>}
+        <ul className="mt-4 space-y-1 text-[14px] text-[#cfc8bb]">{log.map((l, i) => <li key={i}>{l}</li>)}</ul>
+        <ul className="mt-8 space-y-1 text-[14px]">
+          {MEDITATIONS.map((m) => (
+            <li key={m.slug} className="flex justify-between gap-3 border-b border-[#DDC98E]/15 py-2">
+              <span>{uploaded.has(m.slug) ? "✓" : "·"} {m.title}</span>
+              <span className="shrink-0 text-[#8f877a]">{new Date(m.publish_on + "T12:00:00").toLocaleDateString("en-GB", { day: "numeric", month: "short" })}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </main>
+  );
+}
