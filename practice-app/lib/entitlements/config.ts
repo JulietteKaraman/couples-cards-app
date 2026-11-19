@@ -167,7 +167,7 @@ export const MEMBERSHIP_UNLOCKS: MembershipUnlock[] = [
   // Juliette 16 Nov: "I reinstated when she goes quiet but it is called something else now- and they should get access to that immediately". Free guide for men.
   { month: 1, title: "Quiet Isn't Yes", line: "For men: when she goes quiet, and what it really means.", href: "/practice/quiet-isnt-yes" },
   { month: 1, title: "The Trace", line: "Fully clothed. Non-sexual. Touch that isn't going to lead anywhere.", href: "/practice/the-trace" },
-  { month: 2, title: "The Approach Ritual", line: "You approach. She decides the distance.", href: "/practice/when-she-stops-reaching" },
+  { month: 2, title: "When She Stops Reaching", line: "For men: Touch Base, the Approach Ritual, the Full Stop.", href: "/practice/when-she-stops-reaching" },
   { month: 2, title: "The Fifteen Minutes After", line: "One communication. Thank you. Swap.", href: "/practice/the-fifteen-minutes-after" },
   { month: 2, title: "Between Touches", line: "What happens in the moments between.", deck: "between-touches", href: "/practice/between-touches" },
   { month: 3, title: "31 Touch Points", line: "A touch a day for a month.", deck: "31-touch-points", href: "/practice/31-touch-points" },
