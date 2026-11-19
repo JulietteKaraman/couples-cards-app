@@ -432,6 +432,15 @@ function LibraryContent() {
             heroImage="/offers/sales/sacred-no-quiz.jpg"
             note="Free"
           />}
+          {/* The Scrumptiousness Journal, open to everyone for now. Juliette, 19 Nov 2026: build it in full,
+              lock it afterwards. The line under the title is from page 7 of her book. */}
+          <Tile
+            href="/practice/scrumptiousness-journal"
+            title="The Scrumptiousness Journal"
+            subtitle="A journal filled with prompts, practices and meditations."
+            heroImage="/scrumptiousness-journal/thumb.jpg"
+            note="Write in it · stays on your phone"
+          />
           {shown("touch-base") && <Tile
             href="/practice/touch-base"
             title="Touch Base®, the Anchor"
