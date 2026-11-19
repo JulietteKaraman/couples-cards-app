@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import VoicePlayer from "@/components/VoicePlayer";
@@ -278,9 +280,34 @@ function Library() {
     })();
   }, []);
   const month = since ? membershipMonth(since) : 1;
+  const [door, setDoor] = useState<Door | null>(null);
+  if (door) {
+    const d = DOORS.find((x) => x.id === door)!;
+    return (
+      <>
+        <button type="button" onClick={() => setDoor(null)} className="mt-6 min-h-[44px] text-[15px] text-[#DDC98E]">&larr; Back to the library</button>
+        <Answers key={door} paid={paid} trial={trial} start={d.shelves[0]} shelves={d.shelves} />
+      </>
+    );
+  }
   return (
     <>
-    <Answers paid={paid} trial={trial} />
+    <section className="mt-6">
+      <Eyebrow>Your library</Eyebrow>
+      <h2 className="mt-3 font-display text-[28px] font-light leading-tight">Where would you like to start?</h2>
+      <div className="mt-4 grid grid-cols-2 gap-3">
+        <Link href="/practice/scrumptiousness-journal" className="col-span-2 flex min-h-[96px] flex-col justify-between rounded-3xl border-[1.5px] border-[rgba(221,201,142,0.55)] bg-[rgba(13,53,53,0.35)] p-4">
+          <span className="font-display text-[21px] font-light leading-tight text-[#f1ece2]">The Scrumptiousness Journal</span>
+          <span className="text-[13px] text-[#a79f90]">{paid ? "All 103 pages" : "Ten pages to start"}</span>
+        </Link>
+        {DOORS.map((x) => (
+          <button key={x.id} type="button" onClick={() => setDoor(x.id)} className={`${x.id === "read" ? "col-span-2 min-h-[96px]" : "min-h-[132px]"} flex flex-col justify-between rounded-3xl border-[1.5px] border-[rgba(221,201,142,0.55)] bg-[rgba(13,53,53,0.35)] p-4 text-left`}>
+            <span className="font-display text-[21px] font-light leading-tight text-[#f1ece2]">{x.title}</span>
+            <span className="text-[13px] text-[#a79f90]">{x.line}</span>
+          </button>
+        ))}
+      </div>
+    </section>
     <section className="mt-10 space-y-3">
       <Eyebrow>Opening month by month</Eyebrow>
       <h2 className="font-display text-[28px] font-light leading-tight">Something new opens every month you stay</h2>
@@ -330,6 +357,18 @@ const TOPICS: { id: string; label: string; words: string[] }[] = [
   { id: "men", label: "For men", words: [" men", " man ", "for men", "masculin"] },
   { id: "calm", label: "Calm, sleep and clarity", words: ["anxiety", "sleep", "calm", "stress", "breath", "overwhelm", "clarity", "nervous"] },
 ];
+// The library's doors (Juliette 19 Nov 2026: "the library is really not very clear at all").
+// Nobody lands on a list: they pick a door first. The Journal door is a link of its own.
+type Door = "meditations" | "answers" | "read";
+const DOORS: { id: Door; title: string; line: string; shelves: Shelf[] }[] = [
+  { id: "meditations", title: "Meditations", line: "In my voice, a new one every Friday", shelves: ["meditations"] },
+  { id: "answers", title: "Answers to your questions", line: "Start with five, or search them all", shelves: ["answers"] },
+  { id: "read", title: "Essays and podcast", line: "Read or listen", shelves: ["essays", "podcast"] },
+];
+// Five to start with. Juliette can swap these for her own five favourites.
+const STARTERS = ["why-dont-i-feel-anything", "never-in-the-mood-but-enjoy-it", "why-can-i-feel-it-with-someone-else", "sleep-in-same-bed-never-touch", "why-doesnt-my-wife-want-me"];
+// Website pages about finding a coach, not members' questions: kept on the site, left out of the library.
+const HIDE = new Set(["desire-podcast-women-over-40", "how-an-intimacy-coach-helps", "how-much-does-intimacy-coaching-cost", "intimacy-and-touch-coach", "intimacy-classes-for-couples", "intimacy-coach-women-over-40-uk", "intimacy-expert-uk", "is-an-intimacy-coach-right-for-me", "relationship-coaching-for-men", "relationship-coaching", "somatic-coach-uk", "trauma-informed-intimacy-coach-uk", "what-does-a-touch-expert-do", "what-happens-in-intimacy-coaching", "when-to-get-help-with-intimacy", "who-teaches-couples-to-touch-again"]);
 async function loadMeditations(): Promise<Answer[]> {
   const { data } = await supabaseBrowser.auth.getSession();
   const token = data.session?.access_token;
@@ -345,8 +384,8 @@ async function loadMeditations(): Promise<Answer[]> {
 }
 // Juliette 16 Nov: answers, then "all the substacks, and the podcast". Seeded from her
 // published pages (answers, essays, episodes), so every word is hers.
-function Answers({ paid, trial }: { paid: boolean; trial?: boolean }) {
-  const [shelf, setShelf] = useState<Shelf>("answers");
+function Answers({ paid, trial, start, shelves }: { paid: boolean; trial?: boolean; start: Shelf; shelves: Shelf[] }) {
+  const [shelf, setShelf] = useState<Shelf>(start);
   const [data, setData] = useState<Record<Shelf, Answer[] | null>>({ answers: null, essays: null, podcast: null, meditations: null });
   const [find, setFind] = useState("");
   const [topic, setTopic] = useState<string | null>(null);
@@ -356,7 +395,8 @@ function Answers({ paid, trial }: { paid: boolean; trial?: boolean }) {
     const get = shelf === "meditations" ? loadMeditations() : fetch(`/scrumptious-confessions/${shelf}.json`).then((r) => r.json());
     get.then((d) => setData((x) => ({ ...x, [shelf]: d }))).catch(() => setData((x) => ({ ...x, [shelf]: [] })));
   }, [shelf, data]);
-  const all = data[shelf];
+  const raw = data[shelf];
+  const all = raw && shelf === "answers" ? raw.filter((a) => !HIDE.has(a.slug)) : raw;
   const meta = SHELVES.find((x) => x.id === shelf)!;
   const words = find.toLowerCase().split(/\s+/).filter(Boolean);
   const inQ = (a: Answer) => words.every((w) => a.q.toLowerCase().includes(w));
@@ -366,15 +406,16 @@ function Answers({ paid, trial }: { paid: boolean; trial?: boolean }) {
     .filter(onShelf)
     .filter((a) => words.every((w) => (a.q + " " + a.blocks.map((b) => b.x).join(" ")).toLowerCase().includes(w)))
     .sort((a, b) => Number(inQ(b)) - Number(inQ(a)));
+  const starter = shelf === "answers" && !find && !topic;
+  const list = starter ? STARTERS.map((id) => (all || []).find((a) => a.slug === id)).filter((a): a is Answer => !!a) : shown;
   return (
     <section className="mt-6">
-      <Eyebrow>Your library</Eyebrow>
-      <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
-        {SHELVES.map((x) => (
+      {shelves.length > 1 && <div className="mt-3 grid grid-cols-2 gap-2">
+        {SHELVES.filter((x) => shelves.includes(x.id)).map((x) => (
           <button key={x.id} type="button" onClick={() => { setShelf(x.id); setOpen(null); }}
             className={`min-h-[44px] rounded-full border text-[14px] ${shelf === x.id ? "border-[#DDC98E] bg-[rgba(221,201,142,0.15)] text-[#f1ece2]" : "border-[#DDC98E]/35 text-[#f1ece2]/75"}`}>{x.label}</button>
         ))}
-      </div>
+      </div>}
       <h2 className="mt-5 font-display text-[28px] font-light leading-tight">{meta.title}</h2>
       <p className="mt-2 text-[15px] text-[#a79f90]">{all ? `${all.length} ${meta.unit} so far, and it grows every week.` : "Opening\u2026"}</p>
       <input value={find} onChange={(e) => setFind(e.target.value)} placeholder="Search: touch, menopause, desire…"
@@ -387,8 +428,9 @@ function Answers({ paid, trial }: { paid: boolean; trial?: boolean }) {
         ))}
       </div>
       {!paid && <p className="mt-3 text-[14px] text-[#DDC98E]">{trial ? "🔒 In your free week you see every question. The answers open with your first month, on day 8. Three meditations are yours now." : "🔒 These open when you start your 7 days free."}</p>}
+      {starter && list.length > 0 && <p className="mt-5 font-display text-[20px] text-[#f1ece2]">Five to start with</p>}
       <ul className="mt-4 space-y-2">
-        {shown.slice(0, find ? 40 : 12).map((a) => (
+        {(starter ? list : shown.slice(0, find || topic ? 60 : 12)).map((a) => (
           <li key={a.slug} className="rounded-2xl border border-[#DDC98E]/25">
             <button type="button" onClick={() => (paid || (trial && shelf === "meditations")) && !a.locked && setOpen(open === a.slug ? null : a.slug)} className="flex w-full items-start justify-between gap-3 p-4 text-left">
               <span className="text-[16px] leading-snug text-[#f1ece2]">{a.q}</span>
@@ -405,7 +447,7 @@ function Answers({ paid, trial }: { paid: boolean; trial?: boolean }) {
           </li>
         ))}
       </ul>
-      {!find && all && all.length > 12 && <p className="mt-3 text-[13px] text-[#8f877a]">Search to see all {all.length}.</p>}
+      {!find && !topic && !starter && all && all.length > 12 && <p className="mt-3 text-[13px] text-[#8f877a]">Search to see all {all.length}.</p>}
     </section>
   );
 }

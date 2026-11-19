@@ -8,11 +8,14 @@ import { MEDITATIONS, meditationPath } from "@/lib/content/meditations";
 // 7-day trial, which Stripe records as a paid £0 invoice) also get a play link that lasts 2 hours.
 // The audio lives in the private "drops" bucket, never in public/.
 export async function GET(req: Request) {
-  const today = todayUK();
+  const user = await userFromRequest(req);
+  let today = todayUK();
+  // Owner preview, like the confessions (Juliette 19 Nov 2026, to film the app): before the
+  // first day she sees the first day's three. Members only ever see what has opened.
+  if (user && isAdmin(user.email) && today < MEDITATIONS[0].publish_on) today = MEDITATIONS[0].publish_on;
   const opened = MEDITATIONS.filter((m) => m.publish_on <= today);
   const next = MEDITATIONS.find((m) => m.publish_on > today) || null;
 
-  const user = await userFromRequest(req);
   // member = paying; trial = in the 7 free days (Juliette 19 Nov: "a taste of everything"), who get
   // the three day-one meditations only.
   let member = false;
