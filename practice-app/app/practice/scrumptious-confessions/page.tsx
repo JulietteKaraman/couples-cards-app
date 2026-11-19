@@ -675,7 +675,7 @@ function TouchMapMonth() {
           </div>
           {next && <p className="mt-4 text-[13px] text-[#8f877a]">The next place opens on {dayName(next.on)}.</p>}
           {/* Juliette 19 Nov 2026: a way to buy the whole map, without leaving the app. */}
-          <p className="mt-4 text-[14px] text-[#cfc8bb]">This is one place from The Touch Map. Want the whole map? <Link href="/practice/touch-map" className="text-[#DDC98E] underline underline-offset-4">Open it here, &pound;197</Link>.</p>
+          <p className="mt-4 text-[14px] text-[#cfc8bb]">This is one place from The Touch Map. Want the whole map? <Link href="/taste/touch-map" className="text-[#DDC98E] underline underline-offset-4">Open it here, &pound;197</Link>.</p>
         </>
       ) : (
         <p className="mt-2 text-[16px] text-[#cfc8bb]">One place on your body, once a month, in my voice. The first one opens on {next ? dayName(next.on) : "the first Monday of the month"}.</p>
