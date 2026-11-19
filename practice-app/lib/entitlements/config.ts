@@ -207,7 +207,9 @@ export const PRODUCT_ID_TO_DECK_TYPE: Record<string, string> = {
 // the day paying starts, so nobody is cut off before they can press "stay".
 export const FREE_FORTNIGHT = {
   opens: "2026-11-23T00:00:00Z",
-  closes: "2026-11-30T00:00:00Z",
+  // 19 Nov 2026, Juliette: no more free fortnight for new people. It is now 7 days free with the card
+  // taken at sign-up (on the £111 Stripe link). Only the early testers below can still claim.
+  closes: "2026-11-19T12:00:00Z",
   until: "2026-12-08T00:00:00Z",
   marker: "free-fortnight",
   kitTag: 25487963, // "Scrumptious Confessions: Waitlist", the list the closing emails go to

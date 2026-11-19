@@ -16,7 +16,7 @@ export async function POST(req: Request) {
   const now = new Date();
   const tester = FREE_FORTNIGHT.earlyTesters.includes(user.email.toLowerCase());
   if (now < new Date(FREE_FORTNIGHT.opens) && !tester) return NextResponse.json({ state: "not-yet" }, { status: 409 });
-  if (now >= new Date(FREE_FORTNIGHT.closes)) return NextResponse.json({ state: "closed" }, { status: 409 });
+  if (now >= new Date(FREE_FORTNIGHT.closes) && !tester) return NextResponse.json({ state: "closed" }, { status: 409 });
 
   await grantEntitlement(user.email, "scrumptious-confessions", FREE_FORTNIGHT.marker, user.id, FREE_FORTNIGHT.until);
 

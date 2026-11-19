@@ -52,9 +52,9 @@ function Claim() {
         )}
         {state === "closed" && (
           <>
-            <p className="mt-4 font-display text-[26px] font-light leading-tight">The free places have closed.</p>
-            <p className="mt-3 text-[15px] text-[#a79f90]">You can still come in, at &pound;111 a month. Stop any time.</p>
-            <a href={JOIN} className="mt-6 flex min-h-[52px] items-center justify-center rounded-full bg-[#DDC98E] px-6 text-[16px] font-medium text-[#070707]">Come into Scrumptious Confessions</a>
+            <p className="mt-4 font-display text-[26px] font-light leading-tight">The way in is now 7 days free.</p>
+            <p className="mt-3 text-[15px] text-[#a79f90]">Your card goes in to start. Nothing is charged for 7 days, then it&apos;s &pound;111 a month. Stop before day 8 and you pay nothing.</p>
+            <a href={JOIN} className="mt-6 flex min-h-[52px] items-center justify-center rounded-full bg-[#DDC98E] px-6 text-[16px] font-medium text-[#070707]">Start my 7 days free</a>
           </>
         )}
         {state === "error" && (
