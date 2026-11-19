@@ -10,6 +10,7 @@ import { PromptCard } from "@/components/Interactive";
 import { CollectionGate } from "@/components/auth/CollectionGate";
 import { supabaseBrowser } from "@/lib/supabase/client";
 import { MEMBERSHIP_UNLOCKS, membershipMonth, monthOpensOn } from "@/lib/entitlements/config";
+import { PLACES } from "@/lib/content/touch-map";
 import { ADMIN_EMAIL } from "@/lib/entitlements/admin";
 import PracticeTimer from "@/components/PracticeTimer";
 
@@ -643,7 +644,45 @@ function Today() {
         </div>
         <MonthDots days={days} start={start} sel={sel} onPick={(d) => { if (d <= today) setSel(d); }} />
       </div>
+      <TouchMapMonth />
     </section>
+  );
+}
+
+/* THE TOUCH MAP, the first Monday of each month (Juliette 19 Nov 2026: "one of the practises from a touch map, it
+   just gives people more awareness... I would call it the TOUCH MAP and yes the first monday of each month").
+   One place at a time, her recorded Touch Map days, her words and her voice. */
+const TOUCH_MAP_MONTHS: { on: string; place: string }[] = [
+  { on: "2026-12-07", place: "wrist" },
+  { on: "2027-01-04", place: "inner-elbow" },
+  { on: "2027-02-01", place: "elbow-armpit" },
+  { on: "2027-03-01", place: "heart" },
+  { on: "2027-04-05", place: "collarbone" },
+  { on: "2027-05-03", place: "back-of-neck" },
+];
+function TouchMapMonth() {
+  const today = todayUK();
+  const opened = TOUCH_MAP_MONTHS.filter((m) => m.on <= today);
+  const now = opened[opened.length - 1];
+  const next = TOUCH_MAP_MONTHS.find((m) => m.on > today);
+  const p = now ? PLACES.find((x) => x.id === now.place) : null;
+  return (
+    <div className="mt-6 rounded-3xl border-[1.5px] border-[rgba(221,201,142,0.55)] bg-[rgba(13,53,53,0.35)] p-5" data-testid="touch-map-month">
+      <Eyebrow>The Touch Map</Eyebrow>
+      {p ? (
+        <>
+          <h3 className="mt-2 font-display text-[24px] font-light leading-tight">{p.label}</h3>
+          <p className="mt-1 text-[13px] text-[#a79f90]">This month&rsquo;s place. One a month, the first Monday.</p>
+          {p.audio && <div className="mt-4"><VoicePlayer src={p.audio} label={`The Touch Map: ${p.label}`} dark /></div>}
+          <div className="mt-4 space-y-3">
+            {p.touch.map((l, i) => <p key={i} className="text-[16px] leading-relaxed text-[#f1ece2]">{l}</p>)}
+          </div>
+          {next && <p className="mt-4 text-[13px] text-[#8f877a]">The next place opens on {dayName(next.on)}.</p>}
+        </>
+      ) : (
+        <p className="mt-2 text-[16px] text-[#cfc8bb]">One place on your body, once a month, in my voice. The first one opens on {next ? dayName(next.on) : "the first Monday of the month"}.</p>
+      )}
+    </div>
   );
 }
 
