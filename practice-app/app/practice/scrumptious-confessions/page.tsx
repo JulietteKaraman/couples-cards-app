@@ -20,6 +20,7 @@ import PracticeTimer from "@/components/PracticeTimer";
 
 const SLUG = "scrumptious-confessions";
 const DIR = "/how-to-feel-like-a-woman";
+const DOORS_OPEN = "2026-11-23";
 const MAX = 2000;
 
 type Story = { id: string; publish_on: string; title: string; line: string; audio: string };
@@ -72,6 +73,16 @@ function Content() {
   const [feed, setFeed] = useState<Feed | null>(null);
   const [tab, setTab] = useState<TabId>("stories");
   const top = useRef<HTMLDivElement>(null);
+  // Doors open Mon 23 Nov 2026 (Juliette 19 Nov: "I do not want people in this week yet").
+  // Before then members see one welcome; Juliette (admin) sees everything, to film and check.
+  const [early, setEarly] = useState(false);
+  useEffect(() => {
+    if (todayUK() >= DOORS_OPEN || process.env.NODE_ENV === "development") return;
+    supabaseBrowser.auth.getSession().then(({ data }) => {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- one check after sign-in
+      setEarly((data.session?.user.email || "").toLowerCase() !== ADMIN_EMAIL);
+    });
+  }, []);
 
   useEffect(() => {
     (async () => {
@@ -107,6 +118,16 @@ function Content() {
         </div>
         <p className="mt-4 text-center text-[16px] text-[#cfc8bb]">Every Monday, a confession in my voice. What people bring me, what I&rsquo;ve learned, and the things I don&rsquo;t say on Instagram.</p>
 
+        {early && (
+          <div className="mt-8 rounded-3xl border-[1.5px] border-[rgba(221,201,142,0.55)] bg-[rgba(13,53,53,0.45)] p-7 text-center">
+            <p className="text-[11px] uppercase tracking-[0.22em] text-[#DDC98E]">You&rsquo;re in</p>
+            <h2 className="mt-3 font-display text-[28px] font-light leading-tight">Doors open Monday 23 November</h2>
+            <p className="mt-4 text-[16px] text-[#cfc8bb]">Your 7 free days start that morning, with my first confession.</p>
+            <p className="mt-2 text-[16px] text-[#cfc8bb]">Nothing is charged until Monday 30 November. Stop before then and you pay nothing.</p>
+            <p className="mt-5 font-display text-[20px] text-[#DDC98E]">See you on Monday.</p>
+          </div>
+        )}
+        {!early && <>
         <div ref={top} className="sticky top-0 z-10 -mx-5 mt-5 bg-[#070707]/95 px-5 py-3">
           <div className="grid grid-cols-5 gap-1.5">
             {TABS.map((t) => (
@@ -122,6 +143,7 @@ function Content() {
         {tab === "card" && <Cards feed={feed} />}
         {tab === "yours" && <YourTurn />}
         {tab === "library" && <Library />}
+        </>}
       </div>
     </main>
   );

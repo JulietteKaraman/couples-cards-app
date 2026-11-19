@@ -307,7 +307,7 @@ export default function ScrumptiousnessJournal() {
           const live = !!row?.purchased_at && (!row.expires_at || new Date(row.expires_at as string) > new Date());
           // "free-" (the old free fortnight) and "trial-" (the 7-day trial) are not paying members: they get the taster.
           if (live && !/^(free|trial)-/.test(String(row?.stripe_checkout_session_id || ""))) ok = true;
-          else if (live) inWeek = true;
+          else if (live && new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/London" }).format(new Date()) >= "2026-11-23") inWeek = true; // free week starts when doors open
         }
       } catch {
         /* not signed in, or no connection: she sees the taster */
