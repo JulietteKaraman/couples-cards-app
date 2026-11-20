@@ -556,7 +556,7 @@ function WallPeek({ onOpen }: { onOpen: () => void }) {
         {qs.map((q) => <p key={q.id} className="rounded-2xl bg-[#D8DFE1] p-3 text-[15px] leading-snug text-[#0d3535]">{q.body}</p>)}
         {wall && qs.length === 0 && <p className="text-[15px] text-[#a79f90]">Nobody has asked yet this week. Be the first.</p>}
       </div>
-      <button type="button" onClick={onOpen} className="mt-3 inline-flex min-h-[48px] w-full items-center justify-center rounded-full bg-[#D8DFE1] text-[15px] font-medium text-[#0d3535]">Ask yours, or tap Me too</button>
+      <button type="button" onClick={onOpen} className="mt-3 inline-flex min-h-[48px] w-full items-center justify-center rounded-full bg-[#DDC98E] text-[15px] font-medium text-[#070707]">Ask yours, or tap Me too</button>
     </section>
   );
 }
@@ -598,7 +598,7 @@ function YourTurn() {
         <li className="rounded-2xl border border-[#DDC98E]/30 p-3"><span className="block font-display text-[20px] text-[#DDC98E]">3</span>I answer on Thursday. It stays in the library</li>
       </ol>
       {/* Its own colour so it reads as the place to type (Juliette 20 Nov 2026). */}
-      <div className="ask-tile rounded-3xl bg-[#D8DFE1] p-5 text-[#0d3535]">
+      <div className="ask-tile rounded-3xl bg-[#DDC98E] p-5 text-[#0d3535]">{/* gold = the place to type; light blue = the wall (Juliette 20 Nov 2026) */}
         <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#0d3535]/80">Ask me anything</p>
         <p className="mt-2 font-display text-[22px] font-light text-[#0d3535]">Your question about intimacy, Touch, desire, sex.</p>
         <p className="mt-2 text-[15px] text-[#0d3535]/80">Type it below. It goes on the wall with no name. I answer every Thursday.</p>
