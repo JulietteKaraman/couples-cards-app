@@ -5,7 +5,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import VoicePlayer from "@/components/VoicePlayer";
-import { isTouchBase, nextSpeed, readSpeed, saveSpeedFor } from "@/lib/voice-speed";
+import { SlimPlayer as SpeedPlayer } from "@/components/SlimPlayer";
+import { nextSpeed, readSpeed, saveSpeedFor } from "@/lib/voice-speed";
 import { PromptCard } from "@/components/Interactive";
 import { CollectionGate } from "@/components/auth/CollectionGate";
 import { supabaseBrowser } from "@/lib/supabase/client";
@@ -466,7 +467,7 @@ function Answers({ paid, trial, start, shelves }: { paid: boolean; trial?: boole
             </button>
             {(paid || (trial && shelf === "meditations")) && !a.locked && open === a.slug && (
               <div className="space-y-3 px-4 pb-5 text-[15px] leading-relaxed text-[#cfc8bb]">
-                {a.audio && <audio controls preload="none" src={a.audio} className="w-full" />}
+                {a.audio && <SpeedPlayer src={a.audio} label="Hear my answer" />}
                 {a.blocks.map((b, i) => b.t === "h"
                   ? <p key={i} className="pt-2 font-display text-[19px] text-[#f1ece2]">{b.x}</p>
                   : <p key={i} className={b.t === "li" ? "pl-4" : ""}>{b.t === "li" && <span className="-ml-4 mr-2 text-[#DDC98E]">&bull;</span>}{b.x}</p>)}
@@ -976,14 +977,14 @@ function MonthDots({ days, start, sel, onPick }: { days: Record<string, DayRec>;
 }
 
 /* The emblem IS the play button, with a gold ring that fills as it plays. */
-// Touch Base gets a speed button, 1x, 1.1x or 1.2x (lib/voice-speed, 12 Nov 2026).
+// Every recording gets a speed button (Juliette, 20 Nov 2026: "all the voice notes, everything, they can speed up").
+// Touch Base 1x/1.1x/1.2x, everything else up to 1.5x (lib/voice-speed).
 function RoundVoice({ src, img, label }: { src: string; img: string; label: string }) {
   const ref = useRef<HTMLAudioElement | null>(null);
   const [playing, setPlaying] = useState(false);
   const [p, setP] = useState(0);
   const [rate, setRate] = useState(1);
-  const tb = isTouchBase(src);
-  useEffect(() => { if (tb) setRate(readSpeed(src)); }, [src, tb]);
+  useEffect(() => { setRate(readSpeed(src)); }, [src]); // eslint-disable-line react-hooks/set-state-in-effect
   useEffect(() => { if (ref.current) ref.current.playbackRate = rate; }, [rate]);
   const play = (a: HTMLAudioElement) => {
     try { const n = navigator as unknown as { audioSession?: { type: string } }; if (n.audioSession) n.audioSession.type = "playback"; } catch {}
@@ -1004,7 +1005,7 @@ function RoundVoice({ src, img, label }: { src: string; img: string; label: stri
         onLoadedMetadata={(e) => { e.currentTarget.playbackRate = rate; }}
         onTimeUpdate={(e) => { const a = e.currentTarget; if (a.duration) setP((a.currentTime / a.duration) * 100); }} />
     </button>
-    {tb && (
+    {(
       <button type="button" onClick={cycle} aria-label={`Speed ${rate}x. Tap to change`} className="min-h-[32px] min-w-[52px] rounded-full border border-[#DDC98E]/50 px-2 text-[12px] text-[#DDC98E]">
         {rate}×
       </button>

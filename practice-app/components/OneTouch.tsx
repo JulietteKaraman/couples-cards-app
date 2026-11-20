@@ -11,6 +11,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { nextSpeed, readSpeed, saveSpeedFor } from "@/lib/voice-speed";
 
 /* ---------- small helpers ---------- */
 const LS = "ffy.ot.";
@@ -73,17 +74,23 @@ function VoiceNote({ src }: { src: string }) {
   const ref = useRef<HTMLAudioElement | null>(null);
   const [playing, setPlaying] = useState(false);
   const [p, setP] = useState(0);
+  const [rate, setRate] = useState(1);
+  useEffect(() => { setRate(readSpeed(src)); }, [src]); // eslint-disable-line react-hooks/set-state-in-effect
+  const apply = (r: number) => { const a = ref.current; if (a) { a.defaultPlaybackRate = r; a.playbackRate = r; } };
+  const cycle = () => { const r = nextSpeed(src, rate); setRate(r); saveSpeedFor(src, r); apply(r); };
   return (
-    <div className="mx-auto mt-4 max-w-sm">
+    <div className="mx-auto mt-4 flex max-w-sm items-center gap-2">
       <button type="button" onClick={() => { const a = ref.current; if (!a) return; if (a.paused) { a.play(); } else { a.pause(); } }}
-        className="flex w-full items-center gap-3 rounded-full border border-[#DDC98E]/40 bg-[#DDC98E]/[0.06] py-2 pl-2 pr-5 text-left">
+        className="flex flex-1 items-center gap-3 rounded-full border border-[#DDC98E]/40 bg-[#DDC98E]/[0.06] py-2 pl-2 pr-5 text-left">
         <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#DDC98E] text-[#070707]">{playing ? "❚❚" : "▶"}</span>
         <span className="flex-1">
           <span className="block text-[11px] uppercase tracking-[0.2em] text-[#DDC98E]">Hear Juliette</span>
           <span className="mt-1.5 block h-[3px] overflow-hidden rounded-full bg-[#DDC98E]/20"><span className="block h-full bg-[#DDC98E]" style={{ width: `${p}%` }} /></span>
         </span>
       </button>
-      <audio ref={ref} src={src} preload="none" onPlay={() => setPlaying(true)} onPause={() => setPlaying(false)} onEnded={() => { setPlaying(false); setP(0); }}
+      <button type="button" onClick={cycle} aria-label={`Speed ${rate}x, tap to change`}
+        className="shrink-0 rounded-full border border-[#DDC98E]/50 px-2.5 py-1 text-[12px] text-[#DDC98E]">{rate}x</button>
+      <audio ref={ref} src={src} preload="none" onPlay={() => { apply(rate); setPlaying(true); }} onPause={() => setPlaying(false)} onEnded={() => { setPlaying(false); setP(0); }}
         onTimeUpdate={(e) => { const a = e.currentTarget; if (a.duration) setP((a.currentTime / a.duration) * 100); }} />
     </div>
   );

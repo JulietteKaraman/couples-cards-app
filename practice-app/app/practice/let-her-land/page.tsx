@@ -6,6 +6,7 @@
 // stays on her phone; only anonymous counts leave it. Her words live in
 // lib/content/let-her-land.ts, never retyped here.
 
+import { readSpeed } from "@/lib/voice-speed";
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { BITE_CSS, HomePrompt, MuteNote, Photo, StepBar, Voice, read, write } from "@/components/BiteKit";
@@ -237,7 +238,7 @@ const SOLO_VOICE = { start: "/let-her-land/voice/6-solo-start.m4a", bell: "/let-
 const SOLO_SECONDS = 5 * 60;
 let soloAudio: HTMLAudioElement | null = null;
 function playSolo(src: string) {
-  try { soloAudio?.pause(); soloAudio = new Audio(src); soloAudio.play().catch(() => {}); } catch {}
+  try { soloAudio?.pause(); soloAudio = new Audio(src); if (!/bell/.test(src)) soloAudio.playbackRate = readSpeed(src); soloAudio.play().catch(() => {}); } catch {}
 }
 
 function TodayCard({ p }: { p: (typeof PROMPTS)[number] }) {

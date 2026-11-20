@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import VoicePlayer from "@/components/VoicePlayer";
-import { isTouchBase, nextSpeed, readSpeed, saveSpeedFor } from "@/lib/voice-speed";
+import { nextSpeed, readSpeed, saveSpeedFor } from "@/lib/voice-speed";
 import { useRef } from "react";
 import { PromptCard } from "@/components/Interactive";
 import { CollectionGate } from "@/components/auth/CollectionGate";
@@ -752,14 +752,14 @@ function ConfessionsDoor() {
 }
 
 /* A round photo or emblem that IS the play button, with a gold ring that fills as it plays. */
-// Touch Base gets a speed button, 1x, 1.1x or 1.2x (lib/voice-speed, 12 Nov 2026).
+// Every recording gets a speed button (Juliette, 20 Nov 2026: "all the voice notes, everything, they can speed up").
+// Touch Base 1x/1.1x/1.2x, everything else up to 1.5x (lib/voice-speed).
 function RoundVoice({ src, img, label }: { src: string; img: string; label: string }) {
   const ref = useRef<HTMLAudioElement | null>(null);
   const [playing, setPlaying] = useState(false);
   const [p, setP] = useState(0);
   const [rate, setRate] = useState(1);
-  const tb = isTouchBase(src);
-  useEffect(() => { if (tb) setRate(readSpeed(src)); }, [src, tb]);
+  useEffect(() => { setRate(readSpeed(src)); }, [src]); // eslint-disable-line react-hooks/set-state-in-effect
   useEffect(() => { if (ref.current) ref.current.playbackRate = rate; }, [rate]);
   const cycle = () => { const v = nextSpeed(src, rate); setRate(v); saveSpeedFor(src, v); };
   return (
@@ -777,7 +777,7 @@ function RoundVoice({ src, img, label }: { src: string; img: string; label: stri
         onEnded={() => { setPlaying(false); setP(0); }}
         onTimeUpdate={(e) => { const a = e.currentTarget; if (a.duration) setP((a.currentTime / a.duration) * 100); }} />
     </button>
-    {tb && (
+    {(
       <button type="button" onClick={cycle} aria-label={`Speed ${rate}x. Tap to change`} className="min-h-[32px] min-w-[52px] rounded-full border border-[#DDC98E]/50 px-2 text-[12px] text-[#DDC98E]">
         {rate}×
       </button>
@@ -798,6 +798,10 @@ function SlimPlayer({ src, label }: { src: string; label: string }) {
   const [playing, setPlaying] = useState(false);
   const [cur, setCur] = useState(0);
   const [dur, setDur] = useState(0);
+  const [rate, setRate] = useState(1);
+  useEffect(() => { setRate(readSpeed(src)); }, [src]); // eslint-disable-line react-hooks/set-state-in-effect
+  const apply = (r: number) => { const a = ref.current; if (a) { a.defaultPlaybackRate = r; a.playbackRate = r; } };
+  const cycle = () => { const r = nextSpeed(src, rate); setRate(r); saveSpeedFor(src, r); apply(r); };
   const fmt = (s: number) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, "0")}`;
   const seek = (e: React.MouseEvent<HTMLDivElement>) => {
     const a = ref.current; if (!a || !dur) return;
@@ -811,13 +815,17 @@ function SlimPlayer({ src, label }: { src: string; label: string }) {
         {playing ? "❚❚" : "▶"}
       </button>
       <div className="flex-1">
-        <p className="text-[15px] text-[#f1ece2]">{label}</p>
+        <div className="flex items-start justify-between gap-2">
+          <p className="text-[15px] text-[#f1ece2]">{label}</p>
+          <button type="button" onClick={cycle} aria-label={`Speed ${rate}x, tap to change`}
+            className="shrink-0 rounded-full border border-[#DDC98E]/50 px-2.5 py-1 text-[12px] text-[#DDC98E]">{rate}x</button>
+        </div>
         <div onClick={seek} className="mt-2 h-[3px] cursor-pointer overflow-hidden rounded-full bg-[#DDC98E]/20">
           <div className="h-full bg-[#DDC98E]" style={{ width: dur ? `${(cur / dur) * 100}%` : "0%" }} />
         </div>
         <p className="mt-1.5 text-[12px] text-[#8f877a]">{playing || cur ? `${fmt(cur)} · ${fmt(Math.max(0, dur - cur))} left` : "In Juliette\u2019s voice"}</p>
       </div>
-      <audio ref={ref} src={src} preload="metadata" onPlay={() => setPlaying(true)} onPause={() => setPlaying(false)}
+      <audio ref={ref} src={src} preload="metadata" onPlay={() => { apply(rate); setPlaying(true); }} onPause={() => setPlaying(false)}
         onLoadedMetadata={(e) => setDur(e.currentTarget.duration)} onTimeUpdate={(e) => setCur(e.currentTarget.currentTime)}
         onEnded={() => setPlaying(false)} />
     </div>

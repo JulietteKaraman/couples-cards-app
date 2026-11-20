@@ -12,7 +12,7 @@ const VOICE_KEY = "ffy.voice.rate";
 const TB_KEY = "ffy.touchbase.rate";
 
 export const isTouchBase = (src: string) => /\/touch-base\/touch-base-guided/.test(src || "");
-export const isTouchMap = (src: string) => /\/touch-map\/audio\//.test(src || "");
+export const isTouchMap = (src: string) => /\/touch-map\/(audio|menu)\//.test(src || "");
 export const speedsFor = (src: string) => (isTouchBase(src) ? TOUCH_BASE_SPEEDS : isTouchMap(src) ? TOUCH_MAP_SPEEDS : VOICE_SPEEDS);
 const keyFor = (src: string) => (isTouchBase(src) ? TB_KEY : isTouchMap(src) ? TM_KEY : VOICE_KEY);
 
