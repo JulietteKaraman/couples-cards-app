@@ -345,7 +345,8 @@ function LibraryContent() {
         )}
 
         {/* YOURS */}
-        {user && (ownedPaid.length > 0 || entitledCollections.includes("how-to-feel-like-a-woman")) && (
+        {/* 20 Nov 2026: a Confessions-only member must see this section too (their first test showed nothing). */}
+        {user && (ownedPaid.length > 0 || entitledCollections.includes("how-to-feel-like-a-woman") || entitledCollections.includes("scrumptious-confessions")) && (
           <>
             <SectionHead eyebrow="Yours" title="Your practices" />
             <div className="grid gap-3">
@@ -383,9 +384,9 @@ function LibraryContent() {
                 <Tile
                   href="/practice/scrumptious-confessions"
                   title="Scrumptious Confessions"
-                  subtitle="Every Monday, a confession in my voice. Your questions answered with no name on them. Something new opens every month you stay."
+                  subtitle="Every Monday, a confession in my voice. Your questions answered with no name on them. Every month, a programme opens that is yours to keep."
                   heroImage="/how-to-feel-like-a-woman/scrumptious-confessions.jpg"
-                  note="Confessions · anonymous channel · Touch Base · cards · library"
+                  note="Something new every day · questions wall · Touch Base · cards · library"
                 />
               )}
               {/* "Talk to me" call tile removed 5 Nov 2026. Juliette: "I do not
