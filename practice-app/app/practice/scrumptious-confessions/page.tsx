@@ -177,7 +177,7 @@ function Stories({ feed }: { feed: Feed | null }) {
     <section className="mt-4">
       {feed.stories.length === 0 && <p className="mt-6 text-center text-[15px] text-[#a79f90]">Your first story lands here very soon.</p>}
       {feed.stories.map((s, i) => <StoryBlock key={s.id} story={s} open={i === 0} />)}
-      {feed.nextStory && <Coming day={feed.nextStory} what="A new story" />}
+      {feed.nextStory && <Coming day={feed.nextStory} what="A new confession" />}
     </section>
   );
 }
@@ -450,8 +450,8 @@ function Answers({ paid, trial, start, shelves, startTopic }: { paid: boolean; t
             className={`min-h-[44px] rounded-full border text-[14px] ${shelf === x.id ? "border-[#DDC98E] bg-[rgba(221,201,142,0.15)] text-[#f1ece2]" : "border-[#DDC98E]/35 text-[#f1ece2]/75"}`}>{x.label}</button>
         ))}
       </div>}
-      <h2 className="mt-5 font-display text-[28px] font-light leading-tight">{meta.title}</h2>
-      <p className="mt-2 text-[15px] text-[#a79f90]">{all ? `${all.filter((a) => !a.slug.startsWith("next")).length} ${meta.unit} so far, and it grows every week.` : "Opening\u2026"}</p>
+      <h2 className="mt-5 font-display text-[28px] font-light leading-tight">{startTopic === "menopause" ? "Menopause and a changing body" : meta.title}</h2>
+      <p className="mt-2 text-[15px] text-[#a79f90]">{startTopic === "menopause" ? "My answers on menopause, and more every week." : all ? `${all.filter((a) => !a.slug.startsWith("next")).length} ${meta.unit} so far, and it grows every week.` : "Opening\u2026"}</p>
       <input value={find} onChange={(e) => setFind(e.target.value)} placeholder="Search: touch, menopause, desire…"
         className="mt-4 w-full rounded-full border border-[#DDC98E]/40 bg-transparent px-5 py-3 text-[16px] text-[#f1ece2] placeholder:text-[#8f877a]" />
       {shelf === "answers" && (
