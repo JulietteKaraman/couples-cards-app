@@ -31,7 +31,7 @@ export const MEDITATIONS: Meditation[] = [
   {
     "slug": "pleasure-boost-new",
     "title": "Pleasure Boost",
-    "minutes": 24,
+    "minutes": 11,
     "shelves": [
       "desire"
     ],
