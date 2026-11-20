@@ -12,11 +12,13 @@ import { getCompletedWithTimes, markComplete } from "@/lib/entitlements/progress
 import { lsSet, whenItOpens, adminBypassActive } from "@/lib/content/31-touch-points-drip";
 import {
   SN_ADV_KEY,
+  SN_DAY_LESSON,
   computeSacredNoDrip,
   snDayOf,
   snMovesClock,
 } from "@/lib/content/the-sacred-no-drip";
 import { ADMIN_EMAIL } from "@/lib/entitlements/admin";
+import { SacredNoDay, SnVideo } from "@/components/SacredNo";
 
 export default function TheSacredNoEntry() {
   return (
@@ -92,140 +94,86 @@ function TheSacredNoEntryContent() {
 
   if (locked) {
     return (
-      <main className="mx-auto max-w-2xl px-6 py-24 text-center">
-        <div className="mb-8"><Link href="/" className="inline-flex items-center gap-1.5 rounded-full border border-ffy-gold-deep/40 px-4 py-2 text-sm font-medium text-ffy-gold-deep">← Your library</Link></div>
-        <p className="text-xs uppercase tracking-[0.15em] text-ffy-gold-deep">Not yet</p>
-        <h1 className="mt-3 font-display text-3xl font-semibold text-ffy-teal">
+      <main className="min-h-screen bg-[#070707] text-ffy-cream [background-image:radial-gradient(110%_55%_at_50%_0%,rgba(13,53,53,0.9)_0%,rgba(7,7,7,0)_70%)]"><div className="mx-auto max-w-2xl px-6 py-24 text-center">
+        <div className="mb-8"><Link href="/" className="inline-flex items-center gap-1.5 rounded-full border-[1.5px] border-[rgba(221,201,142,0.55)] px-4 py-2 text-sm text-[#DDC98E]">← Your library</Link></div>
+        <p className="text-[11px] uppercase tracking-[0.2em] text-[#DDC98E]">Not yet</p>
+        <h1 className="mt-3 font-display text-3xl font-light text-[#f1ece2]">
           {consecutive >= thisDay - 1 && dueAt
             ? `Day ${thisDay} opens ${whenItOpens(dueAt)}`
             : `Day ${thisDay} opens after day ${thisDay - 1}`}
         </h1>
-        <p className="mt-5 text-ffy-black/70">
+        <p className="mt-5 text-[#cfc8bb]">
           One day at a time, on purpose. Watch the day&rsquo;s lesson, mark it done, and the next
           one opens tomorrow.
         </p>
-        <p className="mt-3 text-ffy-black/70">Nothing is lost if you miss a day. It waits for you.</p>
+        <p className="mt-3 text-[#cfc8bb]">Nothing is lost if you miss a day. It waits for you.</p>
         {lastOpen && (
           <Link
             href={`/practice/the-sacred-no/${lastOpen.slug}`}
-            className="mt-8 inline-block rounded-full bg-ffy-gold px-6 py-3 font-display text-sm font-medium text-white transition hover:opacity-90"
+            className="mt-8 inline-block rounded-full bg-[#DDC98E] px-6 py-3 font-display text-sm font-medium text-[#070707] transition hover:opacity-90"
           >
             Go to {lastOpen.title}
           </Link>
         )}
         <p className="mt-6">
-          <Link href="/practice/the-sacred-no" className="text-sm text-ffy-gold-deep underline">
+          <Link href="/practice/the-sacred-no" className="text-sm text-[#DDC98E] underline">
             See all seven days
           </Link>
         </p>
-      </main>
+      </div></main>
     );
   }
 
-  const markCompleteBlock =
-    entry.kind === "ritual" ? (
-      <div className="mt-8">
-        {completed ? (
-          <p className="inline-flex items-center gap-2 rounded-full bg-ffy-gold px-5 py-2.5 font-display text-sm font-medium text-ffy-black">
-            ✓ Marked done
-          </p>
-        ) : (
-          <button
-            onClick={handleMarkComplete}
-            className={`rounded-full border border-ffy-gold px-5 py-2.5 font-display text-sm font-medium transition hover:bg-ffy-gold hover:text-ffy-black ${dark ? "text-ffy-gold-pale" : "text-ffy-gold-deep"}`}
-          >
-            Mark this one done
-          </button>
-        )}
-      </div>
-    ) : null;
+  // 20 Nov 2026: each lesson is three steps, like One Touch (components/SacredNo.tsx).
+  const firstP = entry.body.find((x) => x.kind === "p") as { text: string } | undefined;
+  const video = entry.body.find((x) => x.kind === "driveVideo") as { url: string; label: string } | undefined;
+  const videoId = video?.url.match(/\/d\/([^/]+)\//)?.[1] ?? "";
+  const lessonDay = Object.entries(SN_DAY_LESSON).find(([, v]) => v === entry.slug)?.[0];
 
-  const navRow = (
-    <div
-      className={`mx-auto mt-12 flex max-w-2xl items-center justify-between border-t px-6 py-6 text-sm ${
-        dark ? "border-ffy-gold/20" : "border-ffy-border"
-      }`}
-    >
-      {prev ? (
-        <Link
-          href={`/practice/the-sacred-no/${prev.slug}`}
-          className={dark ? "text-ffy-gold-pale hover:underline" : "text-ffy-gold-deep hover:underline"}
-        >
-          ← {prev.title}
-        </Link>
-      ) : (
-        <span />
-      )}
-      {next ? (
-        <Link
-          href={`/practice/the-sacred-no/${next.slug}`}
-          className={dark ? "text-ffy-gold-pale hover:underline" : "text-ffy-gold-deep hover:underline"}
-        >
-          {next.title} →
-        </Link>
-      ) : (
-        <span />
-      )}
-    </div>
-  );
+  if (lessonDay) {
+    const d = Number(lessonDay);
+    const nextLesson = entries.find((x) => x.slug === SN_DAY_LESSON[d + 1]);
+    const prevLesson = entries.find((x) => x.slug === SN_DAY_LESSON[d - 1]);
+    const rest = entry.body.filter((x) => x !== firstP && x.kind !== "driveVideo");
+    return (
+      <SacredNoDay
+        slug={entry.slug}
+        day={d}
+        title={entry.title.replace(/^\d+\s/, "")}
+        line={firstP?.text ?? ""}
+        videoId={videoId}
+        extra={rest.length ? <Blocks blocks={rest} dark /> : undefined}
+        nextTitle={nextLesson ? nextLesson.title.replace(/^\d+\s/, "") : undefined}
+        alreadyDone={completed}
+        prevHref={prevLesson ? `/practice/the-sacred-no/${prevLesson.slug}` : undefined}
+        nextHref={nextLesson && (isAdmin || snDayOf(nextLesson.slug) <= unlockedThrough) ? `/practice/the-sacred-no/${nextLesson.slug}` : undefined}
+        onDone={handleMarkComplete}
+      />
+    );
+  }
 
-  // Editorial layout, matching the deck's own presentation: a full-width
-  // photo at the top, then one flowing column of content below — not a
-  // 50/50 split screen. Same shape for every entry kind (the "closing"
-  // entries don't need a separate treatment here, they read the same way).
+  // Welcome and the bonus meditation: one dark page, the video, and a gold button.
+  const isWelcome = entry.slug === "welcome";
   return (
-    <main className={dark ? "min-h-screen bg-ffy-black" : "min-h-screen bg-ffy-cream"}>
-      {entry.image && (
-        <div
-          className={`relative h-[42vh] w-full overflow-hidden sm:h-[56vh] ${
-            entry.imageFocus === "top" ? (dark ? "bg-ffy-black" : "bg-ffy-cream") : ""
-          }`}
-        >
-          <Image
-            src={entry.image}
-            alt={entry.imageAlt ?? ""}
-            fill
-            priority
-            sizes="100vw"
-            className={entry.imageFocus === "top" ? "object-contain" : "object-cover"}
-          />
-          {dark && entry.imageFocus !== "top" && (
-            <div className="absolute inset-0 bg-gradient-to-t from-ffy-black via-ffy-black/10 to-transparent" />
-          )}
-        </div>
-      )}
-
-      <div className="mx-auto max-w-2xl px-6 pb-14 pt-10">
+    <main className="min-h-screen bg-[#070707] text-[#F6EFE0]">
+      <div className="mx-auto max-w-xl px-5 pb-20 pt-5">
         <div className="flex flex-wrap gap-2">
-          <Link
-            href="/"
-            className={`inline-flex items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-medium transition ${dark ? "border-ffy-gold-pale/40 text-ffy-gold-pale hover:bg-white/5" : "border-ffy-gold-deep/40 text-ffy-gold-deep hover:bg-ffy-gold-deep/5"}`}
-          >
-            ← Your library
-          </Link>
-          <Link href="/practice/the-sacred-no" className={`inline-flex items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-medium transition ${dark ? "border-ffy-gold-pale/40 text-ffy-gold-pale hover:bg-white/5" : "border-ffy-gold-deep/40 text-ffy-gold-deep hover:bg-ffy-gold-deep/5"}`}>
-            ← The Sacred No
-          </Link>
+          <Link href="/" className="rounded-full border border-[#DDC98E]/40 px-4 py-1.5 text-xs text-[#DDC98E]">← Your library</Link>
+          <Link href="/practice/the-sacred-no" className="rounded-full border border-[#DDC98E]/40 px-4 py-1.5 text-xs text-[#DDC98E]">← The Sacred No</Link>
         </div>
-
-        {entry.eyebrow && (
-          <p className={`mt-6 text-xs uppercase tracking-[0.15em] ${dark ? "text-ffy-gold-pale" : "text-ffy-gold-deep"}`}>
-            {entry.eyebrow}
-          </p>
+        <p className="mt-6 text-[10px] uppercase tracking-[0.3em] text-[#DDC98E]">{isWelcome ? "Before you begin" : "Bonus · any time"}</p>
+        <h1 className="mt-2 font-display text-[32px] font-light leading-tight">{isWelcome ? "Welcome to The Sacred No" : entry.title}</h1>
+        {entry.body.filter((x) => x.kind === "p").map((x, i) => (
+          <p key={i} className={`mt-4 text-[16px] leading-relaxed ${i === 0 && isWelcome ? "font-display text-[22px] font-light text-[#F6EFE0]" : "text-[#F6EFE0]/75"}`}>{(x as { text: string }).text}</p>
+        ))}
+        {videoId && <div className="mt-6"><SnVideo id={videoId} label={entry.title} /></div>}
+        {isWelcome ? (
+          <Link href={`/practice/the-sacred-no/${SN_DAY_LESSON[1]}`} onClick={() => { if (!completed) void handleMarkComplete(); }}
+            className="mt-8 block w-full rounded-full bg-[#DDC98E] py-3.5 text-center text-xs font-medium uppercase tracking-[0.22em] text-[#070707]">Begin day 1</Link>
+        ) : (
+          <Link href="/practice/the-sacred-no" className="mt-8 block w-full rounded-full border border-[#DDC98E] py-3 text-center text-xs uppercase tracking-[0.22em] text-[#DDC98E]">Back to The Sacred No</Link>
         )}
-        <h1
-          className={`mt-2 font-display text-3xl font-semibold leading-tight sm:text-4xl ${
-            dark ? "text-ffy-cream" : "text-ffy-teal"
-          }`}
-        >
-          {entry.title}
-        </h1>
-
-        <Blocks blocks={entry.body} dark={dark} />
-        {markCompleteBlock}
       </div>
-
-      {navRow}
     </main>
   );
 }

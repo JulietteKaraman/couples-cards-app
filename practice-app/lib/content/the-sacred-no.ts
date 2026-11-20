@@ -31,6 +31,8 @@ export const theSacredNo: PracticeCollection = {
   byline: "By Juliette Karaman",
   heroImage: "/sacred-no/hero.jpg",
   unlockMode: "free-browse",
+  // 20 Nov 2026: the dark Scrumptious Confessions look (Juliette: "make Sacred No like that").
+  theme: "dark",
   entries: [
     {
       slug: "welcome",
