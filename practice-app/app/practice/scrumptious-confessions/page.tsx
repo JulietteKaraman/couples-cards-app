@@ -785,13 +785,15 @@ function Today() {
 /* THE TOUCH MAP, one a month on a Monday, on each member's own clock since 20 Nov 2026 (Juliette 19 Nov 2026: "one of the practises from a touch map, it
    just gives people more awareness... I would call it the TOUCH MAP and yes the first monday of each month").
    One place at a time, her recorded Touch Map days, her words and her voice. */
+// Juliette 20 Nov 2026: the first place opens in week one, then once a month, on a Monday
+// (the launch group's dates; everyone else's move with their own clock).
 const TOUCH_MAP_MONTHS: { on: string; place: string }[] = [
-  { on: "2026-12-07", place: "wrist" },
-  { on: "2027-01-04", place: "inner-elbow" },
-  { on: "2027-02-01", place: "elbow-armpit" },
-  { on: "2027-03-01", place: "heart" },
-  { on: "2027-04-05", place: "collarbone" },
-  { on: "2027-05-03", place: "back-of-neck" },
+  { on: "2026-11-23", place: "wrist" },
+  { on: "2026-12-21", place: "inner-elbow" },
+  { on: "2027-01-25", place: "elbow-armpit" },
+  { on: "2027-02-22", place: "heart" },
+  { on: "2027-03-22", place: "collarbone" },
+  { on: "2027-04-26", place: "back-of-neck" },
 ];
 function TouchMapMonth() {
   const today = todayUK();

@@ -5,12 +5,16 @@
 // Touch Base keeps its own remembered speed, so a 1.5x story never speeds it up.
 export const VOICE_SPEEDS = [1, 1.25, 1.5];
 export const TOUCH_BASE_SPEEDS = [1, 1.1, 1.2];
+// The Touch Map: 1x, 1.1x or 1.25x only (Juliette, 20 Nov 2026: "can we speed up to 1.1 and 1.25 only for touch map").
+export const TOUCH_MAP_SPEEDS = [1, 1.1, 1.25];
+const TM_KEY = "ffy.touchmap.rate";
 const VOICE_KEY = "ffy.voice.rate";
 const TB_KEY = "ffy.touchbase.rate";
 
 export const isTouchBase = (src: string) => /\/touch-base\/touch-base-guided/.test(src || "");
-export const speedsFor = (src: string) => (isTouchBase(src) ? TOUCH_BASE_SPEEDS : VOICE_SPEEDS);
-const keyFor = (src: string) => (isTouchBase(src) ? TB_KEY : VOICE_KEY);
+export const isTouchMap = (src: string) => /\/touch-map\/audio\//.test(src || "");
+export const speedsFor = (src: string) => (isTouchBase(src) ? TOUCH_BASE_SPEEDS : isTouchMap(src) ? TOUCH_MAP_SPEEDS : VOICE_SPEEDS);
+const keyFor = (src: string) => (isTouchBase(src) ? TB_KEY : isTouchMap(src) ? TM_KEY : VOICE_KEY);
 
 export function readSpeed(src: string): number {
   try {
