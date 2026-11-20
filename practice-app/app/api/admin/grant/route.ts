@@ -1,3 +1,4 @@
+import { DOORS_OPEN } from "@/lib/confessions-clock";
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { ADMIN_EMAIL } from "@/lib/entitlements/admin";
@@ -70,7 +71,9 @@ export async function POST(req: Request) {
     // "One month free" (20 Nov 2026): access ends by itself after 30 days, nothing to remember.
     const month = body.length === "month";
     const marker = month ? `admin-grant-month-${Date.now()}` : `admin-grant-${Date.now()}`;
-    const expiresAt = month ? new Date(Date.now() + 30 * 86400 * 1000).toISOString() : undefined;
+    // A free month given before doors open counts from doors open (Juliette 20 Nov 2026: her 4 ladies to Wed 23 Dec).
+    const startMs = Math.max(Date.now(), Date.parse(`${DOORS_OPEN}T00:00:00Z`));
+    const expiresAt = month ? new Date(startMs + 30 * 86400 * 1000).toISOString() : undefined;
     const userId = await grantEntitlement(email, deckType, marker, undefined, expiresAt);
 
     // Read back what this person now holds, so the screen proves the grant
