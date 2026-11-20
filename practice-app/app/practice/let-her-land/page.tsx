@@ -202,6 +202,12 @@ function ConfessionsDoor() {
         <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-[#DDC98E]">{COPY.confKicker}</p>
         <p className="mt-1 font-display text-[28px] font-light leading-tight">{COPY.confTitle}</p>
         <p className="mt-2 text-[16px] text-[#cfc8bb]">{COPY.confLine}</p>
+        <p className="mt-4 text-[11px] font-medium uppercase tracking-[0.2em] text-[#DDC98E]">{COPY.confInsideHead}</p>
+        <ul className="mt-2 grid gap-1.5" data-testid="conf-inside">
+          {COPY.confInside.map((t) => (
+            <li key={t} className="flex gap-2.5 text-[15px] leading-snug text-[#f1ece2]"><span aria-hidden="true" className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-[#DDC98E]" />{t}</li>
+          ))}
+        </ul>
         <div className="mt-4"><Slot src={AUDIO.confessions} label={COPY.confListen} id="lhl-confessions" /></div>
         <p className="mt-3 text-center text-[14px] text-[#a79f90]">{COPY.confPrice}</p>
         <a href={CONFESSIONS_URL} data-testid="confessions-link" onClick={() => count("lhl_confessions_click")} className="lhl-press mt-4 inline-flex min-h-[52px] w-full items-center justify-center rounded-full border-[1.5px] border-[#DDC98E] font-display text-[17px] font-medium text-[#DDC98E]">{COPY.confButton}</a>
