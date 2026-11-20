@@ -14,6 +14,7 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { localVideoPoster, localVideoSrc } from "@/lib/content/local-audio";
 import { HOW_ALONE } from "@/lib/content/let-her-land";
+import { nextSpeed, readSpeed, saveSpeedFor } from "@/lib/voice-speed";
 
 const LS = "ffy.sn.";
 function lsGet<T>(k: string, d: T): T {
@@ -124,13 +125,39 @@ function BodyCheck({ value, onChange, label }: { value: number | null; onChange:
   );
 }
 
-export function SnVideo({ id, label }: { id: string; label: string }) {
+
+/** Her voice up to 1.5x, the same remembered speed as every story and teaching (lib/voice-speed). */
+function useVoiceRate(src: string): [number, () => void] {
+  const [rate, setRate] = useState(1);
+  useEffect(() => {
+    setRate(readSpeed(src)); // eslint-disable-line react-hooks/set-state-in-effect
+    const on = () => setRate(readSpeed(src));
+    window.addEventListener("ffy-voice-rate", on);
+    return () => window.removeEventListener("ffy-voice-rate", on);
+  }, [src]);
+  return [rate, () => { const v = nextSpeed(src, rate); setRate(v); saveSpeedFor(src, v); }];
+}
+function SpeedChip({ rate, onTap }: { rate: number; onTap: () => void }) {
   return (
-    <div className="flex justify-center">
-      <video src={localVideoSrc(id)} poster={localVideoPoster(id)} controls playsInline preload="metadata" controlsList="nodownload"
+    <button type="button" onClick={onTap} aria-label={`Speed ${rate}x. Tap to change`} className="min-h-[36px] min-w-[60px] rounded-full border border-[#DDC98E]/50 px-3 text-[13px] text-[#DDC98E]">
+      {rate}×
+    </button>
+  );
+}
+
+export function SnVideo({ id, label }: { id: string; label: string }) {
+  const src = localVideoSrc(id);
+  const ref = useRef<HTMLVideoElement | null>(null);
+  const [rate, cycle] = useVoiceRate(src);
+  useEffect(() => { if (ref.current) ref.current.playbackRate = rate; }, [rate]);
+  return (
+    <div className="flex flex-col items-center gap-3">
+      <video ref={ref} src={src} poster={localVideoPoster(id)} controls playsInline preload="metadata" controlsList="nodownload"
+        onLoadedMetadata={(e) => { e.currentTarget.playbackRate = rate; }} onPlay={(e) => { e.currentTarget.playbackRate = rate; }}
         className="block h-auto max-h-[72vh] w-auto max-w-full rounded-2xl border-[1.5px] border-[rgba(221,201,142,0.55)] bg-black shadow-[0_0_50px_-20px_rgba(221,201,142,0.55)]">
         {label}
       </video>
+      <SpeedChip rate={rate} onTap={cycle} />
     </div>
   );
 }
@@ -153,9 +180,11 @@ function icsFor(title: string, url: string) {
 const SOLO_VOICE = { start: "/let-her-land/voice/6-solo-start.m4a", bell: "/let-her-land/voice/7-solo-bell.m4a" };
 const SOLO_SECONDS = 5 * 60;
 let soloAudio: HTMLAudioElement | null = null;
-function playSolo(src: string) { try { soloAudio?.pause(); soloAudio = new Audio(src); soloAudio.play().catch(() => {}); } catch {} }
+function playSolo(src: string) { try { soloAudio?.pause(); soloAudio = new Audio(src); if (!/bell/.test(src)) soloAudio.playbackRate = readSpeed(src); soloAudio.play().catch(() => {}); } catch {} }
 
 function OnYourOwn() {
+  const [rate, cycle] = useVoiceRate(SOLO_VOICE.start);
+  useEffect(() => { if (soloAudio && !/bell/.test(soloAudio.src)) soloAudio.playbackRate = rate; }, [rate]);
   const [step, setStep] = useState<"pick" | "prep" | "sit" | "end">("pick");
   const [left, setLeft] = useState(SOLO_SECONDS);
   const [answers, setAnswers] = useState(0);
@@ -202,6 +231,7 @@ function OnYourOwn() {
           <p className="mt-2 min-h-[24px] text-[14px] tracking-[.04em] text-[#EEDE80]" aria-live="polite">{breath}</p>
           <button type="button" onClick={() => { setAnswers((x) => x + 1); setBreath("Take a breath. Read the card again."); setTimeout(() => setBreath(""), 4000); }} className={`mt-2 ${btn}`}>Next answer</button>
           <p className="mt-3 text-[14px] text-[#a79f90]">Answers so far: <b className="font-medium text-[#DDC98E]">{answers}</b></p>
+          <div className="mt-3 flex items-center justify-center gap-2 text-[12px] text-[#a79f90]">My voice <SpeedChip rate={rate} onTap={cycle} /></div>
         </div>
       )}
       {step === "end" && (
