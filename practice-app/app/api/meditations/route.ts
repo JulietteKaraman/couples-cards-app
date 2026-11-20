@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { DROPS_BUCKET, isAdmin, todayUK, userFromRequest } from "@/lib/drops-server";
-import { MEDITATIONS, meditationPath } from "@/lib/content/meditations";
+import { MEDITATIONS as LAUNCH_MEDITATIONS, meditationPath } from "@/lib/content/meditations";
+import { PEEK_DAYS, addDays, memberWeeks, shiftAll } from "@/lib/confessions-clock";
 
 // GET /api/meditations (specs/living-library.md, Juliette 19 Nov 2026: "a new meditation every Friday,
 // three on day one"). Everyone sees the titles that have opened. Paying Confessions members (and the
@@ -9,10 +10,13 @@ import { MEDITATIONS, meditationPath } from "@/lib/content/meditations";
 // The audio lives in the private "drops" bucket, never in public/.
 export async function GET(req: Request) {
   const user = await userFromRequest(req);
+  // Each member's own clock (lib/confessions-clock.ts): their first three on their own first day.
+  const MEDITATIONS = shiftAll(LAUNCH_MEDITATIONS, user && !isAdmin(user.email) ? memberWeeks(user) : 0);
   let today = todayUK();
   // Owner preview, like the confessions (Juliette 19 Nov 2026, to film the app): before the
   // first day she sees the first day's three. Members only ever see what has opened.
   if (user && isAdmin(user.email) && today < MEDITATIONS[0].publish_on) today = MEDITATIONS[0].publish_on;
+  today = addDays(today, PEEK_DAYS); // up to two days ahead (Juliette 20 Nov 2026)
   const opened = MEDITATIONS.filter((m) => m.publish_on <= today);
   const next = MEDITATIONS.find((m) => m.publish_on > today) || null;
 

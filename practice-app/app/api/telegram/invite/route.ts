@@ -7,7 +7,13 @@ import { GROUP_SLUG, groupChatId, tg } from "@/lib/telegram/bot";
 // with Scrumptious Confessions access gets one. Their latest link is handed back
 // rather than making a new one each visit; once used it can't let anyone else in
 // (member_limit 1), and for them it simply opens the group.
-export async function POST(req: Request) {
+// Telegram is gone (Juliette 20 Nov 2026): no new invite links. The daily sweep still removes anyone
+// whose access has ended from the old channel.
+export async function POST() {
+  return NextResponse.json({ error: "The Telegram channel has closed. Questions live in the app now." }, { status: 410 });
+}
+
+async function _retiredPOST(req: Request) {
   const user = await userFromRequest(req);
   if (!user) return NextResponse.json({ error: "Not signed in" }, { status: 401 });
   if (!(await canSee(user.id, user.email ?? undefined, GROUP_SLUG))) {

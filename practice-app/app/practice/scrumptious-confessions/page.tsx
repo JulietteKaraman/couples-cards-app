@@ -13,6 +13,7 @@ import { MEMBERSHIP_UNLOCKS, membershipMonth } from "@/lib/entitlements/config";
 import { PLACES } from "@/lib/content/touch-map";
 import { ADMIN_EMAIL } from "@/lib/entitlements/admin";
 import PracticeTimer from "@/components/PracticeTimer";
+import { memberWeeks, onMyClock } from "@/lib/confessions-clock";
 
 // SCRUMPTIOUS CONFESSIONS, the membership (specs/scrumptious-confessions-membership.md).
 // One story a week with a teaching in it, Touch Base every day with 31 dots, a
@@ -63,16 +64,16 @@ const pill = (on: boolean) =>
 
 type TabId = "stories" | "today" | "card" | "yours" | "library";
 const TABS: { id: TabId; label: string }[] = [
-  { id: "stories", label: "Mondays" },
   { id: "today", label: "Today" },
+  { id: "stories", label: "Mondays" },
   { id: "card", label: "Card" },
-  { id: "yours", label: "Your turn" },
+  { id: "yours", label: "Questions" },
   { id: "library", label: "Library" },
 ];
 
 function Content() {
   const [feed, setFeed] = useState<Feed | null>(null);
-  const [tab, setTab] = useState<TabId>("stories");
+  const [tab, setTab] = useState<TabId>("today"); // 20 Nov 2026: everyone lands on Today
   const top = useRef<HTMLDivElement>(null);
   // Doors open Mon 23 Nov 2026 (Juliette 19 Nov: "I do not want people in this week yet").
   // Before then members see one welcome; Juliette (admin) sees everything, to film and check.
@@ -140,7 +141,7 @@ function Content() {
         </div>
 
         {tab === "stories" && <Stories feed={feed} />}
-        {tab === "today" && <Today />}
+        {tab === "today" && <><WeekStrip onPick={pick} /><Today /></>}
         {tab === "card" && <Cards feed={feed} />}
         {tab === "yours" && <YourTurn />}
         {tab === "library" && <Library />}
@@ -238,49 +239,11 @@ function StoryBlock({ story, open }: { story: Story; open: boolean }) {
           <SendToMe item={story.id} notice="This one comes to me, with no name on it." button="Send it to me" />
         </div>
       </div>
-      <GroupLink />
     </article>
   );
 }
 
-/* Her Telegram group, where members post with no name (5 Nov 2026). */
-// R1, R2 (specs/telegram-gatekeeper.md): each member gets their own one-use
-// link from the bot, never the old shared link.
-function GroupLink() {
-  const [link, setLink] = useState<string | null>(null);
-  const [err, setErr] = useState(false);
-  useEffect(() => {
-    let live = true;
-    (async () => {
-      const { data } = await supabaseBrowser.auth.getSession();
-      const token = data.session?.access_token;
-      if (!token) return;
-      const res = await fetch("/api/telegram/invite", { method: "POST", headers: { Authorization: `Bearer ${token}` } });
-      const json = await res.json().catch(() => ({}));
-      if (!live) return;
-      if (res.ok && json.link) setLink(json.link); else setErr(true);
-    })();
-    return () => { live = false; };
-  }, []);
-  return (
-    <div className="mt-6 rounded-2xl border border-[#DDC98E]/40 p-4 text-center">
-      <p className="text-[15px] text-[#cfc8bb]">Our private Telegram channel. No one can see who&rsquo;s in it, and no one can see who asks.</p>
-      {link ? (
-        <a href={link} target="_blank" rel="noreferrer" className="mt-3 inline-flex min-h-[48px] w-full items-center justify-center rounded-full border border-[#DDC98E] text-[15px] text-[#DDC98E]">
-          Join our channel
-        </a>
-      ) : (
-        <p className="mt-3 inline-flex min-h-[48px] w-full items-center justify-center rounded-full border border-[#DDC98E]/40 text-[14px] text-[#8f877a]">
-          {err ? "Your channel link isn't ready. Come back in a minute." : "Getting your link\u2026"}
-        </p>
-      )}
-      <a href="https://t.me/SConfessionsBot" target="_blank" rel="noreferrer" className="mt-3 inline-flex min-h-[48px] w-full items-center justify-center rounded-full bg-[#DDC98E] text-[15px] font-medium text-[#070707]">
-        Post a question or confession
-      </a>
-      <p className="mt-2 text-[13px] text-[#8f877a]">Message my Confessions bot and it posts your words into the channel with no name on it. Text only, so your voice stays yours. I answer there every week.</p>
-    </div>
-  );
-}
+/* Telegram is gone (Juliette 20 Nov 2026): questions, Me too and answers all live in the app, on the Questions tab. */
 
 /* What opens the longer you stay (MEMBERSHIP_UNLOCKS, Juliette 16 Nov 2026). */
 /* Who this person is in the membership: paying since when, in the free week, or not in (shared by the
@@ -394,6 +357,7 @@ const TOPICS: { id: string; label: string; words: string[] }[] = [
   { id: "us", label: "Him, her, us", words: ["partner", "husband", "wife", "marriage", "couple", "him", "relationship", "reaching", "distance"] },
   { id: "safe", label: "Safety and trust", words: ["safe", "safety", "trust", "boundar", "saying no", "the no", "consent", "brace"] },
   { id: "shame", label: "Shame and the past", words: ["shame", "past", "trauma", "child", "guilt", "abuse", "mother", "father"] },
+  { id: "menopause", label: "Menopause and a changing body", words: ["menopause", "perimenopause", "oestrogen", "postmenopausal", "after having a baby", "hot flush"] },
   { id: "men", label: "For men", words: [" men", " man ", "for men", "masculin"] },
   { id: "calm", label: "Calm, sleep and clarity", words: ["anxiety", "sleep", "calm", "stress", "breath", "overwhelm", "clarity", "nervous"] },
 ];
@@ -407,7 +371,8 @@ const DOORS: { id: Door; title: string; line: string; shelves: Shelf[] }[] = [
 // Five to start with. Juliette can swap these for her own five favourites.
 const STARTERS = ["why-dont-i-feel-anything", "never-in-the-mood-but-enjoy-it", "why-can-i-feel-it-with-someone-else", "sleep-in-same-bed-never-touch", "why-doesnt-my-wife-want-me"];
 // Website pages about finding a coach, not members' questions: kept on the site, left out of the library.
-const HIDE = new Set(["desire-podcast-women-over-40", "how-an-intimacy-coach-helps", "how-much-does-intimacy-coaching-cost", "intimacy-and-touch-coach", "intimacy-classes-for-couples", "intimacy-coach-women-over-40-uk", "intimacy-expert-uk", "is-an-intimacy-coach-right-for-me", "relationship-coaching-for-men", "relationship-coaching", "somatic-coach-uk", "trauma-informed-intimacy-coach-uk", "what-does-a-touch-expert-do", "what-happens-in-intimacy-coaching", "when-to-get-help-with-intimacy", "who-teaches-couples-to-touch-again"]);
+// 20 Nov 2026: the EMDR and "somatic" answers are out too (words Juliette doesn't use for her work).
+const HIDE = new Set(["emdr-and-intimacy", "somatic-coach-uk", "what-is-somatic-touch-therapy", "desire-podcast-women-over-40", "how-an-intimacy-coach-helps", "how-much-does-intimacy-coaching-cost", "intimacy-and-touch-coach", "intimacy-classes-for-couples", "intimacy-coach-women-over-40-uk", "intimacy-expert-uk", "is-an-intimacy-coach-right-for-me", "relationship-coaching-for-men", "relationship-coaching", "somatic-coach-uk", "trauma-informed-intimacy-coach-uk", "what-does-a-touch-expert-do", "what-happens-in-intimacy-coaching", "when-to-get-help-with-intimacy", "who-teaches-couples-to-touch-again"]);
 async function loadMeditations(): Promise<Answer[]> {
   const { data } = await supabaseBrowser.auth.getSession();
   const token = data.session?.access_token;
@@ -437,7 +402,12 @@ function Answers({ paid, trial, start, shelves }: { paid: boolean; trial?: boole
   const [open, setOpen] = useState<string | null>(null);
   useEffect(() => {
     if (data[shelf]) return;
-    const get = shelf === "meditations" ? loadMeditations() : fetch(`/scrumptious-confessions/${shelf}.json`).then((r) => r.json());
+    // Her Thursday answers to members' questions join the library for good, newest first (20 Nov 2026).
+    const fromMembers = (): Promise<Answer[]> => loadWall().then((w) => (w?.answers || []).map((a) => ({ slug: `m-${a.id}`, q: a.question, blocks: a.answer.split(/\n+/).filter(Boolean).map((x) => ({ t: "p" as const, x })) }))).catch(() => []);
+    const get = shelf === "meditations" ? loadMeditations()
+      // Juliette's answer cards (20 Nov 2026): her own essay lines, sorted by topic, alongside the written answers.
+      : shelf === "answers" ? Promise.all([fromMembers(), fetch(`/scrumptious-confessions/cards.json`).then((r) => (r.ok ? r.json() : [])).catch(() => []), fetch(`/scrumptious-confessions/answers.json`).then((r) => r.json())]).then(([m, k, j]) => [...m, ...k, ...j])
+      : fetch(`/scrumptious-confessions/${shelf}.json`).then((r) => r.json());
     get.then((d) => setData((x) => ({ ...x, [shelf]: d }))).catch(() => setData((x) => ({ ...x, [shelf]: [] })));
   }, [shelf, data]);
   const raw = data[shelf];
@@ -468,6 +438,14 @@ function Answers({ paid, trial, start, shelves }: { paid: boolean; trial?: boole
       <p className="mt-2 text-[15px] text-[#a79f90]">{all ? `${all.filter((a) => !a.slug.startsWith("next")).length} ${meta.unit} so far, and it grows every week.` : "Opening\u2026"}</p>
       <input value={find} onChange={(e) => setFind(e.target.value)} placeholder="Search: touch, menopause, desire…"
         className="mt-4 w-full rounded-full border border-[#DDC98E]/40 bg-transparent px-5 py-3 text-[16px] text-[#f1ece2] placeholder:text-[#8f877a]" />
+      {shelf === "answers" && (
+        <div className="mt-3 flex flex-wrap gap-2" aria-label="Topics">
+          {TOPICS.map((t) => (
+            <button key={t.id} type="button" aria-pressed={topic === t.id} onClick={() => { setTopic(topic === t.id ? null : t.id); setOpen(null); }}
+              className={`min-h-[40px] rounded-full border px-3 text-[13px] ${topic === t.id ? "border-[#DDC98E] bg-[#DDC98E] text-[#070707]" : "border-[#DDC98E]/40 text-[#f1ece2]"}`}>{t.label}</button>
+          ))}
+        </div>
+      )}
       {!paid && <p className="mt-3 text-[14px] text-[#DDC98E]">{trial ? "🔒 In your free week you see every question. The answers open with your first month, on day 8. Three meditations are yours now." : "🔒 These open when you start your 7 days free."}</p>}
       {starter && list.length > 0 && <p className="mt-5 font-display text-[20px] text-[#f1ece2]">Five to start with</p>}
       <ul className="mt-4 space-y-2">
@@ -494,7 +472,7 @@ function Answers({ paid, trial, start, shelves }: { paid: boolean; trial?: boole
 }
 
 /* A box whose words go to Juliette, always with no name attached. */
-function SendToMe({ item, notice, button, onType, once }: { item: string; notice: string; button: string; onType?: (v: string) => void; once?: string }) {
+function SendToMe({ item, notice, button, onType, once, onSent }: { item: string; notice: string; button: string; onType?: (v: string) => void; once?: string; onSent?: () => void }) {
   const draftKey = `ffy.confessions.draft.${item}.v1`;
   // once = a week id: one send per week from this phone (her weekly confession).
   const sentKey = `ffy.confessions.sent.${item}${once ? `.${once}` : ""}.v1`;
@@ -510,6 +488,8 @@ function SendToMe({ item, notice, button, onType, once }: { item: string; notice
       lsSet(sentKey, "1");
       lsSet(draftKey, "");
       setState("sent");
+      onType?.("");
+      onSent?.();
     } catch {
       setState("failed");
     }
@@ -542,22 +522,173 @@ function SendToMe({ item, notice, button, onType, once }: { item: string; notice
 // The Monday that starts this week, so a confession can go once a week.
 const weekOf = (d: string) => { const x = new Date(d + "T12:00:00"); const back = (x.getDay() + 6) % 7; x.setDate(x.getDate() - back); return x.toISOString().slice(0, 10); };
 
+type WallQ = { id: string; body: string; metoo: number; created_at: string };
+type WallA = { id: string; question_id: string; question: string; answer: string; created_at: string };
+type WallData = { questions: WallQ[]; thisWeek: WallA[]; answers: WallA[] };
+async function loadWall(): Promise<WallData | null> {
+  const { data } = await supabaseBrowser.auth.getSession();
+  const token = data.session?.access_token;
+  if (!token) return null;
+  const res = await fetch("/api/confessions/wall", { headers: { Authorization: `Bearer ${token}` } }).catch(() => null);
+  return res?.ok ? res.json() : null;
+}
+const normQ = (x: string) => x.toLowerCase().replace(/['\u2018\u2019`]/g, "").replace(/[^a-z0-9\s]/g, " ");
+const STOP = new Set("i me my we our you your he she him her it its a an the and or but to of in on for with is am are was do does did have has why how what when can cant dont not so that this just".split(" "));
+const keyWords = (x: string) => normQ(x).split(/\s+/).filter((w) => w.length > 2 && !STOP.has(w));
+
+/* ================= QUESTIONS: the wall, Me too, her answers (Juliette 20 Nov 2026) ================= */
+// Telegram is gone. Every member sees this week's questions here the moment they're sent, taps Me too
+// instead of asking the same thing again, and reads Juliette's answers on Thursday.
 function YourTurn() {
+  const [wall, setWall] = useState<WallData | null>(null);
+  const [draft, setDraft] = useState("");
+  const [openA, setOpenA] = useState<string | null>(null);
+  const [tapped, setTapped] = useState<Record<string, boolean>>({});
+  const refresh = () => loadWall().then((w) => w && setWall(w));
+  useEffect(() => { refresh(); try { setTapped(JSON.parse(lsGet("ffy.confessions.metoo.v1") || "{}")); } catch {} }, []);
+
+  const metoo = async (q: WallQ) => {
+    if (tapped[q.id]) return;
+    const next = { ...tapped, [q.id]: true };
+    setTapped(next); lsSet("ffy.confessions.metoo.v1", JSON.stringify(next));
+    setWall((w) => w && { ...w, questions: w.questions.map((x) => (x.id === q.id ? { ...x, metoo: x.metoo + 1 } : x)) });
+    const { data } = await supabaseBrowser.auth.getSession();
+    fetch("/api/confessions/wall", { method: "POST", headers: { "Content-Type": "application/json", Authorization: `Bearer ${data.session?.access_token}` }, body: JSON.stringify({ action: "metoo", id: q.id }) }).catch(() => {});
+  };
+
+  // As they type: questions already on the wall or already answered that look the same.
+  const kw = keyWords(draft);
+  const score = (t: string) => { const k = new Set(keyWords(t)); return kw.filter((w) => k.has(w)).length; };
+  const similar = kw.length >= 2 && wall ? [
+    ...wall.answers.map((a) => ({ kind: "answered" as const, id: a.id, text: a.question, s: score(a.question), a })),
+    ...wall.questions.map((q) => ({ kind: "waiting" as const, id: q.id, text: q.body, s: score(q.body), q })),
+  ].filter((x) => x.s >= 2).sort((a, b) => b.s - a.s).slice(0, 3) : [];
+
   return (
-    <section className="mt-8">
+    <section className="mt-8 space-y-6">
       <div className="rounded-3xl border-2 border-[#DDC98E]/60 bg-[rgba(13,53,53,0.45)] p-5">
         <Eyebrow>Ask me anything</Eyebrow>
-        <p className="mt-2 font-display text-[22px] font-light">Your question about intimacy, touch, desire, sex.</p>
-        <p className="mt-2 text-[15px] text-[#cfc8bb]">I answer the questions every week.</p>
-        <SendToMe item="question" notice="This comes to me with no name on it." button="Send my question" />
+        <p className="mt-2 font-display text-[22px] font-light">Your question about intimacy, Touch, desire, sex.</p>
+        <p className="mt-2 text-[15px] text-[#cfc8bb]">It goes on the wall for every member to see, with no name. I answer every Thursday.</p>
+        <SendToMe item="question" onType={setDraft} onSent={refresh} notice="No name goes with it, ever. Everyone in Scrumptious Confessions can read it." button="Ask my question" />
+        {similar.length > 0 && (
+          <div className="mt-4 space-y-2">
+            <p className="text-[13px] uppercase tracking-[0.14em] text-[#a79f90]">Someone may have asked this already</p>
+            {similar.map((x) => x.kind === "answered" ? (
+              <button key={x.id} type="button" onClick={() => setOpenA(x.id)} className="block w-full rounded-2xl border border-[#DDC98E]/40 p-3 text-left text-[15px]">
+                {x.text} <span className="text-[#DDC98E]">· answered, read it</span>
+              </button>
+            ) : (
+              <div key={x.id} className="flex items-center justify-between gap-3 rounded-2xl border border-[#DDC98E]/25 p-3 text-[15px]">
+                <span>{x.text}</span>
+                <button type="button" onClick={() => metoo(x.q!)} className={`shrink-0 rounded-full border px-3 py-1.5 text-[13px] ${tapped[x.id] ? "border-[#DDC98E] bg-[#DDC98E] text-[#070707]" : "border-[#DDC98E] text-[#DDC98E]"}`}>Me too</button>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
-      <div className="mt-6 rounded-3xl border-2 border-[#DDC98E]/60 bg-[rgba(13,53,53,0.45)] p-5">
+
+      {wall && wall.thisWeek.length > 0 && (
+        <div className="rounded-3xl border border-[#DDC98E]/50 p-5">
+          <Eyebrow>This week&rsquo;s answers</Eyebrow>
+          <div className="mt-3 space-y-3">
+            {wall.thisWeek.map((a) => <AnswerItem key={a.id} a={a} open={openA === a.id} onOpen={() => setOpenA(openA === a.id ? null : a.id)} />)}
+          </div>
+        </div>
+      )}
+
+      <div className="rounded-3xl border border-[#DDC98E]/40 p-5">
+        <Eyebrow>This week&rsquo;s questions</Eyebrow>
+        {/* Juliette's opening line, from what her last group told her (20 Nov 2026). */}
+        <p className="mt-3 text-[16px] leading-relaxed text-[#f1ece2]">My last group were surprised how hard it was to stay with their own body for fifteen minutes. Sensation isn&rsquo;t always pleasure. What&rsquo;s coming up for you?</p>
+        <p className="mt-1 text-[13px] text-[#a79f90]">Juliette</p>
+        <div className="mt-4 space-y-2">
+          {!wall && <p className="text-[#8f877a]">…</p>}
+          {wall && wall.questions.length === 0 && <p className="text-[15px] text-[#a79f90]">Be the first to ask this week.</p>}
+          {wall?.questions.map((q) => (
+            <div key={q.id} className="flex items-start justify-between gap-3 rounded-2xl bg-white/[0.03] p-3">
+              <p className="whitespace-pre-wrap text-[15px] leading-snug">{q.body}</p>
+              <button type="button" onClick={() => metoo(q)} aria-pressed={!!tapped[q.id]} className={`shrink-0 rounded-full border px-3 py-1.5 text-[13px] tabular-nums ${tapped[q.id] ? "border-[#DDC98E] bg-[#DDC98E] text-[#070707]" : "border-[#DDC98E] text-[#DDC98E]"}`}>Me too · {q.metoo}</button>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {openA && wall && !wall.thisWeek.some((a) => a.id === openA) && (() => { const a = wall.answers.find((x) => x.id === openA); return a ? <div className="rounded-3xl border border-[#DDC98E]/50 p-5"><AnswerItem a={a} open onOpen={() => setOpenA(null)} /></div> : null; })()}
+
+      <div className="rounded-3xl border-2 border-[#DDC98E]/60 bg-[rgba(13,53,53,0.45)] p-5">
         <Eyebrow>Your confession this week</Eyebrow>
         <p className="mt-2 font-display text-[22px] font-light">I tell you mine every week. Tell me yours.</p>
-        <p className="mt-2 text-[15px] text-[#cfc8bb]">A fantasy, a fear, a moment your body surprised you. One a week.</p>
+        <p className="mt-2 text-[15px] text-[#cfc8bb]">A fantasy, a fear, a moment your body surprised you. One a week. Only I see it.</p>
         <SendToMe item="confession" once={weekOf(todayUK())} notice="This comes to me with no name on it. All of it is welcome." button="Send my confession" />
       </div>
-      <GroupLink />
+    </section>
+  );
+}
+
+function AnswerItem({ a, open, onOpen }: { a: WallA; open: boolean; onOpen: () => void }) {
+  return (
+    <div className="rounded-2xl border border-[#DDC98E]/25">
+      <button type="button" onClick={onOpen} className="flex w-full items-start justify-between gap-3 p-4 text-left">
+        <span className="text-[16px] leading-snug">{a.question}</span>
+        <span className="shrink-0 text-[#DDC98E]">{open ? "\u2212" : "+"}</span>
+      </button>
+      {open && <div className="space-y-3 px-4 pb-5 text-[15px] leading-relaxed text-[#cfc8bb]">{a.answer.split(/\n+/).map((x, i) => <p key={i}>{x}</p>)}</div>}
+    </div>
+  );
+}
+
+/* ================= YOUR WEEK: one thing a day (Juliette 20 Nov 2026) =================
+   "Every day it opens something. You can go 2 days ahead, but you can't go much further than that."
+   Each member's own clock moves whole weeks, so the weekdays are the same for everyone. Thursday's
+   answers are live, the same day for everyone, so they never open early. */
+const WEEK: { what: string; go: TabId | "poems" | "meditations"; early: boolean }[] = [
+  { what: "A confession", go: "stories", early: true },
+  { what: "A card", go: "card", early: true },
+  { what: "A poem", go: "poems", early: true },
+  { what: "My answers", go: "yours", early: false },
+  { what: "A meditation", go: "meditations", early: true },
+  { what: "A card", go: "card", early: true },
+  { what: "Touch Base and your week", go: "today", early: true },
+];
+function WeekStrip({ onPick }: { onPick: (t: TabId) => void }) {
+  const today = todayUK();
+  const monday = weekOf(today);
+  const days = WEEK.map((w, i) => {
+    const d = new Date(monday + "T12:00:00"); d.setDate(d.getDate() + i);
+    const date = d.toISOString().slice(0, 10);
+    const ahead = daysBetween(today, date);
+    const state = ahead < 0 ? "past" : ahead === 0 ? "today" : w.early && ahead <= 2 ? "early" : "locked";
+    return { ...w, date, state, short: d.toLocaleDateString("en-GB", { weekday: "short" }) };
+  });
+  const go = (g: (typeof WEEK)[number]["go"]) => {
+    if (g === "poems") { window.location.assign("/practice/scrumptious-poems"); return; }
+    onPick(g === "meditations" ? "library" : g);
+  };
+  const now = days.find((d) => d.state === "today")!;
+  return (
+    <section className="mt-6" data-testid="week-strip">
+      <Eyebrow>Your week</Eyebrow>
+      <button type="button" onClick={() => go(now.go)} className="mt-3 flex w-full items-center justify-between gap-3 rounded-3xl border-2 border-[#DDC98E] bg-[rgba(221,201,142,0.12)] p-5 text-left">
+        <span>
+          <span className="block text-[12px] uppercase tracking-[0.18em] text-[#DDC98E]">Today</span>
+          <span className="mt-1 block font-display text-[24px] font-light">{now.what}</span>
+        </span>
+        <span className="text-[#DDC98E]">Open &rarr;</span>
+      </button>
+      <div className="mt-3 grid grid-cols-7 gap-1.5">
+        {days.map((d) => {
+          const open = d.state !== "locked";
+          return (
+            <button key={d.date} type="button" disabled={!open} onClick={() => go(d.go)} aria-label={`${d.short}: ${d.what}${open ? "" : `, opens ${weekday(d.date)}`}`}
+              className={`flex min-h-[64px] flex-col items-center justify-center rounded-2xl border px-0.5 text-center text-[11px] leading-tight ${d.state === "today" ? "border-[#DDC98E] bg-[#DDC98E] text-[#070707]" : d.state === "early" ? "border-dashed border-[#DDC98E]/70 text-[#f1ece2]" : d.state === "past" ? "border-[#DDC98E]/30 bg-[rgba(221,201,142,0.08)] text-[#f1ece2]" : "border-[#DDC98E]/15 text-[#6f6a60]"}`}>
+              <span className="font-display text-[14px]">{d.short}</span>
+              <span className="mt-0.5">{open ? (d.state === "early" ? "peek" : "open") : "🔒"}</span>
+            </button>
+          );
+        })}
+      </div>
+      <p className="mt-2 text-[13px] text-[#8f877a]">Something opens every day. You can look up to two days ahead.</p>
     </section>
   );
 }
@@ -651,7 +782,7 @@ function Today() {
   );
 }
 
-/* THE TOUCH MAP, the first Monday of each month (Juliette 19 Nov 2026: "one of the practises from a touch map, it
+/* THE TOUCH MAP, one a month on a Monday, on each member's own clock since 20 Nov 2026 (Juliette 19 Nov 2026: "one of the practises from a touch map, it
    just gives people more awareness... I would call it the TOUCH MAP and yes the first monday of each month").
    One place at a time, her recorded Touch Map days, her words and her voice. */
 const TOUCH_MAP_MONTHS: { on: string; place: string }[] = [
@@ -664,9 +795,20 @@ const TOUCH_MAP_MONTHS: { on: string; place: string }[] = [
 ];
 function TouchMapMonth() {
   const today = todayUK();
-  const opened = TOUCH_MAP_MONTHS.filter((m) => m.on <= today);
+  // Each member's own clock (lib/confessions-clock.ts, Juliette 20 Nov 2026): the wrist in their own third
+  // week, then one place a month, on a Monday. Read fresh from the server so a new start date counts at once.
+  const [weeks, setWeeks] = useState<number | null>(null);
+  useEffect(() => {
+    supabaseBrowser.auth.getUser().then(({ data }) => {
+      const u = data?.user;
+      setWeeks(!u || (u.email || "").toLowerCase() === ADMIN_EMAIL ? 0 : memberWeeks(u));
+    }).catch(() => setWeeks(0));
+  }, []);
+  if (weeks === null) return null;
+  const months = TOUCH_MAP_MONTHS.map((m) => ({ ...m, on: onMyClock(m.on, weeks) }));
+  const opened = months.filter((m) => m.on <= today);
   const now = opened[opened.length - 1];
-  const next = TOUCH_MAP_MONTHS.find((m) => m.on > today);
+  const next = months.find((m) => m.on > today);
   const p = now ? PLACES.find((x) => x.id === now.place) : null;
   return (
     <div className="mt-6 rounded-3xl border-[1.5px] border-[rgba(221,201,142,0.55)] bg-[rgba(13,53,53,0.35)] p-5" data-testid="touch-map-month">
@@ -674,7 +816,7 @@ function TouchMapMonth() {
       {p ? (
         <>
           <h3 className="mt-2 font-display text-[24px] font-light leading-tight">{p.label}</h3>
-          <p className="mt-1 text-[13px] text-[#a79f90]">This month&rsquo;s place. One a month, the first Monday.</p>
+          <p className="mt-1 text-[13px] text-[#a79f90]">This month&rsquo;s place. One a month, on a Monday.</p>
           {p.audio && <div className="mt-4"><VoicePlayer src={p.audio} label={`The Touch Map: ${p.label}`} dark /></div>}
           <div className="mt-4 space-y-3">
             {p.touch.map((l, i) => <p key={i} className="text-[16px] leading-relaxed text-[#f1ece2]">{l}</p>)}
@@ -684,7 +826,7 @@ function TouchMapMonth() {
           <p className="mt-4 text-[14px] text-[#cfc8bb]">This is one place from The Touch Map. Want the whole map? <Link href="/taste/touch-map" className="text-[#DDC98E] underline underline-offset-4">Open it here, &pound;197</Link>.</p>
         </>
       ) : (
-        <p className="mt-2 text-[16px] text-[#cfc8bb]">One place on your body, once a month, in my voice. The first one opens on {next ? dayName(next.on) : "the first Monday of the month"}.</p>
+        <p className="mt-2 text-[16px] text-[#cfc8bb]">One place on your body, once a month, in my voice. The first one opens on {next ? dayName(next.on) : "a Monday soon"}.</p>
       )}
     </div>
   );
@@ -822,8 +964,7 @@ function CardBlock({ card, open }: { card: Card; open: boolean }) {
         <div className="mt-8">
           <p className="font-display text-[20px] font-light">Your answer</p>
           <SendToMe item={card.id} onType={onType} notice="Saved on this phone. It stays private unless you send it to me, and then it comes with no name on it." button="Send it to me" />
-          <GroupLink />
-        </div>
+            </div>
       )}
     </div>
   );

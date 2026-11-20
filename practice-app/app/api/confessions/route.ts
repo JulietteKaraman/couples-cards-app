@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { canSee, isAdmin, todayUK, userFromRequest } from "@/lib/drops-server";
-import { CONFESSION_CARDS, CONFESSION_STORIES } from "@/lib/content/scrumptious-confessions";
+import { CONFESSION_CARDS as LAUNCH_CARDS, CONFESSION_STORIES as LAUNCH_STORIES } from "@/lib/content/scrumptious-confessions";
+import { PEEK_DAYS, addDays, memberWeeks, shiftAll } from "@/lib/confessions-clock";
 
 // Scrumptious Confessions membership (specs/scrumptious-confessions-membership.md).
 //   GET                               opened stories and cards, plus what's next
@@ -25,6 +26,10 @@ const opened = <T extends { publish_on: string }>(items: T[], today: string) =>
 export async function GET(req: Request) {
   const m = await member(req);
   if (m.err) return m.err;
+  // Each member's own clock (lib/confessions-clock.ts): the launch schedule moved to the week they joined.
+  const weeks = isAdmin(m.user!.email) ? 0 : memberWeeks(m.user);
+  const CONFESSION_STORIES = shiftAll(LAUNCH_STORIES, weeks);
+  const CONFESSION_CARDS = shiftAll(LAUNCH_CARDS, weeks);
   let today = todayUK();
   // Owner preview (Juliette 17 Nov 2026, to film the app): she sees the app as it will look
   // on the next confession's Monday. Members always see only what has opened.
@@ -32,6 +37,8 @@ export async function GET(req: Request) {
     const next = CONFESSION_STORIES.map((s) => s.publish_on).filter((d) => d > today).sort()[0];
     if (next) today = next;
   }
+  // Juliette 20 Nov 2026: members can open up to two days ahead, never further.
+  today = addDays(today, PEEK_DAYS);
   const upcoming = [
     ...CONFESSION_STORIES.filter((s) => s.publish_on > today).map((s) => ({ kind: "story", publish_on: s.publish_on })),
     ...CONFESSION_CARDS.filter((c) => c.publish_on > today).map((c) => ({ kind: "card", publish_on: c.publish_on })),
@@ -42,6 +49,7 @@ export async function GET(req: Request) {
     cards: opened(CONFESSION_CARDS, today),
     nextStory: upcoming.find((u) => u.kind === "story")?.publish_on ?? null,
     nextCard: upcoming.find((u) => u.kind === "card")?.publish_on ?? null,
+    weeks,
   });
 }
 
@@ -56,7 +64,10 @@ export async function POST(req: Request) {
   }
 
   const itemId = String(b.item || "");
-  const today = todayUK();
+  const today = addDays(todayUK(), PEEK_DAYS);
+  const weeks = isAdmin(m.user!.email) ? 0 : memberWeeks(m.user);
+  const CONFESSION_STORIES = shiftAll(LAUNCH_STORIES, weeks);
+  const CONFESSION_CARDS = shiftAll(LAUNCH_CARDS, weeks);
   const story = CONFESSION_STORIES.find((s) => s.id === itemId && s.publish_on <= today);
   const card = CONFESSION_CARDS.find((c) => c.id === itemId && c.publish_on <= today);
   // 11 Nov 2026: members ask questions and add confessions of their own, not tied to a story.

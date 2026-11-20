@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { CONFESSION_POEMS } from "@/lib/content/confession-poems";
+import { CONFESSION_POEMS as LAUNCH_POEMS } from "@/lib/content/confession-poems";
+import { PEEK_DAYS, addDays, memberWeeks, shiftAll } from "@/lib/confessions-clock";
 
 // A page of poems each Wednesday for Scrumptious Confessions members. Juliette, 19 Nov 2026: "I can add a
 // poem each week to the membership instead of putting the whole book in." Same lock as the confessions:
@@ -12,13 +13,17 @@ export async function GET(req: Request) {
   // Local preview only (never true on the live site): there is no database here, so show the poems as the owner sees them.
   const preview = process.env.NODE_ENV === "development";
   let admin = false;
+  let weeks = 0;
   if (!preview) {
     const { canSee, isAdmin, userFromRequest } = await import("@/lib/drops-server");
     const user = await userFromRequest(req);
     if (!user) return NextResponse.json({ error: "Not signed in" }, { status: 401 });
     if (!(await canSee(user.id, user.email, SLUG))) return NextResponse.json({ error: "Not on your account" }, { status: 403 });
     admin = isAdmin(user.email);
+    // Each member's own clock (lib/confessions-clock.ts): poem one in their own first week.
+    if (!admin) weeks = memberWeeks(user);
   }
+  const CONFESSION_POEMS = shiftAll(LAUNCH_POEMS, weeks);
 
   let today = todayUK();
   // Owner preview, the same as the confessions: Juliette sees the next Wednesday's poems early.
@@ -26,6 +31,7 @@ export async function GET(req: Request) {
     const next = CONFESSION_POEMS.map((p) => p.publish_on).filter((d) => d > today).sort()[0];
     if (next) today = next;
   }
+  today = addDays(today, PEEK_DAYS); // up to two days ahead (Juliette 20 Nov 2026)
   const list = CONFESSION_POEMS.filter((p) => p.publish_on <= today)
     .sort((a, b) => b.publish_on.localeCompare(a.publish_on));
   // Charlene's videos live in the private "drops" store: each opened one gets a play link that lasts 2 hours.

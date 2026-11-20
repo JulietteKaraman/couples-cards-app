@@ -15,12 +15,13 @@ export const CONFESSION_STORIES: ConfessionStory[] = [
 
 export const CONFESSION_CARDS: ConfessionCard[] = [
   { id: "body-said-yes", publish_on: "2026-11-02", prompt: "Tell me the last time your body said yes before your head got involved." },
-  // Juliette's new cards for the membership (17 Nov 2026), one each Monday, paired with that week's confession.
-  { id: "touch-you-put-up-with", publish_on: "2026-11-23", prompt: "Tell me a kind of touch you put up with, and what you'd rather have instead." },
-  { id: "no-never-said", publish_on: "2026-11-30", prompt: "Tell me about a no you never said out loud." },
-  { id: "take-off-you", publish_on: "2026-12-07", prompt: "Tell me what you'd love someone to take off you, even for a minute." }, // her line from Tilt your beard
-  // Thursday cards (Juliette 17 Nov: "maybe 2 different cards"): Monday's echoes the confession, Thursday's moves them on.
-  { id: "safe-enough", publish_on: "2026-11-26", prompt: "Tell me what makes you feel safe enough to be touched." },
-  { id: "need-to-hear", publish_on: "2026-12-03", prompt: "Tell me what you need to hear before you can say yes." },
-  { id: "fifteen-perfect", publish_on: "2026-12-10", prompt: "Tell me what fifteen minutes of perfect touch would look like for you." },
+  // Juliette's new cards for the membership (17 Nov 2026), paired with that week's confession. 20 Nov 2026 (her daily
+  // rhythm: Mon confession, Tue card, Wed poem, Thu answers, Fri meditation, Sat card, Sun Touch Base): Tuesdays and Saturdays.
+  { id: "touch-you-put-up-with", publish_on: "2026-11-24", prompt: "Tell me a kind of touch you put up with, and what you'd rather have instead." },
+  { id: "no-never-said", publish_on: "2026-12-01", prompt: "Tell me about a no you never said out loud." },
+  { id: "take-off-you", publish_on: "2026-12-08", prompt: "Tell me what you'd love someone to take off you, even for a minute." }, // her line from Tilt your beard
+  // Second card (Juliette 17 Nov: "maybe 2 different cards"): Tuesday's echoes the confession, Saturday's moves them on.
+  { id: "safe-enough", publish_on: "2026-11-28", prompt: "Tell me what makes you feel safe enough to be touched." },
+  { id: "need-to-hear", publish_on: "2026-12-05", prompt: "Tell me what you need to hear before you can say yes." },
+  { id: "fifteen-perfect", publish_on: "2026-12-12", prompt: "Tell me what fifteen minutes of perfect touch would look like for you." },
 ];

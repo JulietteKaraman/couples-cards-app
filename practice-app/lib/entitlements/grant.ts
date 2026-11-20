@@ -91,9 +91,28 @@ export async function grantEntitlement(
     if (stillMember && existing.purchased_at && !wasFree) row.purchased_at = existing.purchased_at;
   }
 
+  // Scrumptious Confessions: read whether this person is already a live member BEFORE the upsert,
+  // so their own clock (lib/confessions-clock.ts) can be started below.
+  let confessionsLive = false;
+  if (deckType === "scrumptious-confessions") {
+    const { data: before } = await supabaseAdmin
+      .from("user_decks")
+      .select("expires_at")
+      .eq("user_id", userId)
+      .eq("deck_type", deckType)
+      .maybeSingle();
+    confessionsLive = !!before && (!before.expires_at || new Date(before.expires_at) > new Date());
+  }
+
   const { error: grantError } = await supabaseAdmin
     .from("user_decks")
     .upsert(row, { onConflict: "user_id,deck_type" });
+
+  if (!grantError && deckType === "scrumptious-confessions") {
+    await startConfessionsClock(userId, confessionsLive).catch((e) =>
+      console.error("startConfessionsClock", e instanceof Error ? e.message : e)
+    );
+  }
 
   if (grantError) {
     throw new Error(
@@ -102,4 +121,25 @@ export async function grantEntitlement(
   }
 
   return userId;
+}
+
+// Juliette 20 Nov 2026: every member starts at week one of Scrumptious Confessions, from the week they
+// join, never in the middle of what the launch group has had. Written once: a live member keeps their
+// start (the trial's £0 invoice, then the first payment, change nothing). Someone whose access had ended
+// starts again at week one. The How to Feel Like a Woman women stay with the launch group.
+async function startConfessionsClock(userId: string, alreadyLive: boolean) {
+  const { START_KEY } = await import("@/lib/confessions-clock");
+  const { data, error } = await supabaseAdmin.auth.admin.getUserById(userId);
+  if (error || !data?.user) return;
+  const meta = (data.user.app_metadata || {}) as Record<string, unknown>;
+  if (alreadyLive && meta[START_KEY]) return;
+  if (!meta[START_KEY]) {
+    const { HTFLAW_FREE_CONFESSIONS } = await import("@/lib/entitlements/config");
+    const { data: htflaw } = await supabaseAdmin
+      .from("user_decks").select("deck_type").eq("user_id", userId).eq("deck_type", HTFLAW_FREE_CONFESSIONS.ownerDeck).limit(1);
+    if ((htflaw || []).length) return;
+    if (alreadyLive) return; // joined before this clock existed: the launch group
+  }
+  const today = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/London" }).format(new Date());
+  await supabaseAdmin.auth.admin.updateUserById(userId, { app_metadata: { ...meta, [START_KEY]: today } });
 }

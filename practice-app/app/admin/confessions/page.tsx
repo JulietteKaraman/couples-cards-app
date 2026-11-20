@@ -11,7 +11,8 @@ import { ADMIN_EMAIL } from "@/lib/entitlements/admin";
 // plus totals (specs/scrumptious-confessions-membership.md R12, R16, R17).
 type Item = { id: string; title: string; type: string; publish_on: string };
 type Message = { id: string; item_title: string; body: string; kind: string; source: string; answered: boolean; created_at: string };
-type Data = { items: Item[]; totals: Record<string, Record<string, Record<string, number>>>; messages: Message[] };
+type Wall = Record<string, { metoo: number; hidden: boolean; answer: string | null }>;
+type Data = { items: Item[]; totals: Record<string, Record<string, Record<string, number>>>; messages: Message[]; wall?: Wall };
 
 const LABELS: Record<string, string> = {
   ick: "Ick", nothing: "Nothing", nice: "Nice", mmm: "Mmm", goosebumps: "Goosebumps", "toes-curl": "Toes curl",
@@ -33,12 +34,11 @@ const FILTERS = [
   { id: "open", label: "Not answered" },
   { id: "question", label: "Questions" },
   { id: "confession", label: "Confessions" },
-  { id: "telegram", label: "From Telegram" },
   { id: "all", label: "Everything" },
 ] as const;
 type FilterId = (typeof FILTERS)[number]["id"];
 const keep = (f: FilterId, m: Message) =>
-  f === "all" ? true : f === "open" ? !m.answered : f === "telegram" ? m.source === "telegram" : m.kind === f;
+  f === "all" ? true : f === "open" ? !m.answered && m.source !== "telegram" : m.kind === f;
 
 async function authed(url: string, init?: RequestInit) {
   const { data: s } = await supabaseBrowser.auth.getSession();
@@ -64,11 +64,14 @@ function Inner() {
     const text = qs.map((m) => `- ${m.body.replace(/\s+/g, " ").trim()}`).join("\n");
     try { await navigator.clipboard.writeText(text); setNote(`Copied ${qs.length}. Paste them into Notion.`); } catch { setNote("Couldn't copy on this device."); }
   };
-  const connect = async () => {
-    setNote("Connecting…");
-    const res = await authed("/api/admin/telegram-connect", { method: "POST" }).catch(() => null);
-    const json = res ? await res.json().catch(() => ({})) : {};
-    setNote(res?.ok ? "Telegram is connected. New posts in the group will land here." : json.error || "Couldn't connect. Try again.");
+  // The questions wall (20 Nov 2026): answer, hide or show, edit the wording.
+  const act = async (id: string, body: Record<string, unknown>, done: string) => {
+    const res = await authed("/api/admin/confessions", { method: "PATCH", body: JSON.stringify({ id, ...body }) }).catch(() => null);
+    if (!res?.ok) { setNote("That didn't save. Try again."); return false; }
+    setNote(done);
+    const fresh = await authed("/api/admin/confessions").then((r) => r.json()).catch(() => null);
+    if (fresh?.messages) setData(fresh);
+    return true;
   };
 
   useEffect(() => {
@@ -95,7 +98,7 @@ function Inner() {
         {data && (
           <>
             <h2 className="mt-8 font-display text-2xl font-light">Questions bank</h2>
-            <p className="mt-1 text-[14px] text-[#a79f90]">From the app and the Telegram group. No names, ever.</p>
+            <p className="mt-1 text-[14px] text-[#a79f90]">From the app. No names, ever. Questions go on every member&rsquo;s wall the moment they&rsquo;re sent. Answer them here on Thursday, most Me too first.</p>
             <div className="mt-3 flex flex-wrap gap-2">
               {FILTERS.map((f) => {
                 const n = data.messages.filter((m) => keep(f.id, m)).length;
@@ -106,20 +109,23 @@ function Inner() {
                 );
               })}
             </div>
-            <div className="mt-3 grid grid-cols-2 gap-2">
-              <button type="button" onClick={copyOpen} className="min-h-[44px] rounded-full border border-[#DDC98E] text-[14px] text-[#DDC98E]">Copy unanswered questions</button>
-              <button type="button" onClick={connect} className="min-h-[44px] rounded-full border border-[#DDC98E]/50 text-[14px] text-[#f1ece2]">Connect Telegram</button>
+            <div className="mt-3">
+              <button type="button" onClick={copyOpen} className="min-h-[44px] w-full rounded-full border border-[#DDC98E] text-[14px] text-[#DDC98E]">Copy unanswered questions</button>
             </div>
             {note && <p className="mt-2 text-[14px] text-[#EEDE80]">{note}</p>}
             {data.messages.filter((m) => keep(filter, m)).length === 0 && <p className="mt-3 text-[#a79f90]">Nothing here yet.</p>}
             <div className="mt-3 space-y-3">
-              {data.messages.filter((m) => keep(filter, m)).map((m) => (
+              {data.messages.filter((m) => keep(filter, m)).sort((a, b) => (data.wall?.[b.id]?.metoo || 0) - (data.wall?.[a.id]?.metoo || 0)).map((m) => (
                 <div key={m.id} className={`rounded-2xl border p-4 ${m.answered ? "border-[#DDC98E]/15 opacity-60" : "border-[#DDC98E]/30"}`}>
                   <p className="text-[12px] text-[#a79f90]">{new Date(m.created_at).toLocaleDateString("en-GB", { day: "numeric", month: "short" })} · {KIND[m.kind] ?? m.kind} · {m.source === "telegram" ? "Telegram" : "App"}{m.kind === "love_next" || m.kind === "card" ? ` · ${m.item_title}` : ""}</p>
                   <p className="mt-2 whitespace-pre-wrap text-[16px]">{m.body}</p>
+                  {m.kind === "question" && m.source === "app" && data.wall?.[m.id] ? (
+                    <WallControls m={m} w={data.wall[m.id]} act={act} />
+                  ) : (
                   <button type="button" onClick={() => toggle(m)} className="mt-2 inline-flex min-h-[40px] items-center text-[14px] text-[#DDC98E] underline underline-offset-4">
                     {m.answered ? "Answered ✓ (undo)" : "Mark answered"}
                   </button>
+                  )}
                 </div>
               ))}
             </div>
@@ -145,6 +151,32 @@ function Inner() {
         )}
       </div>
     </main>
+  );
+}
+
+function WallControls({ m, w, act }: { m: Message; w: { metoo: number; hidden: boolean; answer: string | null }; act: (id: string, body: Record<string, unknown>, done: string) => Promise<boolean> }) {
+  const [answer, setAnswer] = useState(w.answer || "");
+  const [wording, setWording] = useState(m.body);
+  const [editing, setEditing] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const run = async (body: Record<string, unknown>, done: string) => { setBusy(true); await act(m.id, body, done); setBusy(false); };
+  return (
+    <div className="mt-3 space-y-3">
+      <p className="text-[13px] text-[#DDC98E]">Me too · {w.metoo}{w.hidden ? " · Hidden from the wall" : " · On the wall"}</p>
+      {editing ? (
+        <div className="space-y-2">
+          <textarea value={wording} onChange={(e) => setWording(e.target.value)} rows={3} className="w-full rounded-2xl border border-[#DDC98E]/40 bg-transparent p-3 text-[15px]" />
+          <button type="button" disabled={busy} onClick={async () => { await run({ action: "edit", body: wording }, "Wording saved."); setEditing(false); }} className="min-h-[40px] rounded-full border border-[#DDC98E] px-4 text-[14px] text-[#DDC98E]">Save wording</button>
+        </div>
+      ) : null}
+      <textarea value={answer} onChange={(e) => setAnswer(e.target.value)} rows={4} placeholder="Your answer. Members see it under the question on Thursday, then it stays in the library." className="w-full rounded-2xl border border-[#DDC98E]/40 bg-transparent p-3 text-[15px]" />
+      <div className="flex flex-wrap gap-2">
+        <button type="button" disabled={busy || !answer.trim()} onClick={() => run({ action: "answer", answer }, "Answer published. Members can see it now.")} className="min-h-[40px] rounded-full bg-[#DDC98E] px-4 text-[14px] font-medium text-[#070707] disabled:opacity-40">{w.answer ? "Update answer" : "Publish answer"}</button>
+        <button type="button" disabled={busy} onClick={() => setEditing((v) => !v)} className="min-h-[40px] rounded-full border border-[#DDC98E]/50 px-4 text-[14px]">Edit wording</button>
+        <button type="button" disabled={busy} onClick={() => run({ action: w.hidden ? "show" : "hide" }, w.hidden ? "Back on the wall." : "Hidden from the wall.")} className="min-h-[40px] rounded-full border border-[#DDC98E]/50 px-4 text-[14px]">{w.hidden ? "Show on the wall" : "Hide"}</button>
+        {w.answer && <button type="button" disabled={busy} onClick={() => { setAnswer(""); run({ action: "answer", answer: "" }, "Answer taken down."); }} className="min-h-[40px] rounded-full border border-[#DDC98E]/30 px-4 text-[13px] text-[#a79f90]">Take answer down</button>}
+      </div>
+    </div>
   );
 }
 
