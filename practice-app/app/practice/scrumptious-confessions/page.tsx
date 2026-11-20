@@ -293,7 +293,7 @@ function Library() {
     return (
       <>
         <button type="button" onClick={() => setDoor(null)} className="mt-6 min-h-[44px] text-[15px] text-[#DDC98E]">&larr; Back to the library</button>
-        <Answers key={door} paid={paid} trial={trial} start={d.shelves[0]} shelves={d.shelves} />
+        {door === "touchmap" ? <TouchMapMonth /> : <Answers key={door} paid={paid} trial={trial} start={d.shelves[0]} shelves={d.shelves} startTopic={d.topic} />}
       </>
     );
   }
@@ -373,10 +373,14 @@ const TOPICS: { id: string; label: string; words: string[] }[] = [
 ];
 // The library's doors (Juliette 19 Nov 2026: "the library is really not very clear at all").
 // Nobody lands on a list: they pick a door first. The Journal door is a link of its own.
-type Door = "meditations" | "answers";
-const DOORS: { id: Door; title: string; line: string; shelves: Shelf[] }[] = [
+type Door = "meditations" | "answers" | "menopause" | "touchmap";
+// 20 Nov 2026, Juliette: "if I can't even find it, how the hell are they going to find it?" Menopause and
+// The Touch Map get doors of their own, not buried in a topic chip or at the bottom of Today.
+const DOORS: { id: Door; title: string; line: string; shelves: Shelf[]; topic?: string }[] = [
   { id: "answers", title: "Your questions, answered", line: "Search, or start with five", shelves: ["answers"] },
   { id: "meditations", title: "Meditations", line: "A new one every Friday", shelves: ["meditations"] },
+  { id: "menopause", title: "Menopause", line: "And a changing body", shelves: ["answers"], topic: "menopause" },
+  { id: "touchmap", title: "The Touch Map", line: "One place a month, in my voice", shelves: [] },
 ];
 // Five to start with. Juliette can swap these for her own five favourites.
 const STARTERS = ["why-dont-i-feel-anything", "never-in-the-mood-but-enjoy-it", "why-can-i-feel-it-with-someone-else", "sleep-in-same-bed-never-touch", "why-doesnt-my-wife-want-me"];
@@ -404,11 +408,11 @@ async function loadMeditations(): Promise<Answer[]> {
 }
 // Juliette 16 Nov: answers, then "all the substacks, and the podcast". Seeded from her
 // published pages (answers, essays, episodes), so every word is hers.
-function Answers({ paid, trial, start, shelves }: { paid: boolean; trial?: boolean; start: Shelf; shelves: Shelf[] }) {
+function Answers({ paid, trial, start, shelves, startTopic }: { paid: boolean; trial?: boolean; start: Shelf; shelves: Shelf[]; startTopic?: string }) {
   const [shelf, setShelf] = useState<Shelf>(start);
   const [data, setData] = useState<Record<Shelf, Answer[] | null>>({ answers: null, essays: null, podcast: null, meditations: null });
   const [find, setFind] = useState("");
-  const [topic, setTopic] = useState<string | null>(null);
+  const [topic, setTopic] = useState<string | null>(startTopic || null);
   const [open, setOpen] = useState<string | null>(null);
   useEffect(() => {
     if (data[shelf]) return;
@@ -913,17 +917,22 @@ function TouchMapMonth() {
   // Each member's own clock (lib/confessions-clock.ts, Juliette 20 Nov 2026): the wrist in their own third
   // week, then one place a month, on a Monday. Read fresh from the server so a new start date counts at once.
   const [weeks, setWeeks] = useState<number | null>(null);
+  const [admin, setAdmin] = useState(false);
   useEffect(() => {
     supabaseBrowser.auth.getUser().then(({ data }) => {
       const u = data?.user;
-      setWeeks(!u || (u.email || "").toLowerCase() === ADMIN_EMAIL ? 0 : memberWeeks(u));
+      const isAdmin = (u?.email || "").toLowerCase() === ADMIN_EMAIL;
+      setAdmin(isAdmin);
+      setWeeks(!u || isAdmin ? 0 : memberWeeks(u));
     }).catch(() => setWeeks(0));
   }, []);
   if (weeks === null) return null;
   const months = TOUCH_MAP_MONTHS.map((m) => ({ ...m, on: onMyClock(m.on, weeks) }));
   const opened = months.filter((m) => m.on <= today);
-  const now = opened[opened.length - 1];
-  const next = months.find((m) => m.on > today);
+  // Juliette sees the first place before it opens, so she can film and check it (20 Nov 2026).
+  const early = admin && !opened.length;
+  const now = early ? months[0] : opened[opened.length - 1];
+  const next = months.find((m) => m.on > (early ? months[0].on : today));
   const p = now ? PLACES.find((x) => x.id === now.place) : null;
   return (
     <div className="mt-6 rounded-3xl border-[1.5px] border-[rgba(221,201,142,0.55)] bg-[rgba(13,53,53,0.35)] p-5" data-testid="touch-map-month">
@@ -931,7 +940,7 @@ function TouchMapMonth() {
       {p ? (
         <>
           <h3 className="mt-2 font-display text-[24px] font-light leading-tight">{p.label}</h3>
-          <p className="mt-1 text-[13px] text-[#a79f90]">This month&rsquo;s place. One a month, on a Monday.</p>
+          <p className="mt-1 text-[13px] text-[#a79f90]">{early ? `Only you see this early. Members get it on ${dayName(months[0].on)}.` : "This month\u2019s place. One a month, on a Monday."}</p>
           {p.audio && <div className="mt-4"><VoicePlayer src={p.audio} label={`The Touch Map: ${p.label}`} dark /></div>}
           <div className="mt-4 space-y-3">
             {p.touch.map((l, i) => <p key={i} className="text-[16px] leading-relaxed text-[#f1ece2]">{l}</p>)}
