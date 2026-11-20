@@ -8,7 +8,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { HeroPhoto } from "./HeroPhoto";
+import { HeroPhoto } from "@/components/HeroPhoto";
 import { useEffect, useState } from "react";
 import { betweenTouches } from "@/lib/content/between-touches";
 import { CollectionGate } from "@/components/auth/CollectionGate";

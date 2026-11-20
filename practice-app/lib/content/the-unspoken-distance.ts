@@ -321,6 +321,7 @@ export const theUnspokenDistance: PracticeCollection = {
       "title": "What She Actually Needs",
       "kind": "essay",
       "image": "/unspoken-distance/real/what-she-actually-needs.jpg",
+      "imageFocus": "50% 8%",
       "imageAlt": "Juliette and Alex close together, smiling",
       "imageSide": "left",
       "body": [
@@ -905,6 +906,7 @@ export const theUnspokenDistance: PracticeCollection = {
       "title": "The Grounding Practice",
       "kind": "essay",
       "image": "/unspoken-distance/real/the-grounding-practice.jpg",
+      "imageFocus": "50% 8%",
       "imageAlt": "Juliette and Alex in Italy",
       "imageSide": "left",
       "body": [
@@ -1580,6 +1582,7 @@ export const theUnspokenDistance: PracticeCollection = {
       "title": "Closeness That Doesn't Lead Somewhere",
       "kind": "essay",
       "image": "/unspoken-distance/real/closeness-that-doesnt-lead-somewhere.jpg",
+      "imageFocus": "50% 8%",
       "imageAlt": "Juliette kissing Alex on the cheek",
       "imageSide": "right",
       "body": [
@@ -2658,6 +2661,7 @@ export const theUnspokenDistance: PracticeCollection = {
       "order": 22,
       "title": "Your Next Yes",
       "image": "/unspoken-distance/real/your-next-yes.jpg",
+      "imageFocus": "50% 8%",
       "imageAlt": "Juliette and Alex laughing together",
       "kind": "closing",
       "imageSide": "left",

@@ -2,11 +2,11 @@
 
 import Link from "next/link";
 import { TellMe } from "@/components/TellMe";
-import Image from "next/image";
 import { useParams, notFound, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { theUnspokenDistance, UD_CHAPTERS } from "@/lib/content/the-unspoken-distance";
 import { Blocks } from "@/components/Blocks";
+import { HeroPhoto } from "@/components/HeroPhoto";
 import { CollectionGate } from "@/components/auth/CollectionGate";
 import { useAuth } from "@/components/providers/AuthProvider";
 import { getCompletedSlugs, markComplete } from "@/lib/entitlements/progress";
@@ -114,20 +114,9 @@ function TheUnspokenDistanceEntryContent() {
   return (
     <main className={dark ? "min-h-screen bg-ffy-black" : "min-h-screen bg-ffy-cream"}>
       {entry.image && (
-        <div
-          className={`relative h-[42vh] w-full overflow-hidden sm:h-[56vh] ${
-            entry.imageFocus === "top" ? (dark ? "bg-ffy-black" : "bg-ffy-cream") : ""
-          }`}
-        >
-          <Image
-            src={entry.image}
-            alt={entry.imageAlt ?? ""}
-            fill
-            priority
-            sizes="100vw"
-            className={entry.imageFocus === "top" ? "object-contain" : "object-cover"}
-          />
-          {dark && entry.imageFocus !== "top" && (
+        <div className="relative h-[42vh] w-full sm:h-[62vh]">
+          <HeroPhoto src={entry.image} alt={entry.imageAlt ?? ""} focus={entry.imageFocus} />
+          {dark && (
             <div className="absolute inset-0 bg-gradient-to-t from-ffy-black via-ffy-black/10 to-transparent" />
           )}
         </div>

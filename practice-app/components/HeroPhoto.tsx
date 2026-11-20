@@ -1,4 +1,4 @@
-// The top photo on every Between Touches page (20 Nov 2026).
+// The top photo on Between Touches and The Unspoken Distance pages (20 Nov 2026).
 //
 // Juliette's photos are mostly tall phone portraits. Dropped into a wide,
 // short banner with object-cover they get zoomed to the middle of the frame,

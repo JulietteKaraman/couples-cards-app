@@ -6,7 +6,7 @@ import { useParams, notFound, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { betweenTouches } from "@/lib/content/between-touches";
 import { Blocks } from "@/components/Blocks";
-import { HeroPhoto } from "../HeroPhoto";
+import { HeroPhoto } from "@/components/HeroPhoto";
 import { CollectionGate } from "@/components/auth/CollectionGate";
 import { FreeEmailGate } from "@/components/FreeEmailGate";
 import { useAuth } from "@/components/providers/AuthProvider";
