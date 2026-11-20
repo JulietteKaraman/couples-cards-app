@@ -40,14 +40,42 @@ function chime(notes = [523, 659, 784, 1047]) {
 
 /** One question per day, taken from that lesson's own description. Needs Juliette's approval. */
 export const SN_DAY_QUESTION: Record<number, string> = {
-  1: "Where did you first learn that a no turns into a yes if someone pushes long enough?",
-  2: "What did your body's real yes feel like today? And your real no?",
-  3: "Which time did you say yes when your body was already saying no?",
-  4: "After two minutes with your own hands, what does your body want right now?",
-  5: "Who do you say yes to when you mean no?",
-  6: "Which standard do you keep when no one is watching, and which one are you raising?",
-  7: "What has already started to shift this week?",
+  1: "Tell me where you first learned that a no turns into a yes if someone pushes long enough.",
+  2: "Tell me what your body's real yes felt like today. Then tell me what your real no felt like.",
+  3: "Tell me about a time you said yes when your body was already saying no.",
+  4: "Tell me what your body wants right now, after two minutes with your own hands.",
+  5: "Tell me who you say yes to when you mean no.",
+  6: "Tell me which standard you keep when no one is watching. Then tell me which one you're raising.",
+  7: "Tell me what has already started to shift this week.",
 };
+
+/** Her card, the way all her Communication & Intimacy cards look (20 Nov 2026: "it's always the cards").
+ *  Black back with The Sacred No and the gold V's; tap to turn over to the white face with the question. */
+export function SacredNoCard({ prompt }: { prompt: string }) {
+  const [turned, setTurned] = useState(false);
+  const m = prompt.match(/^(.+?[.?])\s+(.+)$/);
+  const lines = m ? [{ t: m[1], b: true }, { t: m[2], b: false }] : [{ t: prompt, b: true }];
+  return (
+    <div className="my-6 flex flex-col items-center">
+      <button type="button" onClick={() => setTurned((v) => !v)} aria-label={turned ? "Turn the card back" : "Turn the card over"}
+        className="relative w-full max-w-[300px] overflow-hidden rounded-2xl border border-white/10 shadow-[0_30px_60px_-28px_rgba(0,0,0,.9),0_0_70px_-10px_rgba(221,201,142,.25)] transition-transform duration-500"
+        style={{ containerType: "inline-size" }} data-testid="sn-card">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={turned ? "/sacred-no/cards/template.png" : "/sacred-no/cards/cover.png"} alt={turned ? prompt : "The Sacred No card"} className="block h-auto w-full" />
+        {turned && (
+          <span className="absolute inset-0 flex items-center justify-center" style={{ paddingLeft: "10cqw", paddingRight: "10cqw", paddingTop: "8cqw" }}>
+            <span className="space-y-3 text-center">
+              {lines.map((l, i) => (
+                <span key={i} className={`block tracking-wide text-black ${l.b ? "font-semibold" : "font-normal"}`} style={{ fontSize: "4.6cqw", lineHeight: 1.35 }}>{l.t}</span>
+              ))}
+            </span>
+          </span>
+        )}
+      </button>
+      <p className="mt-3 text-[11px] uppercase tracking-[0.2em] text-[#DDC98E]/80">{turned ? "Tap to turn back" : "Tap to turn over"}</p>
+    </div>
+  );
+}
 
 type Entry = { slug: string; title: string; eyebrow?: string };
 const clean = (t: string) => t.replace(/^\d+\s/, "");
@@ -286,8 +314,8 @@ export function SacredNoDay(props: {
 
         {step === 2 && (
           <section className="mt-8">
-            <p className="text-center text-[10px] uppercase tracking-[0.3em] text-[#DDC98E]">Today&rsquo;s question</p>
-            <p className="mt-3 text-center font-display text-[24px] font-light leading-snug">{SN_DAY_QUESTION[day]}</p>
+            <p className="text-center text-[10px] uppercase tracking-[0.3em] text-[#DDC98E]">Today&rsquo;s card</p>
+            <SacredNoCard prompt={SN_DAY_QUESTION[day]} />
             <p className="mt-7 text-[10px] uppercase tracking-[0.3em] text-[#DDC98E]">Your answer · only you see this</p>
             <textarea value={answer} onChange={(e) => setAnswer(e.target.value)} rows={4} placeholder="Write it here, or say it out loud and write one line."
               className="mt-2 w-full resize-y rounded-2xl border border-[#DDC98E]/25 bg-[#14120e] p-4 font-display text-[17px] font-light italic text-[#F6EFE0] placeholder:text-[#F6EFE0]/30" />
