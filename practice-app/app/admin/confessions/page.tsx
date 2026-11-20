@@ -12,7 +12,7 @@ import { ADMIN_EMAIL } from "@/lib/entitlements/admin";
 type Item = { id: string; title: string; type: string; publish_on: string };
 type Message = { id: string; item_title: string; body: string; kind: string; source: string; answered: boolean; created_at: string };
 type Wall = Record<string, { metoo: number; hidden: boolean; answer: string | null }>;
-type Data = { items: Item[]; totals: Record<string, Record<string, Record<string, number>>>; messages: Message[]; wall?: Wall };
+type Data = { items: Item[]; totals: Record<string, Record<string, Record<string, number>>>; messages: Message[]; wall?: Wall; shared?: Record<string, string>; nightly?: { body: string; created_at: string } | null };
 
 const LABELS: Record<string, string> = {
   ick: "Ick", nothing: "Nothing", nice: "Nice", mmm: "Mmm", goosebumps: "Goosebumps", "toes-curl": "Toes curl",
@@ -97,6 +97,13 @@ function Inner() {
         {error && <p className="mt-4 text-[#cfc8bb]">{error}</p>}
         {data && (
           <>
+            {/* The nightly Stripe check (20 Nov 2026): who was let back in, what was saved to keep. */}
+            {data.nightly && (
+              <div className="mt-6 rounded-2xl border border-[#DDC98E]/40 p-4">
+                <p className="text-[12px] uppercase tracking-[0.16em] text-[#a79f90]">Last night&rsquo;s membership check · {new Date(data.nightly.created_at).toLocaleString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}</p>
+                <p className="mt-1 text-[15px] text-[#cfc8bb]">{data.nightly.body}</p>
+              </div>
+            )}
             <h2 className="mt-8 font-display text-2xl font-light">Questions bank</h2>
             <p className="mt-1 text-[14px] text-[#a79f90]">From the app. No names, ever. Questions go on every member&rsquo;s wall the moment they&rsquo;re sent. Answer them here on Thursday, most Me too first.</p>
             <div className="mt-3 flex flex-wrap gap-2">
@@ -121,6 +128,8 @@ function Inner() {
                   <p className="mt-2 whitespace-pre-wrap text-[16px]">{m.body}</p>
                   {m.kind === "question" && m.source === "app" && data.wall?.[m.id] ? (
                     <WallControls m={m} w={data.wall[m.id]} act={act} />
+                  ) : m.kind === "confession" ? (
+                    <ShareControls m={m} shared={data.shared?.[m.id] ?? null} act={act} />
                   ) : (
                   <button type="button" onClick={() => toggle(m)} className="mt-2 inline-flex min-h-[40px] items-center text-[14px] text-[#DDC98E] underline underline-offset-4">
                     {m.answered ? "Answered ✓ (undo)" : "Mark answered"}
@@ -151,6 +160,31 @@ function Inner() {
         )}
       </div>
     </main>
+  );
+}
+
+/* "You confessed" (20 Nov 2026): Juliette picks a confession, softens the wording, and shares it with no name. */
+function ShareControls({ m, shared, act }: { m: Message; shared: string | null; act: (id: string, body: Record<string, unknown>, done: string) => Promise<boolean> }) {
+  const [text, setText] = useState(shared ?? m.body);
+  const [open, setOpen] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const run = async (body: Record<string, unknown>, done: string) => { setBusy(true); await act(m.id, body, done); setBusy(false); setOpen(false); };
+  return (
+    <div className="mt-3 space-y-2">
+      {shared && <p className="text-[13px] text-[#EEDE80]">Shared in &ldquo;You confessed&rdquo; with no name</p>}
+      {open ? (
+        <>
+          <textarea value={text} onChange={(e) => setText(e.target.value)} rows={4} className="w-full rounded-2xl border border-[#EEDE80]/50 bg-transparent p-3 text-[15px]" />
+          <p className="text-[12px] text-[#a79f90]">Soften anything that could tell who wrote it. Members see exactly these words, with no name.</p>
+          <button type="button" disabled={busy || !text.trim()} onClick={() => run({ action: "share", body: text }, "Shared in You confessed.")} className="min-h-[40px] rounded-full bg-[#EEDE80] px-4 text-[14px] font-medium text-[#070707]">{shared ? "Update" : "Share with no name"}</button>
+        </>
+      ) : (
+        <div className="flex flex-wrap gap-2">
+          <button type="button" onClick={() => setOpen(true)} className="min-h-[40px] rounded-full border border-[#EEDE80]/60 px-4 text-[14px] text-[#EEDE80]">{shared ? "Edit what's shared" : "Share anonymously"}</button>
+          {shared && <button type="button" disabled={busy} onClick={() => run({ action: "unshare" }, "Taken down.")} className="min-h-[40px] rounded-full border border-[#DDC98E]/30 px-4 text-[13px] text-[#a79f90]">Take it down</button>}
+        </div>
+      )}
+    </div>
   );
 }
 

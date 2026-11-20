@@ -13,7 +13,7 @@ export async function GET(req: Request) {
 
   const [{ data: counts, error: e1 }, { data: messages, error: e2 }] = await Promise.all([
     supabaseAdmin.from("confession_counts").select("item_id, kind, value").limit(50000),
-    supabaseAdmin.from("confession_messages").select("id, item_title, body, kind, source, answered, created_at").not("kind", "in", `(${WALL_KINDS.join(",")})`).order("created_at", { ascending: false }).limit(1000),
+    supabaseAdmin.from("confession_messages").select("id, item_title, body, kind, source, answered, created_at").not("kind", "in", `(${[...WALL_KINDS, "system"].join(",")})`).order("created_at", { ascending: false }).limit(1000),
   ]);
   if (e1 || e2) return NextResponse.json({ error: (e1 || e2)?.message }, { status: 500 });
 
@@ -29,11 +29,15 @@ export async function GET(req: Request) {
   ].sort((a, b) => b.publish_on.localeCompare(a.publish_on));
   // The questions wall (20 Nov 2026): Me too counts, hidden, and her answers, per question.
   let wall: Record<string, { metoo: number; hidden: boolean; answer: string | null }> = {};
+  const sharedMap: Record<string, string> = {};
   try {
     const { questions, answers } = await loadWall();
+    const all = await loadWall();
     wall = Object.fromEntries(questions.map((q) => [q.id, { metoo: q.metoo, hidden: q.hidden, answer: answers.find((a) => a.question_id === q.id)?.answer ?? null }]));
+    for (const s of all.shared) sharedMap[s.confession_id] = s.body;
   } catch {}
-  return NextResponse.json({ items, totals, messages: messages || [], wall });
+  const { data: nightly } = await supabaseAdmin.from("confession_messages").select("body, created_at").eq("kind", "system").order("created_at", { ascending: false }).limit(1).maybeSingle();
+  return NextResponse.json({ items, totals, messages: messages || [], wall, shared: sharedMap, nightly: nightly || null });
 }
 
 // Mark one as answered (or not). Questions are never deleted (only their hidden flag or answer is replaced).
@@ -51,6 +55,16 @@ export async function PATCH(req: Request) {
     await supabaseAdmin.from("confession_messages").delete().eq("kind", "hidden").eq("item_id", id);
     if (b.action === "hide") {
       const { error } = await supabaseAdmin.from("confession_messages").insert({ item_id: id, item_title: "Hidden", body: "-", member_email: null, kind: "hidden", source: "app", answered: true });
+      if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+    return NextResponse.json({ ok: true });
+  }
+  if (b.action === "share" || b.action === "unshare") {
+    await supabaseAdmin.from("confession_messages").delete().eq("kind", "shared").eq("item_id", id);
+    if (b.action === "share") {
+      const text = String(b.body || "").trim();
+      if (!text) return NextResponse.json({ error: "Nothing to share" }, { status: 400 });
+      const { error } = await supabaseAdmin.from("confession_messages").insert({ item_id: id, item_title: "Shared confession", body: text, member_email: null, kind: "shared", source: "app", answered: true });
       if (error) return NextResponse.json({ error: error.message }, { status: 500 });
     }
     return NextResponse.json({ ok: true });

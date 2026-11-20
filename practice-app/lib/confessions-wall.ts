@@ -8,7 +8,9 @@ import { supabaseAdmin } from "@/lib/supabase/admin";
 //   kind "metoo"     one Me too tap, item_id = the question's id
 //   kind "hidden"    Juliette took it off the wall, item_id = the question's id (deleted to show it again)
 //   kind "answer"    her answer, item_id = the question's id, item_title = the question as shown
-export const WALL_KINDS = ["metoo", "hidden", "answer"];
+//   kind "shared"    a confession Juliette chose to share with no name, item_id = the confession's id,
+//                    body = the wording she approved ("You confessed", 20 Nov 2026)
+export const WALL_KINDS = ["metoo", "hidden", "answer", "shared"];
 
 export type WallQuestion = { id: string; body: string; created_at: string; metoo: number; answered: boolean; hidden: boolean };
 export type WallAnswer = { id: string; question_id: string; question: string; answer: string; created_at: string };
@@ -35,21 +37,23 @@ export async function loadWall() {
   const metoo: Record<string, number> = {};
   const hidden = new Set<string>();
   const answers: WallAnswer[] = [];
+  const shared: { id: string; confession_id: string; body: string; created_at: string }[] = [];
   for (const r of rows) {
     if (r.kind === "metoo") metoo[r.item_id] = (metoo[r.item_id] || 0) + 1;
     else if (r.kind === "hidden") hidden.add(r.item_id);
+    else if (r.kind === "shared") shared.push({ id: r.id, confession_id: r.item_id, body: r.body, created_at: r.created_at });
     else if (r.kind === "answer") answers.push({ id: r.id, question_id: r.item_id, question: r.item_title, answer: r.body, created_at: r.created_at });
   }
   // Only questions asked in the app: old Telegram posts were tests and never go on the wall.
   const questions: WallQuestion[] = rows
     .filter((r) => r.kind === "question" && r.source === "app")
     .map((r) => ({ id: r.id, body: r.body, created_at: r.created_at, metoo: metoo[r.id] || 0, answered: r.answered, hidden: hidden.has(r.id) }));
-  return { questions, answers };
+  return { questions, answers, shared };
 }
 
 /** What members see: every open question not hidden (most Me too first), this week's answers, and all answers. */
 export async function memberWall() {
-  const { questions, answers } = await loadWall();
+  const { questions, answers, shared } = await loadWall();
   const since = weekStartISO();
   const open = questions
     .filter((q) => !q.hidden && !q.answered)
@@ -60,5 +64,6 @@ export async function memberWall() {
     questions: open,
     thisWeek: answers.filter((a) => a.created_at >= since),
     answers,
+    confessed: shared.slice(0, 20).map(({ id, body, created_at }) => ({ id, body, created_at })),
   };
 }

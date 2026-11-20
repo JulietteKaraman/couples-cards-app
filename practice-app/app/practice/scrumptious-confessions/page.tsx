@@ -109,6 +109,15 @@ function Content() {
   }, []);
 
   const pick = (t: TabId) => { setTab(t); top.current?.scrollIntoView({ behavior: "smooth" }); };
+  // A gold dot on Questions when Juliette has answered a question this phone asked and it hasn't been read yet.
+  const [answeredDot, setAnsweredDot] = useState(false);
+  useEffect(() => {
+    loadWall().then((w) => {
+      if (!w) return;
+      const mine = new Set(readIds(MINE_KEY)); const seen = new Set(readIds(SEEN_KEY));
+      setAnsweredDot(w.answers.some((a) => mine.has(a.question_id) && !seen.has(a.question_id)));
+    }).catch(() => {});
+  }, [tab]);
 
   return (
     <main className="min-h-screen bg-[#070707] text-ffy-cream [background-image:radial-gradient(110%_55%_at_50%_0%,rgba(13,53,53,0.9)_0%,rgba(7,7,7,0)_70%)]">
@@ -134,14 +143,14 @@ function Content() {
           <div className="grid grid-cols-5 gap-1.5">
             {TABS.map((t) => (
               <button key={t.id} type="button" onClick={() => pick(t.id)} className={`min-h-[44px] rounded-full border px-0.5 text-[13px] ${tab === t.id ? "border-[#DDC98E] bg-[#DDC98E] text-[#070707]" : "border-[#DDC98E]/40 text-[#f1ece2]"}`}>
-                {t.label}
+                {t.label}{t.id === "yours" && answeredDot ? <span aria-label="I answered you" className="ml-1 inline-block h-2 w-2 rounded-full bg-[#DDC98E] align-middle" /> : null}
               </button>
             ))}
           </div>
         </div>
 
         {tab === "stories" && <Stories feed={feed} />}
-        {tab === "today" && <><WeekStrip onPick={pick} /><WallPeek onOpen={() => pick("yours")} /><Today /></>}
+        {tab === "today" && <><WeekStrip onPick={pick} /><ComingUp /><WallPeek onOpen={() => pick("yours")} /><Today /></>}
         {tab === "card" && <Cards feed={feed} />}
         {tab === "yours" && <YourTurn />}
         {tab === "library" && <Library />}
@@ -485,6 +494,7 @@ function SendToMe({ item, notice, button, onType, once, onSent, light }: { item:
     try {
       const res = await api({ action: "send", item, body: text.trim() });
       if (!res.ok) throw new Error(String(res.status));
+      if (item === "question") { const j = await res.json().catch(() => ({})); if (j.id) lsSet(MINE_KEY, JSON.stringify([...readIds(MINE_KEY), j.id].slice(-50))); }
       lsSet(sentKey, "1");
       lsSet(draftKey, "");
       setState("sent");
@@ -524,7 +534,11 @@ const weekOf = (d: string) => { const x = new Date(d + "T12:00:00"); const back 
 
 type WallQ = { id: string; body: string; metoo: number; created_at: string };
 type WallA = { id: string; question_id: string; question: string; answer: string; created_at: string };
-type WallData = { questions: WallQ[]; thisWeek: WallA[]; answers: WallA[] };
+type WallData = { questions: WallQ[]; thisWeek: WallA[]; answers: WallA[]; confessed?: { id: string; body: string; created_at: string }[] };
+// The questions this phone asked (ids only, never words), so it can show "I answered you" (20 Nov 2026).
+const MINE_KEY = "ffy.confessions.mine.v1";
+const SEEN_KEY = "ffy.confessions.seen.v1";
+const readIds = (k: string): string[] => { try { const j = JSON.parse(lsGet(k) || "[]"); return Array.isArray(j) ? j : []; } catch { return []; } };
 async function loadWall(): Promise<WallData | null> {
   const { data } = await supabaseBrowser.auth.getSession();
   const token = data.session?.access_token;
@@ -543,6 +557,42 @@ const TWO_AM = [
   "Why do I flinch whenever my husband tries to touch me?",
   "Why won't my wife let me touch her?",
 ];
+
+/* "Coming this month" on Today (Juliette 20 Nov 2026): the next 30 days on this member's own clock, plus the
+   programme their next paid month opens. Titles only. Cards come every Tuesday and Saturday, so they're one line. */
+function ComingUp() {
+  const [items, setItems] = useState<{ date: string; kind: string; title: string }[] | null>(null);
+  const { since, trial } = useMembership();
+  useEffect(() => {
+    (async () => {
+      const { data } = await supabaseBrowser.auth.getSession();
+      const res = await fetch("/api/confessions/coming", { headers: { Authorization: `Bearer ${data.session?.access_token}` } }).catch(() => null);
+      if (res?.ok) setItems((await res.json()).items || []);
+    })();
+  }, []);
+  const month = since ? membershipMonth(since) : 0;
+  const nextProgrammes = MEMBERSHIP_UNLOCKS.filter((u) => u.month === (trial || !since ? 1 : month + 1));
+  if (!items) return null;
+  return (
+    <section className="mt-6">
+      <Eyebrow>Coming this month</Eyebrow>
+      <ul className="mt-3 divide-y divide-[#DDC98E]/15 rounded-2xl border border-[#DDC98E]/25">
+        {items.map((i) => (
+          <li key={i.kind + i.date + i.title} className="flex items-baseline justify-between gap-3 px-4 py-3">
+            <span className="text-[15px] text-[#f1ece2]"><span className="text-[12px] uppercase tracking-[0.14em] text-[#a79f90]">{i.kind}</span><br />{i.title}</span>
+            <span className="shrink-0 text-[13px] text-[#DDC98E]">{new Date(i.date + "T12:00:00").toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" })}</span>
+          </li>
+        ))}
+        <li className="px-4 py-3 text-[14px] text-[#cfc8bb]">A new card every Tuesday and Saturday, and my answers every Thursday.</li>
+        {nextProgrammes.length > 0 && (
+          <li className="px-4 py-3 text-[14px] text-[#cfc8bb]">
+            <span className="text-[#DDC98E]">{trial || !since ? "Opens with your first month:" : "Opens next month:"}</span> {nextProgrammes.map((u) => u.title).join(", ")}. Yours to keep.
+          </li>
+        )}
+      </ul>
+    </section>
+  );
+}
 
 /* A peek at the wall on Today (Juliette 20 Nov 2026: "People like to see what others are asking"). */
 function WallPeek({ onOpen }: { onOpen: () => void }) {
@@ -570,6 +620,8 @@ function YourTurn() {
   const [openA, setOpenA] = useState<string | null>(null);
   const [tapped, setTapped] = useState<Record<string, boolean>>({});
   const refresh = () => loadWall().then((w) => w && setWall(w));
+  const mine = new Set(typeof window === "undefined" ? [] : readIds(MINE_KEY));
+  const mineAnswered = (wall?.answers || []).filter((a) => mine.has(a.question_id));
   useEffect(() => { refresh(); try { setTapped(JSON.parse(lsGet("ffy.confessions.metoo.v1") || "{}")); } catch {} }, []);
 
   const metoo = async (q: WallQ) => {
@@ -629,6 +681,15 @@ function YourTurn() {
         </div>
       )}
 
+      {mineAnswered.length > 0 && (
+        <div className="rounded-3xl border-2 border-[#DDC98E] bg-[rgba(221,201,142,0.12)] p-5">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#DDC98E]">&#9679; I answered you</p>
+          <div className="mt-3 space-y-3">
+            {mineAnswered.map((a) => <AnswerItem key={a.id} a={a} open={openA === a.id} onOpen={() => { setOpenA(openA === a.id ? null : a.id); lsSet(SEEN_KEY, JSON.stringify([...new Set([...readIds(SEEN_KEY), a.question_id])])); }} />)}
+          </div>
+        </div>
+      )}
+
       <div className="rounded-3xl border border-[#DDC98E]/40 p-5">
         <Eyebrow>This week&rsquo;s questions</Eyebrow>
         {/* Juliette's opening line, from what her last group told her (20 Nov 2026). */}
@@ -656,10 +717,21 @@ function YourTurn() {
 
       {openA && wall && !wall.thisWeek.some((a) => a.id === openA) && (() => { const a = wall.answers.find((x) => x.id === openA); return a ? <div className="rounded-3xl border border-[#DDC98E]/50 p-5"><AnswerItem a={a} open onOpen={() => setOpenA(null)} /></div> : null; })()}
 
-      <div className="rounded-3xl border-2 border-[#DDC98E]/60 bg-[rgba(13,53,53,0.45)] p-5">
-        <Eyebrow>Your confession this week</Eyebrow>
+      {/* Confessions: their own colour, deep teal with a lemon edge, and private (Juliette 20 Nov 2026). */}
+      {wall?.confessed && wall.confessed.length > 0 && (
+        <div className="rounded-3xl border border-[#EEDE80]/50 p-5">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#EEDE80]">You confessed</p>
+          <p className="mt-1 text-[13px] text-[#a79f90]">Shared with no name, the ones I chose.</p>
+          <div className="mt-3 space-y-2">
+            {wall.confessed.map((c) => <p key={c.id} className="whitespace-pre-wrap rounded-2xl bg-[#EEDE80]/10 p-3 text-[15px] leading-snug text-[#f1ece2]">{c.body}</p>)}
+          </div>
+        </div>
+      )}
+
+      <div className="rounded-3xl border-2 border-[#EEDE80] bg-[#0d3535] p-5">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#EEDE80]">Confess to me &middot; only I see this</p>
         <p className="mt-2 font-display text-[22px] font-light">I tell you mine every week. Tell me yours.</p>
-        <p className="mt-2 text-[15px] text-[#cfc8bb]">A fantasy, a fear, a moment your body surprised you. One a week. Only I see it.</p>
+        <p className="mt-2 text-[15px] text-[#cfc8bb]">Tell me what you want more of, what you&rsquo;ve never said, what surprised your body. Your confessions shape what I make next. Sometimes I&rsquo;ll answer one in a Monday confession, with no name.</p>
         <SendToMe item="confession" once={weekOf(todayUK())} notice="This comes to me with no name on it. All of it is welcome." button="Send my confession" />
       </div>
     </section>

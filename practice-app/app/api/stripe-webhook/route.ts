@@ -1,3 +1,5 @@
+import { GRACE_DAYS, keepOpened } from "@/lib/confessions-access";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { grantEntitlement } from "@/lib/entitlements/grant";
@@ -90,15 +92,26 @@ export async function POST(req: Request) {
         return NextResponse.json({ received: true, skipped: "no period end on invoice" });
       }
 
-      const expiresAt = new Date(
-        periodEndSeconds * 1000 + SUBSCRIPTION_GRACE_PERIOD_HOURS * 60 * 60 * 1000
-      ).toISOString();
+      // Scrumptious Confessions gets 7 days of grace so Stripe can retry a card before anyone is locked out
+      // (Juliette 20 Nov 2026); everything else keeps the 48 hours.
+      const graceHours = deckType === "scrumptious-confessions" ? GRACE_DAYS * 24 : SUBSCRIPTION_GRACE_PERIOD_HOURS;
+      const expiresAt = new Date(periodEndSeconds * 1000 + graceHours * 60 * 60 * 1000).toISOString();
 
       // 19 Nov 2026, Juliette: the 7-day trial is a taste, not the whole membership. Stripe sends a
       // paid £0 invoice for the trial; mark it "trial-" so the app can tell. The first real payment
       // (day 8) overwrites this with the plain invoice id, and the paid months start from that day.
       const marker = invoice.amount_paid === 0 ? `trial-${invoice.id ?? subscriptionId}` : (invoice.id ?? subscriptionId);
-      await grantEntitlement(email, deckType, marker, undefined, expiresAt);
+      const grantedUserId = await grantEntitlement(email, deckType, marker, undefined, expiresAt);
+
+      // A paid month of Scrumptious Confessions: every programme opened so far is theirs to keep (20 Nov 2026).
+      if (deckType === "scrumptious-confessions" && invoice.amount_paid > 0) {
+        try {
+          const { data: row } = await supabaseAdmin.from("user_decks").select("purchased_at").eq("user_id", grantedUserId).eq("deck_type", deckType).maybeSingle();
+          if (row?.purchased_at) await keepOpened(grantedUserId, row.purchased_at);
+        } catch (e) {
+          console.error("stripe-webhook: keepOpened", e instanceof Error ? e.message : e);
+        }
+      }
 
       return NextResponse.json({ received: true, granted: deckType, expires_at: expiresAt });
     }

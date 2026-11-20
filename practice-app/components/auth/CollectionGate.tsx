@@ -3,6 +3,8 @@
 import { useAuth } from "@/components/providers/AuthProvider";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { COLLECTION_DECK_TYPES, FREE_DECK_TYPES } from "@/lib/entitlements/config";
+import { useState } from "react";
+import { supabaseBrowser } from "@/lib/supabase/client";
 
 // Spec E6: someone who isn't entitled to a collection must be blocked with
 // a clear message if they hit its URL directly, not a silent 404 and
@@ -14,7 +16,20 @@ function GateContent({
   collectionSlug: string;
   children: React.ReactNode;
 }) {
-  const { entitledCollections, entitlementsReady, user, signOut } = useAuth();
+  const { entitledCollections, entitlementsReady, user, signOut, refreshEntitlements } = useAuth();
+  // "Can't get in?" (20 Nov 2026): checks Stripe right now and lets a paying member straight back in.
+  const [check, setCheck] = useState<"idle" | "checking" | "none" | "error">("idle");
+  const recheck = async () => {
+    setCheck("checking");
+    try {
+      const { data } = await supabaseBrowser.auth.getSession();
+      const res = await fetch("/api/confessions/restore", { method: "POST", headers: { Authorization: `Bearer ${data.session?.access_token}` } });
+      const j = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error();
+      if (j.member) { await refreshEntitlements(); window.location.reload(); return; }
+      setCheck("none");
+    } catch { setCheck("error"); }
+  };
 
   // Wait quietly until access has actually been read, so a real buyer never
   // sees "This isn't on your account" flash up first (fixed 24 Oct 2026).
@@ -37,6 +52,16 @@ function GateContent({
             </a>
             .
           </p>
+          {collectionSlug === "scrumptious-confessions" && (
+            <div className="mt-6">
+              <button type="button" onClick={recheck} disabled={check === "checking"}
+                className="block w-full rounded-full border border-ffy-teal px-5 py-3 font-display text-sm font-medium text-ffy-teal sm:mx-auto sm:w-auto">
+                {check === "checking" ? "Checking your membership\u2026" : "Can\u2019t get in? Check my membership"}
+              </button>
+              {check === "none" && <p className="mt-2 max-w-sm text-sm text-ffy-brown">I can&rsquo;t find a membership for {user?.email}. If you paid with another email, sign in with that one below.</p>}
+              {check === "error" && <p className="mt-2 max-w-sm text-sm text-ffy-brown">That didn&rsquo;t work just now. Try again in a minute, or email support@feelfullyyou.com.</p>}
+            </div>
+          )}
           {/* The most common cause is signing in with a different email
               from the one used to pay. Give them a way out (24 Oct 2026). */}
           <button

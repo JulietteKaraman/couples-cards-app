@@ -39,7 +39,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Not authorised" }, { status: 403 });
   }
 
-  let body: { email?: string; deckType?: string; note?: string };
+  let body: { email?: string; deckType?: string; note?: string; length?: string };
   try {
     body = await req.json();
   } catch {
@@ -67,8 +67,11 @@ export async function POST(req: Request) {
   try {
     // Marker instead of a Stripe checkout id, so a comped grant is always
     // tellable from a real purchase in the user_decks row itself.
-    const marker = `admin-grant-${Date.now()}`;
-    const userId = await grantEntitlement(email, deckType, marker);
+    // "One month free" (20 Nov 2026): access ends by itself after 30 days, nothing to remember.
+    const month = body.length === "month";
+    const marker = month ? `admin-grant-month-${Date.now()}` : `admin-grant-${Date.now()}`;
+    const expiresAt = month ? new Date(Date.now() + 30 * 86400 * 1000).toISOString() : undefined;
+    const userId = await grantEntitlement(email, deckType, marker, undefined, expiresAt);
 
     // Read back what this person now holds, so the screen proves the grant
     // landed rather than just claiming it did.

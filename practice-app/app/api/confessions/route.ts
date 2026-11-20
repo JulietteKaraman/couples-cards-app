@@ -95,11 +95,14 @@ export async function POST(req: Request) {
     if (itemId === "touchbase") return NextResponse.json({ error: "Nothing to send" }, { status: 400 });
     const kind = story ? "love_next" : card ? "card" : itemId;
     const title = story ? `${story.title}: what they'd love next` : card ? `Card: ${card.prompt}` : itemId === "question" ? "A question" : "A confession";
-    const { error } = await supabaseAdmin
+    const { data: saved, error } = await supabaseAdmin
       .from("confession_messages")
-      .insert({ item_id: itemId, item_title: title, body, member_email: null, kind, source: "app" });
+      .insert({ item_id: itemId, item_title: title, body, member_email: null, kind, source: "app" })
+      .select("id")
+      .single();
     if (error) return NextResponse.json({ error: "Could not save" }, { status: 500 });
-    return NextResponse.json({ ok: true });
+    // The id goes back to that phone only, so it can show "I answered you" later. Still no name stored.
+    return NextResponse.json({ ok: true, id: saved?.id ?? null });
   }
 
   return NextResponse.json({ error: "Unknown action" }, { status: 400 });
