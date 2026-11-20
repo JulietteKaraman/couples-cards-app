@@ -13,6 +13,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { localVideoPoster, localVideoSrc } from "@/lib/content/local-audio";
+import { HOW_ALONE } from "@/lib/content/let-her-land";
 
 const LS = "ffy.sn.";
 function lsGet<T>(k: string, d: T): T {
@@ -144,6 +145,81 @@ function icsFor(title: string, url: string) {
     "BEGIN:VALARM", "TRIGGER:-PT0M", "ACTION:DISPLAY", "DESCRIPTION:The Sacred No", "END:VALARM", "END:VEVENT", "END:VCALENDAR"].join("\r\n");
   const blob = new Blob([ics], { type: "text/calendar" });
   const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "sacred-no-tomorrow.ics"; a.click();
+}
+
+
+/** "On your own", five minutes: the same sitting as Let Her Land Part 4 (her voice to start, her bell at
+ *  the end, Next answer, the count), plus her written "how to work with it alone". 20 Nov 2026. */
+const SOLO_VOICE = { start: "/let-her-land/voice/6-solo-start.m4a", bell: "/let-her-land/voice/7-solo-bell.m4a" };
+const SOLO_SECONDS = 5 * 60;
+let soloAudio: HTMLAudioElement | null = null;
+function playSolo(src: string) { try { soloAudio?.pause(); soloAudio = new Audio(src); soloAudio.play().catch(() => {}); } catch {} }
+
+function OnYourOwn() {
+  const [step, setStep] = useState<"pick" | "prep" | "sit" | "end">("pick");
+  const [left, setLeft] = useState(SOLO_SECONDS);
+  const [answers, setAnswers] = useState(0);
+  const [breath, setBreath] = useState("");
+  const endAt = useRef(0);
+  useEffect(() => {
+    if (step !== "sit") return;
+    const t = setInterval(() => {
+      const r = Math.max(0, Math.round((endAt.current - Date.now()) / 1000));
+      setLeft(r);
+      if (r === 0) { clearInterval(t); setStep("end"); setTimeout(() => playSolo(SOLO_VOICE.bell), 1500); }
+    }, 250);
+    return () => clearInterval(t);
+  }, [step]);
+  useEffect(() => () => { try { soloAudio?.pause(); } catch {} }, []);
+  const start = () => { endAt.current = Date.now() + SOLO_SECONDS * 1000; setLeft(SOLO_SECONDS); setAnswers(0); setStep("sit"); playSolo(SOLO_VOICE.start); };
+  const mm = `${String(Math.floor(left / 60)).padStart(2, "0")}:${String(left % 60).padStart(2, "0")}`;
+  const ring = 2 * Math.PI * 54;
+  const btn = "inline-flex min-h-[52px] w-full items-center justify-center rounded-full bg-[#DDC98E] font-display text-[16px] font-medium text-[#070707]";
+  return (
+    <div className="mt-2 rounded-3xl border border-[#DDC98E]/40 bg-[rgba(13,53,53,0.35)] p-5" data-testid="sn-own">
+      {step === "pick" && (
+        <button type="button" onClick={() => setStep("prep")} className="block w-full text-center">
+          <span className="block font-display text-[22px] font-light">On your own</span>
+          <span className="mt-1 block text-[14px] text-[#cfc8bb]">5 minutes, out loud or on paper</span>
+          <span className="mt-4 inline-flex min-h-[48px] items-center rounded-full border border-[#DDC98E] px-6 text-[14px] text-[#DDC98E]">Sit with it for 5 minutes</span>
+        </button>
+      )}
+      {step === "prep" && (
+        <div className="text-center">
+          <p className="font-display text-[20px] font-light">Write one answer, or speak it out loud. Just one.</p>
+          <p className="mt-2 text-[15px] text-[#cfc8bb]">Then take a breath, read the card again, and give the next one.</p>
+          <button type="button" onClick={start} className={`mt-5 ${btn}`}>Start</button>
+        </div>
+      )}
+      {step === "sit" && (
+        <div className="text-center">
+          <div className="relative mx-auto h-[150px] w-[150px]">
+            <svg viewBox="0 0 120 120" className="h-full w-full -rotate-90"><circle cx="60" cy="60" r="54" fill="none" stroke="rgba(221,201,142,.18)" strokeWidth="5" />
+              <circle cx="60" cy="60" r="54" fill="none" stroke="#DDC98E" strokeWidth="5" strokeLinecap="round" strokeDasharray={ring} strokeDashoffset={ring * (1 - left / SOLO_SECONDS)} /></svg>
+            <span className="absolute inset-0 flex items-center justify-center font-display text-[30px] font-light">{mm}</span>
+          </div>
+          <p className="mt-4 font-display text-[18px] font-light">Write one answer, or speak it out loud. Just one.</p>
+          <p className="mt-2 min-h-[24px] text-[14px] tracking-[.04em] text-[#EEDE80]" aria-live="polite">{breath}</p>
+          <button type="button" onClick={() => { setAnswers((x) => x + 1); setBreath("Take a breath. Read the card again."); setTimeout(() => setBreath(""), 4000); }} className={`mt-2 ${btn}`}>Next answer</button>
+          <p className="mt-3 text-[14px] text-[#a79f90]">Answers so far: <b className="font-medium text-[#DDC98E]">{answers}</b></p>
+        </div>
+      )}
+      {step === "end" && (
+        <div className="text-center">
+          <p className="font-display text-[30px] font-light">Pause.</p>
+          <p className="mt-2 text-[15px] text-[#cfc8bb]">Notice how your body feels. Often there&rsquo;s a little more breath, more space, more aliveness.</p>
+          {answers > 0 && <p className="mt-4"><b className="font-display text-[36px] font-light text-[#DDC98E]">{answers}</b><span className="ml-2 text-[14px] text-[#a79f90]">answers on one card</span></p>}
+          <p className="mt-3 text-[14px] text-[#cfc8bb]">Now write the one that matters most below.</p>
+        </div>
+      )}
+      <details className="mt-5 rounded-2xl border border-[#DDC98E]/15 px-4 py-3">
+        <summary className="cursor-pointer text-center text-[11px] uppercase tracking-[0.2em] text-[#DDC98E]">How to work with it alone</summary>
+        <div className="mt-3 space-y-2 text-[15px] leading-relaxed text-[#cfc8bb]">
+          {HOW_ALONE.map((l) => <p key={l}>{l}</p>)}
+        </div>
+      </details>
+    </div>
+  );
 }
 
 /* ================= TODAY SCREEN ================= */
@@ -316,6 +392,7 @@ export function SacredNoDay(props: {
           <section className="mt-8">
             <p className="text-center text-[10px] uppercase tracking-[0.3em] text-[#DDC98E]">Today&rsquo;s card</p>
             <SacredNoCard prompt={SN_DAY_QUESTION[day]} />
+            <OnYourOwn />
             <p className="mt-7 text-[10px] uppercase tracking-[0.3em] text-[#DDC98E]">Your answer · only you see this</p>
             <textarea value={answer} onChange={(e) => setAnswer(e.target.value)} rows={4} placeholder="Write it here, or say it out loud and write one line."
               className="mt-2 w-full resize-y rounded-2xl border border-[#DDC98E]/25 bg-[#14120e] p-4 font-display text-[17px] font-light italic text-[#F6EFE0] placeholder:text-[#F6EFE0]/30" />
