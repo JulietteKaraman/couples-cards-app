@@ -1,5 +1,6 @@
 // Juliette's own guided meditations and hypnosis for Scrumptious Confessions (specs/living-library.md).
-// Voices confirmed by Juliette 19 Nov 2026. Three open on Monday 23 November (doors open), then one more
+// Voices confirmed by Juliette 19 Nov 2026. 20 Nov: Pleasure Boost is a first-day three instead of Sleep Tight;
+// Sleep Tight is held to the end until it has music under it and is better ("take sleep off"). Three open on Monday 23 November (doors open), then one more
 // every Friday. Files live in the PRIVATE "drops" bucket at meditations/<slug>.m4a, uploaded once at
 // /admin/meditations. NEVER add: Marisa Peer, LWL, Dr Joe Dispenza, Guided Visualization, Money Mountain,
 // Chakra Wisdom, The Future Self, REMAINS, RELEASE 2018, or any client recording (Rupertmeditation).
@@ -28,11 +29,11 @@ export const MEDITATIONS: Meditation[] = [
     "publish_on": "2026-11-23"
   },
   {
-    "slug": "sleep-tight",
-    "title": "Sleep Tight",
-    "minutes": 9,
+    "slug": "pleasure-boost-new",
+    "title": "Pleasure Boost",
+    "minutes": 24,
     "shelves": [
-      "calm"
+      "desire"
     ],
     "publish_on": "2026-11-23"
   },
@@ -66,15 +67,6 @@ export const MEDITATIONS: Meditation[] = [
     "publish_on": "2026-12-11"
   },
   {
-    "slug": "pleasure-boost-new",
-    "title": "Pleasure Boost",
-    "minutes": 24,
-    "shelves": [
-      "desire"
-    ],
-    "publish_on": "2026-12-18"
-  },
-  {
     "slug": "trust-again",
     "title": "Trust Again",
     "minutes": 19,
@@ -82,7 +74,7 @@ export const MEDITATIONS: Meditation[] = [
       "us",
       "safe"
     ],
-    "publish_on": "2026-12-25"
+    "publish_on": "2026-12-18"
   },
   {
     "slug": "10-min-anxiety-meditation",
@@ -91,7 +83,7 @@ export const MEDITATIONS: Meditation[] = [
     "shelves": [
       "calm"
     ],
-    "publish_on": "2027-01-01"
+    "publish_on": "2026-12-25"
   },
   {
     "slug": "erotic-guided-meditation-for-women",
@@ -100,7 +92,7 @@ export const MEDITATIONS: Meditation[] = [
     "shelves": [
       "desire"
     ],
-    "publish_on": "2027-01-08"
+    "publish_on": "2027-01-01"
   },
   {
     "slug": "part-1-men-s-sexual-confidence",
@@ -110,7 +102,7 @@ export const MEDITATIONS: Meditation[] = [
       "desire",
       "men"
     ],
-    "publish_on": "2027-01-15"
+    "publish_on": "2027-01-08"
   },
   {
     "slug": "positive-body-image",
@@ -119,7 +111,7 @@ export const MEDITATIONS: Meditation[] = [
     "shelves": [
       "touch"
     ],
-    "publish_on": "2027-01-22"
+    "publish_on": "2027-01-15"
   },
   {
     "slug": "surrender-meditation",
@@ -128,7 +120,7 @@ export const MEDITATIONS: Meditation[] = [
     "shelves": [
       "safe"
     ],
-    "publish_on": "2027-01-29"
+    "publish_on": "2027-01-22"
   },
   {
     "slug": "juliette-karaman-voice-and-music",
@@ -137,7 +129,7 @@ export const MEDITATIONS: Meditation[] = [
     "shelves": [
       "numb"
     ],
-    "publish_on": "2027-02-05"
+    "publish_on": "2027-01-29"
   },
   {
     "slug": "believe-in-yourself",
@@ -146,7 +138,7 @@ export const MEDITATIONS: Meditation[] = [
     "shelves": [
       "shame"
     ],
-    "publish_on": "2027-02-12"
+    "publish_on": "2027-02-05"
   },
   {
     "slug": "hypnosis-body-image-part-1",
@@ -155,7 +147,7 @@ export const MEDITATIONS: Meditation[] = [
     "shelves": [
       "touch"
     ],
-    "publish_on": "2027-02-19"
+    "publish_on": "2027-02-12"
   },
   {
     "slug": "r4-for-body-wisdom-part-1",
@@ -165,7 +157,7 @@ export const MEDITATIONS: Meditation[] = [
       "numb",
       "touch"
     ],
-    "publish_on": "2027-02-26"
+    "publish_on": "2027-02-19"
   },
   {
     "slug": "10-min-chakra-balance-guided-meditation",
@@ -174,7 +166,7 @@ export const MEDITATIONS: Meditation[] = [
     "shelves": [
       "calm"
     ],
-    "publish_on": "2027-03-05"
+    "publish_on": "2027-02-26"
   },
   {
     "slug": "chakra-meditation-v2-2",
@@ -183,7 +175,7 @@ export const MEDITATIONS: Meditation[] = [
     "shelves": [
       "calm"
     ],
-    "publish_on": "2027-03-12"
+    "publish_on": "2027-03-05"
   },
   {
     "slug": "chakras-breath-work",
@@ -192,7 +184,7 @@ export const MEDITATIONS: Meditation[] = [
     "shelves": [
       "calm"
     ],
-    "publish_on": "2027-03-19"
+    "publish_on": "2027-03-12"
   },
   {
     "slug": "time-to-come-back-to-a-safe-place-to-feeling-fully-you",
@@ -201,7 +193,7 @@ export const MEDITATIONS: Meditation[] = [
     "shelves": [
       "safe"
     ],
-    "publish_on": "2027-03-26"
+    "publish_on": "2027-03-19"
   },
   {
     "slug": "divine-love-meditation",
@@ -211,7 +203,7 @@ export const MEDITATIONS: Meditation[] = [
       "desire",
       "us"
     ],
-    "publish_on": "2027-04-02"
+    "publish_on": "2027-03-26"
   },
   {
     "slug": "ease-guided-meditation-have-better-sex",
@@ -221,7 +213,7 @@ export const MEDITATIONS: Meditation[] = [
       "numb",
       "desire"
     ],
-    "publish_on": "2027-04-09"
+    "publish_on": "2027-04-02"
   },
   {
     "slug": "feel-the-full-perfect-you",
@@ -230,7 +222,7 @@ export const MEDITATIONS: Meditation[] = [
     "shelves": [
       "numb"
     ],
-    "publish_on": "2027-04-16"
+    "publish_on": "2027-04-09"
   },
   {
     "slug": "anxiety-meditation-15-min",
@@ -239,7 +231,7 @@ export const MEDITATIONS: Meditation[] = [
     "shelves": [
       "calm"
     ],
-    "publish_on": "2027-04-23"
+    "publish_on": "2027-04-16"
   },
   {
     "slug": "gratitudes",
@@ -248,7 +240,7 @@ export const MEDITATIONS: Meditation[] = [
     "shelves": [
       "calm"
     ],
-    "publish_on": "2027-04-30"
+    "publish_on": "2027-04-23"
   },
   {
     "slug": "i-am-free",
@@ -257,7 +249,7 @@ export const MEDITATIONS: Meditation[] = [
     "shelves": [
       "calm"
     ],
-    "publish_on": "2027-05-07"
+    "publish_on": "2027-04-30"
   },
   {
     "slug": "dp2-second-part",
@@ -266,7 +258,7 @@ export const MEDITATIONS: Meditation[] = [
     "shelves": [
       "calm"
     ],
-    "publish_on": "2027-05-14"
+    "publish_on": "2027-05-07"
   },
   {
     "slug": "loving-compassion-hypnosis",
@@ -275,7 +267,7 @@ export const MEDITATIONS: Meditation[] = [
     "shelves": [
       "us"
     ],
-    "publish_on": "2027-05-21"
+    "publish_on": "2027-05-14"
   },
   {
     "slug": "hypnosis-for-meeting-your-inner-child",
@@ -284,7 +276,7 @@ export const MEDITATIONS: Meditation[] = [
     "shelves": [
       "shame"
     ],
-    "publish_on": "2027-05-28"
+    "publish_on": "2027-05-21"
   },
   {
     "slug": "meditation-for-mind-clarity",
@@ -293,7 +285,7 @@ export const MEDITATIONS: Meditation[] = [
     "shelves": [
       "calm"
     ],
-    "publish_on": "2027-06-04"
+    "publish_on": "2027-05-28"
   },
   {
     "slug": "mindfulness-meditation-longer",
@@ -302,7 +294,7 @@ export const MEDITATIONS: Meditation[] = [
     "shelves": [
       "calm"
     ],
-    "publish_on": "2027-06-11"
+    "publish_on": "2027-06-04"
   },
   {
     "slug": "money-activation-v2",
@@ -312,7 +304,7 @@ export const MEDITATIONS: Meditation[] = [
       "numb",
       "calm"
     ],
-    "publish_on": "2027-06-18"
+    "publish_on": "2027-06-11"
   },
   {
     "slug": "old-habits-v2",
@@ -321,7 +313,7 @@ export const MEDITATIONS: Meditation[] = [
     "shelves": [
       "shame"
     ],
-    "publish_on": "2027-06-25"
+    "publish_on": "2027-06-18"
   },
   {
     "slug": "15-min-guided-meditation-to-find-peace-in-uncertain-times",
@@ -331,7 +323,7 @@ export const MEDITATIONS: Meditation[] = [
       "safe",
       "calm"
     ],
-    "publish_on": "2027-07-02"
+    "publish_on": "2027-06-25"
   },
   {
     "slug": "hypnosis-for-relating-to-food",
@@ -341,7 +333,7 @@ export const MEDITATIONS: Meditation[] = [
       "touch",
       "shame"
     ],
-    "publish_on": "2027-07-09"
+    "publish_on": "2027-07-02"
   },
   {
     "slug": "last-3-minutes-release-all-negative-energy",
@@ -352,7 +344,7 @@ export const MEDITATIONS: Meditation[] = [
       "desire",
       "calm"
     ],
-    "publish_on": "2027-07-16"
+    "publish_on": "2027-07-09"
   },
   {
     "slug": "release-your-fears-part-1",
@@ -364,7 +356,7 @@ export const MEDITATIONS: Meditation[] = [
       "safe",
       "calm"
     ],
-    "publish_on": "2027-07-23"
+    "publish_on": "2027-07-16"
   },
   {
     "slug": "feel-fully-you-self-care-manifesto",
@@ -373,7 +365,7 @@ export const MEDITATIONS: Meditation[] = [
     "shelves": [
       "calm"
     ],
-    "publish_on": "2027-07-30"
+    "publish_on": "2027-07-23"
   },
   {
     "slug": "sensual-journey",
@@ -384,7 +376,7 @@ export const MEDITATIONS: Meditation[] = [
       "touch",
       "desire"
     ],
-    "publish_on": "2027-08-06"
+    "publish_on": "2027-07-30"
   },
   {
     "slug": "stop-self-sabotage",
@@ -393,7 +385,7 @@ export const MEDITATIONS: Meditation[] = [
     "shelves": [
       "shame"
     ],
-    "publish_on": "2027-08-13"
+    "publish_on": "2027-08-06"
   },
   {
     "slug": "weight-loss",
@@ -402,7 +394,7 @@ export const MEDITATIONS: Meditation[] = [
     "shelves": [
       "touch"
     ],
-    "publish_on": "2027-08-20"
+    "publish_on": "2027-08-13"
   },
   {
     "slug": "relationship-to-food-hypnotherapy",
@@ -411,6 +403,15 @@ export const MEDITATIONS: Meditation[] = [
     "shelves": [
       "touch",
       "shame"
+    ],
+    "publish_on": "2027-08-20"
+  },
+  {
+    "slug": "sleep-tight",
+    "title": "Sleep Tight",
+    "minutes": 9,
+    "shelves": [
+      "calm"
     ],
     "publish_on": "2027-08-27"
   }

@@ -141,7 +141,7 @@ function Content() {
         </div>
 
         {tab === "stories" && <Stories feed={feed} />}
-        {tab === "today" && <><WeekStrip onPick={pick} /><Today /></>}
+        {tab === "today" && <><WeekStrip onPick={pick} /><WallPeek onOpen={() => pick("yours")} /><Today /></>}
         {tab === "card" && <Cards feed={feed} />}
         {tab === "yours" && <YourTurn />}
         {tab === "library" && <Library />}
@@ -472,7 +472,7 @@ function Answers({ paid, trial, start, shelves }: { paid: boolean; trial?: boole
 }
 
 /* A box whose words go to Juliette, always with no name attached. */
-function SendToMe({ item, notice, button, onType, once, onSent }: { item: string; notice: string; button: string; onType?: (v: string) => void; once?: string; onSent?: () => void }) {
+function SendToMe({ item, notice, button, onType, once, onSent, light }: { item: string; notice: string; button: string; onType?: (v: string) => void; once?: string; onSent?: () => void; light?: boolean }) {
   const draftKey = `ffy.confessions.draft.${item}.v1`;
   // once = a week id: one send per week from this phone (her weekly confession).
   const sentKey = `ffy.confessions.sent.${item}${once ? `.${once}` : ""}.v1`;
@@ -497,20 +497,20 @@ function SendToMe({ item, notice, button, onType, once, onSent }: { item: string
 
   if (state === "sent") {
     return (
-      <div className="mt-3 rounded-2xl border border-[#DDC98E]/50 p-4">
-        <p className="text-[16px]">It&rsquo;s with me. Thank you.</p>
-        {once ? <p className="mt-1 text-[14px] text-[#cfc8bb]">Your next one opens on Monday.</p> : <button type="button" onClick={() => { lsSet(sentKey, ""); setText(""); setState("idle"); }} className="mt-1 inline-flex min-h-[44px] items-center text-[14px] text-[#DDC98E] underline underline-offset-4">Send me another</button>}
+      <div className={`mt-3 rounded-2xl border p-4 ${light ? "border-[#0d3535]/30" : "border-[#DDC98E]/50"}`}>
+        <p className="text-[16px]">{light ? "It\u2019s on the wall. Thank you." : "It\u2019s with me. Thank you."}</p>
+        {once ? <p className="mt-1 text-[14px] text-[#cfc8bb]">Your next one opens on Monday.</p> : <button type="button" onClick={() => { lsSet(sentKey, ""); setText(""); setState("idle"); }} className={`mt-1 inline-flex min-h-[44px] items-center text-[14px] underline underline-offset-4 ${light ? "text-[#0d3535]" : "text-[#DDC98E]"}`}>{light ? "Ask another" : "Send me another"}</button>}
       </div>
     );
   }
   return (
     <div className="mt-3">
-      <textarea value={text} maxLength={MAX} rows={4} placeholder="Write it here…"
+      <textarea value={text} maxLength={MAX} rows={4} placeholder={light ? "Type your question here…" : "Write it here…"}
         onChange={(e) => { setText(e.target.value); lsSet(draftKey, e.target.value); onType?.(e.target.value); }}
-        className="w-full resize-none rounded-2xl border-[1.5px] border-[#D8DFE1]/50 bg-[#D8DFE1]/[0.06] p-4 text-[16px] leading-relaxed text-[#f1ece2] placeholder:text-[#f1ece2]/35 focus:outline-none" />
-      <p className="mt-2 text-[14px] text-[#cfc8bb]">{notice}</p>
+        className={light ? "w-full resize-none rounded-2xl border-[1.5px] border-[#0d3535]/30 bg-white p-4 text-[16px] leading-relaxed text-[#0d3535] placeholder:text-[#0d3535]/45 focus:outline-none" : "w-full resize-none rounded-2xl border-[1.5px] border-[#D8DFE1]/50 bg-[#D8DFE1]/[0.06] p-4 text-[16px] leading-relaxed text-[#f1ece2] placeholder:text-[#f1ece2]/35 focus:outline-none"} />
+      <p className={`mt-2 text-[14px] ${light ? "text-[#0d3535]/75" : "text-[#cfc8bb]"}`}>{notice}</p>
       <button type="button" disabled={!text.trim() || state === "sending"} onClick={send}
-        className="mt-2 inline-flex min-h-[52px] w-full items-center justify-center rounded-full bg-[#DDC98E] font-display text-[16px] font-medium text-[#070707] transition hover:bg-[#EEDE80] disabled:opacity-40">
+        className={`mt-2 inline-flex min-h-[52px] w-full items-center justify-center rounded-full font-display text-[16px] font-medium transition disabled:opacity-40 ${light ? "bg-[#0d3535] text-[#fefcfa]" : "bg-[#DDC98E] text-[#070707] hover:bg-[#EEDE80]"}`}>
         {state === "sending" ? "Sending…" : button}
       </button>
       {state === "failed" && <p className="mt-2 text-center text-[14px] text-[#EEDE80]">That didn&rsquo;t send. Try again.</p>}
@@ -535,6 +535,31 @@ async function loadWall(): Promise<WallData | null> {
 const normQ = (x: string) => x.toLowerCase().replace(/['\u2018\u2019`]/g, "").replace(/[^a-z0-9\s]/g, " ");
 const STOP = new Set("i me my we our you your he she him her it its a an the and or but to of in on for with is am are was do does did have has why how what when can cant dont not so that this just".split(" "));
 const keyWords = (x: string) => normQ(x).split(/\s+/).filter((w) => w.length > 2 && !STOP.has(w));
+
+// From Juliette's 2am questions bank: real questions people typed (Quora, Mumsnet), each one already answered in the
+// library. Shown as what they are, never as members' questions (20 Nov 2026).
+const TWO_AM = [
+  "Why don't I feel anything during sex anymore?",
+  "Why do I flinch whenever my husband tries to touch me?",
+  "Why won't my wife let me touch her?",
+];
+
+/* A peek at the wall on Today (Juliette 20 Nov 2026: "People like to see what others are asking"). */
+function WallPeek({ onOpen }: { onOpen: () => void }) {
+  const [wall, setWall] = useState<WallData | null>(null);
+  useEffect(() => { loadWall().then((w) => w && setWall(w)); }, []);
+  const qs = (wall?.questions || []).slice(0, 3);
+  return (
+    <section className="mt-6">
+      <Eyebrow>This week&rsquo;s questions</Eyebrow>
+      <div className="mt-3 space-y-2">
+        {qs.map((q) => <p key={q.id} className="rounded-2xl bg-[#D8DFE1] p-3 text-[15px] leading-snug text-[#0d3535]">{q.body}</p>)}
+        {wall && qs.length === 0 && <p className="text-[15px] text-[#a79f90]">Nobody has asked yet this week. Be the first.</p>}
+      </div>
+      <button type="button" onClick={onOpen} className="mt-3 inline-flex min-h-[48px] w-full items-center justify-center rounded-full bg-[#D8DFE1] text-[15px] font-medium text-[#0d3535]">Ask yours, or tap Me too</button>
+    </section>
+  );
+}
 
 /* ================= QUESTIONS: the wall, Me too, her answers (Juliette 20 Nov 2026) ================= */
 // Telegram is gone. Every member sees this week's questions here the moment they're sent, taps Me too
@@ -566,22 +591,29 @@ function YourTurn() {
 
   return (
     <section className="mt-8 space-y-6">
-      <div className="rounded-3xl border-2 border-[#DDC98E]/60 bg-[rgba(13,53,53,0.45)] p-5">
-        <Eyebrow>Ask me anything</Eyebrow>
-        <p className="mt-2 font-display text-[22px] font-light">Your question about intimacy, Touch, desire, sex.</p>
-        <p className="mt-2 text-[15px] text-[#cfc8bb]">It goes on the wall for every member to see, with no name. I answer every Thursday.</p>
-        <SendToMe item="question" onType={setDraft} onSent={refresh} notice="No name goes with it, ever. Everyone in Scrumptious Confessions can read it." button="Ask my question" />
+      {/* How it works, in three steps (Juliette 20 Nov 2026: "somewhere ... we have to explain how it works"). */}
+      <ol className="grid grid-cols-3 gap-2 text-center text-[13px] leading-snug text-[#cfc8bb]">
+        <li className="rounded-2xl border border-[#DDC98E]/30 p-3"><span className="block font-display text-[20px] text-[#DDC98E]">1</span>Ask, with no name</li>
+        <li className="rounded-2xl border border-[#DDC98E]/30 p-3"><span className="block font-display text-[20px] text-[#DDC98E]">2</span>Everyone sees it and taps Me too</li>
+        <li className="rounded-2xl border border-[#DDC98E]/30 p-3"><span className="block font-display text-[20px] text-[#DDC98E]">3</span>I answer on Thursday. It stays in the library</li>
+      </ol>
+      {/* Its own colour so it reads as the place to type (Juliette 20 Nov 2026). */}
+      <div className="ask-tile rounded-3xl bg-[#D8DFE1] p-5 text-[#0d3535]">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#0d3535]/80">Ask me anything</p>
+        <p className="mt-2 font-display text-[22px] font-light text-[#0d3535]">Your question about intimacy, Touch, desire, sex.</p>
+        <p className="mt-2 text-[15px] text-[#0d3535]/80">Type it below. It goes on the wall with no name. I answer every Thursday.</p>
+        <SendToMe item="question" light onType={setDraft} onSent={refresh} notice="No name goes with it, ever. Everyone in Scrumptious Confessions can read it." button="Ask my question" />
         {similar.length > 0 && (
           <div className="mt-4 space-y-2">
-            <p className="text-[13px] uppercase tracking-[0.14em] text-[#a79f90]">Someone may have asked this already</p>
+            <p className="text-[13px] uppercase tracking-[0.14em] text-[#0d3535]/70">Someone may have asked this already</p>
             {similar.map((x) => x.kind === "answered" ? (
-              <button key={x.id} type="button" onClick={() => setOpenA(x.id)} className="block w-full rounded-2xl border border-[#DDC98E]/40 p-3 text-left text-[15px]">
-                {x.text} <span className="text-[#DDC98E]">· answered, read it</span>
+              <button key={x.id} type="button" onClick={() => setOpenA(x.id)} className="block w-full rounded-2xl border border-[#0d3535]/25 bg-white/60 p-3 text-left text-[15px] text-[#0d3535]">
+                {x.text} <span className="font-semibold">· answered, read it</span>
               </button>
             ) : (
-              <div key={x.id} className="flex items-center justify-between gap-3 rounded-2xl border border-[#DDC98E]/25 p-3 text-[15px]">
+              <div key={x.id} className="flex items-center justify-between gap-3 rounded-2xl border border-[#0d3535]/25 bg-white/60 p-3 text-[15px] text-[#0d3535]">
                 <span>{x.text}</span>
-                <button type="button" onClick={() => metoo(x.q!)} className={`shrink-0 rounded-full border px-3 py-1.5 text-[13px] ${tapped[x.id] ? "border-[#DDC98E] bg-[#DDC98E] text-[#070707]" : "border-[#DDC98E] text-[#DDC98E]"}`}>Me too</button>
+                <button type="button" onClick={() => metoo(x.q!)} className={`shrink-0 rounded-full border px-3 py-1.5 text-[13px] ${tapped[x.id] ? "border-[#0d3535] bg-[#0d3535] text-[#fefcfa]" : "border-[#0d3535] text-[#0d3535]"}`}>Me too</button>
               </div>
             ))}
           </div>
@@ -606,11 +638,19 @@ function YourTurn() {
           {!wall && <p className="text-[#8f877a]">…</p>}
           {wall && wall.questions.length === 0 && <p className="text-[15px] text-[#a79f90]">Be the first to ask this week.</p>}
           {wall?.questions.map((q) => (
-            <div key={q.id} className="flex items-start justify-between gap-3 rounded-2xl bg-white/[0.03] p-3">
+            <div key={q.id} className="flex items-start justify-between gap-3 rounded-2xl bg-[#D8DFE1] p-3 text-[#0d3535]">
               <p className="whitespace-pre-wrap text-[15px] leading-snug">{q.body}</p>
-              <button type="button" onClick={() => metoo(q)} aria-pressed={!!tapped[q.id]} className={`shrink-0 rounded-full border px-3 py-1.5 text-[13px] tabular-nums ${tapped[q.id] ? "border-[#DDC98E] bg-[#DDC98E] text-[#070707]" : "border-[#DDC98E] text-[#DDC98E]"}`}>Me too · {q.metoo}</button>
+              <button type="button" onClick={() => metoo(q)} aria-pressed={!!tapped[q.id]} className={`shrink-0 rounded-full border px-3 py-1.5 text-[13px] tabular-nums ${tapped[q.id] ? "border-[#0d3535] bg-[#0d3535] text-[#fefcfa]" : "border-[#0d3535] text-[#0d3535]"}`}>Me too · {q.metoo}</button>
             </div>
           ))}
+        </div>
+      </div>
+
+      <div className="rounded-3xl border border-[#D8DFE1]/40 p-5">
+        <p className="text-[11px] uppercase tracking-[0.2em] text-[#D8DFE1]">Asked at 2am</p>
+        <p className="mt-2 text-[14px] text-[#a79f90]">Real questions women and men type into their phones at night. I&rsquo;ve answered these in the library.</p>
+        <div className="mt-3 space-y-2">
+          {TWO_AM.map((q) => <p key={q} className="rounded-2xl bg-[#D8DFE1]/15 p-3 text-[15px] leading-snug text-[#f1ece2]">{q}</p>)}
         </div>
       </div>
 
@@ -926,11 +966,42 @@ function Cards({ feed }: { feed: Feed | null }) {
                 <p className="mt-1 text-[12px] text-[#a79f90]">Tap my photo to hear how.</p>
               </div>
             </div>
+            {w.min === 15 && <WhoSpeaks />}
             <div className="mt-4"><PracticeTimer minutes={[w.min]} dark solo={w.min === 5} label={w.min === 5 ? "Your five minutes" : "Your fifteen minutes"} /></div>
           </div>
         ))}
       </div>
     </section>
+  );
+}
+
+/* Who's speaking first, like the cards app's Dyad sitting (Juliette 20 Nov 2026: "there is a place to type in
+   who is asking, so it holds time for them"). Names stay on this phone. "Thank you" hands the turn over. */
+function WhoSpeaks() {
+  const KEY = "ffy.confessions.names.v1";
+  const [names, setNames] = useState<[string, string]>(["", ""]);
+  const [first, setFirst] = useState(0);
+  const [turn, setTurn] = useState(0);
+  useEffect(() => { try { const j = JSON.parse(lsGet(KEY) || "{}"); if (Array.isArray(j.n)) setNames([j.n[0] || "", j.n[1] || ""]); if (j.f === 1) { setFirst(1); setTurn(1); } } catch {} }, []);
+  const save = (n: [string, string], f: number) => lsSet(KEY, JSON.stringify({ n, f }));
+  const nm = (i: number) => names[i].trim() || (i === 0 ? "Speaker one" : "Speaker two");
+  return (
+    <div className="mt-4 rounded-2xl border border-[#DDC98E]/30 p-4">
+      <p className="text-[13px] uppercase tracking-[0.16em] text-[#a79f90]">Who&rsquo;s speaking first?</p>
+      <div className="mt-2 grid grid-cols-2 gap-2">
+        {[0, 1].map((i) => (
+          <div key={i} className="space-y-1.5">
+            <input value={names[i]} maxLength={20} placeholder="Name" aria-label={i === 0 ? "First name" : "Second name"}
+              onChange={(e) => { const n: [string, string] = [...names] as [string, string]; n[i] = e.target.value; setNames(n); save(n, first); }}
+              className="w-full rounded-full border border-[#DDC98E]/40 bg-transparent px-4 py-2 text-[15px] text-[#f1ece2] placeholder:text-[#8f877a]" />
+            <button type="button" onClick={() => { setFirst(i); setTurn(i); save(names, i); }}
+              className={`min-h-[40px] w-full rounded-full border text-[13px] ${first === i ? "border-[#DDC98E] bg-[#DDC98E] text-[#070707]" : "border-[#DDC98E]/40 text-[#f1ece2]"}`}>Speaks first</button>
+          </div>
+        ))}
+      </div>
+      <p className="mt-3 text-center text-[15px] text-[#f1ece2]"><span className="text-[#DDC98E]">{nm(turn)}</span> speaking &middot; {nm(1 - turn)} listening</p>
+      <button type="button" onClick={() => setTurn(1 - turn)} className="mt-2 inline-flex min-h-[44px] w-full items-center justify-center rounded-full border border-[#DDC98E]/60 text-[14px] text-[#DDC98E]">Thank you. {nm(1 - turn)}, your turn</button>
+    </div>
   );
 }
 
