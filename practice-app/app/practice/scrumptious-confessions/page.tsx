@@ -367,7 +367,7 @@ const TOPICS: { id: string; label: string; words: string[] }[] = [
   { id: "us", label: "Him, her, us", words: ["partner", "husband", "wife", "marriage", "couple", "him", "relationship", "reaching", "distance"] },
   { id: "safe", label: "Safety and trust", words: ["safe", "safety", "trust", "boundar", "saying no", "the no", "consent", "brace"] },
   { id: "shame", label: "Shame and the past", words: ["shame", "past", "trauma", "child", "guilt", "abuse", "mother", "father"] },
-  { id: "menopause", label: "Menopause and a changing body", words: ["menopause", "perimenopause", "oestrogen", "postmenopausal", "after having a baby", "hot flush"] },
+  { id: "menopause", label: "Menopause and a changing body", words: ["menopause", "perimenopause", "oestrogen", "postmenopausal", "hot flush"] },
   { id: "men", label: "For men", words: [" men", " man ", "for men", "masculin"] },
   { id: "calm", label: "Calm, sleep and clarity", words: ["anxiety", "sleep", "calm", "stress", "breath", "overwhelm", "clarity", "nervous"] },
 ];
@@ -433,7 +433,9 @@ function Answers({ paid, trial, start, shelves, startTopic }: { paid: boolean; t
   const words = norm(find).split(/\s+/).filter(Boolean);
   const inQ = (a: Answer) => words.every((w) => norm(a.q).includes(w));
   const tp = TOPICS.find((t) => t.id === topic);
-  const onShelf = (a: Answer) => !tp || a.slug.startsWith("next") || (a.shelves ? a.shelves.includes(tp.id) : tp.words.some((w) => (" " + a.q + " " + a.blocks.map((b) => b.x).join(" ") + " ").toLowerCase().includes(w)));
+  // Menopause only shows answers whose QUESTION is about menopause (Juliette 20 Nov 2026: the baby answer
+  // and the hug answers were landing there because the word appeared somewhere in the body).
+  const onShelf = (a: Answer) => !tp || a.slug.startsWith("next") || (tp.id === "menopause" ? tp.words.some((w) => a.q.toLowerCase().includes(w)) : a.shelves ? a.shelves.includes(tp.id) : tp.words.some((w) => (" " + a.q + " " + a.blocks.map((b) => b.x).join(" ") + " ").toLowerCase().includes(w)));
   const shown = (all || [])
     .filter(onShelf)
     .filter((a) => { const t = norm(a.q + " " + a.blocks.map((b) => b.x).join(" ")); return words.every((w) => t.includes(w)); })
