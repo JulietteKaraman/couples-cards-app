@@ -182,6 +182,40 @@ const SOLO_SECONDS = 5 * 60;
 let soloAudio: HTMLAudioElement | null = null;
 function playSolo(src: string) { try { soloAudio?.pause(); soloAudio = new Audio(src); if (!/bell/.test(src)) soloAudio.playbackRate = readSpeed(src); soloAudio.play().catch(() => {}); } catch {} }
 
+
+/** Her photo you tap to hear "On your own: how to use your card" (same voice note as One Touch and Confessions). */
+const OWN_VOICE = "/one-touch/voice/on-your-own.m4a";
+function OwnVoice() {
+  const ref = useRef<HTMLAudioElement | null>(null);
+  const [playing, setPlaying] = useState(false);
+  const [p, setP] = useState(0);
+  const [rate, cycle] = useVoiceRate(OWN_VOICE);
+  useEffect(() => { if (ref.current) ref.current.playbackRate = rate; }, [rate]);
+  return (
+    <div className="flex items-center gap-4" data-testid="sn-own-voice">
+      <div className="flex shrink-0 flex-col items-center gap-2">
+        <button type="button" aria-label={playing ? "Pause" : "On your own: how to use your card"} onClick={() => { const a = ref.current; if (!a) return; if (a.paused) { soloAudio?.pause(); a.playbackRate = rate; a.play().catch(() => {}); } else a.pause(); }} className="relative h-[72px] w-[72px] rounded-full">
+          <Image src="/how-to-feel-like-a-woman/juliette.jpg" alt="" width={72} height={72} className="h-[72px] w-[72px] rounded-full object-cover" />
+          <svg viewBox="0 0 36 36" className="absolute inset-0 h-full w-full -rotate-90" aria-hidden="true">
+            <circle cx="18" cy="18" r="16.5" fill="none" stroke="rgba(221,201,142,0.35)" strokeWidth="2" />
+            <circle cx="18" cy="18" r="16.5" fill="none" stroke="#DDC98E" strokeWidth="2" strokeDasharray={`${p * 1.037} 200`} />
+          </svg>
+          <span className="absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full bg-[#DDC98E] text-[11px] text-[#070707] shadow">{playing ? "❚❚" : "▶"}</span>
+          <audio ref={ref} src={OWN_VOICE} preload="none" onPlay={() => setPlaying(true)} onPause={() => setPlaying(false)} onEnded={() => { setPlaying(false); setP(0); }}
+            onLoadedMetadata={(e) => { e.currentTarget.playbackRate = rate; }}
+            onTimeUpdate={(e) => { const a = e.currentTarget; if (a.duration) setP((a.currentTime / a.duration) * 100); }} />
+        </button>
+        <SpeedChip rate={rate} onTap={cycle} />
+      </div>
+      <div className="text-left">
+        <p className="font-display text-[24px] font-light leading-tight">On your own</p>
+        <p className="mt-1 text-[14px] text-[#cfc8bb]">Five minutes, just you and the card.</p>
+        <p className="mt-1 text-[12px] text-[#a79f90]">Tap my photo to hear how.</p>
+      </div>
+    </div>
+  );
+}
+
 function OnYourOwn() {
   const [rate, cycle] = useVoiceRate(SOLO_VOICE.start);
   useEffect(() => { if (soloAudio && !/bell/.test(soloAudio.src)) soloAudio.playbackRate = rate; }, [rate]);
@@ -206,11 +240,11 @@ function OnYourOwn() {
   const btn = "inline-flex min-h-[52px] w-full items-center justify-center rounded-full bg-[#DDC98E] font-display text-[16px] font-medium text-[#070707]";
   return (
     <div className="mt-2 rounded-3xl border border-[#DDC98E]/40 bg-[rgba(13,53,53,0.35)] p-5" data-testid="sn-own">
+      <OwnVoice />
+      <div className="mt-5">
       {step === "pick" && (
-        <button type="button" onClick={() => setStep("prep")} className="block w-full text-center">
-          <span className="block font-display text-[22px] font-light">On your own</span>
-          <span className="mt-1 block text-[14px] text-[#cfc8bb]">5 minutes, out loud or on paper</span>
-          <span className="mt-4 inline-flex min-h-[48px] items-center rounded-full border border-[#DDC98E] px-6 text-[14px] text-[#DDC98E]">Sit with it for 5 minutes</span>
+        <button type="button" onClick={() => setStep("prep")} className="inline-flex min-h-[52px] w-full items-center justify-center rounded-full border border-[#DDC98E] text-[15px] text-[#DDC98E]">
+          Start your five minutes
         </button>
       )}
       {step === "prep" && (
@@ -242,6 +276,7 @@ function OnYourOwn() {
           <p className="mt-3 text-[14px] text-[#cfc8bb]">Now write the one that matters most below.</p>
         </div>
       )}
+      </div>
       <details className="mt-5 rounded-2xl border border-[#DDC98E]/15 px-4 py-3">
         <summary className="cursor-pointer text-center text-[11px] uppercase tracking-[0.2em] text-[#DDC98E]">How to work with it alone</summary>
         <div className="mt-3 space-y-2 text-[15px] leading-relaxed text-[#cfc8bb]">
@@ -274,9 +309,10 @@ export function SacredNoToday(props: {
   }, [tab, dayLesson]);
 
   return (
-    <main className="min-h-screen bg-[#070707] text-[#F6EFE0]">
-      <section className="relative h-[54vh] overflow-hidden">
-        <Image src={heroImage} alt="" fill priority sizes="100vw" className="object-cover object-[50%_18%] opacity-90" />
+    <main className="min-h-screen bg-[#070707] text-[#F6EFE0] md:pt-6">
+      {/* 20 Nov: on a computer the full-width photo showed only the hat, so the photo keeps to the page column. */}
+      <section className="relative mx-auto h-[54vh] max-h-[640px] max-w-xl overflow-hidden md:rounded-3xl md:border md:border-[#DDC98E]/30">
+        <Image src={heroImage} alt="" fill priority sizes="(max-width: 640px) 100vw, 576px" className="object-cover object-[50%_18%] opacity-90" />
         <div className="absolute inset-0 bg-gradient-to-b from-[#070707]/40 via-[#070707]/10 to-[#070707]" />
         <div className="relative z-10 mx-auto flex h-full max-w-xl flex-col justify-between px-5 pb-6 pt-5">
           <Link href="/" className="self-start rounded-full border border-[#DDC98E]/40 bg-[#070707]/50 px-4 py-1.5 text-xs text-[#DDC98E] backdrop-blur">← Your library</Link>
