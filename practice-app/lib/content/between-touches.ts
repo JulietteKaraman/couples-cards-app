@@ -33,6 +33,7 @@ export const betweenTouches: PracticeCollection = {
       eyebrow: "Where love can be lost, or found again",
       kind: "essay",
       image: "/between-touches/real/p1.jpg",
+      imageFocus: "50% 35%", // faces in frame on a phone (20 Nov 2026)
       imageAlt: "Juliette laughing on her sofa",
       imageSide: "left",
       body: [
@@ -62,6 +63,7 @@ export const betweenTouches: PracticeCollection = {
       eyebrow: "What's said. What's felt. What almost lands.",
       kind: "ritual",
       image: "/between-touches/real/p2-birchwood.jpg",
+      imageFocus: "50% 28%", // faces in frame on a phone (20 Nov 2026)
       imageAlt: "Juliette laughing in the sun, Alex's hand on her shoulder",
       imageSide: "right",
       body: [
@@ -93,6 +95,7 @@ export const betweenTouches: PracticeCollection = {
       eyebrow: "One prompt. Fifteen minutes.",
       kind: "closing",
       image: "/between-touches/real/p3-lateoct.jpg",
+      imageFocus: "50% 30%", // faces in frame on a phone (20 Nov 2026)
       imageAlt: "Juliette and Alex holding each other outside their home",
       imageSide: "right",
       body: [

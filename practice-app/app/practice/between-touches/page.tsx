@@ -8,6 +8,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { HeroPhoto } from "./HeroPhoto";
 import { useEffect, useState } from "react";
 import { betweenTouches } from "@/lib/content/between-touches";
 import { CollectionGate } from "@/components/auth/CollectionGate";
@@ -49,7 +50,7 @@ function BetweenTouchesHub() {
   return (
     <main className="min-h-screen bg-[#1a1814] text-[#f1ece2]">
       <div className="relative h-[58vh] min-h-[380px] w-full overflow-hidden">
-        <Image src={heroImage} alt="Juliette and Alex, a night-time selfie" fill priority sizes="100vw" className="object-cover object-[50%_35%]" />
+        <HeroPhoto src={heroImage} alt="Juliette and Alex, a night-time selfie" focus="50% 30%" />
         <div className="absolute inset-0 bg-gradient-to-b from-[#1a1814]/50 via-transparent to-[#1a1814]" />
         <div className="absolute left-0 top-0 p-4">
           <Link href="/" className="inline-flex items-center gap-1.5 rounded-full border border-[#DDC98E]/40 bg-black/20 px-4 py-2 text-sm font-medium text-[#DDC98E] backdrop-blur-sm">
