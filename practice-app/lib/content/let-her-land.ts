@@ -40,7 +40,12 @@ export function lhlOfferOn(now: Date = new Date()) { return now < new Date(LHL_O
 export const DOOR_URL = lhlOfferOn() ? DOOR_URL_OFFER : DOOR_URL_FULL;
 export const DIR = "/let-her-land";
 // Second door, 15 Nov 2026 (Juliette: "best upsell is scrumptious confessions... a taster of that in the app").
-export const CONFESSIONS_URL = "https://feelfullyyou.com/scrumptious-confessions";
+// 20 Nov 2026: Confessions is open (£111/month, 7 days free), so the door goes to the membership page.
+export const CONFESSIONS_URL = "https://feelfullyyou.com/scrumptious-confessions-membership";
+// 20 Nov 2026 (Juliette): the Scrumptiousness Journal is part of Let Her Land, the whole journal, worth £27.
+// Opening it from Let Her Land before the offer ends keeps it open on that phone (flag below).
+export const SJ_URL = "/practice/scrumptiousness-journal?from=let-her-land";
+export const SJ_LHL_FLAG = "ffy.sj.lhl";
 
 // ---------------------------------------------------------------------------
 // PHOTOS. All hers, all solo. Swap a path here to change one.
@@ -56,6 +61,7 @@ export const PHOTOS = {
   door: { src: `${DIR}/photos/sacred-no.jpg`, alt: "The Sacred No", pos: "50% 30%", ratio: "4 / 5" },
   /** The Part 4 card: her printed Visibility Challenge card, 827 x 1181. Never redrawn. */
   card: { src: `${DIR}/card-template.png`, w: 827, h: 1181 },
+  journalApp: { src: "/scrumptiousness-journal/thumb.jpg", alt: "The Scrumptiousness Journal" },
   confessions: { src: `${DIR}/photos/confessions.jpg`, alt: "Scrumptious Confessions cover art" },
   emblem: { src: `${DIR}/photos/emblem.png`, alt: "The Touch Base emblem: thumb pressed to forefinger" },
 };
@@ -67,7 +73,7 @@ export const COPY = {
   coverKicker: "A free practice from Juliette",
   title: "Let Her Land",
   tagline: "Meet the woman you're becoming on the page. Then let her land in your body.",
-  priceWas: "Worth £77 / $97",
+  priceWas: "Worth £104 / $131",
   priceFree: "Free for the Already Her bundle",
   keepLine: "What you write stays on your phone. Not even I see it.",
   hello: (name: string) => (name ? `Hello, ${name}.` : "Hello."),
@@ -94,7 +100,11 @@ export const COPY = {
   confTitle: "Scrumptious Confessions",
   confLine: "People tell me they could listen to my voice for hours. So I built an app where you can.",
   confListen: "Listen to a taste",
-  confButton: "Join the waitlist →",
+  confButton: "Start my 7 days free →",
+  confPrice: "Then £111 a month. Stop any time.",
+  sjKicker: "Your gift",
+  sjName: "The Scrumptiousness Journal",
+  sjLine: "103 pages of prompts, practices and meditations. All of it, yours.",
   p3TouchHead: "Touch Base first",
   p3ListenHead: "Now my voice",
   p3ListenLine: "Keep the touch going and press play.",

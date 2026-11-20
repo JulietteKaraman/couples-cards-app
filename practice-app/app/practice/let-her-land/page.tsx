@@ -15,7 +15,7 @@ import { count } from "@/lib/count";
 import { rememberBite } from "@/lib/bites-on-phone";
 import { nextDayStart, TWELVE_H, whenItOpens } from "@/lib/content/31-touch-points-drip";
 import {
-  AUDIO, CONFESSIONS_URL, COPY, DOOR_URL_FULL, DOOR_URL_OFFER, EYES_SECONDS, HOW_ALONE, JOURNAL, JOURNAL_SCREENS, LETTER, PARTS, PHOTOS, PROMPTS, SENSES, lhlOfferOn,
+  AUDIO, CONFESSIONS_URL, SJ_URL, SJ_LHL_FLAG, COPY, DOOR_URL_FULL, DOOR_URL_OFFER, EYES_SECONDS, HOW_ALONE, JOURNAL, JOURNAL_SCREENS, LETTER, PARTS, PHOTOS, PROMPTS, SENSES, lhlOfferOn,
   TB_AUDIO_LABEL, TB_DAYS, TB_HEAD, TB_LINE, TB_STEPS, TB_WHY, TB_WITH_ME,
 } from "@/lib/content/let-her-land";
 
@@ -203,6 +203,7 @@ function ConfessionsDoor() {
         <p className="mt-1 font-display text-[28px] font-light leading-tight">{COPY.confTitle}</p>
         <p className="mt-2 text-[16px] text-[#cfc8bb]">{COPY.confLine}</p>
         <div className="mt-4"><Slot src={AUDIO.confessions} label={COPY.confListen} id="lhl-confessions" /></div>
+        <p className="mt-3 text-center text-[14px] text-[#a79f90]">{COPY.confPrice}</p>
         <a href={CONFESSIONS_URL} data-testid="confessions-link" onClick={() => count("lhl_confessions_click")} className="lhl-press mt-4 inline-flex min-h-[52px] w-full items-center justify-center rounded-full border-[1.5px] border-[#DDC98E] font-display text-[17px] font-medium text-[#DDC98E]">{COPY.confButton}</a>
       </div>
     </div>
@@ -1077,6 +1078,7 @@ function Part4({ idx, vis, setAnswer, markDone, doneDays, curDay, opensIn }: {
             </div>
           )}
           <KeepCopy text={visText(vis)} />
+          <ConfessionsDoor />
         </>
       )}
     </section>
@@ -1194,6 +1196,19 @@ function Hub({ name, fracs, dones, resume, open, partLabel }: {
           );
         })}
       </div>
+
+      <a href={SJ_URL} data-testid="sj-tile" onClick={() => { try { if (lhlOfferOn() && !localStorage.getItem(SJ_LHL_FLAG)) localStorage.setItem(SJ_LHL_FLAG, new Date().toISOString()); } catch {} count("lhl_sj_open"); }}
+        className="lhl-card mt-3 flex w-full items-center gap-4 overflow-hidden rounded-3xl border-[1.5px] border-[#DDC98E] bg-[rgba(13,53,53,0.35)] p-3 text-left">
+        <span className="relative h-[84px] w-[84px] shrink-0 overflow-hidden rounded-2xl">
+          <Image src={PHOTOS.journalApp.src} alt="" fill sizes="84px" className="object-cover" />
+        </span>
+        <span className="min-w-0 flex-1">
+          <span className="block text-[11px] font-medium uppercase tracking-[0.2em] text-[#DDC98E]">{COPY.sjKicker}</span>
+          <span className="mt-0.5 block font-display text-[22px] font-light leading-tight">{COPY.sjName}</span>
+          <span className="mt-0.5 block text-[14px] leading-snug text-[#a79f90]">{COPY.sjLine}</span>
+        </span>
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[#DDC98E]/50 text-[17px] text-[#DDC98E]">→</span>
+      </a>
 
       <p className="mt-5 text-center text-[14px] text-[#a79f90]">{COPY.keepLine}</p>
       <HomePrompt slug="let-her-land" />

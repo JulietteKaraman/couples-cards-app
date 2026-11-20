@@ -13,6 +13,7 @@ import { HomePrompt, Voice, read, write } from "@/components/BiteKit";
 import { count } from "@/lib/count";
 import { supabaseBrowser } from "@/lib/supabase/client";
 import { ADMIN_EMAIL } from "@/lib/entitlements/admin";
+import { LHL_OFFER_ENDS, SJ_LHL_FLAG, lhlOfferOn } from "@/lib/content/let-her-land";
 import VoicePlayer from "@/components/VoicePlayer";
 import { COVER, JOURNAL_AUDIO, JOURNAL_BOX_TOTAL, JOURNAL_PAGES, type JItem } from "@/lib/content/scrumptiousness-journal";
 
@@ -298,6 +299,13 @@ export default function ScrumptiousnessJournal() {
       let inWeek = false;
       try {
         if (process.env.NODE_ENV === "development" && localStorage.getItem("ffy.sj.member") === "1") ok = true; // local preview only
+        // Let Her Land (Already Her bundle, 20 Nov 2026): the whole journal is part of it. Opened from Let Her Land
+        // before the offer ends, the flag stays on this phone and keeps the journal open after 12 Dec too.
+        try {
+          if (lhlOfferOn() && new URLSearchParams(window.location.search).get("from") === "let-her-land" && !localStorage.getItem(SJ_LHL_FLAG)) localStorage.setItem(SJ_LHL_FLAG, new Date().toISOString());
+          const f = localStorage.getItem(SJ_LHL_FLAG);
+          if (f && new Date(f) < new Date(LHL_OFFER_ENDS)) ok = true;
+        } catch { /* storage blocked: the usual check below */ }
         const { data } = await supabaseBrowser.auth.getSession();
         const uid = data.session?.user.id;
         if (uid) {
