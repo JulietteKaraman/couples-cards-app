@@ -1172,7 +1172,7 @@ function LandPage({ done, onDone }: { done: boolean; onDone: () => void }) {
         <p className="text-[11px] uppercase tracking-[0.2em] text-[#DDC98E]">{COPY.landHead}</p>
         <p className="mt-2 text-[15px] text-[#cfc8bb]">{COPY.landLine}</p>
         <MuteNote />
-        <Slot src={AUDIO.hypnosis} label="The hypnosis" />
+        <Slot src={AUDIO.hypnosis} label="The Visibility Hypnosis & Attunement" />
       </div>
       {done ? <p className="mt-5 text-center font-display text-[20px] text-[#DDC98E]">✓ {COPY.landDone}</p> : <button type="button" data-testid="land-done" onClick={onDone} className={goldBtn}>{COPY.landButton}</button>}
     </section>

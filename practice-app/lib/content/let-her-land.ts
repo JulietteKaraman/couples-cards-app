@@ -76,7 +76,7 @@ export const COPY = {
   // 21 Nov 2026 (Juliette: "why a free practice? It is a whole bundle"). The cover now matches the bundle mockup.
   coverKicker: "Your gift in the Already Her bundle",
   coverInsideHead: "All in one app on your phone",
-  coverInside: ["My 17-minute hypnosis", "The Reinvention Journal", "Touch Base with my voice, and one touch from my Touch Map", "21 days of cards"],
+  coverInside: ["My Visibility Hypnosis & Attunement", "The Reinvention Journal", "Touch Base with my voice, and one touch from my Touch Map", "21 days of cards"],
   coverGift: "+ The Scrumptiousness Journal, all 103 pages",
   title: "Let Her Land",
   tagline: "Meet the woman you're becoming on the page. Then let her land in your body.",
@@ -104,7 +104,7 @@ export const COPY = {
   doorButton: "Start it for £17 · usually £55 →",
   doorButtonFull: "Start it for £55 →",
   // ---- 21 Nov 2026 rebuild: one page per part ----
-  landHead: "My 17-minute hypnosis",
+  landHead: "The Visibility Hypnosis & Attunement · 17 minutes",
   landLine: "Find somewhere you won't be disturbed. Headphones help. Lie down or sit back, and let my voice do the rest.",
   landButton: "I've listened ✓",
   landDone: "You've landed. Come back to it any time.",
@@ -184,7 +184,7 @@ export const COPY = {
 
 export const PARTS = [
   // 21 Nov 2026 (Juliette): the hypnosis comes first, then Meet her. Touch Base and one Touch Map touch together.
-  { n: 1, name: "Land", line: "Start here. My 17-minute hypnosis.", photo: PHOTOS.beSeen.src, pos: "70% 40%" },
+  { n: 1, name: "Land", line: "Start here. My Visibility Hypnosis & Attunement, 17 minutes.", photo: PHOTOS.beSeen.src, pos: "70% 40%" },
   { n: 2, name: "Meet her", line: "Write to the woman you are becoming.", photo: PHOTOS.meetHer.src, pos: "50% 25%" },
   { n: 3, name: "Anchor her", line: "Touch Base with my voice for 7 days, then one touch from my Touch Map.", photo: PHOTOS.emblem.src, pos: "50% 50%" },
   { n: 4, name: "Be seen", line: "One card a day for 21 days.", photo: PHOTOS.grounding.src, pos: "50% 62%" },
