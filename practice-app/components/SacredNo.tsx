@@ -295,7 +295,9 @@ export function SacredNoToday(props: {
   const done = doneSlugs ? Object.values(dayLesson).filter((s) => doneSlugs.includes(s)).length : 0;
   const welcomed = !!doneSlugs?.includes("welcome");
   const allDone = done >= 7;
-  const todayDay = Math.min(7, done + 1);
+  // 21 Nov 2026: Today is the FIRST day not yet done (not "how many are done + 1"), so a skipped day is never jumped over.
+  const firstOpen = [1, 2, 3, 4, 5, 6, 7].find((d) => !doneSlugs?.includes(dayLesson[d]));
+  const todayDay = firstOpen ?? 7;
   const today = entries.find((e) => e.slug === dayLesson[todayDay]);
   const waiting = !allDone && !isAdmin && todayDay > unlockedThrough;
   const [answers, setAnswers] = useState<Record<number, string>>({});
