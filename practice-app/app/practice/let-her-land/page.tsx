@@ -210,6 +210,7 @@ function ConfessionsDoor() {
           ))}
         </ul>
         <div className="mt-4"><Slot src={AUDIO.confessions} label={COPY.confListen} id="lhl-confessions" /></div>
+        <p className="mt-4 rounded-2xl border border-[#EEDE80]/50 bg-[rgba(238,222,128,0.08)] px-4 py-3 text-center text-[15px] text-[#EEDE80]" data-testid="conf-keep">{COPY.confKeep}</p>
         <p className="mt-3 text-center text-[14px] text-[#a79f90]">{COPY.confPrice}</p>
         <a href={CONFESSIONS_URL} data-testid="confessions-link" onClick={() => count("lhl_confessions_click")} className="lhl-press mt-4 inline-flex min-h-[52px] w-full items-center justify-center rounded-full border-[1.5px] border-[#DDC98E] font-display text-[17px] font-medium text-[#DDC98E]">{COPY.confButton}</a>
       </div>
@@ -1232,6 +1233,60 @@ function AnchorPage({ log, saveEntry, landed, setLanded }: { log: Entry[]; saveE
   );
 }
 
+
+/** 21 Nov 2026 (Juliette: "I wrote one, did done, and it said my day is done. That was definitely not 5 minutes.
+ *  Where do the answers live? How can they look back?"). The writing now happens INSIDE the five minutes:
+ *  one answer, Next answer, the next one... When the time is up she sees every answer, then marks the day done.
+ *  Answers stay on her phone (vis.a[day], one answer per line). */
+function SeenSitting({ day, value, setValue, onDone }: { day: number; value: string; setValue: (v: string) => void; onDone: () => void }) {
+  // 21 Nov 2026 (Juliette): her timer with the gong (PracticeTimer, the cards app and Confessions one), and room for
+  // 15 to 20 answers. Each answer is its own line; the day can only be marked done once the five minutes have rung.
+  const [timeUp, setTimeUp] = useState(false);
+  const [draft, setDraft] = useState("");
+  const [breath, setBreath] = useState("");
+  const answers = value.split("\n").map((x) => x.trim()).filter(Boolean);
+  const add = () => {
+    const t = draft.trim();
+    if (!t) return;
+    setValue([...answers, t].join("\n"));
+    setDraft("");
+    setBreath("Take a breath. Read the card again, and give the next one.");
+    setTimeout(() => setBreath(""), 4000);
+  };
+  const remove = (i: number) => setValue(answers.filter((_, k) => k !== i).join("\n"));
+  return (
+    <div className="mt-4" data-testid="seen-sitting">
+      <PracticeTimer minutes={[5]} dark solo label="Your five minutes" onDone={() => setTimeUp(true)} />
+      <p className="mt-5 font-display text-[19px] font-light">Answer {answers.length + 1}</p>
+      <p className="text-[13px] text-[#8f877a]">{COPY.seenManyLine}</p>
+      <textarea value={draft} onChange={(e) => setDraft(e.target.value)} rows={3} placeholder="Write one answer here." aria-label={`Answer ${answers.length + 1}`}
+        className="mt-2 w-full rounded-2xl border border-[#DDC98E]/40 bg-[rgba(13,53,53,0.35)] p-4 text-[16px] leading-relaxed text-[#f1ece2] outline-none placeholder:text-[#8f877a] focus:border-[#DDC98E]" />
+      <p className="min-h-[22px] text-center text-[14px] text-[#EEDE80]" aria-live="polite">{breath}</p>
+      <button type="button" data-testid="seen-next" disabled={!draft.trim()} onClick={add} className="inline-flex min-h-[52px] w-full items-center justify-center rounded-full border-[1.5px] border-[#DDC98E] font-display text-[16px] text-[#DDC98E] disabled:opacity-40">Add it, and write the next one</button>
+      {answers.length > 0 && (
+        <ol className="mt-4 grid gap-2" data-testid="seen-answers">
+          {answers.map((t, i) => (
+            <li key={i} className="flex items-start gap-3 rounded-2xl border border-[#DDC98E]/20 bg-[rgba(13,53,53,0.3)] px-4 py-2.5 text-[15px] text-[#f1ece2]">
+              <span className="font-display text-[#DDC98E]">{i + 1}</span><span className="flex-1">{t}</span>
+              <button type="button" aria-label={`Remove answer ${i + 1}`} onClick={() => remove(i)} className="text-[#8f877a]">×</button>
+            </li>
+          ))}
+        </ol>
+      )}
+      {timeUp ? (
+        <div className="mt-6 text-center" data-testid="seen-end">
+          <p className="font-display text-[26px] font-light">Pause.</p>
+          <p className="mt-1 text-[15px] text-[#cfc8bb]">Notice how your body feels. Often there&rsquo;s a little more breath, more space, more aliveness.</p>
+          {answers.length > 0 && <p className="mt-3"><b className="font-display text-[34px] font-light text-[#DDC98E]">{answers.length}</b><span className="ml-2 text-[14px] text-[#a79f90]">answers on one card</span></p>}
+          <button type="button" data-testid="mark-done" disabled={answers.length === 0 && !draft.trim()} onClick={() => { add(); onDone(); }} className="mt-4 inline-flex min-h-[54px] w-full items-center justify-center rounded-full bg-[#DDC98E] font-display text-[17px] font-medium text-[#070707] disabled:opacity-35">Mark day {day} done ✓</button>
+        </div>
+      ) : (
+        <p className="mt-5 text-center text-[13px] text-[#8f877a]">{COPY.seenDoneAfter}</p>
+      )}
+    </div>
+  );
+}
+
 function SeenPage({ vis, setAnswer, markDone, doneDays, curDay, opensIn }: { vis: Vis; setAnswer: (day: number, v: string) => void; markDone: (day: number) => void; doneDays: number; curDay: number; opensIn: string }) {
   const [look, setLook] = useState<number | null>(null);
   const prompt = PROMPTS.find((p) => p.day === curDay);
@@ -1264,21 +1319,33 @@ function SeenPage({ vis, setAnswer, markDone, doneDays, curDay, opensIn }: { vis
           <TodayCard key={prompt.day} p={prompt} solo={false} />
           {/* 21 Nov 2026 (Juliette): "Be seen needs the explanation in my voice and the timer". */}
           <div className="mt-2 rounded-3xl border border-[#DDC98E]/35 bg-[rgba(7,7,7,0.35)] p-4" data-testid="seen-own">
-            <RoundVoice src="/one-touch/voice/on-your-own.m4a" img="/how-to-feel-like-a-woman/juliette.jpg" label="On your own" sub="Five minutes, just you and the card. Tap my photo to hear how." />
-            <SoloSitting day={prompt.day} />
+            <RoundVoice src="/one-touch/voice/on-your-own.m4a" img="/how-to-feel-like-a-woman/juliette.jpg" label="Listen to me here" sub="How to sit with your card on your own, for five minutes." />
+            <SeenSitting day={prompt.day} value={vis.a[prompt.day] ?? ""} setValue={(v) => setAnswer(prompt.day, v)} onDone={() => markDone(prompt.day)} />
             <details className="mt-4 !my-3">
               <summary><span>{COPY.p4HowNav}</span><span className="pl">+</span></summary>
               <div className="dbody space-y-2 text-[15px] leading-relaxed text-[#cfc8bb]">{HOW_ALONE.map((l) => <p key={l}>{l}</p>)}</div>
             </details>
           </div>
-          <p className="mt-5 text-[11px] uppercase tracking-[0.2em] text-[#DDC98E]">{COPY.seenAnswerHead}</p>
-          <Box id="lhl-today" value={vis.a[prompt.day] ?? ""} onChange={(v) => setAnswer(prompt.day, v)} rows={4} />
-          <button type="button" data-testid="mark-done" disabled={!(vis.a[prompt.day] ?? "").trim()} onClick={() => markDone(prompt.day)} className={`${goldBtn} !mt-1 disabled:opacity-35`}>{COPY.p4Done}</button>
         </div>
       ) : doneDays >= PROMPTS.length ? (
         <div className={`${card} text-center`} data-testid="all-done"><span className="block font-display text-4xl font-light text-[#DDC98E]">✓</span><p className="mt-2 font-display text-[22px] font-light">{COPY.p4AllDone}</p></div>
       ) : (
         <div className={`${card} text-center`} data-testid="waiting"><span className="block font-display text-4xl font-light text-[#DDC98E]">✓</span><p className="mt-2 font-display text-[22px] font-light">Day {doneDays} done.</p><p className="mt-1 text-[16px] text-[#cfc8bb]" data-testid="opens">{COPY.p4Next(doneDays + 1, opensIn)}</p></div>
+      )}
+      {doneDays > 0 && (
+        <div className="mt-8" data-testid="seen-all">
+          <p className="text-[11px] uppercase tracking-[0.2em] text-[#DDC98E]">{COPY.seenAllHead}</p>
+          <p className="mt-1 text-[13px] text-[#8f877a]">{COPY.seenAllLine}</p>
+          <div className="mt-3 grid gap-3">
+            {PROMPTS.filter((p) => p.day <= doneDays).reverse().map((p) => (
+              <div key={p.day} className="rounded-2xl border border-[#DDC98E]/20 bg-[rgba(13,53,53,0.25)] p-4">
+                <p className="text-[11px] uppercase tracking-[0.2em] text-[#DDC98E]">Day {p.day}</p>
+                <p className="mt-1 text-[14px] text-[#cfc8bb]">{p.lines.map((l) => l.text).join(" ")}</p>
+                <p className="mt-2 whitespace-pre-wrap font-display text-[16px] font-light italic text-[#f1ece2]">{vis.a[p.day] ?? ""}</p>
+              </div>
+            ))}
+          </div>
+        </div>
       )}
       <div className="mt-6"><KeepCopy text={visText(vis)} /></div>
       <ConfessionsDoor />

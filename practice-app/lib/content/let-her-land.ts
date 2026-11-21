@@ -120,6 +120,10 @@ export const COPY = {
   seenTrackLine: "One card a day. Tap a gold day to read what you wrote.",
   seenAnswerHead: "Your answer · only you see this",
   backToParts: "Back to all four parts",
+  seenManyLine: "Keep going. Write one, add it, then the next. Fifteen or twenty things often come up.",
+  seenDoneAfter: "When the five minutes ring, you can mark the day done.",
+  seenAllHead: "Your answers, every day",
+  seenAllLine: "Everything you wrote lives on this phone, in this browser. Keep a copy if you change phones.",
   moreKicker: "When you're ready",
   moreTitle: "Want to do more with me?",
   moreLine: "Everything above is yours, free. These are for when you want to go further.",
@@ -128,6 +132,7 @@ export const COPY = {
   confLine: "People tell me they could listen to my voice for hours. So I built an app where you can.",
   confListen: "Listen to a taste",
   confButton: "Start my 7 days free →",
+  confKeep: "Try it for 7 days and my Holiday Survival Kit (worth £17) is yours to keep, even if you stop.",
   confPrice: "7 days free. Then £111 a month for the first 50 members. Stop before day 8 and you pay nothing.",
   confInsideHead: "What's inside, a little every day",
   confInside: [
