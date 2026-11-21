@@ -1032,6 +1032,7 @@ function Cards({ feed }: { feed: Feed | null }) {
       {feed.cards.length === 0 && <p className="mt-6 text-center text-[15px] text-[#a79f90]">Your first card lands here very soon.</p>}
       {feed.cards.map((c, i) => <CardBlock key={c.id} card={c} open={i === 0} />)}
       {feed.nextCard && <Coming day={feed.nextCard} what="A new card" />}
+      <YourAnswers cards={feed.cards} />
       {/* Juliette 19 Nov 2026: "it has two audios, which is weird... the 15-minute timer there... and the
           5-minute timer there as well, so that they understand it's solo or it's together". */}
       <div className="mt-10 space-y-3">
@@ -1116,12 +1117,95 @@ function CardBlock({ card, open }: { card: Card; open: boolean }) {
           )}
         </div>
       </div>
-      {face === "front" && (
-        <div className="mt-8">
-          <p className="font-display text-[20px] font-light">Your answer</p>
-          <SendToMe item={card.id} onType={onType} notice="Saved on this phone. It stays private unless you send it to me, and then it comes with no name on it." button="Send it to me" />
-            </div>
-      )}
+      {face === "front" && <CardAnswers card={card} onType={onType} />}
     </div>
   );
 }
+
+/* 21 Nov 2026 (Juliette: "how do we write on the cards... where do all those answers live... how can they look back").
+   Same as Let Her Land's Be seen: her voice ("Listen to me here") and her 5-minute gong timer right under the card,
+   then answers one at a time (room for 15 to 20), kept on this phone per card, even after she sends one to Juliette. */
+const answersKey = (id: string) => `ffy.confessions.card.${id}.answers.v1`;
+const readAnswers = (id: string): string[] => { try { const j = JSON.parse(lsGet(answersKey(id)) || "[]"); return Array.isArray(j) ? j : []; } catch { return []; } };
+function CardAnswers({ card, onType }: { card: Card; onType: (v: string) => void }) {
+  const [answers, setAnswers] = useState<string[]>([]);
+  const [draft, setDraft] = useState("");
+  const [breath, setBreath] = useState("");
+  useEffect(() => { setAnswers(readAnswers(card.id)); }, [card.id]); // eslint-disable-line react-hooks/set-state-in-effect
+  const save = (next: string[]) => { setAnswers(next); lsSet(answersKey(card.id), JSON.stringify(next)); try { window.dispatchEvent(new Event("ffy-card-answers")); } catch {} };
+  const add = () => {
+    const t = draft.trim();
+    if (!t) return;
+    save([...answers, t]);
+    onType(t);
+    setDraft("");
+    setBreath("Take a breath. Read the card again, and give the next one.");
+    setTimeout(() => setBreath(""), 4000);
+  };
+  return (
+    <div className="mt-8" data-testid="card-answers">
+      <div className="rounded-3xl border border-[#DDC98E]/40 bg-[rgba(13,53,53,0.35)] p-5">
+        <div className="flex items-center gap-4">
+          <RoundVoice src="/one-touch/voice/on-your-own.m4a" img={`${DIR}/juliette.jpg`} label="Listen to me here: how to sit with your card" />
+          <div>
+            <p className="font-display text-[22px] font-light leading-tight">Listen to me here</p>
+            <p className="mt-1 text-[14px] text-[#cfc8bb]">Five minutes, just you and the card.</p>
+            <p className="mt-1 text-[12px] text-[#a79f90]">Tap my photo to hear how.</p>
+          </div>
+        </div>
+        <div className="mt-4"><PracticeTimer minutes={[5]} dark solo label="Your five minutes" /></div>
+      </div>
+      <p className="mt-6 font-display text-[20px] font-light">Answer {answers.length + 1}</p>
+      <p className="text-[13px] text-[#8f877a]">Write one, add it, then the next. Fifteen or twenty things often come up.</p>
+      <textarea value={draft} rows={3} onChange={(e) => setDraft(e.target.value)} placeholder="Write one answer here." aria-label={`Answer ${answers.length + 1}`}
+        className="mt-2 w-full rounded-2xl border border-[#DDC98E]/40 bg-[rgba(13,53,53,0.35)] p-4 text-[16px] leading-relaxed text-[#f1ece2] outline-none placeholder:text-[#8f877a] focus:border-[#DDC98E]" />
+      <p className="min-h-[22px] text-center text-[14px] text-[#EEDE80]" aria-live="polite">{breath}</p>
+      <button type="button" data-testid="card-add" disabled={!draft.trim()} onClick={add} className="inline-flex min-h-[52px] w-full items-center justify-center rounded-full border-[1.5px] border-[#DDC98E] font-display text-[16px] text-[#DDC98E] disabled:opacity-40">Add it, and write the next one</button>
+      {answers.length > 0 && (
+        <ol className="mt-4 grid gap-2" data-testid="card-answer-list">
+          {answers.map((t, i) => (
+            <li key={i} className="flex items-start gap-3 rounded-2xl border border-[#DDC98E]/20 bg-[rgba(13,53,53,0.3)] px-4 py-2.5 text-[15px] text-[#f1ece2]">
+              <span className="font-display text-[#DDC98E]">{i + 1}</span><span className="flex-1">{t}</span>
+              <button type="button" aria-label={`Remove answer ${i + 1}`} onClick={() => save(answers.filter((_, k) => k !== i))} className="text-[#8f877a]">×</button>
+            </li>
+          ))}
+        </ol>
+      )}
+      <p className="mt-3 text-[13px] text-[#8f877a]">Saved on this phone. Only you see these.</p>
+      <details className="mt-6 rounded-2xl border border-[#DDC98E]/25 px-4 py-3">
+        <summary className="cursor-pointer text-[14px] text-[#DDC98E]">Want to send one to me? No name on it.</summary>
+        <div className="mt-3">
+          <SendToMe item={card.id} notice="It comes to me with no name on it. Your answers above stay on your phone." button="Send it to me" />
+        </div>
+      </details>
+    </div>
+  );
+}
+
+/** Every card she has answered, newest first, from this phone. */
+function YourAnswers({ cards }: { cards: Card[] }) {
+  const [rows, setRows] = useState<{ card: Card; answers: string[] }[]>([]);
+  useEffect(() => {
+    const load = () => setRows(cards.map((c) => ({ card: c, answers: readAnswers(c.id) })).filter((r) => r.answers.length));
+    load(); // eslint-disable-line react-hooks/set-state-in-effect
+    window.addEventListener("ffy-card-answers", load);
+    return () => window.removeEventListener("ffy-card-answers", load);
+  }, [cards]);
+  if (!rows.length) return null;
+  return (
+    <div className="mt-10" data-testid="your-answers">
+      <Eyebrow>Your answers, every card</Eyebrow>
+      <p className="mt-1 text-[13px] text-[#8f877a]">Everything you wrote lives on this phone, in this browser. Copy anything you want to keep if you change phones.</p>
+      <div className="mt-3 grid gap-3">
+        {rows.map(({ card, answers }) => (
+          <div key={card.id} className="rounded-2xl border border-[#DDC98E]/20 bg-[rgba(13,53,53,0.25)] p-4">
+            <p className="text-[11px] uppercase tracking-[0.2em] text-[#DDC98E]">{dayName(card.publish_on)}</p>
+            <p className="mt-1 text-[14px] text-[#cfc8bb]">{card.prompt}</p>
+            <ol className="mt-2 grid gap-1">{answers.map((a, i) => <li key={i} className="font-display text-[16px] font-light italic text-[#f1ece2]"><span className="mr-2 not-italic text-[#DDC98E]">{i + 1}</span>{a}</li>)}</ol>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
