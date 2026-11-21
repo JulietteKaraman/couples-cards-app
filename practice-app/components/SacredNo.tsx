@@ -15,6 +15,7 @@ import { useEffect, useRef, useState } from "react";
 import { localVideoPoster, localVideoSrc } from "@/lib/content/local-audio";
 import { HOW_ALONE } from "@/lib/content/let-her-land";
 import { nextSpeed, readSpeed, saveSpeedFor } from "@/lib/voice-speed";
+import PracticeTimer from "@/components/PracticeTimer";
 
 const LS = "ffy.sn.";
 function lsGet<T>(k: string, d: T): T {
@@ -177,10 +178,7 @@ function icsFor(title: string, url: string) {
 
 /** "On your own", five minutes: the same sitting as Let Her Land Part 4 (her voice to start, her bell at
  *  the end, Next answer, the count), plus her written "how to work with it alone". 20 Nov 2026. */
-const SOLO_VOICE = { start: "/let-her-land/voice/6-solo-start.m4a", bell: "/let-her-land/voice/7-solo-bell.m4a" };
-const SOLO_SECONDS = 5 * 60;
-let soloAudio: HTMLAudioElement | null = null;
-function playSolo(src: string) { try { soloAudio?.pause(); soloAudio = new Audio(src); if (!/bell/.test(src)) soloAudio.playbackRate = readSpeed(src); soloAudio.play().catch(() => {}); } catch {} }
+const soloAudio: HTMLAudioElement | null = null;
 
 
 /** Her photo you tap to hear "On your own: how to use your card" (same voice note as One Touch and Confessions). */
@@ -208,7 +206,7 @@ function OwnVoice() {
         <SpeedChip rate={rate} onTap={cycle} />
       </div>
       <div className="text-left">
-        <p className="font-display text-[24px] font-light leading-tight">On your own</p>
+        <p className="font-display text-[24px] font-light leading-tight">Listen to me here</p>
         <p className="mt-1 text-[14px] text-[#cfc8bb]">Five minutes, just you and the card.</p>
         <p className="mt-1 text-[12px] text-[#a79f90]">Tap my photo to hear how.</p>
       </div>
@@ -216,73 +214,65 @@ function OwnVoice() {
   );
 }
 
-function OnYourOwn() {
-  const [rate, cycle] = useVoiceRate(SOLO_VOICE.start);
-  useEffect(() => { if (soloAudio && !/bell/.test(soloAudio.src)) soloAudio.playbackRate = rate; }, [rate]);
-  const [step, setStep] = useState<"pick" | "prep" | "sit" | "end">("pick");
-  const [left, setLeft] = useState(SOLO_SECONDS);
-  const [answers, setAnswers] = useState(0);
+/* 21 Nov 2026 (Juliette, the card-writing standard, memory feedback_card_writing_pattern_21nov2026.md): her photo
+   "Listen to me here" with speed, her five-minute timer with the gong (PracticeTimer, same as the cards app, Confessions
+   and Let Her Land), answers one at a time with room for 15 to 20, kept on this phone (one answer per line under the
+   same key as before, so older single answers still show), and the day is marked done only once the five minutes ring. */
+const splitAnswers = (v: string) => v.split("\n").map((x) => x.trim()).filter(Boolean);
+function SnSitting({ day, value, setValue, onDone }: { day: number; value: string; setValue: (v: string) => void; onDone: () => void }) {
+  const [timeUp, setTimeUp] = useState(false);
+  const [draft, setDraft] = useState("");
   const [breath, setBreath] = useState("");
-  const endAt = useRef(0);
-  useEffect(() => {
-    if (step !== "sit") return;
-    const t = setInterval(() => {
-      const r = Math.max(0, Math.round((endAt.current - Date.now()) / 1000));
-      setLeft(r);
-      if (r === 0) { clearInterval(t); setStep("end"); setTimeout(() => playSolo(SOLO_VOICE.bell), 1500); }
-    }, 250);
-    return () => clearInterval(t);
-  }, [step]);
-  useEffect(() => () => { try { soloAudio?.pause(); } catch {} }, []);
-  const start = () => { endAt.current = Date.now() + SOLO_SECONDS * 1000; setLeft(SOLO_SECONDS); setAnswers(0); setStep("sit"); playSolo(SOLO_VOICE.start); };
-  const mm = `${String(Math.floor(left / 60)).padStart(2, "0")}:${String(left % 60).padStart(2, "0")}`;
-  const ring = 2 * Math.PI * 54;
-  const btn = "inline-flex min-h-[52px] w-full items-center justify-center rounded-full bg-[#DDC98E] font-display text-[16px] font-medium text-[#070707]";
+  const answers = splitAnswers(value);
+  const add = () => {
+    const t = draft.trim();
+    if (!t) return;
+    setValue([...answers, t].join("\n"));
+    setDraft("");
+    setBreath("Take a breath. Read the card again, and give the next one.");
+    setTimeout(() => setBreath(""), 4000);
+  };
+  const remove = (i: number) => setValue(answers.filter((_, k) => k !== i).join("\n"));
   return (
-    <div className="mt-2 rounded-3xl border border-[#DDC98E]/40 bg-[rgba(13,53,53,0.35)] p-5" data-testid="sn-own">
-      <OwnVoice />
-      <div className="mt-5">
-      {step === "pick" && (
-        <button type="button" onClick={() => setStep("prep")} className="inline-flex min-h-[52px] w-full items-center justify-center rounded-full border border-[#DDC98E] text-[15px] text-[#DDC98E]">
-          Start your five minutes
-        </button>
-      )}
-      {step === "prep" && (
-        <div className="text-center">
-          <p className="font-display text-[20px] font-light">Write one answer, or speak it out loud. Just one.</p>
-          <p className="mt-2 text-[15px] text-[#cfc8bb]">Then take a breath, read the card again, and give the next one.</p>
-          <button type="button" onClick={start} className={`mt-5 ${btn}`}>Start</button>
-        </div>
-      )}
-      {step === "sit" && (
-        <div className="text-center">
-          <div className="relative mx-auto h-[150px] w-[150px]">
-            <svg viewBox="0 0 120 120" className="h-full w-full -rotate-90"><circle cx="60" cy="60" r="54" fill="none" stroke="rgba(221,201,142,.18)" strokeWidth="5" />
-              <circle cx="60" cy="60" r="54" fill="none" stroke="#DDC98E" strokeWidth="5" strokeLinecap="round" strokeDasharray={ring} strokeDashoffset={ring * (1 - left / SOLO_SECONDS)} /></svg>
-            <span className="absolute inset-0 flex items-center justify-center font-display text-[30px] font-light">{mm}</span>
+    <div className="mt-2" data-testid="sn-own">
+      <div className="rounded-3xl border border-[#DDC98E]/40 bg-[rgba(13,53,53,0.35)] p-5">
+        <OwnVoice />
+        <div className="mt-4"><PracticeTimer minutes={[5]} dark solo label="Your five minutes" onDone={() => setTimeUp(true)} /></div>
+        <details className="mt-4 rounded-2xl border border-[#DDC98E]/15 px-4 py-3">
+          <summary className="cursor-pointer text-center text-[11px] uppercase tracking-[0.2em] text-[#DDC98E]">How to work with it alone</summary>
+          <div className="mt-3 space-y-2 text-[15px] leading-relaxed text-[#cfc8bb]">
+            {HOW_ALONE.map((l) => <p key={l}>{l}</p>)}
           </div>
-          <p className="mt-4 font-display text-[18px] font-light">Write one answer, or speak it out loud. Just one.</p>
-          <p className="mt-2 min-h-[24px] text-[14px] tracking-[.04em] text-[#EEDE80]" aria-live="polite">{breath}</p>
-          <button type="button" onClick={() => { setAnswers((x) => x + 1); setBreath("Take a breath. Read the card again."); setTimeout(() => setBreath(""), 4000); }} className={`mt-2 ${btn}`}>Next answer</button>
-          <p className="mt-3 text-[14px] text-[#a79f90]">Answers so far: <b className="font-medium text-[#DDC98E]">{answers}</b></p>
-          <div className="mt-3 flex items-center justify-center gap-2 text-[12px] text-[#a79f90]">My voice <SpeedChip rate={rate} onTap={cycle} /></div>
-        </div>
-      )}
-      {step === "end" && (
-        <div className="text-center">
-          <p className="font-display text-[30px] font-light">Pause.</p>
-          <p className="mt-2 text-[15px] text-[#cfc8bb]">Notice how your body feels. Often there&rsquo;s a little more breath, more space, more aliveness.</p>
-          {answers > 0 && <p className="mt-4"><b className="font-display text-[36px] font-light text-[#DDC98E]">{answers}</b><span className="ml-2 text-[14px] text-[#a79f90]">answers on one card</span></p>}
-          <p className="mt-3 text-[14px] text-[#cfc8bb]">Now write the one that matters most below.</p>
-        </div>
-      )}
+        </details>
       </div>
-      <details className="mt-5 rounded-2xl border border-[#DDC98E]/15 px-4 py-3">
-        <summary className="cursor-pointer text-center text-[11px] uppercase tracking-[0.2em] text-[#DDC98E]">How to work with it alone</summary>
-        <div className="mt-3 space-y-2 text-[15px] leading-relaxed text-[#cfc8bb]">
-          {HOW_ALONE.map((l) => <p key={l}>{l}</p>)}
+      <p className="mt-6 font-display text-[20px] font-light">Answer {answers.length + 1}</p>
+      <p className="text-[13px] text-[#8f877a]">Write one, add it, then the next. Fifteen or twenty things often come up.</p>
+      <textarea value={draft} onChange={(e) => setDraft(e.target.value)} rows={3} placeholder="Write one answer here." aria-label={`Answer ${answers.length + 1}`}
+        className="mt-2 w-full rounded-2xl border border-[#DDC98E]/40 bg-[rgba(13,53,53,0.35)] p-4 text-[16px] leading-relaxed text-[#f1ece2] outline-none placeholder:text-[#8f877a] focus:border-[#DDC98E]" />
+      <p className="min-h-[22px] text-center text-[14px] text-[#EEDE80]" aria-live="polite">{breath}</p>
+      <button type="button" data-testid="sn-add" disabled={!draft.trim()} onClick={add} className="inline-flex min-h-[52px] w-full items-center justify-center rounded-full border-[1.5px] border-[#DDC98E] font-display text-[16px] text-[#DDC98E] disabled:opacity-40">Add it, and write the next one</button>
+      {answers.length > 0 && (
+        <ol className="mt-4 grid gap-2" data-testid="sn-answer-list">
+          {answers.map((t, i) => (
+            <li key={i} className="flex items-start gap-3 rounded-2xl border border-[#DDC98E]/20 bg-[rgba(13,53,53,0.3)] px-4 py-2.5 text-[15px] text-[#f1ece2]">
+              <span className="font-display text-[#DDC98E]">{i + 1}</span><span className="flex-1">{t}</span>
+              <button type="button" aria-label={`Remove answer ${i + 1}`} onClick={() => remove(i)} className="text-[#8f877a]">×</button>
+            </li>
+          ))}
+        </ol>
+      )}
+      <p className="mt-3 text-[13px] text-[#8f877a]">Saved on this phone. Only you see these.</p>
+      {timeUp ? (
+        <div className="mt-6 text-center" data-testid="sn-end">
+          <p className="font-display text-[28px] font-light">Pause.</p>
+          <p className="mt-1 text-[15px] text-[#cfc8bb]">Notice how your body feels. Often there&rsquo;s a little more breath, more space, more aliveness.</p>
+          {answers.length > 0 && <p className="mt-3"><b className="font-display text-[34px] font-light text-[#DDC98E]">{answers.length}</b><span className="ml-2 text-[14px] text-[#a79f90]">answers on one card</span></p>}
+          <button type="button" data-testid="sn-did-it" disabled={answers.length === 0 && !draft.trim()} onClick={() => { add(); onDone(); }}
+            className="mt-4 w-full rounded-full bg-[#EEDE80] py-4 text-sm font-medium uppercase tracking-[0.22em] text-[#070707] shadow-[0_0_40px_-6px_rgba(238,222,128,.7)] disabled:opacity-30 disabled:shadow-none">I did it · Day {day}</button>
         </div>
-      </details>
+      ) : (
+        <p className="mt-5 text-center text-[13px] text-[#8f877a]">When the five minutes ring, you can mark the day done.</p>
+      )}
     </div>
   );
 }
@@ -387,7 +377,7 @@ export function SacredNoToday(props: {
                   <div key={d} className="rounded-2xl border border-[#DDC98E]/20 bg-white/[0.03] p-5">
                     <p className="text-[10px] uppercase tracking-[0.25em] text-[#DDC98E]">Day {d}</p>
                     <p className="mt-1 text-sm text-[#F6EFE0]/60">{SN_DAY_QUESTION[Number(d)]}</p>
-                    <p className="mt-3 whitespace-pre-wrap font-display text-[17px] font-light italic">{a}</p>
+                    <ol className="mt-3 grid gap-1">{splitAnswers(a).map((t, i) => <li key={i} className="font-display text-[17px] font-light italic"><span className="mr-2 not-italic text-[#DDC98E]">{i + 1}</span>{t}</li>)}</ol>
                   </div>
                 ))}
               </div>
@@ -458,13 +448,7 @@ export function SacredNoDay(props: {
           <section className="mt-8">
             <p className="text-center text-[10px] uppercase tracking-[0.3em] text-[#DDC98E]">Today&rsquo;s card</p>
             <SacredNoCard prompt={SN_DAY_QUESTION[day]} />
-            <OnYourOwn />
-            <p className="mt-7 text-[10px] uppercase tracking-[0.3em] text-[#DDC98E]">Your answer · only you see this</p>
-            <textarea value={answer} onChange={(e) => setAnswer(e.target.value)} rows={4} placeholder="Write it here, or say it out loud and write one line."
-              className="mt-2 w-full resize-y rounded-2xl border border-[#DDC98E]/25 bg-[#14120e] p-4 font-display text-[17px] font-light italic text-[#F6EFE0] placeholder:text-[#F6EFE0]/30" />
-            <p className="mt-4 text-center text-xs text-[#F6EFE0]/50">Done when you&rsquo;ve written one line.</p>
-            <button type="button" disabled={!answer.trim()} onClick={async () => { await onDone(); chime(); go(3); }}
-              className="mt-4 w-full rounded-full bg-[#EEDE80] py-4 text-sm font-medium uppercase tracking-[0.22em] text-[#070707] shadow-[0_0_40px_-6px_rgba(238,222,128,.7)] disabled:opacity-30 disabled:shadow-none">I did it</button>
+            <SnSitting day={day} value={answer} setValue={setAnswer} onDone={async () => { await onDone(); chime(); go(3); }} />
           </section>
         )}
 
@@ -482,7 +466,7 @@ export function SacredNoDay(props: {
             {answer.trim() && (
               <div className="mt-6 rounded-2xl border border-[#DDC98E]/15 bg-white/[0.02] p-4 text-left">
                 <p className="text-[10px] uppercase tracking-[0.25em] text-[#DDC98E]">You wrote</p>
-                <p className="mt-2 whitespace-pre-wrap font-display text-[16px] font-light italic">{answer}</p>
+                <ol className="mt-2 grid gap-1">{splitAnswers(answer).map((t, i) => <li key={i} className="font-display text-[16px] font-light italic"><span className="mr-2 not-italic text-[#DDC98E]">{i + 1}</span>{t}</li>)}</ol>
               </div>
             )}
             {extra && day === 7 ? <div className="mt-6 text-left">{extra}</div> : null}
