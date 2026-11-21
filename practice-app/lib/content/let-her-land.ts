@@ -76,7 +76,7 @@ export const COPY = {
   // 21 Nov 2026 (Juliette: "why a free practice? It is a whole bundle"). The cover now matches the bundle mockup.
   coverKicker: "Your gift in the Already Her bundle",
   coverInsideHead: "All in one app on your phone",
-  coverInside: ["The Reinvention Journal", "Touch Base, guided by my voice", "One grounding touch", "My 17-minute hypnosis and 21 days of prompts"],
+  coverInside: ["My 17-minute hypnosis", "The Reinvention Journal", "Touch Base with my voice, and one touch from my Touch Map", "21 days of cards"],
   coverGift: "+ The Scrumptiousness Journal, all 103 pages",
   title: "Let Her Land",
   tagline: "Meet the woman you're becoming on the page. Then let her land in your body.",
@@ -103,6 +103,26 @@ export const COPY = {
   doorAfterJournal: "You've just written what you're stopping. These seven days teach your body to hold that no.",
   doorButton: "Start it for £17 · usually £55 →",
   doorButtonFull: "Start it for £55 →",
+  // ---- 21 Nov 2026 rebuild: one page per part ----
+  landHead: "My 17-minute hypnosis",
+  landLine: "Find somewhere you won't be disturbed. Headphones help. Lie down or sit back, and let my voice do the rest.",
+  landButton: "I've listened ✓",
+  landDone: "You've landed. Come back to it any time.",
+  meetButton: "I've met her ✓",
+  meetDone: "You've met her. Come back and add to it any time.",
+  tbSub: "Tap my photo and practise along with me. 5 minutes, every day.",
+  tbDaysHead: "Your seven days",
+  tbButton: "I did Touch Base today ✓",
+  tbDoneToday: "✓ Done for today. See you tomorrow.",
+  wristHead: "Then one touch from my Touch Map",
+  wristSub: "Tap my photo. Sleeves up, palm up.",
+  seenTrackHead: (n: number) => `Your 21 days · ${n} done`,
+  seenTrackLine: "One card a day. Tap a gold day to read what you wrote.",
+  seenAnswerHead: "Your answer · only you see this",
+  backToParts: "Back to all four parts",
+  moreKicker: "When you're ready",
+  moreTitle: "Want to do more with me?",
+  moreLine: "Everything above is yours, free. These are for when you want to go further.",
   confKicker: "A taste of what's next",
   confTitle: "Scrumptious Confessions",
   confLine: "People tell me they could listen to my voice for hours. So I built an app where you can.",
@@ -147,7 +167,7 @@ export const COPY = {
   eyesStart: "Close your eyes",
   eyesSub: "2 minutes",
   eyesSkip: "Skip",
-  eyesRunning: "Eyes closed. A soft chime tells you when it's time.",
+  eyesRunning: "Eyes closed. Let the music hold you. A soft chime tells you when it's time.",
   eyesOpen: "Open your eyes. Take your time.",
   sensesNext: "Next sense →",
   sensesBefore: "What you wrote before",
@@ -163,10 +183,11 @@ export const COPY = {
 };
 
 export const PARTS = [
-  { n: 1, name: "Meet her", line: "Write to the woman you are becoming.", photo: PHOTOS.meetHer.src, pos: "50% 25%" },
-  { n: 2, name: "Anchor her", line: "Learn Touch Base, then try it for 7 days.", photo: PHOTOS.emblem.src, pos: "50% 50%" },
-  { n: 3, name: "The grounding touch", line: "Do one grounding touch, led by my voice.", photo: PHOTOS.grounding.src, pos: "50% 62%" },
-  { n: 4, name: "Be seen", line: "Listen, then answer one prompt a day for 21 days.", photo: PHOTOS.beSeen.src, pos: "70% 40%" },
+  // 21 Nov 2026 (Juliette): the hypnosis comes first, then Meet her. Touch Base and one Touch Map touch together.
+  { n: 1, name: "Land", line: "Start here. My 17-minute hypnosis.", photo: PHOTOS.beSeen.src, pos: "70% 40%" },
+  { n: 2, name: "Meet her", line: "Write to the woman you are becoming.", photo: PHOTOS.meetHer.src, pos: "50% 25%" },
+  { n: 3, name: "Anchor her", line: "Touch Base with my voice for 7 days, then one touch from my Touch Map.", photo: PHOTOS.emblem.src, pos: "50% 50%" },
+  { n: 4, name: "Be seen", line: "One card a day for 21 days.", photo: PHOTOS.grounding.src, pos: "50% 62%" },
 ] as const;
 
 

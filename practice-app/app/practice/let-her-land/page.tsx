@@ -6,7 +6,7 @@
 // stays on her phone; only anonymous counts leave it. Her words live in
 // lib/content/let-her-land.ts, never retyped here.
 
-import { readSpeed } from "@/lib/voice-speed";
+import { nextSpeed, readSpeed, saveSpeedFor } from "@/lib/voice-speed";
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { BITE_CSS, HomePrompt, MuteNote, Photo, StepBar, Voice, read, write } from "@/components/BiteKit";
@@ -456,11 +456,17 @@ function DesireCard({ c, i, onDesire }: { c: Cmp; i: number; onDesire: (v: strin
 }
 
 /** R18. "Close your eyes": two minutes, soft chime, can be skipped, never blocks Next. */
+const SCREEN_PHOTOS = ["bouquet.jpg", "feather-teal-mid.jpg", "fireplace-flowers.jpg", "silk-turquoise.jpg", "flamingo.jpg", "room-flowers.jpg", "feather-teal-dark.jpg", "vases.jpg", "silk-black-turquoise.jpg", "garden.jpg", "purple-iris.jpg", "feather-turquoise-flat.jpg", "pink-flowers.jpg", "red-bowl.jpg"];
+/** 21 Nov 2026 (Juliette): "why don't we have a song playing, one of the ones I use in Scrumptious Confessions". */
+const EYES_MUSIC = "/let-her-land/audio/eyes-music.m4a";
+
 function EyesTimer() {
   const [st, setSt] = useState<"idle" | "run" | "done">("idle");
   const [left, setLeft] = useState(EYES_SECONDS);
   const endAt = useRef(0);
   const actx = useRef<AudioContext | null>(null);
+  const music = useRef<HTMLAudioElement | null>(null);
+  const stopMusic = () => { try { music.current?.pause(); } catch {} };
   const chime = () => {
     const ctx = actx.current;
     if (!ctx) return;
@@ -486,12 +492,13 @@ function EyesTimer() {
     const id = setInterval(() => {
       const r = Math.max(0, Math.round((endAt.current - Date.now()) / 1000));
       setLeft(r);
-      if (r === 0) { clearInterval(id); chime(); try { navigator.vibrate?.([150, 80, 150]); } catch {} setSt("done"); }
+      if (r === 0) { clearInterval(id); stopMusic(); chime(); try { navigator.vibrate?.([150, 80, 150]); } catch {} setSt("done"); }
     }, 250);
     return () => clearInterval(id);
   }, [st]);
-  useEffect(() => () => { try { actx.current?.close(); } catch {} }, []);
+  useEffect(() => () => { try { actx.current?.close(); } catch {} stopMusic(); }, []);
   const start = () => {
+    try { if (!music.current) music.current = new Audio(EYES_MUSIC); music.current.currentTime = 0; music.current.volume = 0.8; void music.current.play().catch(() => {}); } catch { /* silent is fine */ }
     try {
       const AC = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
       actx.current = actx.current ?? new AC();
@@ -516,7 +523,7 @@ function EyesTimer() {
             <span className="absolute inset-0 flex items-center justify-center font-display text-[32px] font-light" data-testid="eyes-time">{mm}</span>
           </div>
           <p className="mt-3 text-[15px] text-[#cfc8bb]">{COPY.eyesRunning}</p>
-          <button type="button" data-testid="eyes-skip" onClick={() => setSt("done")} className="lhl-press mt-2 inline-flex min-h-[44px] items-center text-[14px] text-[#DDC98E] underline underline-offset-4">{COPY.eyesSkip}</button>
+          <button type="button" data-testid="eyes-skip" onClick={() => { stopMusic(); setSt("done"); }} className="lhl-press mt-2 inline-flex min-h-[44px] items-center text-[14px] text-[#DDC98E] underline underline-offset-4">{COPY.eyesSkip}</button>
         </div>
       )}
       {st === "done" && (
@@ -1092,6 +1099,184 @@ function Part4({ idx, vis, setAnswer, markDone, doneDays, curDay, opensIn }: {
   );
 }
 
+
+/* =====================================================================================================
+   21 Nov 2026 REBUILD (Juliette: "way too many pages, not streamlined", "do it like Confessions").
+   Each part is ONE page: 1 Land (the hypnosis) · 2 Meet her (her journal, short) · 3 Anchor her
+   (Touch Base with her voice + 7 dots, then one touch from the Touch Map) · 4 Be seen (21 cards, tracker).
+   ===================================================================================================== */
+const TB_VOICE = "/touch-base/touch-base-guided-music.m4a";
+const WRIST_VOICE = "/touch-map/audio/wrist.m4a";
+const MEET_QS: { q: number; tip?: number; eyes?: boolean }[] = [{ q: 3 }, { q: 4, tip: 5 }, { q: 7, eyes: true }, { q: 15 }, { q: 16 }, { q: 24 }];
+
+function RoundVoice({ src, img, label, sub }: { src: string; img: string; label: string; sub: string }) {
+  const ref = useRef<HTMLAudioElement | null>(null);
+  const [playing, setPlaying] = useState(false);
+  const [p, setP] = useState(0);
+  const [rate, setRate] = useState(1);
+  useEffect(() => { setRate(readSpeed(src)); }, [src]); // eslint-disable-line react-hooks/set-state-in-effect
+  useEffect(() => { if (ref.current) ref.current.playbackRate = rate; }, [rate]);
+  return (
+    <div className="flex items-center gap-4">
+      <div className="flex shrink-0 flex-col items-center gap-2">
+        <button type="button" aria-label={playing ? "Pause" : label} onClick={() => { const a = ref.current; if (!a) return; if (a.paused) { a.playbackRate = rate; a.play().catch(() => {}); } else a.pause(); }} className="relative h-[84px] w-[84px] rounded-full">
+          <Image src={img} alt="" width={84} height={84} className="h-[84px] w-[84px] rounded-full object-cover" />
+          <svg viewBox="0 0 36 36" className="absolute inset-0 h-full w-full -rotate-90" aria-hidden="true">
+            <circle cx="18" cy="18" r="16.5" fill="none" stroke="rgba(221,201,142,0.35)" strokeWidth="2" />
+            <circle cx="18" cy="18" r="16.5" fill="none" stroke="#DDC98E" strokeWidth="2" strokeDasharray={`${p * 1.037} 200`} />
+          </svg>
+          <span className="absolute -bottom-1 -right-1 flex h-8 w-8 items-center justify-center rounded-full bg-[#DDC98E] text-[12px] text-[#070707] shadow">{playing ? "❚❚" : "▶"}</span>
+          <audio ref={ref} src={src} preload="none" onPlay={() => setPlaying(true)} onPause={() => setPlaying(false)} onEnded={() => { setPlaying(false); setP(0); }}
+            onLoadedMetadata={(e) => { e.currentTarget.playbackRate = rate; }}
+            onTimeUpdate={(e) => { const a = e.currentTarget; if (a.duration) setP((a.currentTime / a.duration) * 100); }} />
+        </button>
+        <button type="button" onClick={() => { const v = nextSpeed(src, rate); setRate(v); saveSpeedFor(src, v); }} aria-label={`Speed ${rate}x. Tap to change`} className="min-h-[34px] min-w-[56px] rounded-full border border-[#DDC98E]/50 px-2 text-[12px] text-[#DDC98E]">{rate}×</button>
+      </div>
+      <div>
+        <p className="font-display text-[22px] font-light leading-tight">{label}</p>
+        <p className="mt-1 text-[14px] text-[#a79f90]">{sub}</p>
+      </div>
+    </div>
+  );
+}
+
+function Banner({ n }: { n: number }) {
+  const b = SCREEN_PHOTOS[(n * 3) % SCREEN_PHOTOS.length];
+  return (
+    <span className="relative mb-6 block w-full overflow-hidden rounded-3xl border-[1.5px] border-[rgba(221,201,142,0.35)]" style={{ aspectRatio: "16 / 8" }} data-testid="screen-photo">
+      <Image src={`/let-her-land/journal/${b}`} alt="" fill sizes="(max-width: 768px) 100vw, 672px" className="object-cover" />
+      <span className="absolute inset-0 bg-gradient-to-t from-[#070707]/50 to-transparent" />
+    </span>
+  );
+}
+
+function PartHead({ n }: { n: number }) {
+  return (
+    <>
+      <Banner n={n} />
+      <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-[#DDC98E]">Part {n}</p>
+      <h1 className="mt-1 font-display text-[34px] font-light leading-tight">{PARTS[n - 1].name}</h1>
+      <p className="mt-2 text-[16px] leading-relaxed text-[#cfc8bb]">{PARTS[n - 1].line}</p>
+    </>
+  );
+}
+
+const card = "mt-6 rounded-3xl border-[1.5px] border-[rgba(221,201,142,0.4)] bg-[rgba(13,53,53,0.35)] p-5";
+const goldBtn = "mt-5 inline-flex min-h-[54px] w-full items-center justify-center rounded-full bg-[#DDC98E] font-display text-[17px] font-medium text-[#070707]";
+
+function LandPage({ done, onDone }: { done: boolean; onDone: () => void }) {
+  return (
+    <section data-testid="part-1-page">
+      <PartHead n={1} />
+      <div className={card}>
+        <p className="text-[11px] uppercase tracking-[0.2em] text-[#DDC98E]">{COPY.landHead}</p>
+        <p className="mt-2 text-[15px] text-[#cfc8bb]">{COPY.landLine}</p>
+        <MuteNote />
+        <Slot src={AUDIO.hypnosis} label="The hypnosis" />
+      </div>
+      {done ? <p className="mt-5 text-center font-display text-[20px] text-[#DDC98E]">✓ {COPY.landDone}</p> : <button type="button" data-testid="land-done" onClick={onDone} className={goldBtn}>{COPY.landButton}</button>}
+    </section>
+  );
+}
+
+function MeetPage({ journal, setAnswer, done, onDone }: { journal: Record<string, string>; setAnswer: (k: string, v: string) => void; done: boolean; onDone: () => void }) {
+  const groups: LGroup[] = [{ group: "Her", rows: MEET_QS.map(({ q }) => ({ label: JOURNAL[q].t, text: (journal[`q${q}`] ?? "").trim() })).filter((r) => r.text) }].filter((g) => g.rows.length);
+  return (
+    <section data-testid="part-2-page">
+      <PartHead n={2} />
+      <p className="mt-5 text-[16px] leading-relaxed text-[#cfc8bb]">{JOURNAL[0].t}</p>
+      {MEET_QS.map(({ q, tip, eyes }, i) => (
+        <div key={q} className={card}>
+          <p className="text-[11px] uppercase tracking-[0.2em] text-[#DDC98E]">{i + 1} of {MEET_QS.length}</p>
+          {eyes && <><p className="mt-2 text-[16px] leading-relaxed text-[#cfc8bb]">{JOURNAL[6].t}</p><EyesTimer /></>}
+          <p className="mt-2 font-display text-[21px] font-light leading-snug">{JOURNAL[q].t}</p>
+          {tip !== undefined && <p className="mt-2 border-l-2 border-[#DDC98E] pl-3 text-[14px] text-[#cfc8bb]">{JOURNAL[tip].t.replace(/^TIP:\s*/, "")}</p>}
+          <Box id={`lhl-q${q}`} value={journal[`q${q}`] ?? ""} onChange={(v) => setAnswer(`q${q}`, v)} rows={4} />
+        </div>
+      ))}
+      {groups.length > 0 && <div className="mt-6"><SaveImage groups={groups} /></div>}
+      {done ? <p className="mt-5 text-center font-display text-[20px] text-[#DDC98E]">✓ {COPY.meetDone}</p> : <button type="button" data-testid="meet-done" onClick={onDone} className={goldBtn}>{COPY.meetButton}</button>}
+    </section>
+  );
+}
+
+function AnchorPage({ log, saveEntry, landed, setLanded }: { log: Entry[]; saveEntry: (e: Entry) => void; landed: Landed; setLanded: (v: Landed) => void }) {
+  const days = Array.from(new Set(log.map((e) => e.d)));
+  const today = new Date().toISOString().slice(0, 10);
+  const doneToday = days.includes(today);
+  return (
+    <section data-testid="part-3-page">
+      <PartHead n={3} />
+      <div className={card}>
+        <RoundVoice src={TB_VOICE} img={PHOTOS.emblem.src} label="Touch Base, with me" sub={COPY.tbSub} />
+        <p className="mt-5 text-[11px] uppercase tracking-[0.2em] text-[#DDC98E]">{COPY.tbDaysHead}</p>
+        <div className="mt-3 grid grid-cols-7 gap-1.5" data-testid="tb-dots">
+          {Array.from({ length: 7 }, (_, i) => (
+            <span key={i} className={`flex aspect-square items-center justify-center rounded-full border font-display text-[14px] ${i < days.length ? "border-[#DDC98E] bg-[#DDC98E] text-[#070707]" : i === days.length ? "border-[#DDC98E] text-[#DDC98E]" : "border-[#DDC98E]/25 text-[#8f877a]"}`}>{i < days.length ? "✓" : i + 1}</span>
+          ))}
+        </div>
+        {doneToday ? <p className="mt-4 text-center text-[15px] text-[#DDC98E]">{COPY.tbDoneToday}</p> : <button type="button" data-testid="tb-tick" onClick={() => saveEntry({ d: today, slot: "am", b: 0, a: 0 })} className={goldBtn}>{COPY.tbButton}</button>}
+      </div>
+      <div className={card}>
+        <p className="text-[11px] uppercase tracking-[0.2em] text-[#DDC98E]">{COPY.wristHead}</p>
+        <div className="mt-3"><RoundVoice src={WRIST_VOICE} img="/how-to-feel-like-a-woman/juliette-gold.jpg" label="Your wrist" sub={COPY.wristSub} /></div>
+        <p className="mt-5 text-center font-display text-[20px] font-light">How did it land?</p>
+        <div className="mt-3 grid grid-cols-3 gap-2.5" role="group" aria-label="How did it land?">
+          {([["yes", "Yes"], ["maybe", "Maybe"], ["no", "No"]] as const).map(([id, label]) => (
+            <button key={id} type="button" data-testid={`land-${id}`} aria-pressed={landed === id} onClick={() => setLanded(id)}
+              className={`min-h-[64px] rounded-2xl border-[1.5px] font-display text-[19px] font-light ${landed === id ? "border-[#EEDE80] bg-[#DDC98E] text-[#070707]" : "border-[#DDC98E]/45 text-[#f1ece2]"}`}>{label}</button>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function SeenPage({ vis, setAnswer, markDone, doneDays, curDay, opensIn }: { vis: Vis; setAnswer: (day: number, v: string) => void; markDone: (day: number) => void; doneDays: number; curDay: number; opensIn: string }) {
+  const [look, setLook] = useState<number | null>(null);
+  const prompt = PROMPTS.find((p) => p.day === curDay);
+  const seen = look ? PROMPTS.find((p) => p.day === look) : null;
+  return (
+    <section data-testid="part-4-page">
+      <PartHead n={4} />
+      <p className="mt-6 text-[11px] uppercase tracking-[0.2em] text-[#DDC98E]">{COPY.seenTrackHead(doneDays)}</p>
+      <div className="mt-3 grid grid-cols-7 gap-1.5" data-testid="seen-dots">
+        {PROMPTS.map((p) => {
+          const isDone = p.day <= doneDays;
+          const isToday = p.day === curDay;
+          return (
+            <button key={p.day} type="button" disabled={!isDone} onClick={() => setLook(look === p.day ? null : p.day)} aria-label={`Day ${p.day}`}
+              className={`flex aspect-square items-center justify-center rounded-full border font-display text-[13px] ${isDone ? "border-[#DDC98E] bg-[#DDC98E] text-[#070707]" : isToday ? "border-2 border-[#DDC98E] text-[#DDC98E]" : "border-[#DDC98E]/20 text-[#6f6a60]"}`}>{isDone ? "✓" : p.day}</button>
+          );
+        })}
+      </div>
+      <p className="mt-2 text-[13px] text-[#8f877a]">{COPY.seenTrackLine}</p>
+      {seen && (
+        <div className="mt-4 rounded-2xl border border-[#DDC98E]/25 p-4" data-testid="seen-look">
+          <p className="text-[11px] uppercase tracking-[0.2em] text-[#DDC98E]">Day {seen.day}</p>
+          <p className="mt-1 text-[15px] text-[#cfc8bb]">{seen.lines.map((l) => l.text).join(" ")}</p>
+          <p className="mt-2 whitespace-pre-wrap font-display text-[17px] font-light italic">{vis.a[seen.day] ?? ""}</p>
+        </div>
+      )}
+      {curDay > 0 && prompt ? (
+        <div className={card} data-testid="today">
+          <p className="text-[11px] uppercase tracking-[0.2em] text-[#DDC98E]" data-testid="today-day">Today · Day {prompt.day} of {PROMPTS.length}</p>
+          <TodayCard key={prompt.day} p={prompt} />
+          <p className="mt-5 text-[11px] uppercase tracking-[0.2em] text-[#DDC98E]">{COPY.seenAnswerHead}</p>
+          <Box id="lhl-today" value={vis.a[prompt.day] ?? ""} onChange={(v) => setAnswer(prompt.day, v)} rows={4} />
+          <button type="button" data-testid="mark-done" disabled={!(vis.a[prompt.day] ?? "").trim()} onClick={() => markDone(prompt.day)} className={`${goldBtn} !mt-1 disabled:opacity-35`}>{COPY.p4Done}</button>
+        </div>
+      ) : doneDays >= PROMPTS.length ? (
+        <div className={`${card} text-center`} data-testid="all-done"><span className="block font-display text-4xl font-light text-[#DDC98E]">✓</span><p className="mt-2 font-display text-[22px] font-light">{COPY.p4AllDone}</p></div>
+      ) : (
+        <div className={`${card} text-center`} data-testid="waiting"><span className="block font-display text-4xl font-light text-[#DDC98E]">✓</span><p className="mt-2 font-display text-[22px] font-light">Day {doneDays} done.</p><p className="mt-1 text-[16px] text-[#cfc8bb]" data-testid="opens">{COPY.p4Next(doneDays + 1, opensIn)}</p></div>
+      )}
+      <div className="mt-6"><KeepCopy text={visText(vis)} /></div>
+      <ConfessionsDoor />
+    </section>
+  );
+}
+
 // ---- Cover (before the gate): name, one line, the four parts ------------------------------------
 function Cover() {
   // R15: one tap to the name box. Scroll to it and focus it inside the tap so the keyboard comes up.
@@ -1217,6 +1402,12 @@ function Hub({ name, fracs, dones, resume, open, partLabel }: {
       <p className="mt-5 text-center text-[14px] text-[#a79f90]">{COPY.keepLine}</p>
       <HomePrompt slug="let-her-land" />
 
+      {/* 21 Nov 2026 (Juliette): "the main page should be her freebies, and then 'Want to do more?'" */}
+      <div className="mt-14 border-t border-[#DDC98E]/25 pt-10 text-center" data-testid="do-more">
+        <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-[#DDC98E]">{COPY.moreKicker}</p>
+        <h2 className="mt-2 font-display text-[30px] font-light leading-tight">{COPY.moreTitle}</h2>
+        <p className="mx-auto mt-2 max-w-[34ch] text-[15px] text-[#a79f90]">{COPY.moreLine}</p>
+      </div>
       <SacredNoDoor line={COPY.doorLine} testid="door" />
       <ConfessionsDoor />
     </section>
@@ -1288,14 +1479,20 @@ export default function LetHerLand() {
   const curDay = doneDays >= PROMPTS.length ? 0 : isOpen ? doneDays + 1 : 0;
   const opensIn = dueAt ? whenItOpens(dueAt) : "";
 
-  const p1Done = prog.d[0];
-  const dones = [p1Done, log.length > 0, landed !== "", doneDays >= PROMPTS.length];
+  const tbDays = new Set(log.map((e) => e.d)).size;
+  const meetFilled = MEET_QS.filter(({ q }) => (journal[`q${q}`] ?? "").trim()).length;
+  const dones = [prog.d[0], prog.d[1], tbDays > 0 || landed !== "", doneDays >= PROMPTS.length];
   const fracs = [
-    p1Done ? 1 : prog.r[0] / SCREENS[0],
-    dones[1] ? 1 : prog.r[1] / SCREENS[1],
-    dones[2] ? 1 : prog.r[2] / SCREENS[2],
+    prog.d[0] ? 1 : 0,
+    prog.d[1] ? 1 : meetFilled / MEET_QS.length,
+    Math.min(1, (tbDays + (landed ? 1 : 0)) / 8),
     doneDays / PROMPTS.length,
   ];
+  const markPart = (k: number) => {
+    setProg((p) => ({ ...p, d: p.d.map((v, n) => (n === k ? true : v)) }));
+    count("lhl_part_done", k + 1);
+    open(0, 0);
+  };
 
   const partLabel = (n: number) => `Part ${n}, ${PARTS[n - 1].name}`;
 
@@ -1354,15 +1551,11 @@ export default function LetHerLand() {
   };
 
   const inPart = opened && pos.part > 0;
-  const total = inPart ? SCREENS[pos.part - 1] : 0;
-  const last = inPart && pos.i === total - 1;
-  const nextLabel = !inPart ? "" : last ? COPY.finishPart : pos.part === 1 ? (pos.i === JOURNAL_SCREENS.length - 1 ? COPY.letterNext : "Next →") : `${SCREEN_NAMES[pos.part - 1][pos.i + 1]} →`;
-  const forward = () => (last ? finishPart(pos.part) : open(pos.part, pos.i + 1));
 
   return (
     <main className="wssr min-h-screen bg-[#070707] text-ffy-cream [background-image:radial-gradient(110%_55%_at_50%_0%,rgba(13,53,53,0.9)_0%,rgba(7,7,7,0)_70%)]">
       {/* Stays dark while her phone's saved progress is read, so there is no white flash. */}
-      <div className="mx-auto max-w-2xl px-5 pb-36 pt-6" style={{ visibility: ready ? "visible" : "hidden" }}>
+      <div className="mx-auto max-w-2xl px-5 pb-16 pt-6" style={{ visibility: ready ? "visible" : "hidden" }}>
         {!storageOk && opened && <p role="status" data-testid="storage-note" className="mb-5 rounded-2xl border border-[#EEDE80]/50 px-4 py-3 text-[14px] leading-relaxed text-[#f1ece2]">{COPY.storageBlocked}</p>}
 
         {!opened && <Cover />}
@@ -1372,31 +1565,18 @@ export default function LetHerLand() {
           {pos.part === 0 ? (
             <Hub name={name} fracs={fracs} dones={dones} resume={resume} open={open} partLabel={partLabel} />
           ) : (
-            <div data-testid={`part-view-${pos.part}`}>
-              <div className="mb-5 flex items-center justify-between gap-3">
-                <button type="button" data-testid="all-parts" onClick={() => open(0, 0)} className="inline-flex min-h-[44px] items-center rounded-full border-[1.5px] border-[rgba(221,201,142,0.55)] px-4 text-sm text-[#DDC98E]">{COPY.allParts}</button>
-                <span className="text-[11px] uppercase tracking-[0.2em] text-[#8f877a]" data-testid="screen-count">{pos.i + 1} of {total}</span>
-              </div>
-              <StepBar step={pos.i + 1} total={total} />
-              <div key={`${pos.part}-${pos.i}`} className="lhl-screen">
-                {pos.part === 1 && <Part1 idx={pos.i} journal={journal} r2={r2} act={act} setAnswer={(k, v) => setJournal((j) => ({ ...j, [k]: v }))} />}
-                {pos.part === 2 && <Part2 idx={pos.i} log={log} saveEntry={saveEntry} />}
-                {pos.part === 3 && <Part3 idx={pos.i} landed={landed} setLanded={setLanded} />}
-                {pos.part === 4 && <Part4 idx={pos.i} vis={vis} setAnswer={setVisAnswer} markDone={markDone} doneDays={doneDays} curDay={curDay} opensIn={opensIn} />}
-              </div>
+            <div data-testid={`part-view-${pos.part}`} className="lhl-screen">
+              <button type="button" data-testid="all-parts" onClick={() => open(0, 0)} className="mb-5 inline-flex min-h-[44px] items-center rounded-full border-[1.5px] border-[rgba(221,201,142,0.55)] px-4 text-sm text-[#DDC98E]">{COPY.allParts}</button>
+              {pos.part === 1 && <LandPage done={prog.d[0]} onDone={() => markPart(0)} />}
+              {pos.part === 2 && <MeetPage journal={journal} setAnswer={(k, v) => setJournal((j) => ({ ...j, [k]: v }))} done={prog.d[1]} onDone={() => markPart(1)} />}
+              {pos.part === 3 && <AnchorPage log={log} saveEntry={saveEntry} landed={landed} setLanded={setLanded} />}
+              {pos.part === 4 && <SeenPage vis={vis} setAnswer={setVisAnswer} markDone={markDone} doneDays={doneDays} curDay={curDay} opensIn={opensIn} />}
+              <button type="button" onClick={() => open(0, 0)} className="mt-10 inline-flex min-h-[48px] w-full items-center justify-center rounded-full border border-[#DDC98E]/50 text-[15px] text-[#DDC98E]">{COPY.backToParts}</button>
             </div>
           )}
         </FreeEmailGate>
       </div>
 
-      {inPart && (
-        <nav className="fixed inset-x-0 bottom-0 z-30 border-t border-[#DDC98E]/20 bg-[#070707]/92 px-4 pt-3 backdrop-blur" style={{ paddingBottom: "calc(12px + env(safe-area-inset-bottom))" }}>
-          <div className="mx-auto grid max-w-2xl grid-cols-[auto_1fr] items-center gap-2.5">
-            <button type="button" aria-label="Back" data-testid="back" onClick={() => (pos.i > 0 ? open(pos.part, pos.i - 1) : open(0, 0))} className="h-[52px] w-[52px] rounded-full border border-[#DDC98E]/40 text-lg text-[#DDC98E]">←</button>
-            <button type="button" data-testid="next" onClick={forward} className="h-[52px] truncate rounded-full bg-[#DDC98E] px-5 font-display text-[16px] font-medium text-[#070707]">{nextLabel}</button>
-          </div>
-        </nav>
-      )}
 
       <style>{BITE_CSS}</style>
       <style>{LHL_CSS}</style>
