@@ -105,7 +105,7 @@ export const COPY = {
   doorButtonFull: "Start it for £55 →",
   // ---- 21 Nov 2026 rebuild: one page per part ----
   landHead: "The Visibility Hypnosis & Attunement · 17 minutes",
-  landLine: "Find somewhere you won't be disturbed. Headphones help. Lie down or sit back, and let my voice do the rest.",
+  landLine: "Find somewhere you won't be disturbed. Headphones help. Lie down or sit back. I'll take you through Touch Base inside it, so your body learns it from the very start.",
   landButton: "I've listened ✓",
   landDone: "You've landed. Come back to it any time.",
   meetButton: "I've met her ✓",
