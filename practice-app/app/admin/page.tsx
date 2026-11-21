@@ -36,7 +36,7 @@ function GrantAccess({ onGranted }: { onGranted: () => void }) {
   const [email, setEmail] = useState("");
   const [deckType, setDeckType] = useState("31-touch-points");
   // 20 Nov 2026: a free month (e.g. Juliette's Scrumptious Stroking ladies) ends on its own after 30 days.
-  const [length, setLength] = useState<"forever" | "month">("forever");
+  const [length, setLength] = useState<"forever" | "month" | "week">("forever");
   const [busy, setBusy] = useState(false);
   const [result, setResult] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -123,9 +123,10 @@ function GrantAccess({ onGranted }: { onGranted: () => void }) {
 
         <label className="text-sm text-ffy-brown">
           For how long
-          <select value={length} onChange={(e) => setLength(e.target.value as "forever" | "month")} className="mt-1 w-full rounded-xl border border-ffy-border bg-white px-3 py-2 text-ffy-teal">
+          <select value={length} onChange={(e) => setLength(e.target.value as "forever" | "month" | "week")} className="mt-1 w-full rounded-xl border border-ffy-border bg-white px-3 py-2 text-ffy-teal">
             <option value="forever">Forever</option>
             <option value="month">One month free</option>
+            <option value="week">One week free</option>
           </select>
         </label>
 

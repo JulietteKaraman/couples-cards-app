@@ -70,10 +70,12 @@ export async function POST(req: Request) {
     // tellable from a real purchase in the user_decks row itself.
     // "One month free" (20 Nov 2026): access ends by itself after 30 days, nothing to remember.
     const month = body.length === "month";
-    const marker = month ? `admin-grant-month-${Date.now()}` : `admin-grant-${Date.now()}`;
+    // "One week free" (21 Nov 2026): Juliette gives guests a free week in return for a testimonial.
+    const week = body.length === "week";
+    const marker = month ? `admin-grant-month-${Date.now()}` : week ? `admin-grant-week-${Date.now()}` : `admin-grant-${Date.now()}`;
     // A free month given before doors open counts from doors open (Juliette 20 Nov 2026: her 4 ladies to Wed 23 Dec).
     const startMs = Math.max(Date.now(), Date.parse(`${DOORS_OPEN}T00:00:00Z`));
-    const expiresAt = month ? new Date(startMs + 30 * 86400 * 1000).toISOString() : undefined;
+    const expiresAt = month ? new Date(startMs + 30 * 86400 * 1000).toISOString() : week ? new Date(startMs + 7 * 86400 * 1000).toISOString() : undefined;
     const userId = await grantEntitlement(email, deckType, marker, undefined, expiresAt);
 
     // Read back what this person now holds, so the screen proves the grant

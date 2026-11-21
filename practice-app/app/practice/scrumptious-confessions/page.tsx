@@ -75,6 +75,10 @@ const TABS: { id: TabId; label: string }[] = [
 function Content() {
   const [feed, setFeed] = useState<Feed | null>(null);
   const [tab, setTab] = useState<TabId>("today"); // 20 Nov 2026: everyone lands on Today
+  // 21 Nov 2026: the "Build your first week" flow links straight in (?tab=library&topic=menopause).
+  useEffect(() => {
+    try { const t = new URLSearchParams(window.location.search).get("tab"); if (t === "library" || t === "card" || t === "yours" || t === "stories") setTab(t); } catch {} // eslint-disable-line react-hooks/set-state-in-effect
+  }, []);
   const top = useRef<HTMLDivElement>(null);
   // Doors open Mon 23 Nov 2026 (Juliette 19 Nov: "I do not want people in this week yet").
   // Before then members see one welcome; Juliette (admin) sees everything, to film and check.
@@ -288,12 +292,22 @@ const doorCls = "flex min-h-[132px] flex-col justify-between rounded-3xl border-
 function Library() {
   const { trial, paid } = useMembership();
   const [door, setDoor] = useState<Door | null>(null);
+  const [linkTopic, setLinkTopic] = useState<string | undefined>(undefined);
+  // Opened from a link with ?topic=<id> (the first-week plan): go straight to that shelf.
+  useEffect(() => {
+    try {
+      const t = new URLSearchParams(window.location.search).get("topic");
+      if (!t || !TOPICS.some((x) => x.id === t)) return;
+      if (t === "menopause") setDoor("menopause"); // eslint-disable-line react-hooks/set-state-in-effect
+      else { setLinkTopic(t); setDoor("answers"); }
+    } catch {}
+  }, []);
   if (door) {
     const d = DOORS.find((x) => x.id === door)!;
     return (
       <>
-        <button type="button" onClick={() => setDoor(null)} className="mt-6 min-h-[44px] text-[15px] text-[#DDC98E]">&larr; Back to the library</button>
-        {door === "touchmap" ? <TouchMapMonth /> : <Answers key={door} paid={paid} trial={trial} start={d.shelves[0]} shelves={d.shelves} startTopic={d.topic} />}
+        <button type="button" onClick={() => { setDoor(null); setLinkTopic(undefined); }} className="mt-6 min-h-[44px] text-[15px] text-[#DDC98E]">&larr; Back to the library</button>
+        {door === "touchmap" ? <TouchMapMonth /> : door === "smut" ? <SmutStories /> : <Answers key={door} paid={paid} trial={trial} start={d.shelves[0]} shelves={d.shelves} startTopic={d.topic ?? (door === "answers" ? linkTopic : undefined)} />}
       </>
     );
   }
@@ -372,7 +386,7 @@ const TOPICS: { id: string; label: string; words: string[] }[] = [
 ];
 // The library's doors (Juliette 19 Nov 2026: "the library is really not very clear at all").
 // Nobody lands on a list: they pick a door first. The Journal door is a link of its own.
-type Door = "meditations" | "answers" | "menopause" | "touchmap";
+type Door = "meditations" | "answers" | "menopause" | "touchmap" | "smut";
 // 20 Nov 2026, Juliette: "if I can't even find it, how the hell are they going to find it?" Menopause and
 // The Touch Map get doors of their own, not buried in a topic chip or at the bottom of Today.
 const DOORS: { id: Door; title: string; line: string; shelves: Shelf[]; topic?: string }[] = [
@@ -380,7 +394,31 @@ const DOORS: { id: Door; title: string; line: string; shelves: Shelf[]; topic?: 
   { id: "meditations", title: "Meditations", line: "A new one every Friday", shelves: ["meditations"] },
   { id: "menopause", title: "Menopause", line: "And a changing body", shelves: ["answers"], topic: "menopause" },
   { id: "touchmap", title: "The Touch Map", line: "One place a month, in my voice", shelves: [] },
+  // 21 Nov 2026, Juliette: "put them in, I already have them on the women's app". The late night shelf is SMUT STORIES (canon).
+  { id: "smut", title: "Smut Stories", line: "Late at night, in my voice", shelves: [] },
 ];
+// Smut Stories: her recorded fiction, in her voice (first recorded for How to Feel Like a Woman, Nov 2026).
+const SMUT: { title: string; line: string; src: string; minutes: number }[] = [
+  { title: "The Piano Tuner", line: "He comes every spring. This year she stays in the room.", src: "/scrumptious-confessions/audio/smut-the-piano-tuner.m4a", minutes: 14 },
+  { title: "The Dressmaker", line: "A dress for her daughter's wedding, and hands that take their time.", src: "/scrumptious-confessions/audio/smut-the-dressmaker.m4a", minutes: 10 },
+];
+function SmutStories() {
+  return (
+    <section className="mt-6">
+      <h2 className="font-display text-[28px] font-light leading-tight">Smut Stories</h2>
+      <p className="mt-2 text-[15px] text-[#a79f90]">Late at night, in my voice. Headphones in.</p>
+      <div className="mt-6 space-y-6">
+        {SMUT.map((x) => (
+          <div key={x.src} className="rounded-2xl border border-[#DDC98E]/30 p-4">
+            <p className="mb-3 text-[14px] text-[#cfc8bb]">{x.line} <span className="text-[#8f877a]">&middot; {x.minutes} min</span></p>
+            <SpeedPlayer src={x.src} label={x.title} />
+          </div>
+        ))}
+      </div>
+      <p className="mt-6 text-[13px] text-[#8f877a]">More stories are on their way.</p>
+    </section>
+  );
+}
 // Five to start with. Juliette can swap these for her own five favourites.
 const STARTERS = ["why-dont-i-feel-anything", "never-in-the-mood-but-enjoy-it", "why-can-i-feel-it-with-someone-else", "sleep-in-same-bed-never-touch", "why-doesnt-my-wife-want-me"];
 // Website pages about finding a coach, not members' questions: kept on the site, left out of the library.

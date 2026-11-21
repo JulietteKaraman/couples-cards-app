@@ -13,7 +13,7 @@ const APP = "https://app.feelfullyyou.com/practice/scrumptious-confessions";
 
 let priceCache: string | null = null;
 
-export async function GET() {
+export async function GET(req: Request) {
   const key = process.env.STRIPE_SECRET_KEY;
   if (!key) return NextResponse.redirect(SALES, 303);
   const stripe = new Stripe(key, { apiVersion: "2026-02-25.clover" });
@@ -25,8 +25,11 @@ export async function GET() {
     if (!priceCache) throw new Error("no price on the payment link");
     const now = Math.floor(Date.now() / 1000);
     const trialEnd = Math.max(now + 7 * 24 * 60 * 60 + 60 * 60, FIRST_CHARGE);
+    // 21 Nov 2026: the "Build your first week" flow already has their email, so Stripe fills it in.
+    const email = (new URL(req.url).searchParams.get("email") || "").trim();
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
+      ...(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? { customer_email: email } : {}),
       line_items: [{ price: priceCache, quantity: 1 }],
       payment_method_collection: "always",
       // The site's webhook sends the welcome email by payment link; this names the one it stands for.
