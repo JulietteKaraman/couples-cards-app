@@ -241,7 +241,7 @@ function playSolo(src: string) {
   try { soloAudio?.pause(); soloAudio = new Audio(src); if (!/bell/.test(src)) soloAudio.playbackRate = readSpeed(src); soloAudio.play().catch(() => {}); } catch {}
 }
 
-function TodayCard({ p }: { p: (typeof PROMPTS)[number] }) {
+function TodayCard({ p, solo = true }: { p: (typeof PROMPTS)[number]; solo?: boolean }) {
   const key = `ffy.lhl.turned.v1.${p.day}`;
   const [turned, setTurned] = useState(false);
   const [flip, setFlip] = useState(false);
@@ -263,7 +263,7 @@ function TodayCard({ p }: { p: (typeof PROMPTS)[number] }) {
           </div>
         )}
       </div>
-      {!turned ? <p className="mt-3 text-center text-[13px] text-[#a79f90]">Tap the card to turn it over</p> : <SoloSitting day={p.day} />}
+      {!turned ? <p className="mt-3 text-center text-[13px] text-[#a79f90]">Tap the card to turn it over</p> : solo ? <SoloSitting day={p.day} /> : null}
     </div>
   );
 }
@@ -289,7 +289,7 @@ function SoloSitting({ day }: { day: number }) {
   const ring = 2 * Math.PI * 54;
   if (step === "pick") return (
     <button type="button" data-testid="solo-pick" onClick={() => setStep("prep")} className="lhl-pick mt-5">
-      On your own<small>5 minutes, out loud or on paper</small>
+      Start your five minutes<small>out loud or on paper</small>
     </button>
   );
   if (step === "prep") return (
@@ -1261,7 +1261,16 @@ function SeenPage({ vis, setAnswer, markDone, doneDays, curDay, opensIn }: { vis
       {curDay > 0 && prompt ? (
         <div className={card} data-testid="today">
           <p className="text-[11px] uppercase tracking-[0.2em] text-[#DDC98E]" data-testid="today-day">Today · Day {prompt.day} of {PROMPTS.length}</p>
-          <TodayCard key={prompt.day} p={prompt} />
+          <TodayCard key={prompt.day} p={prompt} solo={false} />
+          {/* 21 Nov 2026 (Juliette): "Be seen needs the explanation in my voice and the timer". */}
+          <div className="mt-2 rounded-3xl border border-[#DDC98E]/35 bg-[rgba(7,7,7,0.35)] p-4" data-testid="seen-own">
+            <RoundVoice src="/one-touch/voice/on-your-own.m4a" img="/how-to-feel-like-a-woman/juliette.jpg" label="On your own" sub="Five minutes, just you and the card. Tap my photo to hear how." />
+            <SoloSitting day={prompt.day} />
+            <details className="mt-4 !my-3">
+              <summary><span>{COPY.p4HowNav}</span><span className="pl">+</span></summary>
+              <div className="dbody space-y-2 text-[15px] leading-relaxed text-[#cfc8bb]">{HOW_ALONE.map((l) => <p key={l}>{l}</p>)}</div>
+            </details>
+          </div>
           <p className="mt-5 text-[11px] uppercase tracking-[0.2em] text-[#DDC98E]">{COPY.seenAnswerHead}</p>
           <Box id="lhl-today" value={vis.a[prompt.day] ?? ""} onChange={(v) => setAnswer(prompt.day, v)} rows={4} />
           <button type="button" data-testid="mark-done" disabled={!(vis.a[prompt.day] ?? "").trim()} onClick={() => markDone(prompt.day)} className={`${goldBtn} !mt-1 disabled:opacity-35`}>{COPY.p4Done}</button>

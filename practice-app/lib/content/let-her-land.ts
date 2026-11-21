@@ -146,7 +146,7 @@ export const COPY = {
   p3ListenLine: "Keep the touch going and press play.",
   p4ListenHead: "Start with the hypnosis",
   p4HowHead: "How to work with them alone",
-  p4HowNav: "Working alone",
+  p4HowNav: "How to work with it alone",
   p4TodayHead: "Today's prompt",
   p4Done: "Mark today done ✓",
   p4AllDone: "All 21 done.",
