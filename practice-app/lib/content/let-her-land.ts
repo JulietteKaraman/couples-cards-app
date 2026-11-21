@@ -51,7 +51,10 @@ export const SJ_LHL_FLAG = "ffy.sj.lhl";
 // PHOTOS. All hers, all solo. Swap a path here to change one.
 // ---------------------------------------------------------------------------
 export const PHOTOS = {
-  cover: { src: `${DIR}/journal/cover-painting.jpg`, alt: "The painted cover of the Reinvention Journal", pos: "50% 40%" },
+  // 21 Nov 2026 (Juliette: "i actually like this one"): the cover IS the Already Her mockup.
+  cover: { src: `${DIR}/photos/cover-mockup.png`, alt: "Let Her Land: Juliette against a wall, with the app and the Scrumptiousness Journal on two phones", pos: "50% 50%" },
+  coverBw: { src: `${DIR}/photos/cover-bw.jpg`, alt: "Juliette, black and white, against a wall", pos: "32% 8%" },
+  coverOld: { src: `${DIR}/journal/cover-painting.jpg`, alt: "The painted cover of the Reinvention Journal", pos: "50% 40%" },
   thumb: { src: `${DIR}/photos/thumb.jpg` },
   me: { src: `${DIR}/photos/me.jpg`, alt: "Juliette" },
   meetHer: { src: `${DIR}/journal/pink-flowers.jpg`, alt: "Pink flowers in a vase, from the Reinvention Journal", pos: "50% 50%", ratio: "1 / 1" },
@@ -70,7 +73,11 @@ export const PHOTOS = {
 // NEW COPY. Connecting words written for this page. Needs Juliette's approval.
 // ---------------------------------------------------------------------------
 export const COPY = {
-  coverKicker: "A free practice from Juliette",
+  // 21 Nov 2026 (Juliette: "why a free practice? It is a whole bundle"). The cover now matches the bundle mockup.
+  coverKicker: "Your gift in the Already Her bundle",
+  coverInsideHead: "All in one app on your phone",
+  coverInside: ["The Reinvention Journal", "Touch Base, guided by my voice", "One grounding touch", "My 17-minute hypnosis and 21 days of prompts"],
+  coverGift: "+ The Scrumptiousness Journal, all 103 pages",
   title: "Let Her Land",
   tagline: "Meet the woman you're becoming on the page. Then let her land in your body.",
   priceWas: "Worth £104 / $131",

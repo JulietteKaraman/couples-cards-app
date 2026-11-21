@@ -1103,26 +1103,23 @@ function Cover() {
   };
   return (
     <section data-testid="cover">
-      <div className="relative mx-auto w-full overflow-hidden rounded-3xl border-[1.5px] border-[rgba(221,201,142,0.45)]" style={{ aspectRatio: "4 / 5", maxWidth: 440 }}>
-        <Image src={PHOTOS.cover.src} alt={PHOTOS.cover.alt} fill priority sizes="(max-width: 768px) 100vw, 440px" className="object-cover" style={{ objectPosition: PHOTOS.cover.pos }} />
-        <div className="absolute inset-x-0 bottom-0 h-[46%] bg-gradient-to-t from-[#070707] via-[#070707]/80 to-transparent" />
-        <div className="absolute inset-x-0 bottom-0 px-5 pb-5">
-          <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-[#DDC98E]">{COPY.coverKicker}</p>
-          <h1 className="mt-1.5 font-display text-[44px] font-light leading-[1.04]">{COPY.title}</h1>
-        </div>
+      <div className="relative mx-auto w-full overflow-hidden rounded-3xl border-[1.5px] border-[rgba(221,201,142,0.45)]" style={{ aspectRatio: "1 / 1", maxWidth: 440 }}>
+        <Image src={PHOTOS.cover.src} alt={PHOTOS.cover.alt} fill priority sizes="(max-width: 768px) 100vw, 440px" className="object-cover" />
       </div>
+      <h1 className="sr-only">{COPY.title}</h1>
+      <p className="mx-auto mt-4 text-center text-[11px] font-medium uppercase tracking-[0.2em] text-[#DDC98E]" style={{ maxWidth: 440 }}>{COPY.coverKicker}</p>
       <div className="mx-auto mt-5" style={{ maxWidth: 440 }}>
-        <p className="text-[18px] leading-relaxed text-[#cfc8bb]">{COPY.tagline}</p>
         <p data-testid="cover-price" className="mt-3 flex flex-wrap items-baseline gap-x-2 text-[15px]"><s className="text-[#a79f90]">{COPY.priceWas}</s><span className="font-medium text-[#DDC98E]">{COPY.priceFree}</span></p>
         <button type="button" data-testid="begin" onClick={begin} className="lhl-press lhl-begin mt-5 flex min-h-[56px] w-full items-center justify-center gap-2 rounded-full bg-[#DDC98E] font-display text-[18px] font-medium text-[#070707]">{COPY.begin}<span aria-hidden="true">↓</span></button>
-        <ol className="mt-6 grid gap-2" data-testid="cover-parts">
-          {PARTS.map((p) => (
-            <li key={p.n} className="flex items-center gap-4 rounded-2xl border border-[#DDC98E]/30 bg-[rgba(13,53,53,0.28)] px-4 py-3">
-              <span className="font-display text-[26px] font-light leading-none text-[#DDC98E]">{p.n}</span>
-              <span className="font-display text-[20px] font-light">{p.name}</span>
-            </li>
-          ))}
-        </ol>
+        <div className="mt-6 rounded-3xl border border-[#DDC98E]/35 bg-[rgba(13,53,53,0.28)] p-5" data-testid="cover-parts">
+          <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-[#DDC98E]">{COPY.coverInsideHead}</p>
+          <ul className="mt-3 grid gap-2">
+            {COPY.coverInside.map((t) => (
+              <li key={t} className="flex gap-3 font-display text-[18px] font-light leading-snug"><span aria-hidden="true" className="mt-[9px] h-2 w-2 shrink-0 rounded-full bg-[#DDC98E]" />{t}</li>
+            ))}
+            <li className="flex gap-3 font-display text-[18px] font-normal leading-snug text-[#DDC98E]"><span aria-hidden="true" className="mt-[9px] h-2 w-2 shrink-0 rounded-full bg-[#DDC98E]" />{COPY.coverGift}</li>
+          </ul>
+        </div>
         <p className="mt-5 text-[14px] text-[#a79f90]">{COPY.keepLine}</p>
       </div>
     </section>
