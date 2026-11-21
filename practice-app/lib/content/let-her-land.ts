@@ -121,7 +121,7 @@ export const COPY = {
   seenAnswerHead: "Your answer · only you see this",
   backToParts: "Back to all four parts",
   seenManyLine: "Keep going. Write one, add it, then the next. Fifteen or twenty things often come up.",
-  seenDoneAfter: "When the five minutes ring, you can mark the day done.",
+  seenDoneAfter: "Written all you need for today? You can finish now. Your answers are saved.",
   seenAllHead: "Your answers, every day",
   seenAllLine: "Everything you wrote lives on this phone, in this browser. Keep a copy if you change phones.",
   moreKicker: "When you're ready",

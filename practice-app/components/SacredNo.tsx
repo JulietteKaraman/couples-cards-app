@@ -262,16 +262,23 @@ function SnSitting({ day, value, setValue, onDone }: { day: number; value: strin
         </ol>
       )}
       <p className="mt-3 text-[13px] text-[#8f877a]">Saved on this phone. Only you see these.</p>
-      {timeUp ? (
+      {/* 21 Nov 2026 (Juliette: "how do they go on if they have written enough and want to finish?"). The finish
+          button shows as soon as there is one answer, timer or no timer. The gong is an invitation, never a lock. */}
+      {timeUp && (
         <div className="mt-6 text-center" data-testid="sn-end">
           <p className="font-display text-[28px] font-light">Pause.</p>
           <p className="mt-1 text-[15px] text-[#cfc8bb]">Notice how your body feels. Often there&rsquo;s a little more breath, more space, more aliveness.</p>
           {answers.length > 0 && <p className="mt-3"><b className="font-display text-[34px] font-light text-[#DDC98E]">{answers.length}</b><span className="ml-2 text-[14px] text-[#a79f90]">answers on one card</span></p>}
-          <button type="button" data-testid="sn-did-it" disabled={answers.length === 0 && !draft.trim()} onClick={() => { add(); onDone(); }}
-            className="mt-4 w-full rounded-full bg-[#EEDE80] py-4 text-sm font-medium uppercase tracking-[0.22em] text-[#070707] shadow-[0_0_40px_-6px_rgba(238,222,128,.7)] disabled:opacity-30 disabled:shadow-none">I did it · Day {day}</button>
+        </div>
+      )}
+      {(answers.length > 0 || draft.trim()) ? (
+        <div className="mt-6" data-testid="sn-finish">
+          {!timeUp && <p className="mb-3 text-center text-[13px] text-[#8f877a]">Written all you need for today? You can finish now. Your answers are saved.</p>}
+          <button type="button" data-testid="sn-did-it" onClick={() => { add(); onDone(); }}
+            className="w-full rounded-full bg-[#EEDE80] py-4 text-sm font-medium uppercase tracking-[0.22em] text-[#070707] shadow-[0_0_40px_-6px_rgba(238,222,128,.7)]">I&rsquo;m done for today · Day {day}</button>
         </div>
       ) : (
-        <p className="mt-5 text-center text-[13px] text-[#8f877a]">When the five minutes ring, you can mark the day done.</p>
+        <p className="mt-5 text-center text-[13px] text-[#8f877a]">Write your first answer, and you can finish whenever you&rsquo;re ready.</p>
       )}
     </div>
   );

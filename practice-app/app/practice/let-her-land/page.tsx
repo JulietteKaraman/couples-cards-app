@@ -1273,15 +1273,21 @@ function SeenSitting({ day, value, setValue, onDone }: { day: number; value: str
           ))}
         </ol>
       )}
-      {timeUp ? (
+      {/* 21 Nov 2026 (Juliette): she can finish as soon as she has one answer; the gong is an invitation, never a lock. */}
+      {timeUp && (
         <div className="mt-6 text-center" data-testid="seen-end">
           <p className="font-display text-[26px] font-light">Pause.</p>
           <p className="mt-1 text-[15px] text-[#cfc8bb]">Notice how your body feels. Often there&rsquo;s a little more breath, more space, more aliveness.</p>
           {answers.length > 0 && <p className="mt-3"><b className="font-display text-[34px] font-light text-[#DDC98E]">{answers.length}</b><span className="ml-2 text-[14px] text-[#a79f90]">answers on one card</span></p>}
-          <button type="button" data-testid="mark-done" disabled={answers.length === 0 && !draft.trim()} onClick={() => { add(); onDone(); }} className="mt-4 inline-flex min-h-[54px] w-full items-center justify-center rounded-full bg-[#DDC98E] font-display text-[17px] font-medium text-[#070707] disabled:opacity-35">Mark day {day} done ✓</button>
+        </div>
+      )}
+      {(answers.length > 0 || draft.trim()) ? (
+        <div className="mt-6" data-testid="seen-finish">
+          {!timeUp && <p className="mb-3 text-center text-[13px] text-[#8f877a]">{COPY.seenDoneAfter}</p>}
+          <button type="button" data-testid="mark-done" onClick={() => { add(); onDone(); }} className="inline-flex min-h-[54px] w-full items-center justify-center rounded-full bg-[#DDC98E] font-display text-[17px] font-medium text-[#070707]">Mark day {day} done ✓</button>
         </div>
       ) : (
-        <p className="mt-5 text-center text-[13px] text-[#8f877a]">{COPY.seenDoneAfter}</p>
+        <p className="mt-5 text-center text-[13px] text-[#8f877a]">Write your first answer, and you can finish whenever you&rsquo;re ready.</p>
       )}
     </div>
   );

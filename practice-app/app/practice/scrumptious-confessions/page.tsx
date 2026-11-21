@@ -1169,6 +1169,8 @@ function CardAnswers({ card, onType }: { card: Card; onType: (v: string) => void
   const [answers, setAnswers] = useState<string[]>([]);
   const [draft, setDraft] = useState("");
   const [breath, setBreath] = useState("");
+  const [timeUp, setTimeUp] = useState(false);
+  const [finished, setFinished] = useState(false);
   useEffect(() => { setAnswers(readAnswers(card.id)); }, [card.id]); // eslint-disable-line react-hooks/set-state-in-effect
   const save = (next: string[]) => { setAnswers(next); lsSet(answersKey(card.id), JSON.stringify(next)); try { window.dispatchEvent(new Event("ffy-card-answers")); } catch {} };
   const add = () => {
@@ -1191,7 +1193,7 @@ function CardAnswers({ card, onType }: { card: Card; onType: (v: string) => void
             <p className="mt-1 text-[12px] text-[#a79f90]">Tap my photo to hear how.</p>
           </div>
         </div>
-        <div className="mt-4"><PracticeTimer minutes={[5]} dark solo label="Your five minutes" /></div>
+        <div className="mt-4"><PracticeTimer minutes={[5]} dark solo label="Your five minutes" onDone={() => setTimeUp(true)} /></div>
       </div>
       <p className="mt-6 font-display text-[20px] font-light">Answer {answers.length + 1}</p>
       <p className="text-[13px] text-[#8f877a]">Write one, add it, then the next. Fifteen or twenty things often come up.</p>
@@ -1210,6 +1212,22 @@ function CardAnswers({ card, onType }: { card: Card; onType: (v: string) => void
         </ol>
       )}
       <p className="mt-3 text-[13px] text-[#8f877a]">Saved on this phone. Only you see these.</p>
+      {/* 21 Nov 2026 (Juliette: "how do they go on if they have written enough and want to finish?"). A clear finish as
+          soon as there is one answer, timer or no timer; it also saves anything still in the box. */}
+      {finished ? (
+        <div className="mt-6 rounded-3xl border border-[#DDC98E]/30 p-5 text-center" data-testid="card-finished">
+          <p className="font-display text-[26px] font-light">Pause.</p>
+          <p className="mt-1 text-[15px] text-[#cfc8bb]">Notice how your body feels. Often there&rsquo;s a little more breath, more space, more aliveness.</p>
+          <p className="mt-3"><b className="font-display text-[34px] font-light text-[#DDC98E]">{answers.length}</b><span className="ml-2 text-[14px] text-[#a79f90]">answers on this card, kept under Your answers</span></p>
+          <button type="button" onClick={() => setFinished(false)} className="mt-3 text-[13px] text-[#DDC98E] underline">Add more</button>
+        </div>
+      ) : (answers.length > 0 || draft.trim()) ? (
+        <div className="mt-6" data-testid="card-finish">
+          {timeUp ? <p className="mb-3 text-center font-display text-[20px] font-light">Pause. That&rsquo;s your five minutes.</p>
+            : <p className="mb-3 text-center text-[13px] text-[#8f877a]">Written all you need for today? You can finish now. Your answers are saved.</p>}
+          <button type="button" data-testid="card-done" onClick={() => { add(); setFinished(true); }} className="inline-flex min-h-[54px] w-full items-center justify-center rounded-full bg-[#DDC98E] font-display text-[17px] font-medium text-[#070707]">I&rsquo;m done with this card ✓</button>
+        </div>
+      ) : null}
       <details className="mt-6 rounded-2xl border border-[#DDC98E]/25 px-4 py-3">
         <summary className="cursor-pointer text-[14px] text-[#DDC98E]">Want to send one to me? No name on it.</summary>
         <div className="mt-3">
