@@ -323,11 +323,10 @@ function Library() {
 /* The practices that have opened for this member, on the Today tab. Only what is open: no locked list. */
 function OpenedForYou() {
   const { since, trial, paid } = useMembership();
-  if (!paid) {
-    return trial ? <p className="mt-6 text-center text-[14px] text-[#a79f90]">Your first practices open with your first month, on day 8.</p> : null;
-  }
+  if (!paid && !trial) return null;
+  // The free week opens the freeWeek gifts (Holiday Survival Kit, Quiet Isn't Yes), theirs to keep (21 Nov 2026).
   const month = since ? membershipMonth(since) : 1;
-  const open = MEMBERSHIP_UNLOCKS.filter((u) => u.month <= month);
+  const open = trial && !paid ? MEMBERSHIP_UNLOCKS.filter((u) => u.freeWeek) : MEMBERSHIP_UNLOCKS.filter((u) => u.month <= month);
   if (!open.length) return null;
   return (
     <div className="mt-6" data-testid="opened-for-you">
@@ -341,7 +340,7 @@ function OpenedForYou() {
           </a>
         ))}
       </div>
-      <p className="mt-2 text-[12px] text-[#8f877a]">Something new opens every month you stay.</p>
+      <p className="mt-2 text-[12px] text-[#8f877a]">{trial && !paid ? "My gift to you: these are yours to keep, whatever you decide. The Trace and the full library open on day 8." : "Something new opens every month you stay."}</p>
     </div>
   );
 }

@@ -158,14 +158,17 @@ export function freeConfessionsActive(now: Date = new Date()) {
 // the membership's first payment (user_decks.purchased_at, kept across renewals
 // in grant.ts). Product list from CANON only: never 10 Touch Rituals (retired).
 // When She Goes Quiet lives on as Quiet Isn't Yes. The Touch Map stays its own £197 product.
-export type MembershipUnlock = { month: number; title: string; line: string; deck?: string; href: string };
+// freeWeek: opens in the 7 free days too, and is theirs to keep whatever they decide (Juliette 21 Nov 2026:
+// "everyone who tries it for 7 days gets to keep the first month (holiday cards)... maybe not the trace,
+// keep that for the actual paid month"). The Trace stays for day 8.
+export type MembershipUnlock = { month: number; title: string; line: string; deck?: string; href: string; freeWeek?: boolean };
 export const MEMBERSHIP_UNLOCKS: MembershipUnlock[] = [
   // Order re-set by Juliette 19 Nov 2026: the small, quick pieces first, the bigger programmes later
   // ("those are actually things that should go in the first few months... much more than the higher-price things").
   // The bites open from a plain link in the app, so the link only appearing in its month is the unlock.
-  { month: 1, title: "Holiday Survival Kit", line: "Cards for the season: the drive there, the table, who isn't here.", href: "https://feelfullyyou.com/my-cards/?unlock=holiday" },
+  { month: 1, title: "Holiday Survival Kit", line: "Cards for the season: the drive there, the table, who isn't here.", href: "https://feelfullyyou.com/my-cards/?unlock=holiday", freeWeek: true },
   // Juliette 16 Nov: "I reinstated when she goes quiet but it is called something else now- and they should get access to that immediately". Free guide for men.
-  { month: 1, title: "Quiet Isn't Yes", line: "For men: when she goes quiet, and what it really means.", href: "/practice/quiet-isnt-yes" },
+  { month: 1, title: "Quiet Isn't Yes", line: "For men: when she goes quiet, and what it really means.", href: "/practice/quiet-isnt-yes", freeWeek: true },
   { month: 1, title: "The Trace", line: "Fully clothed. Non-sexual. One Touch point that creates connection.", href: "/practice/the-trace" },
   { month: 2, title: "When She Stops Reaching", line: "For men: Touch Base, the Approach Ritual, the Full Stop.", href: "/practice/when-she-stops-reaching" },
   { month: 2, title: "The Fifteen Minutes After", line: "One communication. Thank you. Swap.", href: "/practice/the-fifteen-minutes-after" },
