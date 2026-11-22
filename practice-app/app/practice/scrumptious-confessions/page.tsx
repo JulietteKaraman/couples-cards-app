@@ -159,9 +159,34 @@ function Content() {
         {tab === "card" && <Cards feed={feed} />}
         {tab === "yours" && <YourTurn />}
         {tab === "library" && <Library />}
+        <ManageMembership />
         </>}
       </div>
     </main>
+  );
+}
+
+/* Juliette 22 Nov 2026: members cancel themselves, signed in, on Stripe's own page. Never by email. */
+function ManageMembership() {
+  const [state, setState] = useState<"idle" | "opening" | "gift" | "error">("idle");
+  const open = async () => {
+    setState("opening");
+    try {
+      const { data } = await supabaseBrowser.auth.getSession();
+      const res = await fetch("/api/confessions/manage", { method: "POST", headers: { Authorization: `Bearer ${data.session?.access_token}` } });
+      const j = await res.json().catch(() => ({}));
+      if (j.url) { window.location.href = j.url; return; }
+      setState(j.gift ? "gift" : "error");
+    } catch { setState("error"); }
+  };
+  return (
+    <div className="mt-12 border-t border-[#DDC98E]/20 pt-6 text-center">
+      <button type="button" onClick={open} disabled={state === "opening"} className="min-h-[44px] text-[14px] text-[#a79f90] underline underline-offset-4">
+        {state === "opening" ? "Opening\u2026" : "Manage or cancel my membership"}
+      </button>
+      {state === "gift" && <p className="mt-2 text-[13px] text-[#8f877a]">Your place is a gift from Juliette. There&rsquo;s nothing to pay and nothing to cancel.</p>}
+      {state === "error" && <p className="mt-2 text-[13px] text-[#8f877a]">That didn&rsquo;t open. Email support@feelfullyyou.com and we&rsquo;ll sort it.</p>}
+    </div>
   );
 }
 
