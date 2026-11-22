@@ -54,6 +54,12 @@ function GateContent({
           </p>
           {collectionSlug === "scrumptious-confessions" && (
             <div className="mt-6">
+              {/* 22 Nov 2026: someone whose gift has ended (or who never joined) can put their card in right here. */}
+              <a href={`/api/confessions/checkout${user?.email ? `?email=${encodeURIComponent(user.email)}` : ""}`}
+                className="mb-3 block w-full rounded-full bg-[#a88538] px-5 py-3 font-display text-sm font-medium text-white sm:mx-auto sm:w-auto">
+                Join Scrumptious Confessions
+              </a>
+              <p className="mb-4 max-w-sm text-sm text-ffy-brown">Your first 7 days are free, then &pound;111 a month. Stop any time.</p>
               <button type="button" onClick={recheck} disabled={check === "checking"}
                 className="block w-full rounded-full border border-ffy-teal px-5 py-3 font-display text-sm font-medium text-ffy-teal sm:mx-auto sm:w-auto">
                 {check === "checking" ? "Checking your membership\u2026" : "Can\u2019t get in? Check my membership"}

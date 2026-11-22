@@ -83,7 +83,7 @@ export async function POST(req: Request) {
     // A gifted Confessions member gets every member email, same as a paying one
     // (Juliette 22 Nov 2026: "they still get all the emails"). Before this, admin
     // grants never reached Kit, so gifted members got the app but no emails.
-    // Member tag + the Confessions welcome sequence, as the Stripe webhook does.
+    // Member tag + the gift welcome + the daily emails.
     // Never blocks the grant.
     let kit = "skipped";
     if (deckType === "scrumptious-confessions" && process.env.KIT_API_KEY) {
@@ -92,7 +92,10 @@ export async function POST(req: Request) {
       try {
         await fetch("https://api.kit.com/v4/subscribers", { method: "POST", headers, body: payload });
         const t = await fetch("https://api.kit.com/v4/tags/25769563/subscribers", { method: "POST", headers, body: payload });
-        const q = await fetch("https://api.kit.com/v4/sequences/2968362/subscribers", { method: "POST", headers, body: payload });
+        // Gift welcome (no money in it) + the daily first week, then Mondays. Never the paid welcome 2968362,
+        // which talks about the free week and payment.
+        const q = await fetch("https://api.kit.com/v4/sequences/2981858/subscribers", { method: "POST", headers, body: payload });
+        await fetch("https://api.kit.com/v4/sequences/2981859/subscribers", { method: "POST", headers, body: payload });
         kit = t.ok && q.ok ? "member emails on" : `kit ${t.status}/${q.status}`;
       } catch (e) {
         kit = "kit failed";
