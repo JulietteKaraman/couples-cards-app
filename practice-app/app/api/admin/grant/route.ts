@@ -72,11 +72,33 @@ export async function POST(req: Request) {
     const month = body.length === "month";
     // "One week free" (21 Nov 2026): Juliette gives guests a free week in return for a testimonial.
     const week = body.length === "week";
-    const marker = month ? `admin-grant-month-${Date.now()}` : week ? `admin-grant-week-${Date.now()}` : `admin-grant-${Date.now()}`;
+    // "Three months free" (22 Nov 2026, Juliette): 90 days from doors open, ends by itself.
+    const three = body.length === "three";
+    const marker = three ? `admin-grant-3months-${Date.now()}` : month ? `admin-grant-month-${Date.now()}` : week ? `admin-grant-week-${Date.now()}` : `admin-grant-${Date.now()}`;
     // A free month given before doors open counts from doors open (Juliette 20 Nov 2026: her 4 ladies to Wed 23 Dec).
     const startMs = Math.max(Date.now(), Date.parse(`${DOORS_OPEN}T00:00:00Z`));
-    const expiresAt = month ? new Date(startMs + 30 * 86400 * 1000).toISOString() : week ? new Date(startMs + 7 * 86400 * 1000).toISOString() : undefined;
+    const expiresAt = three ? new Date(startMs + 90 * 86400 * 1000).toISOString() : month ? new Date(startMs + 30 * 86400 * 1000).toISOString() : week ? new Date(startMs + 7 * 86400 * 1000).toISOString() : undefined;
     const userId = await grantEntitlement(email, deckType, marker, undefined, expiresAt);
+
+    // A gifted Confessions member gets every member email, same as a paying one
+    // (Juliette 22 Nov 2026: "they still get all the emails"). Before this, admin
+    // grants never reached Kit, so gifted members got the app but no emails.
+    // Member tag + the Confessions welcome sequence, as the Stripe webhook does.
+    // Never blocks the grant.
+    let kit = "skipped";
+    if (deckType === "scrumptious-confessions" && process.env.KIT_API_KEY) {
+      const headers = { "X-Kit-Api-Key": process.env.KIT_API_KEY, "Content-Type": "application/json", Accept: "application/json" };
+      const payload = JSON.stringify({ email_address: email });
+      try {
+        await fetch("https://api.kit.com/v4/subscribers", { method: "POST", headers, body: payload });
+        const t = await fetch("https://api.kit.com/v4/tags/25769563/subscribers", { method: "POST", headers, body: payload });
+        const q = await fetch("https://api.kit.com/v4/sequences/2968362/subscribers", { method: "POST", headers, body: payload });
+        kit = t.ok && q.ok ? "member emails on" : `kit ${t.status}/${q.status}`;
+      } catch (e) {
+        kit = "kit failed";
+        console.error("admin/grant: kit failed", e instanceof Error ? e.message : e);
+      }
+    }
 
     // Read back what this person now holds, so the screen proves the grant
     // landed rather than just claiming it did.
@@ -90,6 +112,7 @@ export async function POST(req: Request) {
       ok: true,
       email,
       granted: deckType,
+      kit,
       decks: decks ?? [],
     });
   } catch (error: unknown) {
