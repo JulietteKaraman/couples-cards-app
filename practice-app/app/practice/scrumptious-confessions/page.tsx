@@ -161,7 +161,7 @@ function Content() {
           <div className="mt-10 border-t border-[#DDC98E]/20 pt-6">
             <p className="font-display text-[22px] font-light leading-tight text-[#f1ece2]">This week</p>
             <p className="mt-1 text-[14px] leading-snug text-[#a79f90]">Tap to open.</p>
-            <Fold title="Today's confession, and your week"><WeekStrip onPick={pick} /></Fold>
+            <Fold title={todayTitle()}><WeekStrip onPick={pick} /></Fold>
             <Fold title="Touch Base" sub="Your kinesthetic anchor, so you feel safe and come back into your body. Five minutes a day, in my voice."><Today /></Fold>
             <Fold title="This week's questions"><WallPeek onOpen={() => pick("yours")} /></Fold>
           </div>
@@ -181,6 +181,13 @@ function Content() {
 /* 23 Nov 2026 (Juliette): "what's more important for them to see is which programmes they're going to be, what's
    going to open next with programmes... that first page feels really confusing". Today now leads with the programmes
    (open now, then opening next with each member's own dates), then the week in three short rows that open with a tap. */
+/* 23 Nov 2026 (Juliette, asked many times): "what happens on Tuesday?" The first row of This week names what
+   opens TODAY, every day, never only the confession. Index 0 = Monday. */
+const TODAY_IS = ["Today's confession", "Today's card", "Today's poem", "My answers to this week's questions", "Today's meditation", "Today's card", "Touch Base, and a look back at your week"];
+function todayTitle() {
+  const i = (new Date(todayUK() + "T12:00:00").getDay() + 6) % 7;
+  return i === 6 ? TODAY_IS[6] : `${TODAY_IS[i]}, and your week`;
+}
 const shortDate = (d: Date) => d.toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short", timeZone: "Europe/London" });
 function Fold({ title, sub, children }: { title: string; sub?: string; children: React.ReactNode }) {
   return (
@@ -606,14 +613,14 @@ function Library() {
       <LibGroup label="Late at night">
         <DoorBtn door="smut" tone="night" wide />
       </LibGroup>
-      <LibGroup label="To read">
+      <LibGroup label="Poems and your journal">
         <Link href="/practice/scrumptious-poems" className={`${doorCls} ${TONE.cream}`}>
           <span className="font-display text-[21px] font-light leading-tight text-[#f1ece2]">Poems</span>
-          <span className="text-[13px] text-[#a79f90]">A new one every Wednesday</span>
+          <span className="text-[13px] text-[#a79f90]">Read them, or let me read them to you. A new one every Wednesday</span>
         </Link>
         <Link href="/practice/scrumptiousness-journal" className={`${doorCls} ${TONE.cream}`}>
           <span className="font-display text-[21px] font-light leading-tight text-[#f1ece2]">The Journal</span>
-          <span className="text-[13px] text-[#a79f90]">Scrumptiousness, {paid ? "all 103 pages" : "ten pages to start"}</span>
+          <span className="text-[13px] text-[#a79f90]">Somewhere to write. Scrumptiousness, {paid ? "all 103 pages" : "ten pages to start"}</span>
         </Link>
       </LibGroup>
     </section>
@@ -959,6 +966,7 @@ function WallPeek({ onOpen }: { onOpen: () => void }) {
 // Telegram is gone. Every member sees this week's questions here the moment they're sent, taps Me too
 // instead of asking the same thing again, and reads Juliette's answers on Thursday.
 function YourTurn() {
+  const { paid: libOpen } = useMembership();
   const [wall, setWall] = useState<WallData | null>(null);
   const [draft, setDraft] = useState("");
   const [openA, setOpenA] = useState<string | null>(null);
@@ -1053,7 +1061,7 @@ function YourTurn() {
 
       <div className="rounded-3xl border border-[#D8DFE1]/40 p-5">
         <p className="text-[11px] uppercase tracking-[0.2em] text-[#D8DFE1]">The questions I&rsquo;m asked most in my DMs</p>
-        <p className="mt-2 text-[14px] text-[#a79f90]">I&rsquo;ve answered these in the library.</p>
+        <p className="mt-2 text-[14px] text-[#a79f90]">I answer them, and many more, in the library. {libOpen ? "It\u2019s open for you now." : "It opens for you on day 8."}</p>
         <div className="mt-3 space-y-2">
           {TWO_AM.map((q) => <p key={q} className="rounded-2xl bg-[#D8DFE1]/15 p-3 text-[15px] leading-snug text-[#f1ece2]">{q}</p>)}
         </div>
