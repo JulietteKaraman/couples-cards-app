@@ -554,8 +554,8 @@ const WHY: { id: string; label: string; to: string[] }[] = [
   { id: "approach", label: "I don't know how to approach her anymore", to: ["men-her", "men-away"] },
   { id: "us", label: "We've drifted apart", to: ["us"] },
   // 23 Nov 2026 (Juliette, asked several times): "my body is changing" is not only menopause. Men get their own.
-  { id: "body", label: "My body is changing: menopause", to: ["menopause"] },
-  { id: "body-m", label: "My body is changing: erections, energy, getting older", to: ["men-body", "ask:men-body"] },
+  { id: "body", label: "My body is changing (menopause)", to: ["menopause"] },
+  { id: "body-m", label: "My erections aren't what they were", to: ["men-body", "ask:men-body"] },
 ];
 function forYou(p: Profile): string[] {
   return Array.from(new Set(p.why.flatMap((w) => WHY.find((x) => x.id === w)?.to ?? [])));
