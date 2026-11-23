@@ -216,21 +216,40 @@ function StartHere({ onPick }: { onPick: (t: TabId) => void }) {
     </div>
   );
 }
+/* 23 Nov 2026 (Juliette): what makes them stay is seeing what opens next. Every date is on this member's own clock:
+   months count from their first payment (day 8 of the free week). */
+const DAY = 86400000;
+function inDays(d: Date) {
+  const n = Math.ceil((d.getTime() - Date.now()) / DAY);
+  return n <= 0 ? "Today" : n === 1 ? "Tomorrow" : `In ${n} days`;
+}
+/** When month 1 started for this member: their first payment, or day 8 of a free week. */
+function payStart(since: string | null, trial: boolean, paid: boolean, trialStart: string | null): string | null {
+  if (since) return since;
+  if (trial && !paid && trialStart) { const d = new Date(trialStart); d.setUTCDate(d.getUTCDate() + 7); return d.toISOString(); }
+  return null;
+}
 function Programmes() {
   const { since, trial, paid, trialStart } = useMembership();
   if (!paid && !trial) return null;
+  const freeWeek = trial && !paid;
   const month = since ? membershipMonth(since) : 1;
-  const open = trial && !paid ? MEMBERSHIP_UNLOCKS.filter((u) => u.freeWeek) : MEMBERSHIP_UNLOCKS.filter((u) => u.month <= month);
-  const nextMonth = trial && !paid ? 1 : month + 1;
-  const next = MEMBERSHIP_UNLOCKS.filter((u) => u.month === nextMonth && !(trial && !paid && u.freeWeek));
-  let when = "Opens next month";
-  if (trial && !paid) {
-    if (trialStart) { const d = new Date(trialStart); d.setUTCDate(d.getUTCDate() + 7); when = `Day 8, ${shortDate(d)}`; } else when = "Day 8";
-  } else if (since) when = `Opens ${shortDate(monthOpensOn(since, nextMonth))}`;
+  const start = payStart(since, trial, paid, trialStart);
+  const open = freeWeek ? MEMBERSHIP_UNLOCKS.filter((u) => u.freeWeek) : MEMBERSHIP_UNLOCKS.filter((u) => u.month <= month);
+  // The next three openings: in the free week that is month 1 (day 8), then months 2 and 3.
+  const first = freeWeek ? 1 : month + 1;
+  const road = [first, first + 1, first + 2].map((m) => ({
+    m,
+    items: MEMBERSHIP_UNLOCKS.filter((u) => u.month === m && !(freeWeek && u.freeWeek)),
+    date: start ? monthOpensOn(start, m) : null,
+  })).filter((r) => r.items.length);
+  const [next, ...later] = road;
   return (
     <div className="mt-8" data-testid="your-programmes">
       <p className="font-display text-[26px] font-light leading-tight text-[#f1ece2]">Your programmes</p>
-      <p className="mt-1 text-[14px] leading-snug text-[#a79f90]">{trial && !paid ? "My gift to you: yours to keep, whatever you decide." : "Everything that has opened for you. Yours to keep."}</p>
+      <p className="mt-1 text-[14px] leading-snug text-[#a79f90]">
+        {freeWeek ? "My gift to you: yours to keep, whatever you decide." : <>Everything that has opened for you. Yours to keep. <span className="text-[#DDC98E]">You&rsquo;ve kept {open.length} so far.</span></>}
+      </p>
       <div className="mt-4 space-y-2">
         {open.map((u) => (
           <a key={u.title} href={u.href} target={u.href.startsWith("http") ? "_blank" : undefined} rel="noreferrer"
@@ -243,19 +262,27 @@ function Programmes() {
           </a>
         ))}
       </div>
-      {next.length > 0 && (
+      {next && (
         <div className="mt-6" data-testid="opening-next">
-          <Eyebrow>Opening next for you</Eyebrow>
+          <Eyebrow>Programmes opening next for you</Eyebrow>
           <div className="mt-3 rounded-2xl border border-dashed border-[#DDC98E]/50 p-4">
-            <p className="text-[13px] uppercase tracking-[0.16em] text-[#DDC98E]">{when}</p>
-            <ul className="mt-2 space-y-2">
-              {next.map((u) => (
+            <p className="font-display text-[22px] font-light leading-tight text-[#DDC98E]">{next.date ? inDays(next.date) : "Next month"}</p>
+            {next.date && <p className="text-[13px] uppercase tracking-[0.16em] text-[#a79f90]">{freeWeek ? `Day 8 · ${shortDate(next.date)}` : shortDate(next.date)}</p>}
+            <ul className="mt-3 space-y-2">
+              {next.items.map((u) => (
                 <li key={u.title}><span className="block font-display text-[18px] font-light leading-tight text-[#f1ece2]">{u.title}</span><span className="block text-[13px] text-[#a79f90]">{u.line}</span></li>
               ))}
-              {trial && !paid && <li className="text-[14px] text-[#cfc8bb]">And the full library: every question I&rsquo;ve answered.</li>}
+              {freeWeek && <li className="text-[14px] text-[#cfc8bb]">And the full library: every question I&rsquo;ve answered.</li>}
             </ul>
+            {later.length > 0 && (
+              <ul className="mt-4 space-y-1.5 border-t border-[#DDC98E]/20 pt-3">
+                {later.map((r) => (
+                  <li key={r.m} className="text-[14px] leading-snug text-[#cfc8bb]"><span className="text-[#DDC98E]">{r.date ? shortDate(r.date) : `Month ${r.m}`}</span> · {r.items.map((u) => u.title).join(" · ")}</li>
+                ))}
+              </ul>
+            )}
           </div>
-          <p className="mt-2 text-[13px] text-[#8f877a]">Something new opens every month you stay. Yours to keep.</p>
+          <p className="mt-2 text-[13px] text-[#8f877a]">Every one is yours to keep.</p>
         </div>
       )}
     </div>
@@ -333,9 +360,29 @@ function ManageMembership() {
       setState(j.gift ? "gift" : "error");
     } catch { setState("error"); }
   };
+  // 23 Nov 2026 (Juliette): before a paying member cancels, show what opens next and that it's theirs to keep.
+  const { since, paid, gift } = useMembership();
+  const [asking, setAsking] = useState(false);
+  const [stayed, setStayed] = useState(false);
+  const nextM = since ? membershipMonth(since) + 1 : 0;
+  const nextItems = MEMBERSHIP_UNLOCKS.filter((u) => u.month === nextM);
+  const nextDate = since ? monthOpensOn(since, nextM) : null;
+  const nCount = ["", "one more programme opens", "two more programmes open", "three more programmes open"][nextItems.length] || `${nextItems.length} more programmes open`;
+  const names = nextItems.map((u) => u.title);
+  const list = names.length > 1 ? `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]}` : names[0];
+  const tap = () => { if (paid && !gift && since && nextItems.length && nextDate && !stayed) setAsking(true); else open(); };
+  if (asking && nextDate) return (
+    <div className="mt-12 rounded-3xl border-[1.5px] border-[#DDC98E]/60 bg-[rgba(13,53,53,0.45)] p-6 text-center" data-testid="before-you-go">
+      <p className="font-display text-[24px] font-light">Before you go</p>
+      <p className="mt-3 text-[15px] leading-relaxed text-[#cfc8bb]">{inDays(nextDate)}, on {shortDate(nextDate)}, {nCount} for you: {list}. Stay until then and {nextItems.length > 1 ? "they\u2019re" : "it\u2019s"} yours to keep, even if you leave after.</p>
+      <button type="button" onClick={() => { setAsking(false); setStayed(true); }} className="mt-5 inline-flex min-h-[48px] w-full items-center justify-center rounded-full bg-[#DDC98E] text-[15px] font-medium text-[#070707]">I&rsquo;ll stay</button>
+      <button type="button" onClick={open} disabled={state === "opening"} className="mt-3 min-h-[44px] text-[14px] text-[#a79f90] underline underline-offset-4">{state === "opening" ? "Opening\u2026" : "Continue to cancel"}</button>
+      {state === "error" && <p className="mt-2 text-[13px] text-[#8f877a]">That didn&rsquo;t open. Email support@feelfullyyou.com and we&rsquo;ll sort it.</p>}
+    </div>
+  );
   return (
     <div className="mt-12 border-t border-[#DDC98E]/20 pt-6 text-center">
-      <button type="button" onClick={open} disabled={state === "opening"} className="min-h-[44px] text-[14px] text-[#a79f90] underline underline-offset-4">
+      <button type="button" onClick={tap} disabled={state === "opening"} className="min-h-[44px] text-[14px] text-[#a79f90] underline underline-offset-4">
         {state === "opening" ? "Opening\u2026" : "Manage or cancel my membership"}
       </button>
       {state === "gift" && <p className="mt-2 text-[13px] text-[#8f877a]">Your place is a gift from Juliette. There&rsquo;s nothing to pay and nothing to cancel.</p>}
@@ -445,6 +492,7 @@ function useMembership() {
   const [since, setSince] = useState<string | null>(null);
   const [trial, setTrial] = useState(false);
   const [trialStart, setTrialStart] = useState<string | null>(null);
+  const [gift, setGift] = useState(false);
   // Local preview only shows the answers open; never true on the live site.
   const [paid, setPaid] = useState(process.env.NODE_ENV === "development");
   useEffect(() => {
@@ -460,10 +508,10 @@ function useMembership() {
       // The 7 free days ("trial-") are a taste: answers stay locked until day 8 (Juliette 19 Nov 2026).
       const sid = String(row?.stripe_checkout_session_id || "");
       if (row?.purchased_at && sid.startsWith("trial-")) { setTrial(true); setTrialStart(row.purchased_at as string); }
-      else if (row?.purchased_at && !sid.startsWith("free-")) { setSince(row.purchased_at as string); setPaid(true); }
+      else if (row?.purchased_at && !sid.startsWith("free-")) { setSince(row.purchased_at as string); setPaid(true); if (sid.startsWith("admin-grant-")) setGift(true); }
     })();
   }, []);
-  return { since, trial, paid, trialStart };
+  return { since, trial, paid, trialStart, gift };
 }
 
 /* Juliette 19 Nov 2026: "the library is too big and difficult to navigate... it will also be for people in the
