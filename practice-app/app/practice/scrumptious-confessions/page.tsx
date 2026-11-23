@@ -442,7 +442,8 @@ function Library() {
     );
   }
   if (!profile || redo) return <Welcome onDone={(p) => { saveProfile(p); setProfile(p); setRedo(false); }} />;
-  const mine = forYou(profile).filter((id) => id.startsWith("door:") || (counts[id] ?? 0) > 0);
+  // A section with no answers yet becomes an invitation to ask, so nobody taps into nothing.
+  const mine = forYou(profile).filter((id) => id.startsWith("door:") || (id.startsWith("ask:") ? (counts[id.slice(4)] ?? 0) === 0 : (counts[id] ?? 0) > 0));
   return (
     <section className="mt-6">
       {mine.length > 0 && (
@@ -450,6 +451,7 @@ function Library() {
           <Eyebrow>For you</Eyebrow>
           <div className="mt-3 flex flex-wrap gap-2">
             {mine.map((id) => {
+              if (id.startsWith("ask:")) return <a key={id} href="?tab=yours" className="inline-flex min-h-[44px] items-center rounded-full border border-[#DDC98E] px-4 text-[14px] text-[#f1ece2]">{TOPICS.find((x) => x.id === id.slice(4))?.label}: ask me, I answer Thursdays</a>;
               if (id === "door:smut") return <button key={id} type="button" onClick={() => setDoor("smut")} className="min-h-[44px] rounded-full border border-[#DDC98E] px-4 text-[14px] text-[#f1ece2]">Smut Stories</button>;
               const t = TOPICS.find((x) => x.id === id)!;
               return <button key={id} type="button" onClick={() => { setLinkTopic(id); setDoor(t.men ? "men" : "answers"); }} className="min-h-[44px] rounded-full border border-[#DDC98E] px-4 text-[14px] text-[#f1ece2]">{t.label} <span className="text-[#a79f90]">{counts[id]}</span></button>;
@@ -551,7 +553,9 @@ const WHY: { id: string; label: string; to: string[] }[] = [
   { id: "desire", label: "I want my desire back", to: ["desire"] },
   { id: "approach", label: "I don't know how to approach her anymore", to: ["men-her", "men-away"] },
   { id: "us", label: "We've drifted apart", to: ["us"] },
-  { id: "body", label: "My body is changing", to: ["menopause", "men-body"] },
+  // 23 Nov 2026 (Juliette, asked several times): "my body is changing" is not only menopause. Men get their own.
+  { id: "body", label: "My body is changing: menopause", to: ["menopause"] },
+  { id: "body-m", label: "My body is changing: erections, energy, getting older", to: ["men-body", "ask:men-body"] },
 ];
 function forYou(p: Profile): string[] {
   return Array.from(new Set(p.why.flatMap((w) => WHY.find((x) => x.id === w)?.to ?? [])));
@@ -701,6 +705,7 @@ function Answers({ paid, trial, start, shelves, startTopic, men, women }: { paid
       )}
       {!paid && <p className="mt-3 text-[14px] text-[#DDC98E]">{trial ? "🔒 In your free week you see every question. The answers open with your first month, on day 8. Three meditations are yours now." : "🔒 These open when you start your 7 days free."}</p>}
       {starter && list.length > 0 && <p className="mt-5 font-display text-[20px] text-[#f1ece2]">Five to start with</p>}
+      {all && topic && shown.length === 0 && <p className="mt-5 rounded-2xl border border-[#DDC98E]/30 p-4 text-[15px] text-[#cfc8bb]">I haven&rsquo;t answered this one yet. Ask me on the Questions wall, with no name on it, and I&rsquo;ll answer it on a Thursday, in my voice.</p>}
       <ul className="mt-4 space-y-2">
         {(starter ? list : shelf === "meditations" ? shown : shown.slice(0, find || topic ? 60 : 12)).map((a) => (
           <li key={a.slug} className="rounded-2xl border border-[#DDC98E]/25">
