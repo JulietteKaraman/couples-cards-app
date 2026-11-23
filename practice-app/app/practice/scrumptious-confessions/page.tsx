@@ -437,12 +437,12 @@ function Library() {
     return (
       <>
         <button type="button" onClick={() => { setDoor(null); setLinkTopic(undefined); }} className="mt-6 min-h-[44px] text-[15px] text-[#DDC98E]">&larr; Back to the library</button>
-        {door === "touchmap" ? <TouchMapMonth /> : door === "smut" ? <SmutStories /> : door === "morecards" ? <MoreCards /> : <Answers key={door + (linkTopic || "")} paid={paid} trial={trial} start={d.shelves[0]} shelves={d.shelves} men={door === "men"} startTopic={linkTopic ?? d.topic} />}
+        {door === "touchmap" ? <TouchMapMonth /> : door === "smut" ? <SmutStories /> : door === "morecards" ? <MoreCards /> : <Answers key={door + (linkTopic || "")} paid={paid} trial={trial} start={d.shelves[0]} shelves={d.shelves} men={door === "men"} women={door === "women"} startTopic={linkTopic ?? d.topic} />}
       </>
     );
   }
   if (!profile || redo) return <Welcome onDone={(p) => { saveProfile(p); setProfile(p); setRedo(false); }} />;
-  const mine = forYou(profile).filter((id) => (counts[id] ?? 0) > 0);
+  const mine = forYou(profile).filter((id) => id.startsWith("door:") || (counts[id] ?? 0) > 0);
   return (
     <section className="mt-6">
       {mine.length > 0 && (
@@ -450,6 +450,7 @@ function Library() {
           <Eyebrow>For you</Eyebrow>
           <div className="mt-3 flex flex-wrap gap-2">
             {mine.map((id) => {
+              if (id === "door:smut") return <button key={id} type="button" onClick={() => setDoor("smut")} className="min-h-[44px] rounded-full border border-[#DDC98E] px-4 text-[14px] text-[#f1ece2]">Smut Stories</button>;
               const t = TOPICS.find((x) => x.id === id)!;
               return <button key={id} type="button" onClick={() => { setLinkTopic(id); setDoor(t.men ? "men" : "answers"); }} className="min-h-[44px] rounded-full border border-[#DDC98E] px-4 text-[14px] text-[#f1ece2]">{t.label} <span className="text-[#a79f90]">{counts[id]}</span></button>;
             })}
@@ -528,6 +529,7 @@ const TOPICS: { id: string; label: string; words: string[]; qOnly?: boolean; not
   { id: "freeze", label: "When your body freezes", qOnly: true, words: ["freeze", "froze", "frozen", "flinch", "tense up", "go still", "stiffen", "pull away", "brace", "after trauma", "safe being touched", "refuse to relax", "cringe"], not: ["she ", "she'", "her ", "her,", "her?", "my wife", "girlfriend", "gain weight"] },
   { id: "shame", label: "Shame and the past", words: ["shame", "past", "trauma", "child", "guilt", "abuse", "mother", "father"] },
   { id: "menopause", label: "Menopause and a changing body", qOnly: true, words: ["menopause", "perimenopause", "oestrogen", "postmenopausal", "hot flush"] },
+  { id: "more", label: "When it's good and you want more", qOnly: true, words: ["spark", "more intimacy", "want more", "fantas", "kink", "power and control", "adventur", "go deeper", "more pleasure"] },
   { id: "men-her", label: "Understanding her", men: true, qOnly: true, words: ["she says she", "what she", "what is happening in her", "her body", "she tense", "she tighten", "she flinch", "flinches when i", "help her feel safe", "she go blank", "she goes quiet", "go quiet", "she really means", "starting to tense", "what does she need", "she closes"] },
   { id: "men-away", label: "When she pulls away", men: true, qOnly: true, words: ["pulled away", "pull away when i", "cold and distant", "doesn't want", "doesnt want", "wife want", "used to open up", "she feel it with someone else", "other men", "gone quiet", "trust me again", "closes and", "lights up"], not: ["why do i pull", "my partner tries"] },
   { id: "men-body", label: "His body", men: true, qOnly: true, words: ["erect", "get hard", "stay hard", "performance anxiety", "testosterone", "viagra", "his body changing", "my body is changing"], not: ["she ", "her "] },
@@ -537,67 +539,52 @@ const TOPICS: { id: string; label: string; words: string[]; qOnly?: boolean; not
 ];
 // 23 Nov 2026 (Juliette): three questions the first time someone opens the Library, so they land in the part
 // that's theirs. Kept on their phone only; "Change my answers" starts again.
-type Profile = { who: "woman" | "man" | "couple"; age: string; why: string[] };
-const PKEY = "ffy.sc.profile.v1";
+// 23 Nov 2026 (Juliette): ONE question only, "What brings you here?", for women and men alike.
+type Profile = { why: string[] };
+const PKEY = "ffy.sc.profile.v2";
 function readProfile(): Profile | null { try { const v = localStorage.getItem(PKEY); return v ? JSON.parse(v) : null; } catch { return null; } }
 function saveProfile(p: Profile) { try { localStorage.setItem(PKEY, JSON.stringify(p)); } catch { /* fine */ } }
-const WHY: Record<Profile["who"], { id: string; label: string }[]> = {
-  woman: [{ id: "numb", label: "I feel nothing anymore" }, { id: "freeze", label: "I freeze when he reaches for me" }, { id: "desire", label: "I want my desire back" }, { id: "us", label: "We've drifted apart" }, { id: "menopause", label: "My body is changing" }],
-  man: [{ id: "men-her", label: "I want to understand her" }, { id: "men-away", label: "She's pulled away from me" }, { id: "men-you", label: "I want to feel close again" }, { id: "men-body", label: "My body is changing" }, { id: "us", label: "We've drifted apart" }],
-  couple: [{ id: "us", label: "We've drifted apart" }, { id: "desire", label: "We want desire back" }, { id: "numb", label: "One of us feels nothing" }, { id: "freeze", label: "One of us freezes" }, { id: "touch", label: "We want Touch to feel good again" }],
-};
+const WHY: { id: string; label: string; to: string[] }[] = [
+  { id: "more", label: "It's good, and we want more", to: ["more", "door:smut"] },
+  { id: "numb", label: "I feel nothing anymore", to: ["numb"] },
+  { id: "freeze", label: "I freeze when my partner reaches for me", to: ["freeze"] },
+  { id: "desire", label: "I want my desire back", to: ["desire"] },
+  { id: "approach", label: "I don't know how to approach her anymore", to: ["men-her", "men-away"] },
+  { id: "us", label: "We've drifted apart", to: ["us"] },
+  { id: "body", label: "My body is changing", to: ["menopause", "men-body"] },
+];
 function forYou(p: Profile): string[] {
-  const ids = [...p.why];
-  if (p.who === "woman" && (p.age === "45-54" || p.age === "55+") && !ids.includes("menopause")) ids.push("menopause");
-  if (p.who === "man" && !ids.includes("men-her")) ids.push("men-her");
-  return ids;
+  return Array.from(new Set(p.why.flatMap((w) => WHY.find((x) => x.id === w)?.to ?? [])));
 }
 function Welcome({ onDone }: { onDone: (p: Profile) => void }) {
-  const [who, setWho] = useState<Profile["who"] | null>(null);
-  const [age, setAge] = useState<string | null>(null);
   const [why, setWhy] = useState<string[]>([]);
   const pill = (on: boolean) => `min-h-[48px] rounded-full border px-4 text-left text-[15px] ${on ? "border-[#DDC98E] bg-[#DDC98E] text-[#070707]" : "border-[#DDC98E]/40 text-[#f1ece2]"}`;
   return (
     <section className="mt-6" data-testid="library-welcome">
       <Eyebrow>Your library</Eyebrow>
-      <h2 className="mt-3 font-display text-[26px] font-light leading-tight">Three quick questions, so I can take you to your part.</h2>
-      <p className="mt-2 text-[14px] text-[#a79f90]">Only you see your answers. They stay on this phone.</p>
-      <p className="mt-6 text-[16px] text-[#f1ece2]">Who are you?</p>
-      <div className="mt-2 flex flex-wrap gap-2">
-        {([["woman", "A woman"], ["man", "A man"], ["couple", "We're a couple"]] as const).map(([id, l]) => (
-          <button key={id} type="button" onClick={() => { setWho(id); setWhy([]); }} className={pill(who === id)}>{l}</button>
+      <h2 className="mt-3 font-display text-[26px] font-light leading-tight">What brings you here?</h2>
+      <p className="mt-2 text-[14px] text-[#a79f90]">Pick as many as are true, and I&rsquo;ll take you to your part. Only you see this.</p>
+      <div className="mt-5 flex flex-col gap-2">
+        {WHY.map((w) => (
+          <button key={w.id} type="button" aria-pressed={why.includes(w.id)} onClick={() => setWhy(why.includes(w.id) ? why.filter((x) => x !== w.id) : [...why, w.id])} className={pill(why.includes(w.id))}>{w.label}</button>
         ))}
       </div>
-      {who && <>
-        <p className="mt-6 text-[16px] text-[#f1ece2]">How old are you?{who === "couple" ? " (the one reading this)" : ""}</p>
-        <div className="mt-2 flex flex-wrap gap-2">
-          {[["under-35", "Under 35"], ["35-44", "35 to 44"], ["45-54", "45 to 54"], ["55+", "55 and over"]].map(([id, l]) => (
-            <button key={id} type="button" onClick={() => setAge(id)} className={pill(age === id)}>{l}</button>
-          ))}
-        </div>
-      </>}
-      {who && age && <>
-        <p className="mt-6 text-[16px] text-[#f1ece2]">What brings you here? Pick as many as are true.</p>
-        <div className="mt-2 flex flex-col gap-2">
-          {WHY[who].map((w) => (
-            <button key={w.id} type="button" aria-pressed={why.includes(w.id)} onClick={() => setWhy(why.includes(w.id) ? why.filter((x) => x !== w.id) : [...why, w.id])} className={pill(why.includes(w.id))}>{w.label}</button>
-          ))}
-        </div>
-        <button type="button" disabled={!why.length} onClick={() => onDone({ who, age, why })} className="mt-6 min-h-[48px] w-full rounded-full bg-[#DDC98E] text-[16px] font-medium text-[#070707] disabled:opacity-40">Take me to my part</button>
-      </>}
-      <button type="button" onClick={() => onDone({ who: who || "woman", age: age || "", why: [] })} className="mt-4 min-h-[40px] text-[13px] text-[#a79f90] underline underline-offset-4">Skip, show me everything</button>
+      <button type="button" disabled={!why.length} onClick={() => onDone({ why })} className="mt-6 min-h-[48px] w-full rounded-full bg-[#DDC98E] text-[16px] font-medium text-[#070707] disabled:opacity-40">Take me to my part</button>
+      <button type="button" onClick={() => onDone({ why: [] })} className="mt-4 min-h-[40px] text-[13px] text-[#a79f90] underline underline-offset-4">Skip, show me everything</button>
     </section>
   );
 }
 // The library's doors (Juliette 19 Nov 2026: "the library is really not very clear at all").
 // Nobody lands on a list: they pick a door first. The Journal door is a link of its own.
-type Door = "meditations" | "answers" | "men" | "touchmap" | "smut" | "morecards";
+type Door = "meditations" | "answers" | "women" | "men" | "touchmap" | "smut" | "morecards";
 // 20 Nov 2026, Juliette: "if I can't even find it, how the hell are they going to find it?" Menopause and
 // The Touch Map get doors of their own, not buried in a topic chip or at the bottom of Today.
 const DOORS: { id: Door; title: string; line: string; shelves: Shelf[]; topic?: string }[] = [
   { id: "answers", title: "Your questions, answered", line: "Search, or start with five", shelves: ["answers"] },
   { id: "meditations", title: "Meditations", line: "A new one every Friday", shelves: ["meditations"] },
   // 23 Nov 2026 (Juliette): Menopause is no longer a door of its own; the welcome questions take each person to their part.
+  // 23 Nov 2026 (Juliette): a For women door beside For men.
+  { id: "women", title: "For women", line: "Your body, your desire", shelves: ["answers"] },
   { id: "men", title: "For men", line: "Understanding her, and you", shelves: ["answers"], topic: "men-her" },
   { id: "touchmap", title: "The Touch Map", line: "One place a month, in my voice", shelves: [] },
   // 21 Nov 2026, Juliette: "put them in, I already have them on the women's app". The late night shelf is SMUT STORIES (canon).
@@ -668,7 +655,9 @@ async function loadMeditations(): Promise<Answer[]> {
 }
 // Juliette 16 Nov: answers, then "all the substacks, and the podcast". Seeded from her
 // published pages (answers, essays, episodes), so every word is hers.
-function Answers({ paid, trial, start, shelves, startTopic, men }: { paid: boolean; trial?: boolean; start: Shelf; shelves: Shelf[]; startTopic?: string; men?: boolean }) {
+function Answers({ paid, trial, start, shelves, startTopic, men, women }: { paid: boolean; trial?: boolean; start: Shelf; shelves: Shelf[]; startTopic?: string; men?: boolean; women?: boolean }) {
+  // For women leaves out the answers written to men.
+  const forMen = (q: string) => TOPICS.some((t) => t.men && t.words.some((w) => q.toLowerCase().includes(w)) && !(t.not || []).some((w) => q.toLowerCase().includes(w)));
   const chips = TOPICS.filter((t) => !!t.men === !!men);
   const startTp = TOPICS.find((t) => t.id === startTopic);
   const [shelf, setShelf] = useState<Shelf>(start);
@@ -687,7 +676,7 @@ function Answers({ paid, trial, start, shelves, startTopic, men }: { paid: boole
     get.then((d) => setData((x) => ({ ...x, [shelf]: d }))).catch(() => setData((x) => ({ ...x, [shelf]: [] })));
   }, [shelf, data]);
   const raw = data[shelf];
-  const all = raw && shelf === "answers" ? raw.filter((a) => !HIDE.has(a.slug)) : raw;
+  const all = raw && shelf === "answers" ? raw.filter((a) => !HIDE.has(a.slug) && !(women && forMen(a.q))) : raw;
   const meta = SHELVES.find((x) => x.id === shelf)!;
   // Phones type curly apostrophes ("don’t"); the library has straight ones. Search ignores
   // apostrophes and punctuation, so "why don't i feel anything" always finds it (19 Nov 2026).
@@ -702,7 +691,7 @@ function Answers({ paid, trial, start, shelves, startTopic, men }: { paid: boole
     .filter(onShelf)
     .filter((a) => { const t = norm(a.q + " " + a.blocks.map((b) => b.x).join(" ")); return words.every((w) => t.includes(w)); })
     .sort((a, b) => Number(inQ(b)) - Number(inQ(a)));
-  const starter = shelf === "answers" && !find && !topic;
+  const starter = shelf === "answers" && !find && !topic && !women;
   const list = starter ? STARTERS.map((id) => (all || []).find((a) => a.slug === id)).filter((a): a is Answer => !!a) : shown;
   return (
     <section className="mt-6">
@@ -712,8 +701,8 @@ function Answers({ paid, trial, start, shelves, startTopic, men }: { paid: boole
             className={`min-h-[44px] rounded-full border text-[14px] ${shelf === x.id ? "border-[#DDC98E] bg-[rgba(221,201,142,0.15)] text-[#f1ece2]" : "border-[#DDC98E]/35 text-[#f1ece2]/75"}`}>{x.label}</button>
         ))}
       </div>}
-      <h2 className="mt-5 font-display text-[28px] font-light leading-tight">{men ? "For men" : startTp ? startTp.label : meta.title}</h2>
-      <p className="mt-2 text-[15px] text-[#a79f90]">{men ? "What's happening in her, and in you. More every week." : startTp ? "My answers, and more every week." : all ? `${all.filter((a) => !a.slug.startsWith("next")).length} ${meta.unit} so far, and it grows every week.` : "Opening\u2026"}</p>
+      <h2 className="mt-5 font-display text-[28px] font-light leading-tight">{men ? "For men" : women && !startTp ? "For women" : startTp ? startTp.label : meta.title}</h2>
+      <p className="mt-2 text-[15px] text-[#a79f90]">{men ? "What's happening in her, and in you. More every week." : women && !startTp ? "Your body, your desire, and what's in the way. More every week." : startTp ? "My answers, and more every week." : all ? `${all.filter((a) => !a.slug.startsWith("next")).length} ${meta.unit} so far, and it grows every week.` : "Opening\u2026"}</p>
       <input value={find} onChange={(e) => setFind(e.target.value)} placeholder="Search: touch, menopause, desire…"
         className="mt-4 w-full rounded-full border border-[#DDC98E]/40 bg-transparent px-5 py-3 text-[16px] text-[#f1ece2] placeholder:text-[#8f877a]" />
       {shelf === "answers" && (
