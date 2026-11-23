@@ -1396,7 +1396,14 @@ function Cards({ feed }: { feed: Feed | null }) {
               </div>
             </div>
             {w.min === 15 && <WhoSpeaks />}
-            <div className="mt-4"><PracticeTimer minutes={[w.min]} dark solo={w.min === 5} label={w.min === 5 ? "Your five minutes" : "Your fifteen minutes"} /></div>
+            {/* 23 Nov 2026 (Juliette, yes): On your own has no separate timer; this button turns this week's card over
+                and takes her to it, where her voice, the gong timer and the answers are. */}
+            {w.min === 5 ? (
+              <button type="button" data-testid="write-on-card" onClick={() => { try { window.dispatchEvent(new Event("ffy-open-card")); } catch {} }}
+                className="mt-4 inline-flex min-h-[52px] w-full items-center justify-center rounded-full bg-[#DDC98E] font-display text-[16px] font-medium text-[#070707]">Write on this week&rsquo;s card</button>
+            ) : (
+              <div className="mt-4"><PracticeTimer minutes={[w.min]} dark label="Your fifteen minutes" /></div>
+            )}
           </div>
         ))}
       </div>
@@ -1440,6 +1447,13 @@ function CardBlock({ card, open, early }: { card: Card; open: boolean; early?: b
   const [face, setFace] = useState<"back" | "front">("back");
   // Counted once: that she answered, never what she wrote.
   const onType = (v: string) => { if (v.trim() && !lsGet(answeredKey)) { lsSet(answeredKey, "1"); tally(card.id, "card_answered", "yes"); } };
+  const box = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!open) return;
+    const go = () => { setShow(true); setFace("front"); setTimeout(() => box.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 80); };
+    window.addEventListener("ffy-open-card", go);
+    return () => window.removeEventListener("ffy-open-card", go);
+  }, [open]);
 
   if (!show) {
     return (
@@ -1450,7 +1464,7 @@ function CardBlock({ card, open, early }: { card: Card; open: boolean; early?: b
     );
   }
   return (
-    <div className="mt-5">
+    <div className="mt-5 scroll-mt-24" ref={box}>
       <p className="text-center text-[11px] uppercase tracking-[0.18em] text-[#a79f90]">{early ? earlyLabel(card.publish_on) : dayName(card.publish_on)}</p>
       <div className="my-5 flex justify-center">
         <div onClick={() => setFace("front")} role={face === "back" ? "button" : undefined} aria-label={face === "back" ? "Turn the card over" : undefined} className={`w-full max-w-[300px] ${face === "back" ? "cursor-pointer" : ""}`}>
@@ -1462,6 +1476,7 @@ function CardBlock({ card, open, early }: { card: Card; open: boolean; early?: b
           )}
         </div>
       </div>
+      {face === "back" && <p className="-mt-2 text-center text-[14px] text-[#cfc8bb]" data-testid="tap-to-turn">Tap to turn your card over. My voice, your five minutes and space to write are underneath.</p>}
       {face === "front" && <CardAnswers card={card} onType={onType} />}
     </div>
   );
