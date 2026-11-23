@@ -14,7 +14,6 @@ import { MEMBERSHIP_UNLOCKS, membershipMonth } from "@/lib/entitlements/config";
 import { PLACES } from "@/lib/content/touch-map";
 import { ADMIN_EMAIL } from "@/lib/entitlements/admin";
 import PracticeTimer from "@/components/PracticeTimer";
-import { HTFLAW_CARDS } from "@/lib/content/htflaw-cards";
 import { memberWeeks, onMyClock } from "@/lib/confessions-clock";
 
 // SCRUMPTIOUS CONFESSIONS, the membership (specs/scrumptious-confessions-membership.md).
@@ -438,7 +437,7 @@ function Library() {
     return (
       <>
         <button type="button" onClick={() => { setDoor(null); setLinkTopic(undefined); }} className="mt-6 min-h-[44px] text-[15px] text-[#DDC98E]">&larr; Back to the library</button>
-        {door === "touchmap" ? <TouchMapMonth /> : door === "smut" ? <SmutStories /> : door === "morecards" ? <MoreCards /> : <Answers key={door + (linkTopic || "")} paid={paid} trial={trial} start={d.shelves[0]} shelves={d.shelves} men={door === "men"} women={door === "women"} startTopic={linkTopic ?? d.topic} />}
+        {door === "touchmap" ? <TouchMapMonth /> : door === "smut" ? <SmutStories /> : <Answers key={door + (linkTopic || "")} paid={paid} trial={trial} start={d.shelves[0]} shelves={d.shelves} men={door === "men"} women={door === "women"} startTopic={linkTopic ?? d.topic} />}
       </>
     );
   }
@@ -577,7 +576,7 @@ function Welcome({ onDone }: { onDone: (p: Profile) => void }) {
 }
 // The library's doors (Juliette 19 Nov 2026: "the library is really not very clear at all").
 // Nobody lands on a list: they pick a door first. The Journal door is a link of its own.
-type Door = "meditations" | "answers" | "women" | "men" | "touchmap" | "smut" | "morecards";
+type Door = "meditations" | "answers" | "women" | "men" | "touchmap" | "smut";
 // 20 Nov 2026, Juliette: "if I can't even find it, how the hell are they going to find it?" Menopause and
 // The Touch Map get doors of their own, not buried in a topic chip or at the bottom of Today.
 const DOORS: { id: Door; title: string; line: string; shelves: Shelf[]; topic?: string }[] = [
@@ -590,8 +589,7 @@ const DOORS: { id: Door; title: string; line: string; shelves: Shelf[]; topic?: 
   { id: "touchmap", title: "The Touch Map", line: "One place a month, in my voice", shelves: [] },
   // 21 Nov 2026, Juliette: "put them in, I already have them on the women's app". The late night shelf is SMUT STORIES (canon).
   { id: "smut", title: "Smut Stories", line: "Late at night, in my voice", shelves: [] },
-  // 23 Nov 2026 (Juliette): "pull their old cards". Every card from How to Feel Like a Woman, kept here.
-  { id: "morecards", title: "More cards", line: "From How to Feel Like a Woman", shelves: [] },
+  // 23 Nov 2026 (Juliette): the How to Feel Like a Woman cards do NOT belong in Confessions. Never add them.
 ];
 // Smut Stories: her recorded fiction, in her voice (first recorded for How to Feel Like a Woman, Nov 2026).
 const SMUT: { title: string; line: string; src: string; minutes: number }[] = [
@@ -600,19 +598,6 @@ const SMUT: { title: string; line: string; src: string; minutes: number }[] = [
   { title: "The Piano Tuner", line: "He comes every spring. This year she stays in the room.", src: "/scrumptious-confessions/audio/smut-the-piano-tuner.m4a", minutes: 14 },
   { title: "The Dressmaker", line: "A dress for her daughter's wedding, and hands that take their time.", src: "/scrumptious-confessions/audio/smut-the-dressmaker.m4a", minutes: 10 },
 ];
-function MoreCards() {
-  return (
-    <section className="mt-6">
-      <h2 className="font-display text-[28px] font-light leading-tight">More cards</h2>
-      <p className="mt-2 text-[15px] text-[#a79f90]">Every card from How to Feel Like a Woman. Five minutes on your own, write until it stops.</p>
-      <ul className="mt-6 space-y-3">
-        {HTFLAW_CARDS.map((c) => (
-          <li key={c.publish_on} className="rounded-2xl border border-[#DDC98E]/30 p-4 font-display text-[19px] font-light leading-snug text-[#f1ece2]">{c.body}</li>
-        ))}
-      </ul>
-    </section>
-  );
-}
 function SmutStories() {
   return (
     <section className="mt-6">
