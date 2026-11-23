@@ -161,7 +161,8 @@ function Content() {
           <Part id="part-today" n={1} title="Today's confession, and your week"><WeekStrip onPick={pick} /></Part>
           <Part id="part-questions" n={2} title="This week's questions"><WallPeek onOpen={() => pick("yours")} /></Part>
           <Part id="part-practice" n={3} title="Touch Base" sub="Your kinesthetic anchor, so you feel safe and come back into your body. Five minutes a day, in my voice."><Today /></Part>
-          <Part id="part-month" n={4} title="What opens the rest of the month"><ComingUp /></Part>
+          <OpenedForYou />
+          <Part id="part-month" n={5} title="What opens the rest of the month"><ComingUp /></Part>
         </>}
         {tab === "card" && <Cards feed={feed} />}
         {tab === "yours" && <YourTurn />}
@@ -180,12 +181,13 @@ const TODAY_PARTS = [
   { id: "part-today", label: "Today's confession" },
   { id: "part-questions", label: "This week's questions" },
   { id: "part-practice", label: "Touch Base" },
+  { id: "part-programmes", label: "Your programmes" },
   { id: "part-month", label: "The rest of the month" },
 ];
 function TodayIndex() {
   return (
     <nav className="mt-5 rounded-2xl border border-[#DDC98E]/30 p-4" aria-label="Today, in four parts">
-      <p className="text-[15px] text-[#f1ece2]">Today comes in four parts.</p>
+      <p className="text-[15px] text-[#f1ece2]">Today comes in five parts.</p>
       <ol className="mt-2 grid grid-cols-2 gap-2">
         {TODAY_PARTS.map((p, i) => (
           <li key={p.id}>
@@ -490,9 +492,9 @@ function OpenedForYou() {
   const open = trial && !paid ? MEMBERSHIP_UNLOCKS.filter((u) => u.freeWeek) : MEMBERSHIP_UNLOCKS.filter((u) => u.month <= month);
   if (!open.length) return null;
   return (
-    <div className="mt-6" data-testid="opened-for-you">
-      <Eyebrow>Opened for you</Eyebrow>
-      <div className="mt-3 space-y-2">
+    <Part id="part-programmes" n={4} title="Your programmes" sub={trial && !paid ? "My gift to you: yours to keep, whatever you decide." : "Everything that has opened for you. Yours to keep."}>
+    <div className="mt-4" data-testid="opened-for-you">
+      <div className="space-y-2">
         {open.map((u) => (
           <a key={u.title} href={u.href} target={u.href.startsWith("http") ? "_blank" : undefined} rel="noreferrer"
             className="block rounded-2xl border border-[#DDC98E]/40 bg-[rgba(13,53,53,0.35)] p-4">
@@ -501,8 +503,9 @@ function OpenedForYou() {
           </a>
         ))}
       </div>
-      <p className="mt-2 text-[12px] text-[#8f877a]">{trial && !paid ? "My gift to you: these are yours to keep, whatever you decide. The Trace and the full library open on day 8." : "Something new opens every month you stay."}</p>
+      <p className="mt-2 text-[12px] text-[#8f877a]">{trial && !paid ? "The Trace and the full library open on day 8." : "Something new opens every month you stay."}</p>
     </div>
+    </Part>
   );
 }
 
@@ -1138,7 +1141,6 @@ function Today() {
         <MonthDots days={days} start={start} sel={sel} onPick={(d) => { if (d <= today) setSel(d); }} />
       </div>
       <TouchMapMonth />
-      <OpenedForYou />
     </section>
   );
 }
