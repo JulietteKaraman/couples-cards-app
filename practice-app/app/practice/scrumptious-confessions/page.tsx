@@ -417,7 +417,7 @@ function Library() {
     // How many answers each section holds, so an empty one never shows on For you.
     Promise.all([fetch("/scrumptious-confessions/cards.json").then((r) => (r.ok ? r.json() : [])).catch(() => []), fetch("/scrumptious-confessions/answers.json").then((r) => r.json()).catch(() => []), loadWall().then((w) => (w?.answers || []).map((a) => ({ q: a.question }))).catch(() => [])])
       .then(([k, j, m]) => {
-        const qs: string[] = [...k, ...j, ...m].filter((a: { slug?: string }) => !a.slug || !HIDE.has(a.slug)).map((a: { q: string }) => a.q.toLowerCase());
+        const qs: string[] = [...k, ...j, ...m].filter((a: { slug?: string }) => !a.slug || !HIDE.has(a.slug.split("--")[0])).map((a: { q: string }) => a.q.toLowerCase());
         const c: Record<string, number> = {};
         for (const t of TOPICS) c[t.id] = qs.filter((q) => t.qOnly ? t.words.some((w) => q.includes(w)) && !(t.not || []).some((w) => q.includes(w)) : t.words.some((w) => (" " + q + " ").includes(w))).length;
         setCounts(c);
@@ -676,7 +676,7 @@ function Answers({ paid, trial, start, shelves, startTopic, men, women }: { paid
     get.then((d) => setData((x) => ({ ...x, [shelf]: d }))).catch(() => setData((x) => ({ ...x, [shelf]: [] })));
   }, [shelf, data]);
   const raw = data[shelf];
-  const all = raw && shelf === "answers" ? raw.filter((a) => !HIDE.has(a.slug) && !(women && forMen(a.q))) : raw;
+  const all = raw && shelf === "answers" ? raw.filter((a) => !HIDE.has(a.slug.split("--")[0]) && !(women && forMen(a.q))) : raw;
   const meta = SHELVES.find((x) => x.id === shelf)!;
   // Phones type curly apostrophes ("don’t"); the library has straight ones. Search ignores
   // apostrophes and punctuation, so "why don't i feel anything" always finds it (19 Nov 2026).
