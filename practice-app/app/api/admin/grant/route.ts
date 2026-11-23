@@ -40,7 +40,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Not authorised" }, { status: 403 });
   }
 
-  let body: { email?: string; deckType?: string; note?: string; length?: string };
+  let body: { email?: string; deckType?: string; note?: string; length?: string; until?: string };
   try {
     body = await req.json();
   } catch {
@@ -74,10 +74,12 @@ export async function POST(req: Request) {
     const week = body.length === "week";
     // "Three months free" (22 Nov 2026, Juliette): 90 days from doors open, ends by itself.
     const three = body.length === "three";
-    const marker = three ? `admin-grant-3months-${Date.now()}` : month ? `admin-grant-month-${Date.now()}` : week ? `admin-grant-week-${Date.now()}` : `admin-grant-${Date.now()}`;
+    const marker = body.length === "date" ? `admin-grant-until-${Date.now()}` : three ? `admin-grant-3months-${Date.now()}` : month ? `admin-grant-month-${Date.now()}` : week ? `admin-grant-week-${Date.now()}` : `admin-grant-${Date.now()}`;
     // A free month given before doors open counts from doors open (Juliette 20 Nov 2026: her 4 ladies to Wed 23 Dec).
     const startMs = Math.max(Date.now(), Date.parse(`${DOORS_OPEN}T00:00:00Z`));
-    const expiresAt = three ? new Date(startMs + 90 * 86400 * 1000).toISOString() : month ? new Date(startMs + 30 * 86400 * 1000).toISOString() : week ? new Date(startMs + 7 * 86400 * 1000).toISOString() : undefined;
+    // "Pick an end date" (23 Nov 2026): access ends at the end of that day, UK time is close enough at 23:59 UTC.
+    const untilMs = body.length === "date" && body.until ? Date.parse(`${body.until}T23:59:00Z`) : NaN;
+    const expiresAt = !Number.isNaN(untilMs) ? new Date(untilMs).toISOString() : three ? new Date(startMs + 90 * 86400 * 1000).toISOString() : month ? new Date(startMs + 30 * 86400 * 1000).toISOString() : week ? new Date(startMs + 7 * 86400 * 1000).toISOString() : undefined;
     const userId = await grantEntitlement(email, deckType, marker, undefined, expiresAt);
 
     // A gifted Confessions member gets every member email, same as a paying one

@@ -32,10 +32,14 @@ export async function GET(req: Request) {
   }
 
   const userIds = Array.from(new Set((decks ?? []).map((d) => d.user_id)));
+  // One paged read of every account instead of one request per person: the per-person
+  // lookups made the admin list hang on "Loading…" (23 Nov 2026).
   const emailsByUserId: Record<string, string> = {};
-  for (const uid of userIds) {
-    const { data } = await supabaseAdmin.auth.admin.getUserById(uid);
-    if (data?.user?.email) emailsByUserId[uid] = data.user.email;
+  for (let page = 1; page <= 50; page++) {
+    const { data, error } = await supabaseAdmin.auth.admin.listUsers({ page, perPage: 1000 });
+    if (error) break;
+    for (const u of data.users) if (u.email) emailsByUserId[u.id] = u.email;
+    if (data.users.length < 1000) break;
   }
 
   const { data: progressRows } = await supabaseAdmin
@@ -53,6 +57,10 @@ export async function GET(req: Request) {
   }
 
   const buyers = (decks ?? []).map((d) => ({
+    user_id: d.user_id,
+    expires_at: d.expires_at,
+    // Only access Juliette gave (or a free place) can be changed from the admin page; paying is Stripe's.
+    changeable: /^(admin-grant-|free-)/.test(String(d.stripe_checkout_session_id || "")),
     email: emailsByUserId[d.user_id] ?? "(unknown)",
     deck_type: d.deck_type,
     purchased_at: d.purchased_at,
