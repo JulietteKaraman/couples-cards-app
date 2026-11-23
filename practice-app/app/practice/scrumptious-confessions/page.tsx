@@ -14,6 +14,7 @@ import { MEMBERSHIP_UNLOCKS, membershipMonth } from "@/lib/entitlements/config";
 import { PLACES } from "@/lib/content/touch-map";
 import { ADMIN_EMAIL } from "@/lib/entitlements/admin";
 import PracticeTimer from "@/components/PracticeTimer";
+import { HTFLAW_CARDS } from "@/lib/content/htflaw-cards";
 import { memberWeeks, onMyClock } from "@/lib/confessions-clock";
 
 // SCRUMPTIOUS CONFESSIONS, the membership (specs/scrumptious-confessions-membership.md).
@@ -155,7 +156,14 @@ function Content() {
         </div>
 
         {tab === "stories" && <Stories feed={feed} />}
-        {tab === "today" && <><HomeScreen /><WeekStrip onPick={pick} /><ComingUp /><WallPeek onOpen={() => pick("yours")} /><Today /></>}
+        {tab === "today" && <>
+          <TodayIndex />
+          <HomeScreen />
+          <Part id="part-today" n={1} title="Today's confession, and your week"><WeekStrip onPick={pick} /></Part>
+          <Part id="part-questions" n={2} title="This week's questions"><WallPeek onOpen={() => pick("yours")} /></Part>
+          <Part id="part-practice" n={3} title="Touch Base and your wrist"><Today /></Part>
+          <Part id="part-month" n={4} title="What opens the rest of the month"><ComingUp /></Part>
+        </>}
         {tab === "card" && <Cards feed={feed} />}
         {tab === "yours" && <YourTurn />}
         {tab === "library" && <Library />}
@@ -167,11 +175,43 @@ function Content() {
   );
 }
 
+/* 23 Nov 2026 (Juliette): "Today is split up into different things", in her order: the confession, this week's
+   questions, Touch Base and the wrist, then what opens the rest of the month. A short index at the top jumps there. */
+const TODAY_PARTS = [
+  { id: "part-today", label: "Today's confession" },
+  { id: "part-questions", label: "This week's questions" },
+  { id: "part-practice", label: "Touch Base and your wrist" },
+  { id: "part-month", label: "The rest of the month" },
+];
+function TodayIndex() {
+  return (
+    <nav className="mt-5 rounded-2xl border border-[#DDC98E]/30 p-4" aria-label="Today, in four parts">
+      <p className="text-[15px] text-[#f1ece2]">Today comes in four parts.</p>
+      <ol className="mt-2 grid grid-cols-2 gap-2">
+        {TODAY_PARTS.map((p, i) => (
+          <li key={p.id}>
+            <button type="button" onClick={() => document.getElementById(p.id)?.scrollIntoView({ behavior: "smooth", block: "start" })} className="flex min-h-[44px] w-full items-center gap-2 rounded-full border border-[#DDC98E]/40 px-3 text-left text-[13px] text-[#f1ece2]">
+              <span className="text-[#DDC98E]">{i + 1}</span>{p.label}
+            </button>
+          </li>
+        ))}
+      </ol>
+    </nav>
+  );
+}
+function Part({ id, n, title, children }: { id: string; n: number; title: string; children: React.ReactNode }) {
+  return (
+    <div id={id} className="mt-10 scroll-mt-24 border-t border-[#DDC98E]/20 pt-6">
+      <p className="font-display text-[22px] font-light leading-tight text-[#f1ece2]"><span className="mr-2 text-[#DDC98E]">{n}</span>{title}</p>
+      {children}
+    </div>
+  );
+}
 /* Juliette 23 Nov 2026: "it should say in the confessions how to do that". Shown on Today until it is on the
    home screen or dismissed; always reachable as a small link at the bottom. */
 function HomeScreen({ always }: { always?: boolean }) {
   const key = "ffy.a2hs.confessions.v1";
-  const [state, setState] = useState<"hidden" | "card" | "link" | "open">("hidden");
+  const [state, setState] = useState<"hidden" | "card" | "link" | "open" | "mini">("hidden");
   useEffect(() => {
     let standalone = false;
     let dismissed = false;
@@ -181,9 +221,16 @@ function HomeScreen({ always }: { always?: boolean }) {
     } catch { /* treat as a browser */ }
     if (standalone) return;
     // eslint-disable-next-line react-hooks/set-state-in-effect -- phone storage is only readable after mount
-    setState(always ? "link" : dismissed ? "hidden" : "card");
+    setState(always ? "link" : dismissed ? "hidden" : "mini");
   }, [always]);
   if (state === "hidden") return null;
+  // On Today it starts as one line, so the four parts stay near the top (Juliette 23 Nov 2026: too much scrolling).
+  if (state === "mini") return (
+    <button type="button" onClick={() => setState("card")} className="mt-4 flex min-h-[48px] w-full items-center justify-between rounded-2xl border border-[#DDC98E]/40 px-4 text-left text-[14px] text-[#f1ece2]">
+      <span><span className="text-[#DDC98E]">Put Confessions on your home screen</span>, one tap next time</span>
+      <span className="shrink-0 text-[#DDC98E]">How &rarr;</span>
+    </button>
+  );
   if (state === "link") return (
     <div className="mt-12 text-center">
       <button type="button" onClick={() => setState("open")} className="min-h-[44px] text-[14px] text-[#a79f90] underline underline-offset-4">How to put this on my home screen</button>
@@ -390,7 +437,7 @@ function Library() {
     return (
       <>
         <button type="button" onClick={() => { setDoor(null); setLinkTopic(undefined); }} className="mt-6 min-h-[44px] text-[15px] text-[#DDC98E]">&larr; Back to the library</button>
-        {door === "touchmap" ? <TouchMapMonth /> : door === "smut" ? <SmutStories /> : <Answers key={door + (linkTopic || "")} paid={paid} trial={trial} start={d.shelves[0]} shelves={d.shelves} men={door === "men"} startTopic={linkTopic ?? d.topic} />}
+        {door === "touchmap" ? <TouchMapMonth /> : door === "smut" ? <SmutStories /> : door === "morecards" ? <MoreCards /> : <Answers key={door + (linkTopic || "")} paid={paid} trial={trial} start={d.shelves[0]} shelves={d.shelves} men={door === "men"} startTopic={linkTopic ?? d.topic} />}
       </>
     );
   }
@@ -544,7 +591,7 @@ function Welcome({ onDone }: { onDone: (p: Profile) => void }) {
 }
 // The library's doors (Juliette 19 Nov 2026: "the library is really not very clear at all").
 // Nobody lands on a list: they pick a door first. The Journal door is a link of its own.
-type Door = "meditations" | "answers" | "men" | "touchmap" | "smut";
+type Door = "meditations" | "answers" | "men" | "touchmap" | "smut" | "morecards";
 // 20 Nov 2026, Juliette: "if I can't even find it, how the hell are they going to find it?" Menopause and
 // The Touch Map get doors of their own, not buried in a topic chip or at the bottom of Today.
 const DOORS: { id: Door; title: string; line: string; shelves: Shelf[]; topic?: string }[] = [
@@ -555,12 +602,29 @@ const DOORS: { id: Door; title: string; line: string; shelves: Shelf[]; topic?: 
   { id: "touchmap", title: "The Touch Map", line: "One place a month, in my voice", shelves: [] },
   // 21 Nov 2026, Juliette: "put them in, I already have them on the women's app". The late night shelf is SMUT STORIES (canon).
   { id: "smut", title: "Smut Stories", line: "Late at night, in my voice", shelves: [] },
+  // 23 Nov 2026 (Juliette): "pull their old cards". Every card from How to Feel Like a Woman, kept here.
+  { id: "morecards", title: "More cards", line: "From How to Feel Like a Woman", shelves: [] },
 ];
 // Smut Stories: her recorded fiction, in her voice (first recorded for How to Feel Like a Woman, Nov 2026).
 const SMUT: { title: string; line: string; src: string; minutes: number }[] = [
+  // 23 Nov 2026 (Juliette): this one is a Smut Story, not a confession.
+  { title: "Tilt Your Beard", line: "The one where I confess who's really in charge.", src: "/how-to-feel-like-a-woman/audio/confession-2026-11-02-0944cc5b.m4a", minutes: 6 },
   { title: "The Piano Tuner", line: "He comes every spring. This year she stays in the room.", src: "/scrumptious-confessions/audio/smut-the-piano-tuner.m4a", minutes: 14 },
   { title: "The Dressmaker", line: "A dress for her daughter's wedding, and hands that take their time.", src: "/scrumptious-confessions/audio/smut-the-dressmaker.m4a", minutes: 10 },
 ];
+function MoreCards() {
+  return (
+    <section className="mt-6">
+      <h2 className="font-display text-[28px] font-light leading-tight">More cards</h2>
+      <p className="mt-2 text-[15px] text-[#a79f90]">Every card from How to Feel Like a Woman. Five minutes on your own, write until it stops.</p>
+      <ul className="mt-6 space-y-3">
+        {HTFLAW_CARDS.map((c) => (
+          <li key={c.publish_on} className="rounded-2xl border border-[#DDC98E]/30 p-4 font-display text-[19px] font-light leading-snug text-[#f1ece2]">{c.body}</li>
+        ))}
+      </ul>
+    </section>
+  );
+}
 function SmutStories() {
   return (
     <section className="mt-6">
