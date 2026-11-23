@@ -161,7 +161,7 @@ function Content() {
           <HomeScreen />
           <Part id="part-today" n={1} title="Today's confession, and your week"><WeekStrip onPick={pick} /></Part>
           <Part id="part-questions" n={2} title="This week's questions"><WallPeek onOpen={() => pick("yours")} /></Part>
-          <Part id="part-practice" n={3} title="Touch Base and your wrist"><Today /></Part>
+          <Part id="part-practice" n={3} title="Touch Base" sub="Your kinesthetic anchor, so you feel safe and come back into your body. Five minutes a day, in my voice."><Today /></Part>
           <Part id="part-month" n={4} title="What opens the rest of the month"><ComingUp /></Part>
         </>}
         {tab === "card" && <Cards feed={feed} />}
@@ -180,7 +180,7 @@ function Content() {
 const TODAY_PARTS = [
   { id: "part-today", label: "Today's confession" },
   { id: "part-questions", label: "This week's questions" },
-  { id: "part-practice", label: "Touch Base and your wrist" },
+  { id: "part-practice", label: "Touch Base" },
   { id: "part-month", label: "The rest of the month" },
 ];
 function TodayIndex() {
@@ -199,10 +199,11 @@ function TodayIndex() {
     </nav>
   );
 }
-function Part({ id, n, title, children }: { id: string; n: number; title: string; children: React.ReactNode }) {
+function Part({ id, n, title, sub, children }: { id: string; n: number; title: string; sub?: string; children: React.ReactNode }) {
   return (
     <div id={id} className="mt-10 scroll-mt-24 border-t border-[#DDC98E]/20 pt-6">
       <p className="font-display text-[22px] font-light leading-tight text-[#f1ece2]"><span className="mr-2 text-[#DDC98E]">{n}</span>{title}</p>
+      {sub && <p className="mt-1 text-[14px] leading-snug text-[#a79f90]">{sub}</p>}
       {children}
     </div>
   );
