@@ -10,7 +10,7 @@ import { nextSpeed, readSpeed, saveSpeedFor } from "@/lib/voice-speed";
 import { PromptCard } from "@/components/Interactive";
 import { CollectionGate } from "@/components/auth/CollectionGate";
 import { supabaseBrowser } from "@/lib/supabase/client";
-import { MEMBERSHIP_UNLOCKS, membershipMonth } from "@/lib/entitlements/config";
+import { MEMBERSHIP_UNLOCKS, membershipMonth, monthOpensOn } from "@/lib/entitlements/config";
 import { PLACES } from "@/lib/content/touch-map";
 import { ADMIN_EMAIL } from "@/lib/entitlements/admin";
 import PracticeTimer from "@/components/PracticeTimer";
@@ -156,18 +156,21 @@ function Content() {
 
         {tab === "stories" && <Stories feed={feed} />}
         {tab === "today" && <>
-          <TodayIndex />
+          <StartHere onPick={pick} />
+          <Programmes />
+          <div className="mt-10 border-t border-[#DDC98E]/20 pt-6">
+            <p className="font-display text-[22px] font-light leading-tight text-[#f1ece2]">This week</p>
+            <p className="mt-1 text-[14px] leading-snug text-[#a79f90]">Tap to open.</p>
+            <Fold title="Today's confession, and your week"><WeekStrip onPick={pick} /></Fold>
+            <Fold title="Touch Base" sub="Your kinesthetic anchor, so you feel safe and come back into your body. Five minutes a day, in my voice."><Today /></Fold>
+            <Fold title="This week's questions"><WallPeek onOpen={() => pick("yours")} /></Fold>
+          </div>
           <HomeScreen />
-          <Part id="part-today" n={1} title="Today's confession, and your week"><WeekStrip onPick={pick} /></Part>
-          <Part id="part-questions" n={2} title="This week's questions"><WallPeek onOpen={() => pick("yours")} /></Part>
-          <Part id="part-practice" n={3} title="Touch Base" sub="Your kinesthetic anchor, so you feel safe and come back into your body. Five minutes a day, in my voice."><Today /></Part>
-          <OpenedForYou />
-          <Part id="part-month" n={5} title="What opens the rest of the month"><ComingUp /></Part>
         </>}
         {tab === "card" && <Cards feed={feed} />}
         {tab === "yours" && <YourTurn />}
         {tab === "library" && <Library />}
-        <HomeScreen always />
+        {tab !== "today" && <HomeScreen always />}
         <ManageMembership />
         </>}
       </div>
@@ -175,29 +178,87 @@ function Content() {
   );
 }
 
-/* 23 Nov 2026 (Juliette): "Today is split up into different things", in her order: the confession, this week's
-   questions, Touch Base and the wrist, then what opens the rest of the month. A short index at the top jumps there. */
-const TODAY_PARTS = [
-  { id: "part-today", label: "Today's confession" },
-  { id: "part-questions", label: "This week's questions" },
-  { id: "part-practice", label: "Touch Base" },
-  { id: "part-programmes", label: "Your programmes" },
-  { id: "part-month", label: "The rest of the month" },
-];
-function TodayIndex() {
+/* 23 Nov 2026 (Juliette): "what's more important for them to see is which programmes they're going to be, what's
+   going to open next with programmes... that first page feels really confusing". Today now leads with the programmes
+   (open now, then opening next with each member's own dates), then the week in three short rows that open with a tap. */
+const shortDate = (d: Date) => d.toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short", timeZone: "Europe/London" });
+function Fold({ title, sub, children }: { title: string; sub?: string; children: React.ReactNode }) {
   return (
-    <nav className="mt-5 rounded-2xl border border-[#DDC98E]/30 p-4" aria-label="Today, in four parts">
-      <p className="text-[15px] text-[#f1ece2]">Today comes in five parts.</p>
-      <ol className="mt-2 grid grid-cols-2 gap-2">
-        {TODAY_PARTS.map((p, i) => (
-          <li key={p.id}>
-            <button type="button" onClick={() => document.getElementById(p.id)?.scrollIntoView({ behavior: "smooth", block: "start" })} className="flex min-h-[44px] w-full items-center gap-2 rounded-full border border-[#DDC98E]/40 px-3 text-left text-[13px] text-[#f1ece2]">
-              <span className="text-[#DDC98E]">{i + 1}</span>{p.label}
-            </button>
-          </li>
+    <details className="group mt-3 rounded-2xl border border-[#DDC98E]/40 bg-[rgba(13,53,53,0.25)] px-4">
+      <summary className="flex min-h-[56px] cursor-pointer list-none items-center justify-between gap-3 py-3 [&::-webkit-details-marker]:hidden">
+        <span>
+          <span className="block font-display text-[19px] font-light leading-tight text-[#f1ece2]">{title}</span>
+          {sub && <span className="mt-0.5 block text-[13px] leading-snug text-[#a79f90]">{sub}</span>}
+        </span>
+        <span className="shrink-0 text-[#DDC98E] transition group-open:rotate-90">&rarr;</span>
+      </summary>
+      <div className="pb-5">{children}</div>
+    </details>
+  );
+}
+/* A member's first day: one thing first, so a mid-week joiner isn't handed everything at once. */
+function StartHere({ onPick }: { onPick: (t: TabId) => void }) {
+  const [show, setShow] = useState(false);
+  useEffect(() => {
+    const k = "ffy.sc.firstday.v1";
+    const t = todayUK();
+    let first = lsGet(k);
+    if (!first) { lsSet(k, t); first = t; }
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- phone storage is only readable after mount
+    setShow(first === t);
+  }, []);
+  if (!show) return null;
+  return (
+    <div className="mt-6 rounded-3xl border-2 border-[#DDC98E] bg-[rgba(221,201,142,0.12)] p-5" data-testid="start-here">
+      <p className="text-[12px] uppercase tracking-[0.18em] text-[#DDC98E]">Start here</p>
+      <p className="mt-2 text-[16px] leading-snug text-[#f1ece2]">Open your first gift below, then listen to this week&rsquo;s confession. Everything else will wait for you.</p>
+      <button type="button" onClick={() => onPick("stories")} className="mt-4 inline-flex min-h-[48px] w-full items-center justify-center rounded-full bg-[#DDC98E] text-[15px] font-medium text-[#070707]">Listen to this week&rsquo;s confession</button>
+    </div>
+  );
+}
+function Programmes() {
+  const { since, trial, paid, trialStart } = useMembership();
+  if (!paid && !trial) return null;
+  const month = since ? membershipMonth(since) : 1;
+  const open = trial && !paid ? MEMBERSHIP_UNLOCKS.filter((u) => u.freeWeek) : MEMBERSHIP_UNLOCKS.filter((u) => u.month <= month);
+  const nextMonth = trial && !paid ? 1 : month + 1;
+  const next = MEMBERSHIP_UNLOCKS.filter((u) => u.month === nextMonth && !(trial && !paid && u.freeWeek));
+  let when = "Opens next month";
+  if (trial && !paid) {
+    if (trialStart) { const d = new Date(trialStart); d.setUTCDate(d.getUTCDate() + 7); when = `Day 8, ${shortDate(d)}`; } else when = "Day 8";
+  } else if (since) when = `Opens ${shortDate(monthOpensOn(since, nextMonth))}`;
+  return (
+    <div className="mt-8" data-testid="your-programmes">
+      <p className="font-display text-[26px] font-light leading-tight text-[#f1ece2]">Your programmes</p>
+      <p className="mt-1 text-[14px] leading-snug text-[#a79f90]">{trial && !paid ? "My gift to you: yours to keep, whatever you decide." : "Everything that has opened for you. Yours to keep."}</p>
+      <div className="mt-4 space-y-2">
+        {open.map((u) => (
+          <a key={u.title} href={u.href} target={u.href.startsWith("http") ? "_blank" : undefined} rel="noreferrer"
+            className="flex items-center justify-between gap-3 rounded-2xl border-[1.5px] border-[#DDC98E]/60 bg-[rgba(13,53,53,0.45)] p-5">
+            <span>
+              <span className="block font-display text-[21px] font-light leading-tight">{u.title}</span>
+              <span className="mt-1 block text-[14px] text-[#a79f90]">{u.line}</span>
+            </span>
+            <span className="shrink-0 text-[#DDC98E]">Open &rarr;</span>
+          </a>
         ))}
-      </ol>
-    </nav>
+      </div>
+      {next.length > 0 && (
+        <div className="mt-6" data-testid="opening-next">
+          <Eyebrow>Opening next for you</Eyebrow>
+          <div className="mt-3 rounded-2xl border border-dashed border-[#DDC98E]/50 p-4">
+            <p className="text-[13px] uppercase tracking-[0.16em] text-[#DDC98E]">{when}</p>
+            <ul className="mt-2 space-y-2">
+              {next.map((u) => (
+                <li key={u.title}><span className="block font-display text-[18px] font-light leading-tight text-[#f1ece2]">{u.title}</span><span className="block text-[13px] text-[#a79f90]">{u.line}</span></li>
+              ))}
+              {trial && !paid && <li className="text-[14px] text-[#cfc8bb]">And the full library: every question I&rsquo;ve answered.</li>}
+            </ul>
+          </div>
+          <p className="mt-2 text-[13px] text-[#8f877a]">Something new opens every month you stay. Yours to keep.</p>
+        </div>
+      )}
+    </div>
   );
 }
 function Part({ id, n, title, sub, children }: { id: string; n: number; title: string; sub?: string; children: React.ReactNode }) {
@@ -383,6 +444,7 @@ function StoryBlock({ story, open }: { story: Story; open: boolean }) {
 function useMembership() {
   const [since, setSince] = useState<string | null>(null);
   const [trial, setTrial] = useState(false);
+  const [trialStart, setTrialStart] = useState<string | null>(null);
   // Local preview only shows the answers open; never true on the live site.
   const [paid, setPaid] = useState(process.env.NODE_ENV === "development");
   useEffect(() => {
@@ -397,11 +459,11 @@ function useMembership() {
       // Free fortnight days don't count: months start with the first payment.
       // The 7 free days ("trial-") are a taste: answers stay locked until day 8 (Juliette 19 Nov 2026).
       const sid = String(row?.stripe_checkout_session_id || "");
-      if (row?.purchased_at && sid.startsWith("trial-")) setTrial(true);
+      if (row?.purchased_at && sid.startsWith("trial-")) { setTrial(true); setTrialStart(row.purchased_at as string); }
       else if (row?.purchased_at && !sid.startsWith("free-")) { setSince(row.purchased_at as string); setPaid(true); }
     })();
   }, []);
-  return { since, trial, paid };
+  return { since, trial, paid, trialStart };
 }
 
 /* Juliette 19 Nov 2026: "the library is too big and difficult to navigate... it will also be for people in the
@@ -495,32 +557,6 @@ function Library() {
         </Link>
       </LibGroup>
     </section>
-  );
-}
-
-/* The practices that have opened for this member, on the Today tab. Only what is open: no locked list. */
-function OpenedForYou() {
-  const { since, trial, paid } = useMembership();
-  if (!paid && !trial) return null;
-  // The free week opens the freeWeek gifts (Holiday Survival Kit, Quiet Isn't Yes), theirs to keep (21 Nov 2026).
-  const month = since ? membershipMonth(since) : 1;
-  const open = trial && !paid ? MEMBERSHIP_UNLOCKS.filter((u) => u.freeWeek) : MEMBERSHIP_UNLOCKS.filter((u) => u.month <= month);
-  if (!open.length) return null;
-  return (
-    <Part id="part-programmes" n={4} title="Your programmes" sub={trial && !paid ? "My gift to you: yours to keep, whatever you decide." : "Everything that has opened for you. Yours to keep."}>
-    <div className="mt-4" data-testid="opened-for-you">
-      <div className="space-y-2">
-        {open.map((u) => (
-          <a key={u.title} href={u.href} target={u.href.startsWith("http") ? "_blank" : undefined} rel="noreferrer"
-            className="block rounded-2xl border border-[#DDC98E]/40 bg-[rgba(13,53,53,0.35)] p-4">
-            <span className="block font-display text-[19px] font-light leading-tight">{u.title}</span>
-            <span className="mt-0.5 block text-[13px] text-[#a79f90]">{u.line}</span>
-          </a>
-        ))}
-      </div>
-      <p className="mt-2 text-[12px] text-[#8f877a]">{trial && !paid ? "The Trace and the full library open on day 8." : "Something new opens every month you stay."}</p>
-    </div>
-    </Part>
   );
 }
 
@@ -842,40 +878,6 @@ const TWO_AM = [
 
 /* "Coming this month" on Today (Juliette 20 Nov 2026): the next 30 days on this member's own clock, plus the
    programme their next paid month opens. Titles only. Cards come every Tuesday and Saturday, so they're one line. */
-function ComingUp() {
-  const [items, setItems] = useState<{ date: string; kind: string; title: string }[] | null>(null);
-  const { since, trial } = useMembership();
-  useEffect(() => {
-    (async () => {
-      const { data } = await supabaseBrowser.auth.getSession();
-      const res = await fetch("/api/confessions/coming", { headers: { Authorization: `Bearer ${data.session?.access_token}` } }).catch(() => null);
-      if (res?.ok) setItems((await res.json()).items || []);
-    })();
-  }, []);
-  const month = since ? membershipMonth(since) : 0;
-  const nextProgrammes = MEMBERSHIP_UNLOCKS.filter((u) => u.month === (trial || !since ? 1 : month + 1));
-  if (!items) return null;
-  return (
-    <section className="mt-6">
-      <Eyebrow>Coming this month</Eyebrow>
-      <ul className="mt-3 divide-y divide-[#DDC98E]/15 rounded-2xl border border-[#DDC98E]/25">
-        {items.map((i) => (
-          <li key={i.kind + i.date + i.title} className="flex items-baseline justify-between gap-3 px-4 py-3">
-            <span className="text-[15px] text-[#f1ece2]"><span className="text-[12px] uppercase tracking-[0.14em] text-[#a79f90]">{i.kind}</span><br />{i.title}</span>
-            <span className="shrink-0 text-[13px] text-[#DDC98E]">{new Date(i.date + "T12:00:00").toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" })}</span>
-          </li>
-        ))}
-        <li className="px-4 py-3 text-[14px] text-[#cfc8bb]">A new card every Tuesday and Saturday, and my answers every Thursday.</li>
-        {nextProgrammes.length > 0 && (
-          <li className="px-4 py-3 text-[14px] text-[#cfc8bb]">
-            <span className="text-[#DDC98E]">{trial || !since ? "Opens with your first month:" : "Opens next month:"}</span> {nextProgrammes.map((u) => u.title).join(", ")}. Yours to keep.
-          </li>
-        )}
-      </ul>
-    </section>
-  );
-}
-
 /* A peek at the wall on Today (Juliette 20 Nov 2026: "People like to see what others are asking"). */
 function WallPeek({ onOpen }: { onOpen: () => void }) {
   const [wall, setWall] = useState<WallData | null>(null);
