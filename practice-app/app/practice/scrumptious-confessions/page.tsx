@@ -401,12 +401,21 @@ function Coming({ day, what }: { day: string; what: string }) {
 }
 
 /* ================= STORIES ================= */
+/* 23 Nov 2026 (Juliette): the one for now stays on top and opens; anything they can look at early (up to two
+   days ahead) sits under it, closed, marked "Opens Monday, an early look". Older ones follow. */
+function nowFirst<T extends { publish_on: string }>(items: T[]) {
+  const t = todayUK();
+  const now = items.filter((i) => i.publish_on <= t);
+  const early = items.filter((i) => i.publish_on > t).sort((a, b) => a.publish_on.localeCompare(b.publish_on));
+  return [...now.slice(0, 1).map((i) => ({ i, early: false })), ...early.map((i) => ({ i, early: true })), ...now.slice(1).map((i) => ({ i, early: false }))];
+}
+const earlyLabel = (d: string) => `Opens ${weekday(d)}, an early look`;
 function Stories({ feed }: { feed: Feed | null }) {
   if (!feed) return <p className="mt-6 text-[#8f877a]">…</p>;
   return (
     <section className="mt-4">
       {feed.stories.length === 0 && <p className="mt-6 text-center text-[15px] text-[#a79f90]">Your first story lands here very soon.</p>}
-      {feed.stories.map((s, i) => <StoryBlock key={s.id} story={s} open={i === 0} />)}
+      {nowFirst(feed.stories).map(({ i: s, early }, n) => <StoryBlock key={s.id} story={s} open={n === 0 && !early} early={early} />)}
       {feed.nextStory && <Coming day={feed.nextStory} what="A new confession" />}
     </section>
   );
@@ -428,7 +437,7 @@ const WHERE = [
   { id: "nowhere", label: "Nowhere yet" },
 ];
 
-function StoryBlock({ story, open }: { story: Story; open: boolean }) {
+function StoryBlock({ story, open, early }: { story: Story; open: boolean; early?: boolean }) {
   const [show, setShow] = useState(open);
   const key = `ffy.confessions.story.${story.id}.v1`;
   const [landed, setLanded] = useState("");
@@ -447,15 +456,18 @@ function StoryBlock({ story, open }: { story: Story; open: boolean }) {
 
   if (!show) {
     return (
-      <button type="button" onClick={() => setShow(true)} className="mt-3 flex w-full items-center justify-between gap-3 rounded-2xl border border-[#DDC98E]/30 px-4 py-4 text-left">
-        <span className="font-display text-[18px] font-light">{story.title}</span>
-        <span className="shrink-0 text-[12px] text-[#8f877a]">{dayName(story.publish_on)}</span>
+      <button type="button" onClick={() => setShow(true)} className={`mt-3 flex w-full items-center justify-between gap-3 rounded-2xl border px-4 py-4 text-left ${early ? "border-dashed border-[#DDC98E]/60" : "border-[#DDC98E]/30"}`}>
+        <span>
+          {early && <span className="block text-[12px] uppercase tracking-[0.14em] text-[#DDC98E]">{earlyLabel(story.publish_on)}</span>}
+          <span className="font-display text-[18px] font-light">{story.title}</span>
+        </span>
+        {!early && <span className="shrink-0 text-[12px] text-[#8f877a]">{dayName(story.publish_on)}</span>}
       </button>
     );
   }
   return (
     <article className="mt-5">
-      <p className="text-[11px] uppercase tracking-[0.18em] text-[#a79f90]">{dayName(story.publish_on)}</p>
+      <p className="text-[11px] uppercase tracking-[0.18em] text-[#a79f90]">{early ? earlyLabel(story.publish_on) : dayName(story.publish_on)}</p>
       <h2 className="mt-1 font-display text-[30px] font-light leading-tight">{story.title}</h2>
       <p className="mt-1 text-[15px] text-[#cfc8bb]">{story.line}</p>
       <div className="mt-4"><VoicePlayer src={story.audio} label={story.title} dark /></div>
@@ -1040,8 +1052,8 @@ function YourTurn() {
       </div>
 
       <div className="rounded-3xl border border-[#D8DFE1]/40 p-5">
-        <p className="text-[11px] uppercase tracking-[0.2em] text-[#D8DFE1]">Asked at 2am</p>
-        <p className="mt-2 text-[14px] text-[#a79f90]">Real questions women and men type into their phones at night. I&rsquo;ve answered these in the library.</p>
+        <p className="text-[11px] uppercase tracking-[0.2em] text-[#D8DFE1]">The questions I&rsquo;m asked most in my DMs</p>
+        <p className="mt-2 text-[14px] text-[#a79f90]">I&rsquo;ve answered these in the library.</p>
         <div className="mt-3 space-y-2">
           {TWO_AM.map((q) => <p key={q} className="rounded-2xl bg-[#D8DFE1]/15 p-3 text-[15px] leading-snug text-[#f1ece2]">{q}</p>)}
         </div>
@@ -1355,7 +1367,7 @@ function Cards({ feed }: { feed: Feed | null }) {
   return (
     <section className="mt-4">
       {feed.cards.length === 0 && <p className="mt-6 text-center text-[15px] text-[#a79f90]">Your first card lands here very soon.</p>}
-      {feed.cards.map((c, i) => <CardBlock key={c.id} card={c} open={i === 0} />)}
+      {nowFirst(feed.cards).map(({ i: c, early }, n) => <CardBlock key={c.id} card={c} open={n === 0 && !early} early={early} />)}
       {feed.nextCard && <Coming day={feed.nextCard} what="A new card" />}
       <YourAnswers cards={feed.cards} />
       {/* Juliette 19 Nov 2026: "it has two audios, which is weird... the 15-minute timer there... and the
@@ -1414,7 +1426,7 @@ function WhoSpeaks() {
   );
 }
 
-function CardBlock({ card, open }: { card: Card; open: boolean }) {
+function CardBlock({ card, open, early }: { card: Card; open: boolean; early?: boolean }) {
   const answeredKey = `ffy.confessions.card.${card.id}.answered.v1`;
   const [show, setShow] = useState(open);
   const [face, setFace] = useState<"back" | "front">("back");
@@ -1423,15 +1435,15 @@ function CardBlock({ card, open }: { card: Card; open: boolean }) {
 
   if (!show) {
     return (
-      <button type="button" onClick={() => setShow(true)} className="mt-3 flex w-full items-center justify-between rounded-2xl border border-[#DDC98E]/30 px-4 py-4 text-left">
-        <span className="text-[15px] text-[#cfc8bb]">An earlier card</span>
-        <span className="text-[12px] text-[#8f877a]">{dayName(card.publish_on)}</span>
+      <button type="button" onClick={() => setShow(true)} className={`mt-3 flex w-full items-center justify-between rounded-2xl border px-4 py-4 text-left ${early ? "border-dashed border-[#DDC98E]/60" : "border-[#DDC98E]/30"}`}>
+        <span className={`text-[15px] ${early ? "text-[#DDC98E]" : "text-[#cfc8bb]"}`}>{early ? earlyLabel(card.publish_on) : "An earlier card"}</span>
+        {!early && <span className="text-[12px] text-[#8f877a]">{dayName(card.publish_on)}</span>}
       </button>
     );
   }
   return (
     <div className="mt-5">
-      <p className="text-center text-[11px] uppercase tracking-[0.18em] text-[#a79f90]">{dayName(card.publish_on)}</p>
+      <p className="text-center text-[11px] uppercase tracking-[0.18em] text-[#a79f90]">{early ? earlyLabel(card.publish_on) : dayName(card.publish_on)}</p>
       <div className="my-5 flex justify-center">
         <div onClick={() => setFace("front")} role={face === "back" ? "button" : undefined} aria-label={face === "back" ? "Turn the card over" : undefined} className={`w-full max-w-[300px] ${face === "back" ? "cursor-pointer" : ""}`}>
           {face === "back" ? (
