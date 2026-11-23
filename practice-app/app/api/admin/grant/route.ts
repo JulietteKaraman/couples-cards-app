@@ -92,6 +92,9 @@ export async function POST(req: Request) {
       try {
         await fetch("https://api.kit.com/v4/subscribers", { method: "POST", headers, body: payload });
         const t = await fetch("https://api.kit.com/v4/tags/25769563/subscribers", { method: "POST", headers, body: payload });
+        // Gifted tag (Juliette 23 Nov 2026): keeps free members off the paying-member emails
+        // (the "before your first £111" reminder goes to Kit segment 610264 = Member minus Gifted).
+        await fetch("https://api.kit.com/v4/tags/26318266/subscribers", { method: "POST", headers, body: payload });
         // Gift welcome (no money in it) + the daily first week, then Mondays. Never the paid welcome 2968362,
         // which talks about the free week and payment.
         const q = await fetch("https://api.kit.com/v4/sequences/2981858/subscribers", { method: "POST", headers, body: payload });
