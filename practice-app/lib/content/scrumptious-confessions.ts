@@ -10,7 +10,8 @@ export const CONFESSION_STORIES: ConfessionStory[] = [
   { id: "tolerated-touch", publish_on: "2026-11-23", title: "The touch you tolerate", line: "The one about the touch you just put up with, and what it teaches your body.", audio: "/scrumptious-confessions/audio/confession-2026-11-23-75f72c61.m4a" },
   { id: "no-is-complete", publish_on: "2026-11-30", title: "No is a complete sentence", line: "The one about what happens in your body when you hear no.", audio: "/scrumptious-confessions/audio/confession-2026-11-30-dd4e2afd.m4a" },
   // 23 Nov 2026 (Juliette): "Tilt your beard" is a Smut Story, not a confession. It now lives in the Library's Smut Stories.
-  // Mon 7 Dec needs a new confession recording.
+  // Recorded 23 Nov 2026 (her own twist on the vigilance centre). Title, line and card approved by Juliette 23 Nov.
+  { id: "table-by-the-wall", publish_on: "2026-12-07", title: "The table by the wall", line: "The one about a restaurant in Edinburgh, and why her body wants the wall behind her.", audio: "/scrumptious-confessions/audio/confession-2026-12-07-b7e43f15.m4a" },
 ];
 
 export const CONFESSION_CARDS: ConfessionCard[] = [
@@ -19,7 +20,7 @@ export const CONFESSION_CARDS: ConfessionCard[] = [
   // rhythm: Mon confession, Tue card, Wed poem, Thu answers, Fri meditation, Sat card, Sun Touch Base): Tuesdays and Saturdays.
   { id: "touch-you-put-up-with", publish_on: "2026-11-24", prompt: "Tell me a kind of touch you put up with, and what you'd rather have instead." },
   { id: "no-never-said", publish_on: "2026-12-01", prompt: "Tell me about a no you never said out loud." },
-  { id: "take-off-you", publish_on: "2026-12-08", prompt: "Tell me what you'd love someone to take off you, even for a minute." }, // her line from Tilt your beard
+  { id: "safest-in-a-room", publish_on: "2026-12-08", prompt: "Tell me where you feel safest in a busy room." }, // goes with The table by the wall (approved 23 Nov)
   // Second card (Juliette 17 Nov: "maybe 2 different cards"): Tuesday's echoes the confession, Saturday's moves them on.
   { id: "safe-enough", publish_on: "2026-11-28", prompt: "Tell me what makes you feel safe enough to be touched." },
   { id: "need-to-hear", publish_on: "2026-12-05", prompt: "Tell me what you need to hear before you can say yes." },
