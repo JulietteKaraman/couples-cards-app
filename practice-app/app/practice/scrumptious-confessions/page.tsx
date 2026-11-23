@@ -445,6 +445,15 @@ function Library() {
   }
   if (!profile || redo) return <Welcome onDone={(p) => { saveProfile(p); setProfile(p); setRedo(false); }} />;
   // A section with no answers yet becomes an invitation to ask, so nobody taps into nothing.
+  const DoorBtn = ({ door: id, tone, wide }: { door: Door; tone: keyof typeof TONE; wide?: boolean }) => {
+    const x = DOORS.find((d) => d.id === id)!;
+    return (
+      <button type="button" onClick={() => setDoor(x.id)} className={`${doorCls} ${TONE[tone]} ${wide ? "col-span-2" : ""}`}>
+        <span className="font-display text-[21px] font-light leading-tight text-[#f1ece2]">{x.title}</span>
+        <span className="text-[13px] text-[#a79f90]">{x.line}</span>
+      </button>
+    );
+  };
   const mine = forYou(profile).filter((id) => id.startsWith("door:") || (id.startsWith("ask:") ? (counts[id.slice(4)] ?? 0) === 0 : (counts[id] ?? 0) > 0));
   return (
     <section className="mt-6">
@@ -462,23 +471,29 @@ function Library() {
           <button type="button" onClick={() => setRedo(true)} className="mt-3 min-h-[40px] text-[13px] text-[#a79f90] underline underline-offset-4">Change my answers</button>
         </div>
       )}
-      <Eyebrow>Your library</Eyebrow>
-      <div className="mt-4 grid grid-cols-2 gap-3">
-        {DOORS.map((x) => (
-          <button key={x.id} type="button" onClick={() => setDoor(x.id)} className={doorCls}>
-            <span className="font-display text-[21px] font-light leading-tight text-[#f1ece2]">{x.title}</span>
-            <span className="text-[13px] text-[#a79f90]">{x.line}</span>
-          </button>
-        ))}
-        <Link href="/practice/scrumptious-poems" className={doorCls}>
+      {/* 23 Nov 2026 (Juliette): four groups, each its own colour, so the doors make sense together. */}
+      <LibGroup label="Answers">
+        <DoorBtn door="answers" tone="gold" wide />
+        <DoorBtn door="women" tone="gold" />
+        <DoorBtn door="men" tone="gold" />
+      </LibGroup>
+      <LibGroup label="Practices">
+        <DoorBtn door="meditations" tone="green" />
+        <DoorBtn door="touchmap" tone="green" />
+      </LibGroup>
+      <LibGroup label="Late at night">
+        <DoorBtn door="smut" tone="night" wide />
+      </LibGroup>
+      <LibGroup label="To read">
+        <Link href="/practice/scrumptious-poems" className={`${doorCls} ${TONE.cream}`}>
           <span className="font-display text-[21px] font-light leading-tight text-[#f1ece2]">Poems</span>
           <span className="text-[13px] text-[#a79f90]">A new one every Wednesday</span>
         </Link>
-        <Link href="/practice/scrumptiousness-journal" className={doorCls}>
+        <Link href="/practice/scrumptiousness-journal" className={`${doorCls} ${TONE.cream}`}>
           <span className="font-display text-[21px] font-light leading-tight text-[#f1ece2]">The Journal</span>
           <span className="text-[13px] text-[#a79f90]">Scrumptiousness, {paid ? "all 103 pages" : "ten pages to start"}</span>
         </Link>
-      </div>
+      </LibGroup>
     </section>
   );
 }
@@ -605,6 +620,21 @@ const SMUT: { title: string; line: string; src: string; minutes: number }[] = [
   { title: "The Piano Tuner", line: "He comes every spring. This year she stays in the room.", src: "/scrumptious-confessions/audio/smut-the-piano-tuner.m4a", minutes: 14 },
   { title: "The Dressmaker", line: "A dress for her daughter's wedding, and hands that take their time.", src: "/scrumptious-confessions/audio/smut-the-dressmaker.m4a", minutes: 10 },
 ];
+// Library group colours (Juliette 23 Nov 2026), from the brand: gold, deep green, black, cream.
+const TONE = {
+  gold: "!border-[#DDC98E] !bg-[rgba(221,201,142,0.14)]",
+  green: "!border-[#DDC98E]/40 !bg-[rgba(13,53,53,0.75)]",
+  night: "!border-[#DDC98E] !bg-[#070707]",
+  cream: "!border-[#fefcfa]/50 !bg-transparent",
+};
+function LibGroup({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div className="mt-7">
+      <Eyebrow>{label}</Eyebrow>
+      <div className="mt-3 grid grid-cols-2 gap-3">{children}</div>
+    </div>
+  );
+}
 function SmutStories() {
   return (
     <section className="mt-6">
