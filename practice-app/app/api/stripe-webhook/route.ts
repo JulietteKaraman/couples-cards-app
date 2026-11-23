@@ -9,6 +9,9 @@ import {
   SUBSCRIPTION_GRACE_PERIOD_HOURS,
 } from "@/lib/entitlements/config";
 
+// Kit: "Scrumptious Confessions: Programmes opening this week", one email a few days before each new month opens.
+const PROGRAMMES_OPENING_SEQUENCE = 2983231;
+
 // Members App spec R13/E1/E2. Every other product in this app is a
 // one-time purchase, matched on sign-in against real Stripe checkout
 // sessions (see resolve-purchase) — that pattern is correct for a
@@ -108,6 +111,19 @@ export async function POST(req: Request) {
         try {
           const { data: row } = await supabaseAdmin.from("user_decks").select("purchased_at").eq("user_id", grantedUserId).eq("deck_type", deckType).maybeSingle();
           if (row?.purchased_at) await keepOpened(grantedUserId, row.purchased_at);
+          // 23 Nov 2026 (Juliette, "Yes, switch them on"): the monthly "This week, more open for you" emails.
+          // purchased_at is set fresh only on the first real payment (day 8), never on a renewal, so a
+          // purchased_at from the last hour means their paid months start today. Gifts never reach here.
+          const fresh = row?.purchased_at && Date.now() - new Date(row.purchased_at as string).getTime() < 60 * 60 * 1000;
+          const kitKey = process.env.KIT_API_KEY;
+          if (fresh && kitKey) {
+            const r = await fetch(`https://api.kit.com/v4/sequences/${PROGRAMMES_OPENING_SEQUENCE}/subscribers`, {
+              method: "POST",
+              headers: { "X-Kit-Api-Key": kitKey, "Content-Type": "application/json", Accept: "application/json" },
+              body: JSON.stringify({ email_address: email.toLowerCase() }),
+            });
+            if (!r.ok) console.error("stripe-webhook: programmes-opening sequence", r.status, await r.text().catch(() => ""));
+          }
         } catch (e) {
           console.error("stripe-webhook: keepOpened", e instanceof Error ? e.message : e);
         }
