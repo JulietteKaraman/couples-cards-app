@@ -155,14 +155,58 @@ function Content() {
         </div>
 
         {tab === "stories" && <Stories feed={feed} />}
-        {tab === "today" && <><WeekStrip onPick={pick} /><ComingUp /><WallPeek onOpen={() => pick("yours")} /><Today /></>}
+        {tab === "today" && <><HomeScreen /><WeekStrip onPick={pick} /><ComingUp /><WallPeek onOpen={() => pick("yours")} /><Today /></>}
         {tab === "card" && <Cards feed={feed} />}
         {tab === "yours" && <YourTurn />}
         {tab === "library" && <Library />}
+        <HomeScreen always />
         <ManageMembership />
         </>}
       </div>
     </main>
+  );
+}
+
+/* Juliette 23 Nov 2026: "it should say in the confessions how to do that". Shown on Today until it is on the
+   home screen or dismissed; always reachable as a small link at the bottom. */
+function HomeScreen({ always }: { always?: boolean }) {
+  const key = "ffy.a2hs.confessions.v1";
+  const [state, setState] = useState<"hidden" | "card" | "link" | "open">("hidden");
+  useEffect(() => {
+    let standalone = false;
+    let dismissed = false;
+    try {
+      standalone = window.matchMedia("(display-mode: standalone)").matches || (navigator as unknown as { standalone?: boolean }).standalone === true;
+      dismissed = localStorage.getItem(key) === "1";
+    } catch { /* treat as a browser */ }
+    if (standalone) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- phone storage is only readable after mount
+    setState(always ? "link" : dismissed ? "hidden" : "card");
+  }, [always]);
+  if (state === "hidden") return null;
+  if (state === "link") return (
+    <div className="mt-12 text-center">
+      <button type="button" onClick={() => setState("open")} className="min-h-[44px] text-[14px] text-[#a79f90] underline underline-offset-4">How to put this on my home screen</button>
+    </div>
+  );
+  return (
+    <div className={`${always ? "mt-12" : "mt-5"} rounded-2xl border border-[#DDC98E]/40 p-4 text-[14px] leading-relaxed text-[#cfc8bb]`} data-testid="confessions-home-screen">
+      <p className="text-[#f1ece2]"><span className="text-[#DDC98E]">Put Confessions on your home screen</span>, so it opens in one tap, like an app.</p>
+      <p className="mt-3"><b className="font-medium text-[#f1ece2]">iPhone</b></p>
+      <ol className="mt-1 list-decimal space-y-1 pl-5">
+        <li>Open this page in <b className="font-medium text-[#f1ece2]">Safari</b>. If you came from an email, tap the compass or &ldquo;Open in Safari&rdquo; first. Inside Gmail, AOL or Instagram the option isn&rsquo;t there.</li>
+        <li>Tap the <b className="font-medium text-[#f1ece2]">Share</b> button: the square with the arrow pointing up. On newer iPhones, tap the three dots first, then Share.</li>
+        <li>Scroll down and tap <b className="font-medium text-[#f1ece2]">Add to Home Screen</b>, then <b className="font-medium text-[#f1ece2]">Add</b>.</li>
+      </ol>
+      <p className="mt-3"><b className="font-medium text-[#f1ece2]">Android</b></p>
+      <ol className="mt-1 list-decimal space-y-1 pl-5">
+        <li>Open this page in <b className="font-medium text-[#f1ece2]">Chrome</b>.</li>
+        <li>Tap the three dots at the top right, then <b className="font-medium text-[#f1ece2]">Add to Home screen</b> (or Install app).</li>
+      </ol>
+      <p className="mt-3">The first time you open it from your home screen, sign in once more with your email. After that it remembers you.</p>
+      {!always && <button type="button" onClick={() => { try { localStorage.setItem(key, "1"); } catch { /* fine */ } setState("hidden"); }} className="mt-2 inline-flex min-h-[44px] items-center text-[14px] text-[#DDC98E] underline underline-offset-4">Done, hide this</button>}
+      {always && <button type="button" onClick={() => setState("link")} className="mt-2 inline-flex min-h-[44px] items-center text-[14px] text-[#DDC98E] underline underline-offset-4">Close</button>}
+    </div>
   );
 }
 
