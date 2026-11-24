@@ -14,8 +14,9 @@ import { dayOf } from "@/lib/content/31-touch-points-drip";
 import { useAuth } from "@/components/providers/AuthProvider";
 import { supabaseBrowser } from "@/lib/supabase/client";
 import { PhoneBites } from "@/components/PhoneBites";
+import { AppHomeScreen } from "@/components/AppHomeScreen";
 import { getCompletedSlugs } from "@/lib/entitlements/progress";
-import { COLLECTION_DECK_TYPES, PURCHASE_URLS, FREE_DECK_TYPES } from "@/lib/entitlements/config";
+import { COLLECTION_DECK_TYPES, PURCHASE_URLS, FREE_DECK_TYPES, MEMBERSHIP_UNLOCKS, membershipMonth, type MembershipUnlock } from "@/lib/entitlements/config";
 
 // ===========================================================================
 // THE HOME, rebuilt dark 24 Oct 2026 (specs/feel-fully-you-app-home.md).
@@ -190,10 +191,24 @@ function LibraryContent() {
   const [loaded, setLoaded] = useState(false);
   // Has this person EVER started Scrumptious Confessions (an ended free week counts)? Then the kit stays theirs.
   const [everJoined, setEverJoined] = useState(false);
+  // 24 Nov 2026 (Juliette): every programme that has opened for them in Scrumptious Confessions shows under
+  // "Your programmes", more the longer they stay, and stays theirs to keep after they leave.
+  const [memberOpen, setMemberOpen] = useState<MembershipUnlock[]>([]);
   useEffect(() => {
-    if (!user) { setEverJoined(false); return; }
-    supabaseBrowser.from("user_decks").select("deck_type").eq("user_id", user.id).eq("deck_type", "scrumptious-confessions").limit(1)
-      .then(({ data }) => setEverJoined(!!data?.length || user.email?.toLowerCase() === "juliette@feelfullyyou.com"));
+    if (!user) { setEverJoined(false); setMemberOpen([]); return; }
+    if (user.email?.toLowerCase() === "juliette@feelfullyyou.com") { setEverJoined(true); setMemberOpen(MEMBERSHIP_UNLOCKS); return; }
+    supabaseBrowser.from("user_decks").select("purchased_at, expires_at, stripe_checkout_session_id").eq("user_id", user.id).eq("deck_type", "scrumptious-confessions").maybeSingle()
+      .then(({ data: row }) => {
+        if (!row) { setEverJoined(false); setMemberOpen([]); return; }
+        setEverJoined(true);
+        const sid = String(row.stripe_checkout_session_id || "");
+        const paid = !!row.purchased_at && !/^(free|trial)-/.test(sid);
+        if (!paid) { setMemberOpen(MEMBERSHIP_UNLOCKS.filter((u) => u.freeWeek)); return; }
+        // Months count from the first payment; after they leave, what opened before they left stays.
+        const end = row.expires_at && new Date(row.expires_at as string) < new Date() ? new Date(row.expires_at as string) : new Date();
+        const m = membershipMonth(row.purchased_at as string, end);
+        setMemberOpen(MEMBERSHIP_UNLOCKS.filter((u) => u.month <= m));
+      });
   }, [user]);
 
   const owns = (slug: string) => !!user && entitledCollections.includes(slug);
@@ -264,6 +279,8 @@ function LibraryContent() {
             </Link>
           </p>
         )}
+
+        <AppHomeScreen />
 
         {/* Funnel bites this phone has opened. They stay hidden from everyone else. */}
         <PhoneBites />
@@ -434,6 +451,14 @@ function LibraryContent() {
                   onClick={() => trackInterest("scrumptious-confessions", user?.email)}
                 />
               )}
+              {memberOpen.filter((u) => u.title !== "Holiday Survival Kit" && !ownedPaid.some((c) => c.slug === u.deck)).map((u) => {
+                const ext = u.href.startsWith("http");
+                const cls = "flex min-h-[60px] items-center justify-between gap-3 rounded-2xl border-[1.5px] border-[rgba(221,201,142,0.55)] bg-[rgba(13,53,53,0.45)] px-4 py-3";
+                const inner = (<><span><span className="block font-display text-lg font-normal leading-snug text-ffy-cream">{u.title}</span><span className="mt-0.5 block text-sm leading-snug text-[rgba(254,252,250,0.75)]">{u.line}</span></span><span className="shrink-0 text-[#DDC98E]">&rarr;</span></>);
+                return ext
+                  ? <a key={u.title} href={u.href} target="_blank" rel="noreferrer" className={cls}>{inner}</a>
+                  : <Link key={u.title} href={u.href} className={cls}>{inner}</Link>;
+              })}
               {ownedPaid.map((c) => (
                 <Tile
                   key={c.slug}
