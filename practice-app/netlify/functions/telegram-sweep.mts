@@ -1,6 +1,6 @@
 import { createHash } from "crypto";
 
-// Daily at 06:00 UTC: asks the app to remove group members whose
+// (Retired 24 Nov 2026.) Was daily at 06:00 UTC: asked the app to remove group members whose
 // Scrumptious Confessions access has ended (specs/telegram-gatekeeper.md R4).
 export default async () => {
   const raw = process.env.TELEGRAM_WEBHOOK_SECRET;
@@ -15,4 +15,5 @@ export default async () => {
   return new Response(body, { status: res.status });
 };
 
-export const config = { schedule: "0 6 * * *" };
+// 24 Nov 2026 (Juliette): "telegram off". There is no Telegram group any more, so this no longer runs.
+// To bring it back, put the schedule line back: export const config = { schedule: "0 6 * * *" };
