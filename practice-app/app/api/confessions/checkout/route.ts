@@ -62,6 +62,29 @@ async function lhlCoupon(stripe: Stripe, price: string): Promise<string | null> 
   }
 }
 
+// 24 Nov 2026 (Juliette): COLLECTIVE = her Scrumptious Collective women (Sue-Ann MacCara, Lucy Hall, Kate Caine,
+// Penelope and one more): the same £55 a month for good. Its own coupon, capped at 6 uses, so a shared link can't run on.
+const COLLECTIVE_COUPON = "confessions-collective-55";
+async function collectiveCoupon(stripe: Stripe, price: string): Promise<string | null> {
+  try {
+    const c = await stripe.coupons.retrieve(COLLECTIVE_COUPON);
+    return c.valid ? c.id : null;
+  } catch {
+    const p = await stripe.prices.retrieve(price);
+    const product = typeof p.product === "string" ? p.product : p.product.id;
+    const c = await stripe.coupons.create({
+      id: COLLECTIVE_COUPON,
+      name: "Scrumptious Collective: £55 a month (COLLECTIVE)",
+      amount_off: 5600,
+      currency: p.currency,
+      duration: "forever",
+      max_redemptions: 6,
+      applies_to: { products: [product] },
+    });
+    return c.id;
+  }
+}
+
 export async function GET(req: Request) {
   const key = process.env.STRIPE_SECRET_KEY;
   if (!key) return NextResponse.redirect(SALES, 303);
@@ -78,8 +101,9 @@ export async function GET(req: Request) {
     const email = (new URL(req.url).searchParams.get("email") || "").trim();
     const code = (new URL(req.url).searchParams.get("code") || "").trim().toUpperCase();
     const lhl = code === "LETHERLAND" && now < LHL_ENDS ? await lhlCoupon(stripe, priceCache).catch((e) => { console.error("confessions checkout LETHERLAND coupon:", (e as Error).message); return null; }) : null;
-    const coupon = lhl ?? (code === "FIRST50" ? await first50Coupon(stripe, priceCache).catch(() => null) : null);
-    const codeTag = lhl ? "LETHERLAND" : coupon ? "FIRST50" : null;
+    const coll = code === "COLLECTIVE" ? await collectiveCoupon(stripe, priceCache).catch((e) => { console.error("confessions checkout COLLECTIVE coupon:", (e as Error).message); return null; }) : null;
+    const coupon = lhl ?? coll ?? (code === "FIRST50" ? await first50Coupon(stripe, priceCache).catch(() => null) : null);
+    const codeTag = lhl ? "LETHERLAND" : coll ? "COLLECTIVE" : coupon ? "FIRST50" : null;
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
       ...(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? { customer_email: email } : {}),
@@ -92,7 +116,9 @@ export async function GET(req: Request) {
       // Stripe counts free days from today ("10 days free"); this says plainly when the week starts.
       custom_text: {
         submit: {
-          message: lhl
+          message: coll
+            ? "Nothing is charged today. Your 7 free days start now. Then it's £55 a month instead of £111, for as long as you stay, because you're one of my Scrumptious Collective women. Stop before day 8 and you pay nothing."
+            : lhl
             ? "Nothing is charged today. Your 7 free days start now. Then it's £55 a month instead of £111, for as long as you stay. Stop before day 8 and you pay nothing."
             : coupon
             ? "Nothing is charged today. Your 7 free days come first, then your first month is free too. Your first £111 comes about five weeks from today. Stop before then and you pay nothing."
