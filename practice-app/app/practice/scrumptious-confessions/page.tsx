@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import VoicePlayer from "@/components/VoicePlayer";
+import { ConfessionsStart, START_KEY as SC_START_KEY, toLibraryWhy, type StartAnswers, type StartGo } from "@/components/ConfessionsStart";
 import { SlimPlayer as SpeedPlayer } from "@/components/SlimPlayer";
 import { nextSpeed, readSpeed, saveSpeedFor } from "@/lib/voice-speed";
 import { PromptCard } from "@/components/Interactive";
@@ -75,6 +76,29 @@ const TABS: { id: TabId; label: string }[] = [
 function Content() {
   const [feed, setFeed] = useState<Feed | null>(null);
   const [tab, setTab] = useState<TabId>("today"); // 20 Nov 2026: everyone lands on Today
+  // 24 Nov 2026 (Juliette): the first time someone opens Confessions: her welcome, the five taps, time, their first week.
+  // Someone who was already a member before this existed gets a one-time offer on Today instead.
+  const [startMode, setStartMode] = useState<"loading" | "flow" | "offer" | "done">("loading");
+  useEffect(() => {
+    const done = !!lsGet(SC_START_KEY);
+    const existing = !!lsGet("ffy.sc.firstday.v1") && lsGet("ffy.sc.firstday.v1") < todayUK();
+    const declined = lsGet("ffy.sc.start.offer.v1") === "no";
+    setStartMode(done ? "done" : existing ? (declined ? "done" : "offer") : "flow"); // eslint-disable-line react-hooks/set-state-in-effect
+  }, []);
+  const finishStart = (a: StartAnswers, go: StartGo) => {
+    lsSet(SC_START_KEY, JSON.stringify(a));
+    saveProfile({ why: toLibraryWhy(a) });
+    setStartMode("done");
+    if (go.tab === "library") {
+      window.location.href = `/practice/scrumptious-confessions?tab=library${go.topic ? `&topic=${go.topic}` : ""}${go.door ? `&door=${go.door}` : ""}`;
+      return;
+    }
+    setTab(go.tab);
+    if (go.fold) setTimeout(() => {
+      const d = document.querySelector<HTMLDetailsElement>(`details[data-fold="${go.fold}"]`);
+      if (d) { d.open = true; d.scrollIntoView({ behavior: "smooth", block: "start" }); }
+    }, 350);
+  };
   // 21 Nov 2026: the "Build your first week" flow links straight in (?tab=library&topic=menopause).
   useEffect(() => {
     try { const t = new URLSearchParams(window.location.search).get("tab"); if (t === "library" || t === "card" || t === "yours" || t === "stories") setTab(t); } catch {} // eslint-disable-line react-hooks/set-state-in-effect
@@ -143,7 +167,10 @@ function Content() {
             <p className="mt-5 font-display text-[20px] text-[#DDC98E]">See you on Monday.</p>
           </div>
         )}
-        {!early && <>
+        {!early && startMode === "flow" && (
+          <ConfessionsStart onDone={finishStart} />
+        )}
+        {!early && startMode !== "flow" && startMode !== "loading" && <>
         <div ref={top} className="sticky top-0 z-10 -mx-5 mt-5 bg-[#070707]/95 px-5 py-3">
           <div className="grid grid-cols-5 gap-1.5">
             {TABS.map((t) => (
@@ -156,20 +183,28 @@ function Content() {
 
         {tab === "stories" && <Stories feed={feed} />}
         {tab === "today" && <>
-          <StartHere onPick={pick} />
+          {startMode === "offer" && (
+            <div className="mt-6 rounded-3xl border-2 border-[#DDC98E] bg-[rgba(221,201,142,0.12)] p-5" data-testid="start-offer">
+              <p className="text-[12px] uppercase tracking-[0.18em] text-[#DDC98E]">New</p>
+              <p className="mt-2 font-display text-[24px] font-light leading-tight text-[#f1ece2]">Build your week with me</p>
+              <p className="mt-2 text-[15px] leading-snug text-[#cfc8bb]">Six quick taps, one minute. Then I&rsquo;ll show you where to start.</p>
+              <button type="button" onClick={() => setStartMode("flow")} className="mt-4 min-h-[48px] w-full rounded-full bg-[#DDC98E] text-[15px] font-medium text-[#070707]">Begin</button>
+              <button type="button" onClick={() => { lsSet("ffy.sc.start.offer.v1", "no"); setStartMode("done"); }} className="mt-3 block min-h-[40px] text-[13px] text-[#a79f90] underline underline-offset-4">Not now</button>
+            </div>
+          )}
           <Programmes />
           <div className="mt-10 border-t border-[#DDC98E]/20 pt-6">
             <p className="font-display text-[22px] font-light leading-tight text-[#f1ece2]">This week</p>
             <p className="mt-1 text-[14px] leading-snug text-[#a79f90]">Tap to open.</p>
             <Fold title={todayTitle()}><WeekStrip onPick={pick} /></Fold>
-            <Fold title="Touch Base" sub="Your kinesthetic anchor, so you feel safe and come back into your body. Five minutes a day, in my voice."><Today /></Fold>
+            <Fold id="touchbase" title="Touch Base" sub="Your kinesthetic anchor, so you feel safe and come back into your body. Five minutes a day, in my voice."><Today /></Fold>
             <Fold title="This week's questions"><WallPeek onOpen={() => pick("yours")} /></Fold>
           </div>
           <HomeScreen />
         </>}
         {tab === "card" && <Cards feed={feed} />}
         {tab === "yours" && <YourTurn />}
-        {tab === "library" && <Library />}
+        {tab === "library" && <Library onStart={() => setStartMode("flow")} />}
         {tab !== "today" && <HomeScreen always />}
         <ManageMembership />
         </>}
@@ -189,9 +224,9 @@ function todayTitle() {
   return i === 6 ? TODAY_IS[6] : `${TODAY_IS[i]}, and your week`;
 }
 const shortDate = (d: Date) => d.toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short", timeZone: "Europe/London" });
-function Fold({ title, sub, children }: { title: string; sub?: string; children: React.ReactNode }) {
+function Fold({ title, sub, id, children }: { title: string; sub?: string; id?: string; children: React.ReactNode }) {
   return (
-    <details className="group mt-3 rounded-2xl border border-[#DDC98E]/40 bg-[rgba(13,53,53,0.25)] px-4">
+    <details data-fold={id} className="group mt-3 rounded-2xl border border-[#DDC98E]/40 bg-[rgba(13,53,53,0.25)] px-4">
       <summary className="flex min-h-[56px] cursor-pointer list-none items-center justify-between gap-3 py-3 [&::-webkit-details-marker]:hidden">
         <span>
           <span className="block font-display text-[19px] font-light leading-tight text-[#f1ece2]">{title}</span>
@@ -536,7 +571,7 @@ function useMembership() {
 /* Juliette 19 Nov 2026: "the library is too big and difficult to navigate... it will also be for people in the
    Scrumptious Touch Reset and private clients". Four doors, nothing else. */
 const doorCls = "flex min-h-[132px] flex-col justify-between rounded-3xl border-[1.5px] border-[rgba(221,201,142,0.55)] bg-[rgba(13,53,53,0.35)] p-4 text-left";
-function Library() {
+function Library({ onStart }: { onStart: () => void }) {
   const { trial, paid } = useMembership();
   const [door, setDoor] = useState<Door | null>(null);
   const [linkTopic, setLinkTopic] = useState<string | undefined>(undefined);
@@ -557,7 +592,10 @@ function Library() {
   // Opened from a link with ?topic=<id> (the first-week plan): go straight to that shelf.
   useEffect(() => {
     try {
-      const t = new URLSearchParams(window.location.search).get("topic");
+      const q = new URLSearchParams(window.location.search);
+      const dr = q.get("door") as Door | null;
+      if (dr && DOORS.some((x) => x.id === dr)) { setDoor(dr); return; } // eslint-disable-line react-hooks/set-state-in-effect
+      const t = q.get("topic");
       if (!t || !TOPICS.some((x) => x.id === t)) return;
       setLinkTopic(t); setDoor(TOPICS.find((x) => x.id === t)?.men ? "men" : "answers"); // eslint-disable-line react-hooks/set-state-in-effect
     } catch {}
@@ -572,7 +610,15 @@ function Library() {
       </>
     );
   }
-  if (!profile || redo) return <Welcome onDone={(p) => { saveProfile(p); setProfile(p); setRedo(false); }} />;
+  // 24 Nov 2026: the five taps replace the old "What brings you here?" question.
+  if (!profile || redo) return (
+    <section className="mt-6 rounded-3xl border-[1.5px] border-[#DDC98E]/60 bg-[rgba(13,53,53,0.35)] p-5">
+      <p className="font-display text-[24px] font-light leading-tight text-[#f1ece2]">Let me take you to your part</p>
+      <p className="mt-2 text-[15px] text-[#cfc8bb]">Six quick taps, and I&rsquo;ll open the doors that are yours.</p>
+      <button type="button" onClick={onStart} className="mt-4 min-h-[48px] w-full rounded-full bg-[#DDC98E] text-[15px] font-medium text-[#070707]">Begin</button>
+      <button type="button" onClick={() => { saveProfile({ why: [] }); setProfile({ why: [] }); setRedo(false); }} className="mt-3 block min-h-[40px] text-[13px] text-[#a79f90] underline underline-offset-4">Skip, show me everything</button>
+    </section>
+  );
   // A section with no answers yet becomes an invitation to ask, so nobody taps into nothing.
   const DoorBtn = ({ door: id, tone, wide }: { door: Door; tone: keyof typeof TONE; wide?: boolean }) => {
     const x = DOORS.find((d) => d.id === id)!;
@@ -597,7 +643,7 @@ function Library() {
               return <button key={id} type="button" onClick={() => { setLinkTopic(id); setDoor(t.men ? "men" : "answers"); }} className="min-h-[44px] rounded-full border border-[#DDC98E] px-4 text-[14px] text-[#f1ece2]">{t.label} <span className="text-[#a79f90]">{counts[id]}</span></button>;
             })}
           </div>
-          <button type="button" onClick={() => setRedo(true)} className="mt-3 min-h-[40px] text-[13px] text-[#a79f90] underline underline-offset-4">Change my answers</button>
+          <button type="button" onClick={onStart} className="mt-3 min-h-[40px] text-[13px] text-[#a79f90] underline underline-offset-4">Change my answers</button>
         </div>
       )}
       {/* 23 Nov 2026 (Juliette): four groups, each its own colour, so the doors make sense together. */}
@@ -667,7 +713,7 @@ type Profile = { why: string[] };
 const PKEY = "ffy.sc.profile.v2";
 function readProfile(): Profile | null { try { const v = localStorage.getItem(PKEY); return v ? JSON.parse(v) : null; } catch { return null; } }
 function saveProfile(p: Profile) { try { localStorage.setItem(PKEY, JSON.stringify(p)); } catch { /* fine */ } }
-const WHY: { id: string; label: string; to: string[] }[] = [
+const WHY: { id: string; label: string; sub?: string; to: string[] }[] = [
   { id: "more", label: "It's good, and we want more", to: ["more", "door:smut"] },
   { id: "numb", label: "I feel nothing anymore", to: ["numb"] },
   { id: "freeze", label: "I freeze when my partner reaches for me", to: ["freeze"] },
@@ -675,7 +721,8 @@ const WHY: { id: string; label: string; to: string[] }[] = [
   { id: "approach", label: "I don't know how to approach her anymore", to: ["men-her", "men-away"] },
   { id: "us", label: "We've drifted apart", to: ["us"] },
   // 23 Nov 2026 (Juliette, asked several times): "my body is changing" is not only menopause. Men get their own.
-  { id: "body", label: "My body is changing (menopause)", to: ["menopause"] },
+  // 24 Nov 2026 (Juliette): not only menopause, also knees, aches and hips.
+  { id: "body", label: "My body is changing", sub: "Menopause, sore hips or knees, a body that aches", to: ["menopause", "touch"] },
   { id: "body-m", label: "My erections aren't what they were", to: ["men-body", "ask:men-body"] },
 ];
 function forYou(p: Profile): string[] {
@@ -691,7 +738,7 @@ function Welcome({ onDone }: { onDone: (p: Profile) => void }) {
       <p className="mt-2 text-[14px] text-[#a79f90]">Pick as many as are true, and I&rsquo;ll take you to your part. Only you see this.</p>
       <div className="mt-5 flex flex-col gap-2">
         {WHY.map((w) => (
-          <button key={w.id} type="button" aria-pressed={why.includes(w.id)} onClick={() => setWhy(why.includes(w.id) ? why.filter((x) => x !== w.id) : [...why, w.id])} className={pill(why.includes(w.id))}>{w.label}</button>
+          <button key={w.id} type="button" aria-pressed={why.includes(w.id)} onClick={() => setWhy(why.includes(w.id) ? why.filter((x) => x !== w.id) : [...why, w.id])} className={`${pill(why.includes(w.id))} ${w.sub ? "py-2" : ""}`}>{w.label}{w.sub && <span className={`block text-[12px] ${why.includes(w.id) ? "text-[#070707]/70" : "text-[#a79f90]"}`}>{w.sub}</span>}</button>
         ))}
       </div>
       <button type="button" disabled={!why.length} onClick={() => onDone({ why })} className="mt-6 min-h-[48px] w-full rounded-full bg-[#DDC98E] text-[16px] font-medium text-[#070707] disabled:opacity-40">Take me to my part</button>

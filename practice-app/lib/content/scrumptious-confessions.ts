@@ -7,7 +7,7 @@ export type ConfessionCard = { id: string; publish_on: string; prompt: string };
 
 export const CONFESSION_STORIES: ConfessionStory[] = [
   // Recorded 17 Nov 2026 from the new-direction scripts (confessions that teach).
-  { id: "tolerated-touch", publish_on: "2026-11-23", title: "The touch you tolerate", line: "The one about the touch you just put up with, and what it teaches your body.", audio: "/scrumptious-confessions/audio/confession-2026-11-23-75f72c61.m4a" },
+  { id: "tolerated-touch", publish_on: "2026-11-23", title: "The touch you tolerate", line: "The one about the touch you just put up with, and what it teaches your body.", audio: "/scrumptious-confessions/audio/confession-2026-11-23-c00a3f99.m4a" },
   { id: "no-is-complete", publish_on: "2026-11-30", title: "No is a complete sentence", line: "The one about what happens in your body when you hear no.", audio: "/scrumptious-confessions/audio/confession-2026-11-30-dd4e2afd.m4a" },
   // 23 Nov 2026 (Juliette): "Tilt your beard" is a Smut Story, not a confession. It now lives in the Library's Smut Stories.
   // Recorded 23 Nov 2026 (her own twist on the vigilance centre). Title, line and card approved by Juliette 23 Nov.

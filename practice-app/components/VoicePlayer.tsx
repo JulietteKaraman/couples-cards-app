@@ -21,10 +21,12 @@ export default function VoicePlayer({
   src,
   label,
   dark = false,
+  noScene = false,
 }: {
   src: string;
   label: string;
   dark?: boolean;
+  noScene?: boolean; // the page already sets the scene itself
 }) {
   const ref = useRef<HTMLAudioElement>(null);
   const [playing, setPlaying] = useState(false);
@@ -129,11 +131,17 @@ export default function VoicePlayer({
         </button>
         <div className="min-w-0 flex-1">
           <p className={`text-[11px] uppercase tracking-[0.18em] ${dark ? "text-[#DDC98E]" : "text-ffy-gold-deep"}`}>
-            In Juliette&rsquo;s voice
+            In Juliette&rsquo;s voice{dur ? ` · ${Math.max(1, Math.round(dur / 60))} min` : ""}
           </p>
           <p className={`mt-1 font-display text-lg leading-snug ${dark ? "font-light text-ffy-cream" : "font-semibold text-ffy-teal"}`}>
             {label}
           </p>
+          {/* 24 Nov 2026 (Juliette, from Viv's test): set the scene before a longer recording. */}
+          {!noScene && dur > 180 && t === 0 && !playing && (
+            <p className={`mt-1 text-[13px] ${dark ? "text-[rgba(254,252,250,0.65)]" : "text-ffy-black/60"}`}>
+              Headphones on, somewhere you won&rsquo;t be disturbed.
+            </p>
+          )}
         </div>
       </div>
       <div

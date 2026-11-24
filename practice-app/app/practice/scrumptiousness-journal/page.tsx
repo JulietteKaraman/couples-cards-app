@@ -37,7 +37,20 @@ const UI = {
   shareTitle: "My Scrumptiousness Journal answers",
   comeBack: "Come back to this",
   marked: "Marked to come back to",
+  firstPrompt: "Go straight to the first prompt",
+  toMeditation: "Go to the meditation",
+  coverTimes: "Write at your own pace. The meditation needs about 20 minutes, headphones and somewhere quiet.",
+  beforePlay: "Before you press play: find somewhere quiet and put your headphones on.",
+  recordingLength: (len: string) => `The recording is ${len} long.`,
+  giveYourself: "Give yourself 20 minutes in all.",
+  celebrate: "Celebrate what you've just done. Come back tomorrow for the next part.",
+  keepGoing: "Keep going anyway",
 };
+
+// Natural places to stop: the last page of a section that ends in something she has done.
+// 22 self-care routine, 33 after the playlist practice and brain dump, 37 the first brags and wins practice,
+// 49 to 91 the end of each of the seven days. A gentle card, never a gate.
+const SECTION_ENDS = new Set([22, 33, 37, 49, 56, 63, 70, 77, 84, 91]);
 
 // A TASTER for people who are not paying members (Juliette, 19 Nov 2026: "only give a taster of the journal",
 // and "the 10 pages is more beautiful and gives a real feel of it"). Pages 4 to 13 of the book: the preface,
@@ -53,6 +66,82 @@ function pageHeading(items: JItem[]): string {
   const t = items.find((i) => i.t === "text") as Extract<JItem, { t: "text" }> | undefined;
   const s = (t?.text ?? "Writing space").replace(/\s+/g, " ").trim();
   return s.length > 64 ? s.slice(0, 61).trimEnd() + "…" : s;
+}
+
+// ---- Quotes --------------------------------------------------------------------------------------
+// The quote pages are set in capitals in her PDF, so the words in the content file are capitals too.
+// Left as they are in the file; here, for display only, a quote is shown in normal sentence case, in italic.
+// A quote page: no writing box, one title (the quote), an optional "- Name" line and an optional note.
+type QuoteParts = { quote: string; by: string; note: string };
+function quoteParts(items: JItem[]): QuoteParts | null {
+  if (items.length > 3 || items.some((i) => i.t === "box")) return null;
+  const txt = items as Extract<JItem, { t: "text" }>[];
+  if (txt[0].k !== "title") return null;
+  const by = txt.find((i) => i.k === "kicker");
+  const note = txt.find((i) => i.k === "sub");
+  if (txt.length !== 1 + (by ? 1 : 0) + (note ? 1 : 0)) return null;
+  return { quote: sentenceCase(txt[0].text), by: by ? nameCase(by.text) : "", note: note ? note.text : "" };
+}
+function sentenceCase(raw: string): string {
+  const t = raw.replace(/\s+/g, " ").replace(/,(?=[A-Za-z])/g, ", ").trim().toLowerCase();
+  let out = "";
+  let cap = true;
+  for (let i = 0; i < t.length; i++) {
+    const c = t[i];
+    if (cap && /[a-z]/.test(c)) { out += c.toUpperCase(); cap = false; continue; }
+    out += c;
+    if (c === "!" || c === "?") cap = true;
+    else if (c === ".") {
+      const before = t.slice(0, i).trimEnd().slice(-1);
+      const after = t.slice(i + 1).trimStart().charAt(0);
+      cap = before !== "." && after !== ".";
+    }
+  }
+  return out.replace(/\bi\b/g, "I");
+}
+function nameCase(raw: string): string {
+  const name = raw.replace(/^[-\u2013\u2014]\s*/, "").trim().toLowerCase();
+  let first = true;
+  return name.replace(/[a-z][a-z.']*/g, (w) => {
+    const keep = !first && /^(de|von|van|der|di|le|la)$/.test(w);
+    first = false;
+    return keep ? w : w[0].toUpperCase() + w.slice(1);
+  });
+}
+function QuoteEasy({ q }: { q: QuoteParts }) {
+  return (
+    <blockquote className="my-8 border-l-2 border-[#DDC98E]/60 pl-5" data-testid="quote">
+      <p className="text-[23px] font-light italic leading-[1.5] text-[#f1ece2]" style={{ fontFamily: "'Playfair Display', serif" }}>{q.quote}</p>
+      {q.by && <p className="mt-4 text-[14px] text-[#DDC98E]">{q.by}</p>}
+      {q.note && <p className="mt-1 text-[13px] text-[#a79f90]">{q.note}</p>}
+    </blockquote>
+  );
+}
+
+// How long a recording runs, read from the audio file itself. Unknown until it loads, and then left out if it never does.
+function useAudioLength(src: string): string {
+  const [len, setLen] = useState("");
+  useEffect(() => {
+    const a = new Audio();
+    a.preload = "metadata";
+    a.onloadedmetadata = () => {
+      if (!isFinite(a.duration) || a.duration <= 0) return;
+      const m = Math.floor(a.duration / 60);
+      const r = Math.round(a.duration % 60);
+      setLen(`${m}:${String(r).padStart(2, "0")}`);
+    };
+    a.src = src;
+    return () => { a.onloadedmetadata = null; a.removeAttribute("src"); };
+  }, [src]);
+  return len;
+}
+function MeditationNote({ src }: { src: string }) {
+  const len = useAudioLength(src);
+  return (
+    <p className="mb-3 mt-4 rounded-2xl border border-[#DDC98E]/30 p-4 text-[15px] leading-relaxed text-[#cfc8bb]" data-testid="meditation-note">
+      {UI.beforePlay} {len ? UI.recordingLength(len) + " " : ""}{UI.giveYourself}
+    </p>
+  );
 }
 
 // ---- Keep a copy: every answer with the words above it ------------------------------------------
@@ -181,7 +270,7 @@ async function loadLay(n: number): Promise<Lay | null> {
   }
 }
 
-function BookPage({ n, answers, setAnswer }: { n: number; answers: Record<string, string>; setAnswer: (id: string, v: string) => void }) {
+function BookPage({ n, answers, setAnswer, quote }: { n: number; answers: Record<string, string>; setAnswer: (id: string, v: string) => void; quote: QuoteParts | null }) {
   const slot = JOURNAL_AUDIO[n]?.src && JOURNAL_AUDIO[n]?.at ? JOURNAL_AUDIO[n] : null;
   const [lay, setLay] = useState<Lay | null>(layCache.get(n) ?? null);
   const [w, setW] = useState(375);
@@ -207,20 +296,42 @@ function BookPage({ n, answers, setAnswer }: { n: number; answers: Record<string
   if (failed) return <p className="my-10 text-center text-[15px] text-[#a79f90]" data-testid="book-failed">This page could not load. Use Easy read at the top.</p>;
   const k = w / 432; // screen pixels per printed point
   const cur = lay && lay.n === n ? lay : null;
+  // A quote page: her capitals are taken off the page and the quote is set again in normal case, softer, in italic.
+  // Lines below y 600 (the footer and page number) stay as printed.
+  const body = quote && cur ? cur.lines.filter((l) => l[1] < 600) : [];
+  const qBox = body.length ? (() => {
+    const minX = Math.min(...body.map((l) => l[0]));
+    const flushLeft = body.every((l) => Math.abs(l[0] - body[0][0]) < 0.5);
+    const top = Math.min(...body.map((l) => l[1] - l[6]));
+    return flushLeft ? { x: minX, y: top, w: 432 - minX - 40, h: 560 - top, flushLeft } : { x: 92, y: 170, w: 248, h: 330, flushLeft };
+  })() : null;
+  const qLen = quote ? quote.quote.length : 0;
+  const qPt = qBox?.flushLeft ? 22 : qLen > 250 ? 14 : qLen > 120 ? 16 : 19;
   return (
     <div ref={box} className="relative mx-auto w-full overflow-hidden bg-[#070707] shadow-[0_0_60px_-20px_rgba(221,201,142,0.35)] sm:rounded-lg" style={{ aspectRatio: "432 / 648", maxWidth: 900 }} data-testid="bookpage">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src={`/scrumptiousness-journal/pages/p${pad3(n)}.webp`} alt={`Page ${n} of The Scrumptiousness Journal`} className="absolute inset-0 h-full w-full select-none" draggable={false} />
       {cur && (
         <svg viewBox="0 0 432 648" className="pointer-events-none absolute inset-0 h-full w-full" aria-hidden="true">
-          {cur.lines.map((l, i) => (
+          {cur.lines.filter((l) => !qBox || l[1] >= 600).map((l, i) => (
             <text key={i} x={l[0]} y={l[1]} textLength={l[2]} lengthAdjust="spacing" fill={l[7]} fontSize={l[6]} fontWeight={l[4] === 300 && l[6] < 8 ? 400 : l[4]} fontStyle={l[5] ? "italic" : "normal"} style={{ fontFamily: FONT_VAR[l[3]] ?? FONT_VAR.Jost, whiteSpace: "pre" }}>{l[8]}</text>
           ))}
         </svg>
       )}
+      {qBox && quote && (
+        <div
+          className={`absolute flex flex-col ${qBox.flushLeft ? "justify-start text-left" : "justify-center text-center"}`}
+          style={{ left: `${(qBox.x / 432) * 100}%`, top: `${(qBox.y / 648) * 100}%`, width: `${(qBox.w / 432) * 100}%`, height: `${(qBox.h / 648) * 100}%` }}
+          data-testid="quote"
+        >
+          <p style={{ fontFamily: FONT_VAR.Playfair, fontStyle: "italic", fontWeight: 400, fontSize: qPt * k, lineHeight: 1.5, color: body[0][7] }}>{quote.quote}</p>
+          {quote.by && <p style={{ fontFamily: FONT_VAR.Jost, fontSize: 9 * k, marginTop: 14 * k, letterSpacing: "0.06em", color: body[body.length - 1][7] }}>{quote.by}</p>}
+          {quote.note && <p style={{ fontFamily: FONT_VAR.Jost, fontSize: 8.5 * k, marginTop: 4 * k, color: body[body.length - 1][7] }}>{quote.note}</p>}
+        </div>
+      )}
       {slot && slot.src && slot.at && (
         <div className="absolute" style={{ left: `${slot.at.x * 100}%`, top: `${slot.at.y * 100}%`, width: `${slot.at.w * 100}%` }} data-testid="slot-player">
-          <VoicePlayer src={slot.src} label={slot.label} />
+          <VoicePlayer noScene src={slot.src} label={slot.label} />
         </div>
       )}
       {cur?.areas.map((a) => {
@@ -268,6 +379,9 @@ export default function ScrumptiousnessJournal() {
   // Pages a non-member may open: 10 in the free week, none for someone who hasn't started it (Juliette 19 Nov 2026).
   const [limit, setLimit] = useState(0);
   const [memberKnown, setMemberKnown] = useState(false);
+  // The small "back to Scrumptious Confessions" pill (components/BackToConfessions) floats at the top right
+  // once someone has come through Confessions this visit. When it is there, the page starts lower so it covers nothing.
+  const [pill, setPill] = useState(false);
   const answersRef = useRef<Record<string, string>>({});
   const counted = useRef<Set<string>>(new Set());
 
@@ -289,6 +403,7 @@ export default function ScrumptiousnessJournal() {
     const p = read<number>(K.pos, -1);
     if (Number.isInteger(p) && p >= 0 && p < JOURNAL_PAGES.length) setPos(p);
     setBlocked(b);
+    try { setPill(sessionStorage.getItem("ffy.from.confessions") === "1"); } catch { /* no session storage: no pill to make room for */ }
     setReady(true);
     count("sj_open");
   }, []);
@@ -360,19 +475,26 @@ export default function ScrumptiousnessJournal() {
   };
 
   const wrap = "ffy-sj mx-auto w-full max-w-[560px] px-5 pb-28 pt-6 text-[#f1ece2]";
+  const wrapStyle = pill ? { paddingTop: "calc(env(safe-area-inset-top, 0px) + 64px)" } : undefined;
   const bg = "min-h-screen bg-[#070707] [background-image:radial-gradient(120%_60%_at_50%_0%,rgba(13,53,53,0.55),transparent_70%)]";
 
   if (!ready || !memberKnown) return <main className={bg} />;
   const locked = !paid && pos >= limit;
+  // Shortcuts: the first page with a writing box, and the meditation recording (her only recording played in the app).
+  const firstBoxIdx = JOURNAL_PAGES.findIndex((p) => p.items.some((i) => i.t === "box"));
+  const medIdx = JOURNAL_PAGES.findIndex((p) => JOURNAL_AUDIO[p.n]?.src);
+  const canFirst = firstBoxIdx >= 0 && (paid || limit > firstBoxIdx);
+  const canMed = medIdx >= 0 && paid;
 
   // ---- Contents --------------------------------------------------------------------------------
   if (view === "contents") {
     return (
       <main className={bg}>
-        <div className={wrap}>
+        <div className={wrap} style={wrapStyle}>
           <button type="button" onClick={() => setView(pos >= 0 ? "page" : "cover")} className="min-h-[44px] text-[14px] text-[#DDC98E]">← Back to the page</button>
           <h1 className="font-display mt-2 text-[30px] font-light">Contents</h1>
           <p className="mt-1 text-[14px] text-[#a79f90]">{answered} of {JOURNAL_BOX_TOTAL} writing spaces answered</p>
+          {canMed && <button type="button" onClick={() => open(medIdx)} data-testid="to-meditation" className="mt-4 inline-flex min-h-[48px] items-center rounded-full border border-[#DDC98E]/40 px-5 text-[15px] text-[#DDC98E]">{UI.toMeditation}</button>}
           <ul className="mt-5">
             {JOURNAL_PAGES.map((p, i) => (
               <li key={p.n}>
@@ -397,7 +519,7 @@ export default function ScrumptiousnessJournal() {
     const started = answered > 0 || pos > 0;
     return (
       <main className={bg}>
-        <div className={wrap}>
+        <div className={wrap} style={wrapStyle}>
           <Link href="/" className="inline-flex min-h-[44px] items-center text-[14px] text-[#DDC98E]">← The app</Link>
           <div className="relative mx-auto mt-2 w-full overflow-hidden rounded-3xl border-[1.5px] border-[rgba(221,201,142,0.45)]" style={{ aspectRatio: "2 / 3", maxWidth: 340 }}>
             <Image src="/scrumptiousness-journal/cover.jpg" alt="The Scrumptiousness Journal, a woman by candlelight" fill sizes="340px" className="object-cover" priority />
@@ -405,6 +527,7 @@ export default function ScrumptiousnessJournal() {
           <p className="mt-6 text-center text-[11px] font-medium uppercase tracking-[0.22em] text-[#DDC98E]">{COVER.by}</p>
           <h1 className="font-display mt-2 text-center text-[32px] font-light leading-[1.12]">{COVER.title}</h1>
           <p className="mx-auto mt-3 max-w-[420px] text-center text-[16px] leading-relaxed text-[#cfc8bb]">{COVER.line}</p>
+          <p className="mx-auto mt-2 max-w-[420px] text-center text-[14px] leading-relaxed text-[#a79f90]" data-testid="cover-times">{UI.coverTimes}</p>
 
           <div className="mt-7 rounded-2xl border border-[#DDC98E]/30 p-4" data-testid="progress">
             <div className="h-1 overflow-hidden rounded-full bg-[rgba(221,201,142,0.15)]" aria-hidden="true">
@@ -416,7 +539,9 @@ export default function ScrumptiousnessJournal() {
           <button type="button" onClick={() => { count("sj_begin"); open(started ? pos : 0); }} data-testid="begin" className="mt-5 inline-flex min-h-[52px] w-full items-center justify-center rounded-full border-[1.5px] border-[#DDC98E] font-display text-[17px] font-medium text-[#DDC98E]">
             {started ? "Pick up where you left off" : "Begin"}
           </button>
+          {!started && canFirst && <button type="button" onClick={() => open(firstBoxIdx)} data-testid="first-prompt" className="mt-3 inline-flex min-h-[48px] w-full items-center justify-center rounded-full border border-[#DDC98E]/40 text-[15px] text-[#DDC98E]">{UI.firstPrompt}</button>}
           <button type="button" onClick={() => setView("contents")} data-testid="contents" className="mt-3 inline-flex min-h-[48px] w-full items-center justify-center rounded-full border border-[#DDC98E]/40 text-[15px] text-[#cfc8bb]">Contents</button>
+          {canMed && <button type="button" onClick={() => open(medIdx)} data-testid="to-meditation" className="mt-3 inline-flex min-h-[48px] w-full items-center justify-center rounded-full border border-[#DDC98E]/40 text-[15px] text-[#cfc8bb]">{UI.toMeditation}</button>}
 
           <p className="mt-6 text-center text-[15px] leading-relaxed text-[#EEDE80]">{UI.privacy}</p>
           {blocked && <p role="status" className="mt-3 rounded-2xl border border-[#DDC98E]/40 p-3 text-[14px] text-[#cfc8bb]" data-testid="blocked">{UI.blocked}</p>}
@@ -432,7 +557,7 @@ export default function ScrumptiousnessJournal() {
   if (locked) {
     return (
       <main className={bg}>
-        <div className={wrap}>
+        <div className={wrap} style={wrapStyle}>
           <div className="flex items-center justify-between">
             <button type="button" onClick={() => setView("cover")} className="min-h-[44px] text-[14px] text-[#DDC98E]">← Journal</button>
             <button type="button" onClick={() => setView("contents")} className="min-h-[44px] text-[14px] text-[#DDC98E]">Contents</button>
@@ -453,9 +578,11 @@ export default function ScrumptiousnessJournal() {
   const pg = JOURNAL_PAGES[pos];
   const audio = JOURNAL_AUDIO[pg.n];
   const hasBox = pg.items.some((i) => i.t === "box");
+  const quote = quoteParts(pg.items);
+  const onOpening = canFirst && pos < firstBoxIdx;
   return (
     <main className={bg}>
-      <div className={wrap}>
+      <div className={wrap} style={wrapStyle}>
         <div className="flex items-center justify-between">
           <button type="button" onClick={() => setView("cover")} className="min-h-[44px] text-[14px] text-[#DDC98E]">← Journal</button>
           <span className="text-[13px] text-[#a79f90]" data-testid="pageno">Page {pg.n}</span>
@@ -465,16 +592,21 @@ export default function ScrumptiousnessJournal() {
           <div className="h-full rounded-full bg-[#DDC98E] transition-all duration-500" style={{ width: `${((pos + 1) / JOURNAL_PAGES.length) * 100}%` }} />
         </div>
 
-        <div className="flex justify-center">
+        <div className="flex flex-wrap justify-center gap-2">
           <button type="button" onClick={toggleBook} data-testid="mode" className="min-h-[40px] rounded-full border border-[#DDC98E]/40 px-4 text-[13px] text-[#DDC98E]">
             {book ? "Easy read" : "Book pages"}
           </button>
+          {onOpening && <button type="button" onClick={() => open(firstBoxIdx)} data-testid="first-prompt-top" className="min-h-[40px] rounded-full border border-[#DDC98E]/40 px-4 text-[13px] text-[#DDC98E]">{UI.firstPrompt}</button>}
         </div>
+        {hasBox && <p className="mt-3 text-center text-[13px] text-[#EEDE80]" data-testid="privacy-top">{UI.privacy}</p>}
+        {audio?.src && <MeditationNote src={audio.src} />}
 
         {book ? (
           <div className="relative left-1/2 mt-3 w-screen -translate-x-1/2 sm:w-[min(calc(100vw-24px),900px)]">
-            <BookPage n={pg.n} answers={answers} setAnswer={setAnswer} />
+            <BookPage n={pg.n} answers={answers} setAnswer={setAnswer} quote={quote} />
           </div>
+        ) : quote ? (
+          <QuoteEasy q={quote} />
         ) : (
           pg.items.map((it, i) => <Item key={i} it={it} answers={answers} setAnswer={setAnswer} />)
         )}
@@ -488,6 +620,15 @@ export default function ScrumptiousnessJournal() {
           <button type="button" onClick={() => toggleMark(pg.n)} data-testid="mark" className="mt-6 inline-flex min-h-[44px] items-center text-[14px] text-[#DDC98E] underline underline-offset-4">
             {marks.includes(pg.n) ? `★ ${UI.marked}` : `☆ ${UI.comeBack}`}
           </button>
+        )}
+
+        {onOpening && <button type="button" onClick={() => open(firstBoxIdx)} data-testid="first-prompt" className="mt-6 inline-flex min-h-[48px] w-full items-center justify-center rounded-full border border-[#DDC98E]/40 text-[15px] text-[#DDC98E]">{UI.firstPrompt}</button>}
+
+        {SECTION_ENDS.has(pg.n) && pos < JOURNAL_PAGES.length - 1 && (
+          <div className="mt-8 rounded-2xl border border-[#DDC98E]/40 bg-[rgba(13,53,53,0.35)] p-5 text-center" data-testid="section-end">
+            <p className="font-display text-[19px] font-light leading-[1.45] text-[#f1ece2]">{UI.celebrate}</p>
+            <button type="button" onClick={() => open(pos + 1)} data-testid="keep-going" className="mt-4 inline-flex min-h-[48px] items-center rounded-full border border-[#DDC98E]/50 px-6 text-[15px] text-[#DDC98E]">{UI.keepGoing}</button>
+          </div>
         )}
 
         <div className="mt-8 flex gap-3">

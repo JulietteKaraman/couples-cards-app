@@ -514,7 +514,7 @@ function LibraryContent() {
               title="Scrumptious Confessions"
               subtitle="Every Monday, a confession in my voice. Your questions answered, anonymously. Every month, a programme opens that is yours to keep."
               heroImage="/how-to-feel-like-a-woman/scrumptious-confessions.jpg"
-              note="Your first 7 days are free"
+              note="For you, or the two of you together · your first 7 days are free"
               onClick={() => trackInterest("scrumptious-confessions", user?.email)}
             />
           </>
