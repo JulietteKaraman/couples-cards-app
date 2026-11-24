@@ -16,7 +16,7 @@ import { count } from "@/lib/count";
 import { rememberBite } from "@/lib/bites-on-phone";
 import { nextDayStart, TWELVE_H, whenItOpens } from "@/lib/content/31-touch-points-drip";
 import {
-  AUDIO, CONFESSIONS_URL, SJ_URL, SJ_LHL_FLAG, COPY, DOOR_URL_FULL, DOOR_URL_OFFER, EYES_SECONDS, HOW_ALONE, JOURNAL, JOURNAL_SCREENS, LETTER, PARTS, PHOTOS, PROMPTS, SENSES, lhlOfferOn,
+  AUDIO, CONFESSIONS_URL, CONFESSIONS_LHL_URL, SJ_URL, SJ_LHL_FLAG, COPY, DOOR_URL_FULL, DOOR_URL_OFFER, EYES_SECONDS, HOW_ALONE, JOURNAL, JOURNAL_SCREENS, LETTER, PARTS, PHOTOS, PROMPTS, SENSES, lhlOfferOn,
   TB_AUDIO_LABEL, TB_DAYS, TB_HEAD, TB_LINE, TB_STEPS, TB_WHY, TB_WITH_ME,
 } from "@/lib/content/let-her-land";
 
@@ -211,8 +211,8 @@ function ConfessionsDoor() {
         </ul>
         <div className="mt-4"><Slot src={AUDIO.confessions} label={COPY.confListen} id="lhl-confessions" /></div>
         <p className="mt-4 rounded-2xl border border-[#EEDE80]/50 bg-[rgba(238,222,128,0.08)] px-4 py-3 text-center text-[15px] text-[#EEDE80]" data-testid="conf-keep">{COPY.confKeep}</p>
-        <p className="mt-3 text-center text-[14px] text-[#a79f90]">{COPY.confPrice}</p>
-        <a href={CONFESSIONS_URL} data-testid="confessions-link" onClick={() => count("lhl_confessions_click")} className="lhl-press mt-4 inline-flex min-h-[52px] w-full items-center justify-center rounded-full border-[1.5px] border-[#DDC98E] font-display text-[17px] font-medium text-[#DDC98E]">{COPY.confButton}</a>
+        <p className="mt-3 text-center text-[14px] text-[#a79f90]" data-testid="conf-price">{lhlOfferOn() ? COPY.confPrice : COPY.confPriceAfter}</p>
+        <a href={lhlOfferOn() ? CONFESSIONS_LHL_URL : CONFESSIONS_URL} data-testid="confessions-link" onClick={() => count("lhl_confessions_click")} className="lhl-press mt-4 inline-flex min-h-[52px] w-full items-center justify-center rounded-full border-[1.5px] border-[#DDC98E] font-display text-[17px] font-medium text-[#DDC98E]">{COPY.confButton}</a>
       </div>
     </div>
   );

@@ -42,6 +42,8 @@ export const DIR = "/let-her-land";
 // Second door, 15 Nov 2026 (Juliette: "best upsell is scrumptious confessions... a taster of that in the app").
 // 20 Nov 2026: Confessions is open (£111/month, 7 days free), so the door goes to the membership page.
 export const CONFESSIONS_URL = "https://feelfullyyou.com/scrumptious-confessions-membership";
+// 24 Nov 2026: while Kate's bundle runs, the button goes straight to checkout with the £55-a-month code.
+export const CONFESSIONS_LHL_URL = "https://app.feelfullyyou.com/api/confessions/checkout?code=LETHERLAND";
 // 20 Nov 2026 (Juliette): the Scrumptiousness Journal is part of Let Her Land, the whole journal, worth £27.
 // Opening it from Let Her Land before the offer ends keeps it open on that phone (flag below).
 export const SJ_URL = "/practice/scrumptiousness-journal?from=let-her-land";
@@ -133,7 +135,9 @@ export const COPY = {
   confListen: "Listen to a taste",
   confButton: "Start my 7 days free →",
   confKeep: "Try it for 7 days and my Holiday Survival Kit (worth £17) is yours to keep, even if you stop.",
-  confPrice: "7 days free. Then £111 a month for the first 50 members. Stop before day 8 and you pay nothing.",
+  // 24 Nov 2026 (Juliette, yes): Kate's women get £55 a month instead of £111, for good, if they join by 12 Dec.
+  confPrice: "Because you're one of Kate's Already Her women: 7 days free, then £55 a month instead of £111, for as long as you stay. Join by 12 December. Stop before day 8 and you pay nothing.",
+  confPriceAfter: "7 days free. Then £111 a month. Stop before day 8 and you pay nothing.",
   confInsideHead: "What's inside, a little every day",
   confInside: [
     "Monday: a confession in my voice",

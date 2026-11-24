@@ -37,6 +37,30 @@ async function first50Coupon(stripe: Stripe, price: string): Promise<string | nu
   }
 }
 
+// 24 Nov 2026 (Juliette, yes): LETHERLAND = Kate's Already Her women (Let Her Land): £55 a month instead of £111,
+// for as long as they stay (£56 off, forever). The code only works until the bundle ends (13 Dec 2026 00:00 UTC);
+// anyone who joins in time keeps the price.
+const LHL_COUPON = "confessions-letherland-55";
+const LHL_ENDS = Date.UTC(2026, 11, 13, 0, 0, 0) / 1000;
+async function lhlCoupon(stripe: Stripe, price: string): Promise<string | null> {
+  try {
+    const c = await stripe.coupons.retrieve(LHL_COUPON);
+    return c.valid ? c.id : null;
+  } catch {
+    const p = await stripe.prices.retrieve(price);
+    const product = typeof p.product === "string" ? p.product : p.product.id;
+    const c = await stripe.coupons.create({
+      id: LHL_COUPON,
+      name: "Already Her: £55 a month (LETHERLAND)",
+      amount_off: 5600,
+      currency: p.currency,
+      duration: "forever",
+      applies_to: { products: [product] },
+    });
+    return c.id;
+  }
+}
+
 export async function GET(req: Request) {
   const key = process.env.STRIPE_SECRET_KEY;
   if (!key) return NextResponse.redirect(SALES, 303);
@@ -52,7 +76,9 @@ export async function GET(req: Request) {
     // 21 Nov 2026: the "Build your first week" flow already has their email, so Stripe fills it in.
     const email = (new URL(req.url).searchParams.get("email") || "").trim();
     const code = (new URL(req.url).searchParams.get("code") || "").trim().toUpperCase();
-    const coupon = code === "FIRST50" ? await first50Coupon(stripe, priceCache).catch(() => null) : null;
+    const lhl = code === "LETHERLAND" && now < LHL_ENDS ? await lhlCoupon(stripe, priceCache).catch(() => null) : null;
+    const coupon = lhl ?? (code === "FIRST50" ? await first50Coupon(stripe, priceCache).catch(() => null) : null);
+    const codeTag = lhl ? "LETHERLAND" : coupon ? "FIRST50" : null;
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
       ...(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? { customer_email: email } : {}),
@@ -60,12 +86,14 @@ export async function GET(req: Request) {
       ...(coupon ? { discounts: [{ coupon }] } : {}),
       payment_method_collection: "always",
       // The site's webhook sends the welcome email by payment link; this names the one it stands for.
-      metadata: { payment_link: PAYMENT_LINK, ...(coupon ? { code: "FIRST50" } : {}) },
-      subscription_data: { trial_end: trialEnd, metadata: { payment_link: PAYMENT_LINK, ...(coupon ? { code: "FIRST50" } : {}) } },
+      metadata: { payment_link: PAYMENT_LINK, ...(codeTag ? { code: codeTag } : {}) },
+      subscription_data: { trial_end: trialEnd, metadata: { payment_link: PAYMENT_LINK, ...(codeTag ? { code: codeTag } : {}) } },
       // Stripe counts free days from today ("10 days free"); this says plainly when the week starts.
       custom_text: {
         submit: {
-          message: coupon
+          message: lhl
+            ? "Nothing is charged today. Your 7 free days start now. Then it's £55 a month instead of £111, for as long as you stay. Stop before day 8 and you pay nothing."
+            : coupon
             ? "Nothing is charged today. Your 7 free days come first, then your first month is free too. Your first £111 comes about five weeks from today. Stop before then and you pay nothing."
             : now < FIRST_CHARGE - 7 * 24 * 60 * 60
             ? "Nothing is charged today. Doors open Monday 23 November and your 7 free days start then, with Juliette's first confession. Your first £111 is on Monday 30 November. Stop before then and you pay nothing."
