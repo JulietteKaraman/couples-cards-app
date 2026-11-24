@@ -102,6 +102,8 @@ function LoginPageContent() {
         <h1 className="font-display text-2xl font-semibold text-ffy-teal">
           {destination ? `Open ${destination}` : "The Feel Fully You App"}
         </h1>
+        {/* 24 Nov 2026 (Juliette, from Viv's test): say what the app is. */}
+        {!destination && <p className="mt-2 text-sm text-ffy-brown">Daily practices and cards to bring Touch, desire and closeness back, into your body and your relationship.</p>}
 
         {status === "sent" ? (
           <div className="mt-6">
@@ -127,11 +129,10 @@ function LoginPageContent() {
         ) : (
           <form onSubmit={handleSubmit} className="mt-6 flex flex-col gap-3">
             <p className="text-sm text-ffy-brown">
+              {/* 24 Nov 2026 (Juliette): free things open without signing in, so this is only the key to what's theirs. */}
               {destination
-                ? `Enter your email and we'll send you a code to open ${destination}.`
-                : "Enter your email and we’ll send you a code to open your library."}{" "}
-              Free practices unlock straight away, no purchase
-              needed, plus anything you&rsquo;ve already bought.
+                ? `Type the email you used when you joined or bought, and I'll send you a code to open ${destination}.`
+                : "Type the email you used when you joined or bought, and I’ll send you a code to open what’s yours."}
             </p>
             <input
               type="email"

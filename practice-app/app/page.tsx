@@ -12,6 +12,7 @@ import { oneTouch } from "@/lib/content/one-touch";
 import { touchMap } from "@/lib/content/touch-map";
 import { dayOf } from "@/lib/content/31-touch-points-drip";
 import { useAuth } from "@/components/providers/AuthProvider";
+import { supabaseBrowser } from "@/lib/supabase/client";
 import { PhoneBites } from "@/components/PhoneBites";
 import { getCompletedSlugs } from "@/lib/entitlements/progress";
 import { COLLECTION_DECK_TYPES, PURCHASE_URLS, FREE_DECK_TYPES } from "@/lib/entitlements/config";
@@ -22,6 +23,8 @@ import { COLLECTION_DECK_TYPES, PURCHASE_URLS, FREE_DECK_TYPES } from "@/lib/ent
 // into the other app too." 31 Touch Points leads, because it is where she
 // sends almost everyone. The order is: Today (if you own something) or the
 // featured 31 Touch Points, then Start free, then Yours, then More ways in.
+// 24 Nov 2026 (Juliette, from Viv's test): NEW ORDER. Check-in, then Today and Yours, then Free, then More ways in
+// (31 Touch Points with day one free). Nothing leads with a sale any more.
 //
 // Everything the old shelf did still happens here: the same purchase URLs,
 // the 31 Days Closer pin under 31 Touch Points, interest tracking on tiles
@@ -90,6 +93,7 @@ const CARDS_COMPANION = {
 // How to Feel Like a Woman is closed to new buyers (Juliette, 18 Nov 2026). Never re-run.
 const HTFLAW_ON_SALE = false;
 const CARDS_APP = "https://feelfullyyou.com/my-cards/";
+const HOLIDAY_KIT_URL = CARDS_APP + "?unlock=holiday";
 const CARDS_APP_ALL = CARDS_APP + "?unlock=31-days-closer,couples,friends-family,trust-repair,repair-kit,touch-languages,holiday,three-answers,fifteen-after,essence,reconnect,one-touch";
 
 // Offers with no content in this app: they unlock elsewhere (a deck, a code).
@@ -184,6 +188,13 @@ function LibraryContent() {
   const { user, entitledCollections, signOut } = useAuth();
   const [completed, setCompleted] = useState<Record<string, string[]>>({});
   const [loaded, setLoaded] = useState(false);
+  // Has this person EVER started Scrumptious Confessions (an ended free week counts)? Then the kit stays theirs.
+  const [everJoined, setEverJoined] = useState(false);
+  useEffect(() => {
+    if (!user) { setEverJoined(false); return; }
+    supabaseBrowser.from("user_decks").select("deck_type").eq("user_id", user.id).eq("deck_type", "scrumptious-confessions").limit(1)
+      .then(({ data }) => setEverJoined(!!data?.length || user.email?.toLowerCase() === "juliette@feelfullyyou.com"));
+  }, [user]);
 
   const owns = (slug: string) => !!user && entitledCollections.includes(slug);
   const ownedPaid = PAID_COLLECTIONS.filter((c) => owns(c.slug));
@@ -239,7 +250,8 @@ function LibraryContent() {
         <div className="absolute inset-0 bg-gradient-to-t from-[#070707] via-[#070707]/30 to-transparent" />
         <div className="relative z-10 mx-auto w-full max-w-3xl px-5 pb-7">
           <h1 className="font-display text-4xl font-light text-ffy-cream sm:text-5xl">The Feel Fully You App</h1>
-          <p className="mt-2 text-[#DDC98E]">Your practices, in one place.</p>
+          {/* 24 Nov 2026 (Juliette): what the app is, in one line. */}
+          <p className="mt-2 text-[#DDC98E]">Daily practices and cards to bring Touch, desire and closeness back, into your body and your relationship.</p>
         </div>
       </section>
 
@@ -256,6 +268,7 @@ function LibraryContent() {
         {/* Funnel bites this phone has opened. They stay hidden from everyone else. */}
         <PhoneBites />
 
+        {/* 24 Nov 2026 (Juliette): theirs first, then free, then more. The check-in belongs in Confessions, not here. */}
         {/* TODAY, for an owner */}
         {owns31 && (
           <Link
@@ -302,99 +315,6 @@ function LibraryContent() {
           </Link>
         )}
 
-        {/* FEATURED 31 Touch Points, for everyone who does not own it */}
-        {!owns31 && (
-          <>
-            <a
-              href={PURCHASE_URLS[thirtyOneTouchPoints.slug]}
-              target="_blank"
-              rel="noreferrer"
-              onClick={() => trackInterest(thirtyOneTouchPoints.slug, user?.email)}
-              className="ffy-rise group relative mt-5 block overflow-hidden rounded-3xl border-2 border-[#DDC98E] bg-[#0b1414] shadow-[0_0_70px_-24px_rgba(221,201,142,0.35)]"
-            >
-              <div className="relative h-56 overflow-hidden sm:h-72">
-                <Image src={thirtyOneTouchPoints.heroImage} alt={thirtyOneTouchPoints.title} fill sizes="(max-width: 768px) 100vw, 768px" className="object-cover transition duration-700 group-hover:scale-[1.03]" />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0b1414] via-transparent to-transparent" />
-              </div>
-              <div className="relative -mt-10 p-6 pt-0 sm:p-8 sm:pt-0">
-                <p className="text-[11px] uppercase tracking-[0.18em] text-[#DDC98E]">Where most people start</p>
-                <h2 className="font-display mt-2 text-3xl font-light text-ffy-cream sm:text-4xl">{thirtyOneTouchPoints.title}</h2>
-                <p className="mt-2 max-w-md text-[15px] leading-relaxed text-[rgba(254,252,250,0.82)]">{thirtyOneTouchPoints.subtitle}</p>
-                <div className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-2 text-[rgba(254,252,250,0.78)]">
-                  <span><b className="font-display mr-1 text-2xl font-light text-[#DDC98E]">31</b>days</span>
-                  <span><b className="font-display mr-1 text-2xl font-light text-[#DDC98E]">1</b>a day</span>
-                  <span className="text-[11px] uppercase tracking-[0.14em]">Buy once, keep it</span>
-                </div>
-                <span className="mt-5 inline-flex min-h-[48px] items-center rounded-full bg-[#DDC98E] px-6 text-[15px] font-medium text-[#070707] transition group-hover:bg-[#EEDE80]">
-                  See inside 31 Touch Points
-                </span>
-              </div>
-            </a>
-            <div className="mt-3">
-              <Tile
-                href={CARDS_COMPANION.purchaseUrl}
-                external
-                title={CARDS_COMPANION.title}
-                subtitle={CARDS_COMPANION.subtitle}
-                heroImage={CARDS_COMPANION.heroImage}
-                note={CARDS_COMPANION.note}
-                onClick={() => trackInterest(CARDS_COMPANION.slug, user?.email)}
-              />
-            </div>
-          </>
-        )}
-
-        {/* YOURS */}
-        {/* 20 Nov 2026: a Confessions-only member must see this section too (their first test showed nothing). */}
-        {user && (ownedPaid.length > 0 || entitledCollections.includes("how-to-feel-like-a-woman") || entitledCollections.includes("scrumptious-confessions")) && (
-          <>
-            <SectionHead eyebrow="Yours" title="Your practices" />
-            <div className="grid gap-3">
-              {ownedPaid.map((c) => (
-                <Tile
-                  key={c.slug}
-                  href={`/practice/${c.slug}`}
-                  title={c.title}
-                  subtitle={c.subtitle}
-                  heroImage={tileImage(c)}
-                  note={`${doneCount(c.slug)} of ${c.entries.length} done`}
-                />
-              ))}
-              {owns31 && (
-                <Tile
-                  href={user?.email?.toLowerCase() === "juliette@feelfullyyou.com" ? CARDS_APP_ALL : CARDS_APP}
-                  external
-                  title={CARDS_COMPANION.title}
-                  subtitle={CARDS_COMPANION.subtitle}
-                  heroImage={CARDS_COMPANION.heroImage}
-                  note={CARDS_COMPANION.note}
-                  onClick={() => trackInterest(CARDS_COMPANION.slug, user?.email)}
-                />
-              )}
-              {entitledCollections.includes("how-to-feel-like-a-woman") && (
-                <Tile
-                  href="/practice/how-to-feel-like-a-woman"
-                  title="How to Feel Like a Woman"
-                  subtitle="Your cards, your practices, my voice. New things every week."
-                  heroImage="/how-to-feel-like-a-woman/juliette-boudoir.jpg"
-                  note="Practice Lab · cards · Scrumptious Confessions"
-                />
-              )}
-              {entitledCollections.includes("scrumptious-confessions") && (
-                <Tile
-                  href="/practice/scrumptious-confessions"
-                  title="Scrumptious Confessions"
-                  subtitle="Every Monday, a confession in my voice. Your questions answered with no name on them. Every month, a programme opens that is yours to keep."
-                  heroImage="/how-to-feel-like-a-woman/scrumptious-confessions.jpg"
-                  note="Something new every day · questions wall · Touch Base · cards · library"
-                />
-              )}
-              {/* "Talk to me" call tile removed 5 Nov 2026. Juliette: "I do not
-                  want that on- I only want qualified leads". */}
-            </div>
-          </>
-        )}
-
         {/* START FREE */}
         <SectionHead eyebrow="Free" title="Start here" />
         {/* Quiz card = the website pop-up, exactly (Juliette, 30 Oct 2026) */}
@@ -433,14 +353,15 @@ function LibraryContent() {
             heroImage="/offers/sales/sacred-no-quiz.jpg"
             note="Free"
           />}
-          {/* The Scrumptiousness Journal, open to everyone for now. Juliette, 19 Nov 2026: build it in full,
-              lock it afterwards. The line under the title is from page 7 of her book. */}
+          {/* 24 Nov 2026 (Juliette): the Scrumptiousness Journal is NOT free. Never list it here. */}
+          {/* Her ask, 1 Nov 2026. Goes to the website sign-up, so these people land on the list too. */}
           <Tile
-            href="/practice/scrumptiousness-journal"
-            title="The Scrumptiousness Journal"
-            subtitle="A journal filled with prompts, practices and meditations."
-            heroImage="/scrumptiousness-journal/thumb.jpg"
-            note="Write in it · stays on your phone"
+            href="https://feelfullyyou.com/cards-free-taster"
+            external
+            title="Six free cards"
+            subtitle="On your phone. Three for the two of you, three for the people you have known longest."
+            heroImage="/offers/free-cards-app.jpg"
+            note="Free · opens on the website"
           />
           {shown("touch-base") && <Tile
             href="/practice/touch-base"
@@ -480,61 +401,111 @@ function LibraryContent() {
             heroImage="/quiet-isnt-yes/hero.jpg"
             note="Free · for men"
           />
-          {/* Her ask, 1 Nov 2026. Goes to the website sign-up, so these people land on the list too. */}
-          <Tile
-            href="https://feelfullyyou.com/cards-free-taster"
-            external
-            title="Six free cards"
-            subtitle="On your phone. Three for the two of you, three for the people you have known longest."
-            heroImage="/offers/free-cards-app.jpg"
-            note="Free · opens on the website"
-          />
         </div>
 
-        {/* MORE WAYS IN */}
-        {(lockedPaid.length > 0 || externalShown.length > 0) && (
-          <>
-            <SectionHead eyebrow="When you want more" title="More ways in" />
+        {/* YOURS */}
+        {/* 20 Nov 2026: a Confessions-only member must see this section too (their first test showed nothing). */}
+        {/* 24 Nov 2026 (Juliette): "Your programmes" in gold, after the free things and before the two things to buy.
+            Anyone who has ever started Scrumptious Confessions (even only the 7 free days) keeps the Holiday Survival Kit
+            here for good; it opens in the cards app. Nobody else sees a list of locks, only the kit and how to get it. */}
+        <>
+            <div className="mb-4 mt-12">
+              <p className="text-[11px] uppercase tracking-[0.18em] text-[#DDC98E]">Yours</p>
+              <h2 className="font-display mt-1 text-2xl font-light text-[#DDC98E]">Your programmes</h2>
+            </div>
             <div className="grid gap-3">
-              {/* 18 Nov 2026, Juliette: the course has finished and is closed to new buyers
-                  ("we need to stop that now"). Owners still reach it from their own row above. */}
-              {HTFLAW_ON_SALE && !entitledCollections.includes("how-to-feel-like-a-woman") && (
+              {everJoined ? (
                 <Tile
-                  href={PURCHASE_URLS["how-to-feel-like-a-woman"]}
+                  href={HOLIDAY_KIT_URL}
                   external
-                  title="How to Feel Like a Woman"
-                  subtitle="For women. Fifteen minutes a day with my voice, a card from me every week, Practice Lab with me three mornings a week."
-                  heroImage="/how-to-feel-like-a-woman/juliette-boudoir.jpg"
-                  note="Women only · join any time · see what is inside"
-                  onClick={() => trackInterest("how-to-feel-like-a-woman", user?.email)}
+                  title="Holiday Survival Kit"
+                  subtitle="Cards for the season: the drive there, the table, who isn't here."
+                  heroImage="/offers/holiday-survival-kit.png"
+                  note="Yours to keep · opens in the cards app"
+                />
+              ) : (
+                <Tile
+                  href="https://feelfullyyou.com/scrumptious-confessions-membership"
+                  external
+                  title="Holiday Survival Kit"
+                  subtitle="Cards for the season: the drive there, the table, who isn't here."
+                  heroImage="/offers/holiday-survival-kit.png"
+                  note="Yours to keep when you try Scrumptious Confessions free for 7 days"
+                  onClick={() => trackInterest("scrumptious-confessions", user?.email)}
                 />
               )}
-              {lockedPaid.map((c) => (
+              {ownedPaid.map((c) => (
                 <Tile
                   key={c.slug}
-                  href={PURCHASE_URLS[c.slug]}
-                  external
+                  href={`/practice/${c.slug}`}
                   title={c.title}
                   subtitle={c.subtitle}
                   heroImage={tileImage(c)}
-                  note="Buy once, keep it · see what is inside"
-                  onClick={() => trackInterest(c.slug, user?.email)}
+                  note={`${doneCount(c.slug)} of ${c.entries.length} done`}
                 />
               ))}
-              {externalShown.map((o) => (
+              {owns31 && (
                 <Tile
-                  key={o.slug}
-                  href={user?.email?.toLowerCase() === "juliette@feelfullyyou.com" ? CARDS_APP_ALL : o.purchaseUrl}
+                  href={user?.email?.toLowerCase() === "juliette@feelfullyyou.com" ? CARDS_APP_ALL : CARDS_APP}
                   external
-                  title={o.title}
-                  subtitle={o.subtitle}
-                  heroImage={o.heroImage}
-                  note={o.note}
-                  onClick={() => trackInterest(o.slug, user?.email)}
+                  title={CARDS_COMPANION.title}
+                  subtitle={CARDS_COMPANION.subtitle}
+                  heroImage={CARDS_COMPANION.heroImage}
+                  note={CARDS_COMPANION.note}
+                  onClick={() => trackInterest(CARDS_COMPANION.slug, user?.email)}
                 />
-              ))}
+              )}
+              {entitledCollections.includes("how-to-feel-like-a-woman") && (
+                <Tile
+                  href="/practice/how-to-feel-like-a-woman"
+                  title="How to Feel Like a Woman"
+                  subtitle="Your cards, your practices, my voice. New things every week."
+                  heroImage="/how-to-feel-like-a-woman/juliette-boudoir.jpg"
+                  note="Practice Lab · cards · Scrumptious Confessions"
+                />
+              )}
+              {entitledCollections.includes("scrumptious-confessions") && (
+                <Tile
+                  href="/practice/scrumptious-confessions"
+                  title="Scrumptious Confessions"
+                  subtitle="Every Monday, a confession in my voice. Your questions answered, anonymously. Every month, a programme opens that is yours to keep."
+                  heroImage="/how-to-feel-like-a-woman/scrumptious-confessions.jpg"
+                  note="Something new every day · questions wall · Touch Base · cards · library"
+                />
+              )}
+              {/* "Talk to me" call tile removed 5 Nov 2026. Juliette: "I do not
+                  want that on- I only want qualified leads". */}
             </div>
+        </>
+
+        {/* MORE WAYS IN. 24 Nov 2026 (Juliette): "the only way in is Scrumptious Confessions... not 5,000 things to
+            choose from". Every programme opens inside the membership, month by month. No other paid tile here, ever. */}
+        {!entitledCollections.includes("scrumptious-confessions") && (
+          <>
+            <SectionHead eyebrow="When you want more" title="Scrumptious Confessions" />
+            <Tile
+              href="https://feelfullyyou.com/scrumptious-confessions-membership"
+              external
+              title="Scrumptious Confessions"
+              subtitle="Every Monday, a confession in my voice. Your questions answered, anonymously. Every month, a programme opens that is yours to keep."
+              heroImage="/how-to-feel-like-a-woman/scrumptious-confessions.jpg"
+              note="Your first 7 days are free"
+              onClick={() => trackInterest("scrumptious-confessions", user?.email)}
+            />
           </>
+        )}
+        {/* 24 Nov 2026 (Juliette): The Touch Map is the only other thing to buy here. */}
+        {!owns(touchMap.slug) && (
+          <div className="mt-3">
+            <Tile
+              href={PURCHASE_URLS[touchMap.slug]}
+              title={touchMap.title}
+              subtitle={touchMap.subtitle}
+              heroImage={tileImage(touchMap)}
+              note="Buy once, keep it · see what is inside"
+              onClick={() => trackInterest(touchMap.slug, user?.email)}
+            />
+          </div>
         )}
 
         {user && (
