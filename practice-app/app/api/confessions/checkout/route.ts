@@ -45,6 +45,7 @@ const LHL_ENDS = Date.UTC(2026, 11, 13, 0, 0, 0) / 1000;
 async function lhlCoupon(stripe: Stripe, price: string): Promise<string | null> {
   try {
     const c = await stripe.coupons.retrieve(LHL_COUPON);
+    if (!c.valid) console.error("confessions checkout LETHERLAND coupon not valid");
     return c.valid ? c.id : null;
   } catch {
     const p = await stripe.prices.retrieve(price);
@@ -76,7 +77,7 @@ export async function GET(req: Request) {
     // 21 Nov 2026: the "Build your first week" flow already has their email, so Stripe fills it in.
     const email = (new URL(req.url).searchParams.get("email") || "").trim();
     const code = (new URL(req.url).searchParams.get("code") || "").trim().toUpperCase();
-    const lhl = code === "LETHERLAND" && now < LHL_ENDS ? await lhlCoupon(stripe, priceCache).catch(() => null) : null;
+    const lhl = code === "LETHERLAND" && now < LHL_ENDS ? await lhlCoupon(stripe, priceCache).catch((e) => { console.error("confessions checkout LETHERLAND coupon:", (e as Error).message); return null; }) : null;
     const coupon = lhl ?? (code === "FIRST50" ? await first50Coupon(stripe, priceCache).catch(() => null) : null);
     const codeTag = lhl ? "LETHERLAND" : coupon ? "FIRST50" : null;
     const session = await stripe.checkout.sessions.create({
