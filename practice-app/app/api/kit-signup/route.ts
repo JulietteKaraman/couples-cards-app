@@ -43,6 +43,9 @@ const FREEBIES: Record<string, { tagId: number; sequenceId: number }> = {
   // Quiet Isn't Yes, the free piece for men (10 Nov 2026). Own tag and sequence. The sequence
   // sends nothing until its emails are written, approved and published.
   "quiet-isnt-yes": { tagId: 25673987, sequenceId: 2964949 },
+  // The Fruit, the free 31 Touch Points taster (26 Nov 2026, Juliette: free things should put people on the list).
+  // Same tag and sequence the ManyChat TOUCH DM uses, so both doors land in one place.
+  "the-fruit": { tagId: 26235735, sequenceId: 2949146 },
 };
 
 export async function POST(req: Request) {

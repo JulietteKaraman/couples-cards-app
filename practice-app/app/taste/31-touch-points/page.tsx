@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { FEELS } from "@/components/Interactive";
 import { count } from "@/lib/count";
 import VoicePlayer from "@/components/VoicePlayer";
+import { FreeEmailGate } from "@/components/FreeEmailGate";
 import { Blocks } from "@/components/Blocks";
 import type { ContentBlock } from "@/lib/content/blocks";
 
@@ -107,6 +108,8 @@ export default function TasteThirtyOneTouchPoints() {
           One of you leads. One of you receives. I&rsquo;ll talk you both through it.
         </p>
 
+        {/* 26 Nov 2026 (Juliette): free things ask for a first name and email first, so people land on the list. */}
+        <FreeEmailGate freebie="the-fruit">
         <Blocks blocks={before} dark />
 
         <div className="mt-8">
@@ -200,6 +203,7 @@ export default function TasteThirtyOneTouchPoints() {
           </a>
           <p className="mt-3 text-[13px] text-[#8f877a]">Day one opens the minute you join.</p>
         </div>
+        </FreeEmailGate>
       </div>
       <style>{`
         @keyframes ffyDone { from { opacity: 0; transform: scale(.96); } to { opacity: 1; transform: none; } }
