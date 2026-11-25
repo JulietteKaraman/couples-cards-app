@@ -1,0 +1,160 @@
+// Juliette's real TOUCH LANGUAGES deck ("Tell me..." cards), copied word for
+// word from card-engine/app/sets/touch-languages.json (29 Oct 2026). Used to
+// close every Touch Map touch with one card, the way One Touch closes each day.
+// Her five card sections are not the five Pleasure Languages, so each touch
+// draws from the closest section (see CARD_SECTION).
+import type { LanguageId } from "./touch-map";
+
+export const TOUCH_LANGUAGES_CARDS: Record<string, string[]> = {
+  "Erotic Touch": [
+    "Tell me how you most want my hands to meet you right now.",
+    "Tell me what part of your body craves to be touched erotically.",
+    "Tell me what erotic touch means to you.",
+    "Tell me one fantasy you've never shared out loud.",
+    "Tell me how you want me to undress you.",
+    "Tell me what kind of kiss unravels you.",
+    "Tell me what happens in you when my fingers trace your jaw.",
+    "Tell me what you feel when you get kissed on the back of your neck.",
+    "Tell me what kind of touch has you melt without words.",
+    "Tell me how you want me to guide your body.",
+    "Tell me what happens in you when I pull you closer by the hips.",
+    "Tell me what kind of pressure your body is hungry for.",
+    "Tell me what it does to you when I bite your shoulder softly and breathe near your ear.",
+    "Tell me about a time when you were mis-touched: touched too fast, too soon, or without presence.",
+    "Tell me about a time when you longed for slower touch.",
+    "Tell me what keeps your desire alive when we're apart.",
+    "Tell me what scent, taste, or sound awakens your erotic energy.",
+    "Tell me how you'd love me to show you that I want touch when we're out together in a way that still feels safe.",
+    "Tell me what draws you in more, being whispered to in the dark, or feeling my hands explore what words can't say.",
+    "Tell me what part of your body feels deeply erogenous that I might not know.",
+    "Tell me what surprises you most about your own desire.",
+    "Tell me what playful, erotic touch means to you.",
+    "Tell me how you want to be looked at when I touch you.",
+    "Tell me how you'd like me to touch you if we had only five minutes.",
+    "Tell me how you want to be held after erotic play."
+  ],
+  "Physical Touch": [
+    "Tell me, what does physical touch mean to you?",
+    "Tell me what kind of non-erotic, physical touch you want more of in your life.",
+    "Tell me how your body responds to a warm, lingering hug.",
+    "Tell me what happens in you when someone holds your hand.",
+    "Tell me about a time when a friend's touch brought you comfort.",
+    "Tell me how you like to be comforted with physical touch when you're overwhelmed.",
+    "Tell me what kind of touch brings you a sense of grounding.",
+    "Tell me about a moment when someone's hand on your shoulder felt like an anchor.",
+    "Tell me what it feels like when someone places their hand on the small of your back.",
+    "Tell me how you feel when someone casually places an arm around your waist.",
+    "Tell me what kind of touch helps you feel most safe.",
+    "Tell me what kind of touch helps you soften into your body.",
+    "Tell me how you feel about platonic cuddling.",
+    "Tell me what happens in you when someone rubs your back slowly.",
+    "Tell me what kind of physical affection you received growing up and what you missed.",
+    "Tell me how your relationship with physical touch changes when you're under stress.",
+    "Tell me one small gesture of physical care that means more to you than most people realise.",
+    "Tell me about a time a simple touch changed your whole day.",
+    "Tell me what part of your body longs to be held by someone else.",
+    "Tell me what it feels like when someone brushes lint off your shoulder or tucks your hair behind your ear.",
+    "Tell me if you ever feel touch-starved and how your body lets you know.",
+    "Tell me what it feels like when someone links arms with you.",
+    "Tell me about a memory where physical touch felt deeply healing.",
+    "Tell me what kind of touch feels like presence, not performance.",
+    "Tell me what it's like to touch your own hands with reverence."
+  ],
+  "Emotional Touch": [
+    "Tell me what emotional touch means to you.",
+    "Tell me the last words that truly landed for you.",
+    "Tell me a thank you you've secretly wanted to receive.",
+    "Tell me about a time when words felt like a hug around your heart.",
+    "Tell me what kind of praise actually touches you.",
+    "Tell me one truth you long to hear more often.",
+    "Tell me what you most need when you're tired or upset.",
+    "Tell me what silence between us feels like for you.",
+    "Tell me one memory where you were hurt more emotionally than you let on.",
+    "Tell me how you know when I really understand you.",
+    "Tell me the phrase that softens you.",
+    "Tell me what being seen means to you.",
+    "Tell me what tone of voice has you feel safe, and what tone of voice has you feel unsafe.",
+    "Tell me when emotional honesty has brought you closer to someone.",
+    "Tell me what you wish I would ask so you could open up about how you're feeling right now.",
+    "Tell me how you feel when someone interrupts you.",
+    "Tell me a word that lights you up instantly.",
+    "Tell me what has an apology land for you.",
+    "Tell me, if I whispered how much you mean to me in the dark, how would that land for you, in your heart?",
+    "Tell me one compliment you've received that never felt true to you.",
+    "Tell me what unspoken words you still carry, and who they're for.",
+    "Tell me how you want me to respond when you're hurting.",
+    "Tell me what \"I love you\" means in your body when you hear it.",
+    "Tell me about a time when language felt like nourishment.",
+    "Tell me what you most long to express, even if words don't always capture it."
+  ],
+  "Spiritual Touch": [
+    "Tell me what spiritual touch means to you.",
+    "Tell me when you last felt held by something greater than you.",
+    "Tell me how you know when love feels sacred.",
+    "Tell me a ritual that reconnects you to yourself or to something greater.",
+    "Tell me what prayer your body whispers when you're alone and in touch with your essence.",
+    "Tell me how you feel when our breath syncs in silence.",
+    "Tell me about a time when music or art lifted you beyond yourself.",
+    "Tell me about a moment in nature that felt supernatural or deeply alive.",
+    "Tell me what surrender means to you, and how it feels in your body.",
+    "Tell me one word or image that captures \"the sacred\" in you.",
+    "Tell me how you experience awe.",
+    "Tell me when our love has felt like a ceremony.",
+    "Tell me when you felt small in the best possible way.",
+    "Tell me a place or moment that has you feel \"close to something holy.\"",
+    "Tell me what you trust, even when you can't see it.",
+    "Tell me what aliveness means to you.",
+    "Tell me what you're in devotion to, consciously or not.",
+    "Tell me how you know when you've come home to yourself.",
+    "Tell me what presence feels like in your body.",
+    "Tell me about a time when you felt guided by unseen hands.",
+    "Tell me how prayer or sacred practice shapes your relationship, with life, love, or yourself.",
+    "Tell me about a book, poem, piece of writing or music that touched something sacred in you.",
+    "Tell me what signs, symbols, or practices have been guiding you lately.",
+    "Tell me how your body responds when you enter stillness.",
+    "Tell me about a moment when everything felt quietly right and you felt at ease in yourself or with life."
+  ],
+  "Energetic Touch": [
+    "Tell me what you feel when my eyes meet yours and nothing else moves.",
+    "Tell me, does feeling my presence in the room before I physically touch you bring excitement?",
+    "Tell me if you can feel me when I stand behind you in silence.",
+    "Tell me what happens in your body when I take a step closer to you.",
+    "Tell me how you want to indicate when you're in the mood for energetic touch.",
+    "Tell me what energetic touch means to you.",
+    "Tell me whether touch off the body ever feels more electric than touch on it.",
+    "Tell me how far away I can be before you stop feeling me.",
+    "Tell me what part of you tingles most when I don't touch you at all.",
+    "Tell me what happens in you when our eyes catch across the room and our breath starts to co-regulate.",
+    "Tell me how you feel when my gaze doesn't let go of you.",
+    "Tell me what changes when I close my eyes but keep my attention on you.",
+    "Tell me if you can feel the difference when I leave the room.",
+    "Tell me how your body responds when I exhale near your body and you can just sense it.",
+    "Tell me what it feels like when energy pools between our hands.",
+    "Tell me about a time you entered a room or a space, felt something was off but dismissed it.",
+    "Tell me what shifts when I whisper your name without speaking it out loud.",
+    "Tell me what distance between us ignites electricity in your body, further away or closer?",
+    "Tell me about a time the space between us felt most magnetic.",
+    "Tell me what you notice when I walk away from you slowly.",
+    "Tell me how your body feels when you imagine me touching you but I don't.",
+    "Tell me what happens when we stand still, eyes locked, without moving.",
+    "Tell me if stillness feels like intensity or like reset.",
+    "Tell me when you felt most alive in the space between us.",
+    "Tell me what you most long to feel, even if it lives only in the space between us."
+  ]
+};
+
+export const CARD_SECTION: Record<LanguageId, string[]> = {
+  energetic: ["Energetic Touch", "Spiritual Touch"],
+  sensual: ["Physical Touch", "Emotional Touch"],
+  sexual: ["Erotic Touch"],
+  kinky: ["Erotic Touch"],
+  shapeshifter: ["Erotic Touch", "Physical Touch", "Emotional Touch", "Spiritual Touch", "Energetic Touch"],
+};
+
+// One card for this touch, the same one each time it's opened today, a new one tomorrow.
+export function cardFor(slug: string, lang: LanguageId, day: string, extra = 0): string {
+  const pool = CARD_SECTION[lang].flatMap((s) => TOUCH_LANGUAGES_CARDS[s] ?? []);
+  let h = extra;
+  for (const ch of slug + day) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+  return pool[h % pool.length];
+}
