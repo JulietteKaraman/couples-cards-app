@@ -51,7 +51,7 @@ const BODY_COUPLE = [
   ["none", "Nothing like that"],
 ];
 const NEEDS = [
-  ["safe", "My head won’t switch off. I’m anxious, tense or on edge"],
+  ["safe", "Something for when I’m anxious, or tense"],
   ["pleasure", "To find my way back into pleasure"],
   ["understand", "To understand what’s happening to me"],
   ["closer", "To feel closer to my partner"],
