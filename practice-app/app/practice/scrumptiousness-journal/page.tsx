@@ -45,12 +45,38 @@ const UI = {
   giveYourself: "Give yourself 20 minutes in all.",
   celebrate: "Celebrate what you've just done. Come back tomorrow for the next part.",
   keepGoing: "Keep going anyway",
+  // 25 Nov 2026 (Juliette, from Viv): "flow", the playlist goes straight to Spotify, and her intentions in one place.
+  flow: "Flow through it. Do each practice as you reach it, one part a day.",
+  opensSpotify: "Opens in your Spotify app.",
+  saidTitle: "What I said I’d do",
+  saidLine: "Everything you promised yourself in this journal, in one place. Come back to it, and act on it.",
+  saidEmpty: "Not written yet.",
+  saidWrite: "Write it",
 };
 
 // Natural places to stop: the last page of a section that ends in something she has done.
 // 22 self-care routine, 33 after the playlist practice and brain dump, 37 the first brags and wins practice,
 // 49 to 91 the end of each of the seven days. A gentle card, never a gate.
 const SECTION_ENDS = new Set([22, 33, 37, 49, 56, 63, 70, 77, 84, 91]);
+
+// "What I said I'd do" (Viv's idea, Juliette's yes, 25 Nov 2026): the writing spaces where she makes a promise to herself.
+const SAID: { page: number; title: string; ids: string[] }[] = [
+  { page: 11, title: "My intentions for this journal", ids: ["p11a1"] },
+  { page: 37, title: "My commitment to myself", ids: ["p37a5"] },
+  { page: 102, title: "Five things I will commit to, long term", ids: ["p102a1", "p102a2", "p102a3", "p102a4", "p102a5"] },
+];
+
+// Spotify: try the Spotify app first, and only if it doesn't open, the website (Viv: the website took her into settings).
+function openSpotify(href: string) {
+  const m = href.match(/open\.spotify\.com\/(playlist|show|album|track|episode)\/([A-Za-z0-9]+)/);
+  if (!m) { window.open(href, "_blank"); return; }
+  const web = `https://open.spotify.com/${m[1]}/${m[2]}`;
+  let left = false;
+  const onHide = () => { left = true; };
+  document.addEventListener("visibilitychange", onHide, { once: true });
+  window.location.href = `spotify:${m[1]}:${m[2]}`;
+  setTimeout(() => { document.removeEventListener("visibilitychange", onHide); if (!left && document.visibilityState === "visible") window.open(web, "_blank"); }, 1400);
+}
 
 // A TASTER for people who are not paying members (Juliette, 19 Nov 2026: "only give a taster of the journal",
 // and "the 10 pages is more beautiful and gives a real feel of it"). Pages 4 to 13 of the book: the preface,
@@ -371,7 +397,7 @@ export default function ScrumptiousnessJournal() {
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [marks, setMarks] = useState<number[]>([]);
   const [pos, setPos] = useState(0);
-  const [view, setView] = useState<"cover" | "page" | "contents">("cover");
+  const [view, setView] = useState<"cover" | "page" | "contents" | "said">("cover");
   const [ready, setReady] = useState(false);
   const [blocked, setBlocked] = useState(false);
   const [book, setBook] = useState(true);
@@ -485,6 +511,37 @@ export default function ScrumptiousnessJournal() {
   const medIdx = JOURNAL_PAGES.findIndex((p) => JOURNAL_AUDIO[p.n]?.src);
   const canFirst = firstBoxIdx >= 0 && (paid || limit > firstBoxIdx);
   const canMed = medIdx >= 0 && paid;
+  const saidAny = SAID.some((g) => g.ids.some((id) => (answers[id] || "").trim()));
+
+  // ---- What I said I'd do ---------------------------------------------------------------------------
+  if (view === "said") {
+    return (
+      <main className={bg}>
+        <div className={wrap} style={wrapStyle}>
+          <button type="button" onClick={() => setView(pos >= 0 ? "page" : "cover")} className="min-h-[44px] text-[14px] text-[#DDC98E]">← Back</button>
+          <h1 className="font-display mt-2 text-[30px] font-light">{UI.saidTitle}</h1>
+          <p className="mt-2 text-[15px] leading-relaxed text-[#cfc8bb]">{UI.saidLine}</p>
+          {SAID.map((g) => {
+            const idx = JOURNAL_PAGES.findIndex((p) => p.n === g.page);
+            const lines = g.ids.map((id) => (answers[id] || "").trim()).filter(Boolean);
+            const canOpen = idx >= 0 && (paid || idx < limit);
+            return (
+              <section key={g.page} className="mt-6 rounded-2xl border border-[#DDC98E]/35 bg-[rgba(13,53,53,0.35)] p-5" data-testid={`said-${g.page}`}>
+                <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#DDC98E]">{g.title}</p>
+                {lines.length ? (
+                  g.ids.length > 1
+                    ? <ol className="mt-3 list-decimal space-y-2 pl-5 text-[16px] leading-relaxed text-[#f1ece2]">{lines.map((l, i) => <li key={i} className="whitespace-pre-wrap">{l}</li>)}</ol>
+                    : <p className="mt-3 whitespace-pre-wrap text-[16px] leading-relaxed text-[#f1ece2]">{lines[0]}</p>
+                ) : <p className="mt-3 text-[15px] text-[#a79f90]">{UI.saidEmpty}</p>}
+                {canOpen && <button type="button" onClick={() => open(idx)} className="mt-3 min-h-[40px] text-[14px] text-[#DDC98E] underline underline-offset-4">{lines.length ? `Page ${g.page}` : UI.saidWrite}</button>}
+              </section>
+            );
+          })}
+          <p className="mt-6 text-center text-[13px] text-[#8f877a]">{UI.privacy}</p>
+        </div>
+      </main>
+    );
+  }
 
   // ---- Contents --------------------------------------------------------------------------------
   if (view === "contents") {
@@ -528,6 +585,7 @@ export default function ScrumptiousnessJournal() {
           <h1 className="font-display mt-2 text-center text-[32px] font-light leading-[1.12]">{COVER.title}</h1>
           <p className="mx-auto mt-3 max-w-[420px] text-center text-[16px] leading-relaxed text-[#cfc8bb]">{COVER.line}</p>
           <p className="mx-auto mt-2 max-w-[420px] text-center text-[14px] leading-relaxed text-[#a79f90]" data-testid="cover-times">{UI.coverTimes}</p>
+          <p className="mx-auto mt-2 max-w-[420px] text-center text-[14px] leading-relaxed text-[#cfc8bb]" data-testid="cover-flow">{UI.flow}</p>
 
           <div className="mt-7 rounded-2xl border border-[#DDC98E]/30 p-4" data-testid="progress">
             <div className="h-1 overflow-hidden rounded-full bg-[rgba(221,201,142,0.15)]" aria-hidden="true">
@@ -542,6 +600,7 @@ export default function ScrumptiousnessJournal() {
           {!started && canFirst && <button type="button" onClick={() => open(firstBoxIdx)} data-testid="first-prompt" className="mt-3 inline-flex min-h-[48px] w-full items-center justify-center rounded-full border border-[#DDC98E]/40 text-[15px] text-[#DDC98E]">{UI.firstPrompt}</button>}
           <button type="button" onClick={() => setView("contents")} data-testid="contents" className="mt-3 inline-flex min-h-[48px] w-full items-center justify-center rounded-full border border-[#DDC98E]/40 text-[15px] text-[#cfc8bb]">Contents</button>
           {canMed && <button type="button" onClick={() => open(medIdx)} data-testid="to-meditation" className="mt-3 inline-flex min-h-[48px] w-full items-center justify-center rounded-full border border-[#DDC98E]/40 text-[15px] text-[#cfc8bb]">{UI.toMeditation}</button>}
+          {saidAny && <button type="button" onClick={() => setView("said")} data-testid="to-said" className="mt-3 inline-flex min-h-[48px] w-full items-center justify-center rounded-full border border-[#DDC98E]/40 text-[15px] text-[#DDC98E]">{UI.saidTitle}</button>}
 
           <p className="mt-6 text-center text-[15px] leading-relaxed text-[#EEDE80]">{UI.privacy}</p>
           {blocked && <p role="status" className="mt-3 rounded-2xl border border-[#DDC98E]/40 p-3 text-[14px] text-[#cfc8bb]" data-testid="blocked">{UI.blocked}</p>}
@@ -613,7 +672,10 @@ export default function ScrumptiousnessJournal() {
 
         {audio?.src && (!book || !audio.at) && <Voice src={audio.src} label={audio.label} />}
         {audio?.href && (
-          <a href={audio.href} target="_blank" rel="noreferrer" data-testid="audio" className="mt-6 inline-flex min-h-[52px] w-full items-center justify-center rounded-full border-[1.5px] border-[#DDC98E] px-6 text-center font-display text-[16px] font-medium text-[#DDC98E]">{audio.label}</a>
+          <>
+            <a href={audio.href} target="_blank" rel="noreferrer" onClick={(e) => { e.preventDefault(); openSpotify(audio.href!); }} data-testid="audio" className="mt-6 inline-flex min-h-[52px] w-full items-center justify-center rounded-full border-[1.5px] border-[#DDC98E] px-6 text-center font-display text-[16px] font-medium text-[#DDC98E]">{audio.label}</a>
+            <p className="mt-2 text-center text-[13px] text-[#a79f90]">{UI.opensSpotify}</p>
+          </>
         )}
 
         {hasBox && (
@@ -629,6 +691,10 @@ export default function ScrumptiousnessJournal() {
             <p className="font-display text-[19px] font-light leading-[1.45] text-[#f1ece2]">{UI.celebrate}</p>
             <button type="button" onClick={() => open(pos + 1)} data-testid="keep-going" className="mt-4 inline-flex min-h-[48px] items-center rounded-full border border-[#DDC98E]/50 px-6 text-[15px] text-[#DDC98E]">{UI.keepGoing}</button>
           </div>
+        )}
+
+        {pos === JOURNAL_PAGES.length - 1 && (
+          <button type="button" onClick={() => setView("said")} data-testid="said-end" className="mt-8 inline-flex min-h-[52px] w-full items-center justify-center rounded-full border-[1.5px] border-[#DDC98E] font-display text-[17px] font-medium text-[#DDC98E]">{UI.saidTitle} &rarr;</button>
         )}
 
         <div className="mt-8 flex gap-3">
