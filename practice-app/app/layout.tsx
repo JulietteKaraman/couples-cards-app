@@ -3,6 +3,7 @@ import { Poppins, Inter } from "next/font/google";
 import { AuthProvider } from "@/components/providers/AuthProvider";
 import { AudioPlayback } from "@/components/AudioPlayback";
 import { BackToConfessions } from "@/components/BackToConfessions";
+import { BackToApp } from "@/components/BackToApp";
 import "./globals.css";
 
 const poppins = Poppins({
@@ -39,7 +40,7 @@ export default function RootLayout({
     <html lang="en" className={`${poppins.variable} ${inter.variable}`}>
       <body>
         <AudioPlayback />
-        <AuthProvider>{children}<BackToConfessions /></AuthProvider>
+        <AuthProvider>{children}<BackToApp /><BackToConfessions /></AuthProvider>
       </body>
     </html>
   );
