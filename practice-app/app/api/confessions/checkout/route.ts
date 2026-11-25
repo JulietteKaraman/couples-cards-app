@@ -103,12 +103,22 @@ export async function GET(req: Request) {
     const lhl = code === "LETHERLAND" && now < LHL_ENDS ? await lhlCoupon(stripe, priceCache).catch((e) => { console.error("confessions checkout LETHERLAND coupon:", (e as Error).message); return null; }) : null;
     const coll = code === "COLLECTIVE" ? await collectiveCoupon(stripe, priceCache).catch((e) => { console.error("confessions checkout COLLECTIVE coupon:", (e as Error).message); return null; }) : null;
     const coupon = lhl ?? coll ?? (code === "FIRST50" ? await first50Coupon(stripe, priceCache).catch(() => null) : null);
-    const codeTag = lhl ? "LETHERLAND" : coll ? "COLLECTIVE" : coupon ? "FIRST50" : null;
+    // 25 Nov 2026 (Juliette: "I want to be able to use a coupon"): any other ?code= that is an ACTIVE Stripe
+    // promotion code is applied for them (switch codes on and off in the Stripe dashboard, no code change needed).
+    // With no discount applied, checkout shows Stripe's own "Add promotion code" box so they can type one.
+    let promo: string | null = null;
+    if (!coupon && code) {
+      try {
+        const pc = await stripe.promotionCodes.list({ code, active: true, limit: 1 });
+        promo = pc.data[0]?.id ?? null;
+      } catch (e) { console.error("confessions checkout promo lookup:", (e as Error).message); }
+    }
+    const codeTag = lhl ? "LETHERLAND" : coll ? "COLLECTIVE" : coupon ? "FIRST50" : promo ? code : null;
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
       ...(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? { customer_email: email } : {}),
       line_items: [{ price: priceCache, quantity: 1 }],
-      ...(coupon ? { discounts: [{ coupon }] } : {}),
+      ...(coupon ? { discounts: [{ coupon }] } : promo ? { discounts: [{ promotion_code: promo }] } : { allow_promotion_codes: true }),
       payment_method_collection: "always",
       // The site's webhook sends the welcome email by payment link; this names the one it stands for.
       metadata: { payment_link: PAYMENT_LINK, ...(codeTag ? { code: codeTag } : {}) },
