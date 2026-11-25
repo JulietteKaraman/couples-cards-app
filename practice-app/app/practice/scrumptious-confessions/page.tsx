@@ -578,8 +578,17 @@ function Library({ onStart }: { onStart: () => void }) {
   const [profile, setProfile] = useState<Profile | null | undefined>(undefined);
   const [redo, setRedo] = useState(false);
   const [counts, setCounts] = useState<Record<string, number>>({});
+  // 25 Nov 2026 (Juliette): back in the Library, the Journal door says where she is in it.
+  const [jAt, setJAt] = useState<{ page: number; written: number } | null>(null);
   useEffect(() => {
     setProfile(readProfile()); // eslint-disable-line react-hooks/set-state-in-effect
+    try {
+      const pos = JSON.parse(localStorage.getItem("ffy.sj.pos.v1") || "-1");
+      const ans = JSON.parse(localStorage.getItem("ffy.sj.answers.v1") || "{}") as Record<string, string>;
+      const written = Object.values(ans).filter((v) => typeof v === "string" && v.trim()).length;
+      // The journal's printed page numbers start at 4 (page index 0 is "Page 4").
+      if ((Number.isInteger(pos) && pos > 0) || written > 0) setJAt({ page: (Number.isInteger(pos) && pos >= 0 ? pos : 0) + 4, written }); // eslint-disable-line react-hooks/set-state-in-effect
+    } catch { /* no phone storage: the door keeps its usual line */ }
     // How many answers each section holds, so an empty one never shows on For you.
     Promise.all([fetch("/scrumptious-confessions/cards.json").then((r) => (r.ok ? r.json() : [])).catch(() => []), fetch("/scrumptious-confessions/answers.json").then((r) => r.json()).catch(() => []), loadWall().then((w) => (w?.answers || []).map((a) => ({ q: a.question }))).catch(() => [])])
       .then(([k, j, m]) => {
@@ -666,7 +675,9 @@ function Library({ onStart }: { onStart: () => void }) {
         </Link>
         <Link href="/practice/scrumptiousness-journal" className={`${doorCls} ${TONE.cream}`}>
           <span className="font-display text-[21px] font-light leading-tight text-[#f1ece2]">The Journal</span>
-          <span className="text-[13px] text-[#a79f90]">Somewhere to write. Scrumptiousness, {paid ? "all 103 pages" : "ten pages to start"}</span>
+          {jAt
+            ? <span className="text-[13px] text-[#DDC98E]" data-testid="journal-at">You&rsquo;re on page {jAt.page}{jAt.written ? ` \u00b7 ${jAt.written} written` : ""}. Pick up where you left off</span>
+            : <span className="text-[13px] text-[#a79f90]">Somewhere to write. Scrumptiousness, {paid ? "all 103 pages" : "ten pages to start"}</span>}
         </Link>
       </LibGroup>
     </section>

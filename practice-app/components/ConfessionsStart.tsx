@@ -103,8 +103,15 @@ const WAYS: Record<Need, { k: string; title: string; paras: string[]; why?: { ti
   },
 };
 
+// 25 Nov 2026 (Juliette): the body question takes as many answers as are true ("menopause and sore hips"),
+// kept as a comma list in `body`. The door follows the most specific one.
+const BODY_ORDER = ["erect", "sooner", "older", "single", "please", "meno", "baby", "aches", "stress", "mlow", "none"];
+const bodyList = (a: StartAnswers) => (a.body || "").split(",").filter(Boolean);
+const hasBody = (a: StartAnswers, v: string) => bodyList(a).includes(v);
 /** The library door each answer opens (topic ids in the Confessions page). */
-export function firstDoor(a: StartAnswers): { title: string; topic: string } {
+export function firstDoor(a0: StartAnswers): { title: string; topic: string } {
+  const bs = bodyList(a0);
+  const a = { ...a0, body: BODY_ORDER.find((v) => bs.includes(v)) ?? "" };
   if (a.who === "man") {
     if (a.body === "erect" || a.body === "sooner" || a.body === "older") return { title: "His body", topic: "men-body" };
     if (a.body === "single") return { title: "You, too", topic: "men-you" };
@@ -123,10 +130,10 @@ export function toLibraryWhy(a: StartAnswers): string[] {
   const w = new Set<string>();
   w.add(({ braced: "numb", fade: "freeze", reaching: "us", melted: "more" } as Record<string, string>)[a.state] ?? "desire");
   if (a.who === "man") w.add("approach");
-  if (a.body === "meno" || a.body === "aches") w.add("body");
-  if (a.body === "erect" || a.body === "sooner" || a.body === "older") w.add("body-m");
+  if (hasBody(a, "meno") || hasBody(a, "aches")) w.add("body");
+  if (hasBody(a, "erect") || hasBody(a, "sooner") || hasBody(a, "older")) w.add("body-m");
   if (a.need === "closer") w.add("us");
-  if (a.need === "pleasure" || a.body === "mlow") w.add("desire");
+  if (a.need === "pleasure" || hasBody(a, "mlow")) w.add("desire");
   return Array.from(w);
 }
 
@@ -193,19 +200,28 @@ export function ConfessionsStart({ onDone }: { onDone: (a: StartAnswers, go: Sta
   const photo = PHOTO[Math.min(step, 6)];
   const finish = (go: StartGo) => onDone({ ...a, date: new Date().toISOString() }, go);
 
-  const Q = (n: number, title: React.ReactNode, opts: string[][], key: keyof StartAnswers, sub?: string) => (
+  const Q = (n: number, title: React.ReactNode, opts: string[][], key: keyof StartAnswers, sub?: string, multi = false) => {
+    const picked = (v: string) => (multi ? String(a[key] || "").split(",").includes(v) : a[key] === v);
+    const tap = (v: string) => {
+      if (!multi) return setA({ ...a, [key]: v });
+      let cur = String(a[key] || "").split(",").filter(Boolean);
+      cur = cur.includes(v) ? cur.filter((x) => x !== v) : v === "none" ? ["none"] : [...cur.filter((x) => x !== "none"), v];
+      setA({ ...a, [key]: cur.join(",") });
+    };
+    return (
     <>
       <div className="text-[11px] font-medium uppercase tracking-[0.3em] text-[#DDC98E]">{n} of 5</div>
       <h2 className="mt-3 text-[clamp(1.6rem,6.6vw,2.2rem)] font-medium leading-[1.2] text-white [text-shadow:0_2px_18px_rgba(7,7,7,0.55)] [&_em]:italic [&_em]:text-[#DDC98E]">{title}</h2>
       {sub && <p className="mt-3.5 text-[1.02rem] leading-relaxed text-[rgba(246,239,224,0.95)] [text-shadow:0_1px_12px_rgba(7,7,7,0.6)]">{sub}</p>}
-      <div className="mt-[26px] flex flex-col gap-2.5" role="radiogroup">
+      <div className="mt-[26px] flex flex-col gap-2.5" role={multi ? "group" : "radiogroup"}>
         {opts.map(([v, l]) => (
-          <button key={v} type="button" role="radio" aria-checked={a[key] === v} onClick={() => setA({ ...a, [key]: v })}
-            className={`min-h-[52px] rounded-[30px] border px-[22px] py-3.5 text-center text-[15px] leading-snug backdrop-blur-[4px] transition ${a[key] === v ? "border-[#DDC98E] bg-[#DDC98E] text-[#070707]" : "border-[rgba(221,201,142,0.4)] bg-[rgba(7,7,7,0.55)] text-[#F6EFE0]"}`}>{l}</button>
+          <button key={v} type="button" role={multi ? "checkbox" : "radio"} aria-checked={picked(v)} onClick={() => tap(v)}
+            className={`min-h-[52px] rounded-[30px] border px-[22px] py-3.5 text-center text-[15px] leading-snug backdrop-blur-[4px] transition ${picked(v) ? "border-[#DDC98E] bg-[#DDC98E] text-[#070707]" : "border-[rgba(221,201,142,0.4)] bg-[rgba(7,7,7,0.55)] text-[#F6EFE0]"}`}>{l}</button>
         ))}
       </div>
     </>
-  );
+    );
+  };
 
   let body: React.ReactNode;
   let foot: { label: string; enabled: boolean; onClick: () => void } | null = null;
@@ -234,7 +250,7 @@ export function ConfessionsStart({ onDone }: { onDone: (a: StartAnswers, go: Sta
     body = Q(2, <>Where did <em>the Touch go?</em></>, STATES, "state", "Answer for how it is right now.");
     foot = { label: "Continue", enabled: !!a.state, onClick: () => setStep(3) };
   } else if (step === 3) {
-    body = Q(3, a.who === "man" ? <>What&rsquo;s going on <em>for you?</em></> : a.who === "both" ? <>Is anything changing <em>for the two of you?</em></> : <>Is anything changing <em>in your body?</em></>, a.who === "man" ? BODY_MAN : a.who === "both" ? BODY_COUPLE : BODY, "body");
+    body = Q(3, a.who === "man" ? <>What&rsquo;s going on <em>for you?</em></> : a.who === "both" ? <>Is anything changing <em>for the two of you?</em></> : <>Is anything changing <em>in your body?</em></>, a.who === "man" ? BODY_MAN : a.who === "both" ? BODY_COUPLE : BODY, "body", "Pick as many as are true.", true);
     foot = { label: "Continue", enabled: !!a.body, onClick: () => setStep(4) };
   } else if (step === 4) {
     body = Q(4, <>What do you <em>need today?</em></>, NEEDS, "need", "There are many ways in. Pick the one that feels true right now.");
