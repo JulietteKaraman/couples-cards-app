@@ -40,7 +40,7 @@ function CommunicationRebootKitHub() {
       <div className="relative w-full bg-black">
         <div className="absolute left-0 top-0 z-10 p-4">
           <Link href="/" className="inline-flex items-center gap-1.5 rounded-full border border-[#DDC98E]/40 bg-black/40 px-4 py-2 text-sm font-medium text-[#DDC98E] backdrop-blur-sm">
-            ← Your library
+            ← FFY app
           </Link>
         </div>
         <Image src={heroImage} alt="The Communication & Intimacy Reboot, the cover of the kit" width={800} height={350} priority sizes="100vw" className="mx-auto block h-auto w-full max-w-3xl pt-14" />

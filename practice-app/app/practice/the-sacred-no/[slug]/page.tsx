@@ -95,7 +95,7 @@ function TheSacredNoEntryContent() {
   if (locked) {
     return (
       <main className="min-h-screen bg-[#070707] text-ffy-cream [background-image:radial-gradient(110%_55%_at_50%_0%,rgba(13,53,53,0.9)_0%,rgba(7,7,7,0)_70%)]"><div className="mx-auto max-w-2xl px-6 py-24 text-center">
-        <div className="mb-8"><Link href="/" className="inline-flex items-center gap-1.5 rounded-full border-[1.5px] border-[rgba(221,201,142,0.55)] px-4 py-2 text-sm text-[#DDC98E]">← Your library</Link></div>
+        <div className="mb-8"><Link href="/" className="inline-flex items-center gap-1.5 rounded-full border-[1.5px] border-[rgba(221,201,142,0.55)] px-4 py-2 text-sm text-[#DDC98E]">← FFY app</Link></div>
         <p className="text-[11px] uppercase tracking-[0.2em] text-[#DDC98E]">Not yet</p>
         <h1 className="mt-3 font-display text-3xl font-light text-[#f1ece2]">
           {consecutive >= thisDay - 1 && dueAt
@@ -158,7 +158,7 @@ function TheSacredNoEntryContent() {
     <main className="min-h-screen bg-[#070707] text-[#F6EFE0]">
       <div className="mx-auto max-w-xl px-5 pb-20 pt-5">
         <div className="flex flex-wrap gap-2">
-          <Link href="/" className="rounded-full border border-[#DDC98E]/40 px-4 py-1.5 text-xs text-[#DDC98E]">← Your library</Link>
+          <Link href="/" className="rounded-full border border-[#DDC98E]/40 px-4 py-1.5 text-xs text-[#DDC98E]">← FFY app</Link>
           <Link href="/practice/the-sacred-no" className="rounded-full border border-[#DDC98E]/40 px-4 py-1.5 text-xs text-[#DDC98E]">← The Sacred No</Link>
         </div>
         <p className="mt-6 text-[10px] uppercase tracking-[0.3em] text-[#DDC98E]">{isWelcome ? "Before you begin" : "Bonus · any time"}</p>

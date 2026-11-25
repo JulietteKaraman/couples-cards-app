@@ -13,7 +13,7 @@ import { touchMap } from "@/lib/content/touch-map";
 import { dayOf } from "@/lib/content/31-touch-points-drip";
 import { useAuth } from "@/components/providers/AuthProvider";
 import { supabaseBrowser } from "@/lib/supabase/client";
-import { PhoneBites } from "@/components/PhoneBites";
+import { readPhoneBites, type PhoneBite } from "@/lib/bites-on-phone";
 import { AppHomeScreen } from "@/components/AppHomeScreen";
 import { getCompletedSlugs } from "@/lib/entitlements/progress";
 import { COLLECTION_DECK_TYPES, PURCHASE_URLS, FREE_DECK_TYPES, MEMBERSHIP_UNLOCKS, membershipMonth, type MembershipUnlock } from "@/lib/entitlements/config";
@@ -251,6 +251,97 @@ function LibraryContent() {
   const lockedPaid = PAID_COLLECTIONS.filter((c) => !owns(c.slug) && c.slug !== thirtyOneTouchPoints.slug && shown(c.slug));
   const externalShown = EXTERNAL_OFFERS.filter((o) => shown(o.slug));
 
+  // 25 Nov 2026 (Juliette): one place for everything that is theirs, never twice. "Yours on this phone" and the
+  // separate 31 Touch Points card are gone; it all lives in Your programmes. Someone who has anything sees it first;
+  // someone with nothing sees Free first, then the Holiday Survival Kit offer.
+  const [bites, setBites] = useState<PhoneBite[]>([]);
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- phone storage is only readable after mount
+  useEffect(() => { setBites(readPhoneBites()); }, []);
+  const bitesHere = bites.filter((b) => !ownedPaid.some((c) => c.slug === b.slug) && !memberOpen.some((u) => u.href.includes(b.slug)));
+  const hasAny = everJoined || ownedPaid.length > 0 || bitesHere.length > 0 || entitledCollections.includes("scrumptious-confessions") || entitledCollections.includes("how-to-feel-like-a-woman");
+  const programmesBlock = (
+        <>
+            <div className={hasAny ? "mb-4 mt-8" : "mb-4 mt-12"}>
+              <p className="text-[11px] uppercase tracking-[0.18em] text-[#DDC98E]">Yours</p>
+              <h2 className="font-display mt-1 text-2xl font-light text-[#DDC98E]">Your programmes</h2>
+            </div>
+            <div className="grid gap-3">
+              {everJoined ? (
+                <Tile
+                  href={HOLIDAY_KIT_URL}
+                  external
+                  title="Holiday Survival Kit"
+                  subtitle="Cards for the season: the drive there, the table, who isn't here."
+                  heroImage="/offers/holiday-survival-kit.png"
+                  note="Yours to keep · opens in the cards app"
+                />
+              ) : (
+                <Tile
+                  href="https://feelfullyyou.com/scrumptious-confessions-membership"
+                  external
+                  title="Holiday Survival Kit"
+                  subtitle="Cards for the season: the drive there, the table, who isn't here."
+                  heroImage="/offers/holiday-survival-kit.png"
+                  note="Yours to keep when you try Scrumptious Confessions free for 7 days"
+                  onClick={() => trackInterest("scrumptious-confessions", user?.email)}
+                />
+              )}
+              {memberOpen.filter((u) => u.title !== "Holiday Survival Kit" && !ownedPaid.some((c) => c.slug === u.deck)).map((u) => {
+                const ext = u.href.startsWith("http");
+                const cls = "flex min-h-[60px] items-center justify-between gap-3 rounded-2xl border-[1.5px] border-[rgba(221,201,142,0.55)] bg-[rgba(13,53,53,0.45)] px-4 py-3";
+                const inner = (<><span><span className="block font-display text-lg font-normal leading-snug text-ffy-cream">{u.title}</span><span className="mt-0.5 block text-sm leading-snug text-[rgba(254,252,250,0.75)]">{u.line}</span></span><span className="shrink-0 text-[#DDC98E]">&rarr;</span></>);
+                return ext
+                  ? <a key={u.title} href={u.href} target="_blank" rel="noreferrer" className={cls}>{inner}</a>
+                  : <Link key={u.title} href={u.href} className={cls}>{inner}</Link>;
+              })}
+              {ownedPaid.map((c) => (
+                <Tile
+                  key={c.slug}
+                  href={`/practice/${c.slug}`}
+                  title={c.title}
+                  subtitle={c.subtitle}
+                  heroImage={tileImage(c)}
+                  note={c.slug === thirtyOneTouchPoints.slug && !finished31 ? `Day ${nextDay} of 31 · open today's` : `${doneCount(c.slug)} of ${c.entries.length} done`}
+                />
+              ))}
+              {bitesHere.map((b) => (
+                <Tile key={b.slug} href={`/practice/${b.slug}`} title={b.title} subtitle="" heroImage={b.img} note="Yours to keep" />
+              ))}
+              {owns31 && (
+                <Tile
+                  href={user?.email?.toLowerCase() === "juliette@feelfullyyou.com" ? CARDS_APP_ALL : CARDS_APP}
+                  external
+                  title={CARDS_COMPANION.title}
+                  subtitle={CARDS_COMPANION.subtitle}
+                  heroImage={CARDS_COMPANION.heroImage}
+                  note={CARDS_COMPANION.note}
+                  onClick={() => trackInterest(CARDS_COMPANION.slug, user?.email)}
+                />
+              )}
+              {entitledCollections.includes("how-to-feel-like-a-woman") && (
+                <Tile
+                  href="/practice/how-to-feel-like-a-woman"
+                  title="How to Feel Like a Woman"
+                  subtitle="Your cards, your practices, my voice. New things every week."
+                  heroImage="/how-to-feel-like-a-woman/juliette-boudoir.jpg"
+                  note="Practice Lab · cards · Scrumptious Confessions"
+                />
+              )}
+              {entitledCollections.includes("scrumptious-confessions") && (
+                <Tile
+                  href="/practice/scrumptious-confessions"
+                  title="Scrumptious Confessions"
+                  subtitle="Every Monday, a confession in my voice. Your questions answered, anonymously. Every month, a programme opens that is yours to keep."
+                  heroImage="/how-to-feel-like-a-woman/scrumptious-confessions.jpg"
+                  note="Something new every day · questions wall · Touch Base · cards · library"
+                />
+              )}
+              {/* "Talk to me" call tile removed 5 Nov 2026. Juliette: "I do not
+                  want that on- I only want qualified leads". */}
+            </div>
+        </>
+  );
+
   return (
     <main className="min-h-screen bg-[#070707] text-ffy-cream">
       <style>{`
@@ -282,84 +373,27 @@ function LibraryContent() {
 
         <AppHomeScreen />
 
-        {/* Funnel bites this phone has opened. They stay hidden from everyone else. */}
-        <PhoneBites />
-
-        {/* 24 Nov 2026 (Juliette): theirs first, then free, then more. The check-in belongs in Confessions, not here. */}
-        {/* TODAY, for an owner */}
-        {owns31 && (
-          <Link
-            href={`/practice/${thirtyOneTouchPoints.slug}`}
-            className="ffy-rise group mt-4 block overflow-hidden rounded-3xl border-2 border-[#DDC98E] bg-[rgba(13,53,53,0.6)] p-6 shadow-[0_0_70px_-20px_rgba(221,201,142,0.35)] sm:p-8"
-          >
-            <p className="text-[11px] uppercase tracking-[0.18em] text-[#DDC98E]">{finished31 ? "Your practice" : "Today"}</p>
-            <div className="mt-3 flex items-end justify-between gap-4">
-              <div>
-                <h2 className="font-display text-2xl font-light text-ffy-cream sm:text-3xl">31 Touch Points</h2>
-                {!finished31 && (
-                  <p className="mt-2 text-sm text-[rgba(254,252,250,0.78)]">One touch point a day. Nothing is lost if you miss one.</p>
-                )}
-              </div>
-              {loaded && !finished31 && (
-                <div className="shrink-0 text-right">
-                  <span className="block text-[11px] uppercase tracking-[0.16em] text-[rgba(254,252,250,0.78)]">Day</span>
-                  <span className="font-display block text-6xl font-light leading-none text-[#DDC98E]">{nextDay}</span>
-                </div>
-              )}
-            </div>
-            <div className="mt-5 h-1 overflow-hidden rounded-full bg-[rgba(221,201,142,0.15)]">
-              <div className="h-full rounded-full bg-[#DDC98E] transition-all duration-700" style={{ width: `${(Math.min(days31, 31) / 31) * 100}%` }} />
-            </div>
-            <span className="mt-6 inline-flex min-h-[48px] items-center rounded-full bg-[#DDC98E] px-6 text-[15px] font-medium text-[#070707] transition group-hover:bg-[#EEDE80]">
-              {finished31 ? "Open 31 Touch Points" : loaded ? `Open day ${nextDay}` : "Carry on"}
-            </span>
-          </Link>
-        )}
-
-        {!owns31 && todayOther && (
-          <Link
-            href={`/practice/${todayOther.slug}`}
-            className="ffy-rise group mt-4 block rounded-3xl border-2 border-[#DDC98E] bg-[rgba(13,53,53,0.6)] p-6 sm:p-8"
-          >
-            <p className="text-[11px] uppercase tracking-[0.18em] text-[#DDC98E]">Today</p>
-            <h2 className="font-display mt-3 text-2xl font-light text-ffy-cream">Carry on with {todayOther.title}</h2>
-            <p className="mt-2 text-sm text-[rgba(254,252,250,0.78)]">
-              {doneCount(todayOther.slug)} of {todayOther.entries.length} done
-            </p>
-            <span className="mt-6 inline-flex min-h-[48px] items-center rounded-full bg-[#DDC98E] px-6 text-[15px] font-medium text-[#070707]">
-              Carry on
-            </span>
-          </Link>
-        )}
+        {hasAny && programmesBlock}
 
         {/* START FREE */}
         <SectionHead eyebrow="Free" title="Start here" />
-        {/* Quiz card = the website pop-up, exactly (Juliette, 30 Oct 2026) */}
+        {/* Quiz card, 25 Nov 2026 (Juliette): "a bit smaller, more integrated". Same website look (cream, teal,
+            gold italic), now the size of the other free tiles. It opens the quiz on the website, over the app. */}
         <a
           href="https://feelfullyyou.com/touch-reset-quiz"
           target="_blank"
           rel="noreferrer"
-          style={{ maxWidth: 460, marginLeft: "auto", marginRight: "auto" }}
-          className="ffy-rise group relative block overflow-hidden rounded-[22px] bg-[#fefcfa] text-center text-[#0D3535] shadow-[0_20px_50px_-20px_rgba(0,0,0,0.6)]"
+          className="ffy-rise group flex items-stretch overflow-hidden rounded-3xl bg-[#fefcfa] text-[#0D3535] shadow-[0_20px_50px_-24px_rgba(0,0,0,0.6)]"
         >
-          <div className="relative h-60 sm:h-64">
-            <Image src="/offers/touch-reset-quiz-bw-full.jpg" alt="Juliette and Alex, black and white, her eyes closed" fill sizes="(max-width: 768px) 100vw, 768px" className="object-cover" style={{ objectPosition: "50% 24%" }} />
-            <div className="absolute inset-x-0 bottom-0 h-7 bg-gradient-to-b from-transparent to-[#fefcfa]" />
-          </div>
-          <div className="relative px-6 pb-7 pt-1">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-[#7a6236]">Free · two minutes</p>
-            <h3 className="font-display mt-2 text-[2rem] font-semibold leading-[1.08] text-[#0D3535]">
-              Where did
-              <em className="block italic text-[#A88538]">the touch go?</em>
-            </h3>
-            <p className="mx-auto mt-3 max-w-sm text-[15px] leading-relaxed text-[#1c1714]">Sixteen quick taps. Your body answers.</p>
-            <span className="mt-5 inline-flex min-h-[48px] items-center rounded-full bg-[#0D3535] px-8 text-[12px] font-semibold uppercase tracking-[0.24em] text-[#fefcfa] transition group-hover:bg-[#070707]">
-              Take the quiz
-            </span>
-            {/* 30 Oct, Juliette: "if I don't give my results, can I get back to the app? No, there's no button."
-                The quiz lives on the website, so on a phone it opens over the app. The ✕ top left brings them back. */}
-            <p className="mt-3 text-[12px] text-[#5b4a2e]">Opens over the app. Tap ✕ at the top to come back.</p>
-          </div>
+          <span className="relative w-[38%] shrink-0">
+            <Image src="/offers/touch-reset-quiz-bw-full.jpg" alt="" fill sizes="160px" className="object-cover" style={{ objectPosition: "50% 24%" }} />
+          </span>
+          <span className="flex flex-1 flex-col justify-center px-4 py-4">
+            <span className="text-[10px] font-semibold uppercase tracking-[0.24em] text-[#7a6236]">Free · two minutes</span>
+            <span className="font-display mt-1 text-[1.45rem] font-semibold leading-[1.1]">Where did <em className="italic text-[#A88538]">the touch go?</em></span>
+            <span className="mt-1.5 text-[14px] leading-snug text-[#1c1714]">Sixteen quick taps. Your body answers.</span>
+            <span className="mt-2 text-[12px] font-semibold uppercase tracking-[0.18em] text-[#0D3535]">Take the quiz &rarr;</span>
+          </span>
         </a>
         <div className="mt-3 grid gap-3">
           {shown("sacred-no-quiz") && <Tile
@@ -420,88 +454,7 @@ function LibraryContent() {
           />
         </div>
 
-        {/* YOURS */}
-        {/* 20 Nov 2026: a Confessions-only member must see this section too (their first test showed nothing). */}
-        {/* 24 Nov 2026 (Juliette): "Your programmes" in gold, after the free things and before the two things to buy.
-            Anyone who has ever started Scrumptious Confessions (even only the 7 free days) keeps the Holiday Survival Kit
-            here for good; it opens in the cards app. Nobody else sees a list of locks, only the kit and how to get it. */}
-        <>
-            <div className="mb-4 mt-12">
-              <p className="text-[11px] uppercase tracking-[0.18em] text-[#DDC98E]">Yours</p>
-              <h2 className="font-display mt-1 text-2xl font-light text-[#DDC98E]">Your programmes</h2>
-            </div>
-            <div className="grid gap-3">
-              {everJoined ? (
-                <Tile
-                  href={HOLIDAY_KIT_URL}
-                  external
-                  title="Holiday Survival Kit"
-                  subtitle="Cards for the season: the drive there, the table, who isn't here."
-                  heroImage="/offers/holiday-survival-kit.png"
-                  note="Yours to keep · opens in the cards app"
-                />
-              ) : (
-                <Tile
-                  href="https://feelfullyyou.com/scrumptious-confessions-membership"
-                  external
-                  title="Holiday Survival Kit"
-                  subtitle="Cards for the season: the drive there, the table, who isn't here."
-                  heroImage="/offers/holiday-survival-kit.png"
-                  note="Yours to keep when you try Scrumptious Confessions free for 7 days"
-                  onClick={() => trackInterest("scrumptious-confessions", user?.email)}
-                />
-              )}
-              {memberOpen.filter((u) => u.title !== "Holiday Survival Kit" && !ownedPaid.some((c) => c.slug === u.deck)).map((u) => {
-                const ext = u.href.startsWith("http");
-                const cls = "flex min-h-[60px] items-center justify-between gap-3 rounded-2xl border-[1.5px] border-[rgba(221,201,142,0.55)] bg-[rgba(13,53,53,0.45)] px-4 py-3";
-                const inner = (<><span><span className="block font-display text-lg font-normal leading-snug text-ffy-cream">{u.title}</span><span className="mt-0.5 block text-sm leading-snug text-[rgba(254,252,250,0.75)]">{u.line}</span></span><span className="shrink-0 text-[#DDC98E]">&rarr;</span></>);
-                return ext
-                  ? <a key={u.title} href={u.href} target="_blank" rel="noreferrer" className={cls}>{inner}</a>
-                  : <Link key={u.title} href={u.href} className={cls}>{inner}</Link>;
-              })}
-              {ownedPaid.map((c) => (
-                <Tile
-                  key={c.slug}
-                  href={`/practice/${c.slug}`}
-                  title={c.title}
-                  subtitle={c.subtitle}
-                  heroImage={tileImage(c)}
-                  note={`${doneCount(c.slug)} of ${c.entries.length} done`}
-                />
-              ))}
-              {owns31 && (
-                <Tile
-                  href={user?.email?.toLowerCase() === "juliette@feelfullyyou.com" ? CARDS_APP_ALL : CARDS_APP}
-                  external
-                  title={CARDS_COMPANION.title}
-                  subtitle={CARDS_COMPANION.subtitle}
-                  heroImage={CARDS_COMPANION.heroImage}
-                  note={CARDS_COMPANION.note}
-                  onClick={() => trackInterest(CARDS_COMPANION.slug, user?.email)}
-                />
-              )}
-              {entitledCollections.includes("how-to-feel-like-a-woman") && (
-                <Tile
-                  href="/practice/how-to-feel-like-a-woman"
-                  title="How to Feel Like a Woman"
-                  subtitle="Your cards, your practices, my voice. New things every week."
-                  heroImage="/how-to-feel-like-a-woman/juliette-boudoir.jpg"
-                  note="Practice Lab · cards · Scrumptious Confessions"
-                />
-              )}
-              {entitledCollections.includes("scrumptious-confessions") && (
-                <Tile
-                  href="/practice/scrumptious-confessions"
-                  title="Scrumptious Confessions"
-                  subtitle="Every Monday, a confession in my voice. Your questions answered, anonymously. Every month, a programme opens that is yours to keep."
-                  heroImage="/how-to-feel-like-a-woman/scrumptious-confessions.jpg"
-                  note="Something new every day · questions wall · Touch Base · cards · library"
-                />
-              )}
-              {/* "Talk to me" call tile removed 5 Nov 2026. Juliette: "I do not
-                  want that on- I only want qualified leads". */}
-            </div>
-        </>
+        {!hasAny && programmesBlock}
 
         {/* MORE WAYS IN. 24 Nov 2026 (Juliette): "the only way in is Scrumptious Confessions... not 5,000 things to
             choose from". Every programme opens inside the membership, month by month. No other paid tile here, ever. */}

@@ -155,7 +155,7 @@ export function FreeEmailGate({
   return (
     <main className="min-h-screen bg-[#1a1814] px-6 pb-16 pt-4 text-[#f1ece2]">
       <Link href="/" className="inline-flex items-center gap-1.5 rounded-full border border-[#DDC98E]/40 px-4 py-2 text-sm font-medium text-[#DDC98E]">
-        ← Your library
+        ← FFY app
       </Link>
       <div className="mx-auto mt-10 max-w-xl">{form}</div>
     </main>

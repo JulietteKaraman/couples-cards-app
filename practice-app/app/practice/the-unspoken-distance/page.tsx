@@ -52,7 +52,7 @@ function TheUnspokenDistanceHub() {
       <div className="relative w-full bg-black">
         <div className="absolute left-0 top-0 z-10 p-4">
           <Link href="/" className="inline-flex items-center gap-1.5 rounded-full border border-[#DDC98E]/40 bg-black/40 px-4 py-2 text-sm font-medium text-[#DDC98E] backdrop-blur-sm">
-            ← Your library
+            ← FFY app
           </Link>
         </div>
         <Image src={heroImage} alt="The Unspoken Distance: a guide for men who love women they can no longer reach" width={1600} height={901} priority sizes="100vw" className="mx-auto block h-auto w-full max-w-3xl pt-14" />

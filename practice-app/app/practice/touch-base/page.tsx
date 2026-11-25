@@ -60,7 +60,7 @@ export default function TouchBasePage() {
         <div className="absolute inset-0 bg-gradient-to-b from-[#1a1814]/50 via-transparent to-[#1a1814]" />
         <div className="absolute left-0 top-0 p-4">
           <Link href="/" className="inline-flex items-center gap-1.5 rounded-full border border-[#DDC98E]/40 bg-black/20 px-4 py-2 text-sm font-medium text-[#DDC98E] backdrop-blur-sm">
-            ← Your library
+            ← FFY app
           </Link>
         </div>
       </div>

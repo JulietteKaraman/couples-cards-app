@@ -314,7 +314,7 @@ export function SacredNoToday(props: {
         <Image src={heroImage} alt="" fill priority sizes="(max-width: 640px) 100vw, 576px" className="object-cover object-[50%_18%] opacity-90" />
         <div className="absolute inset-0 bg-gradient-to-b from-[#070707]/40 via-[#070707]/10 to-[#070707]" />
         <div className="relative z-10 mx-auto flex h-full max-w-xl flex-col justify-between px-5 pb-6 pt-5">
-          <Link href="/" className="self-start rounded-full border border-[#DDC98E]/40 bg-[#070707]/50 px-4 py-1.5 text-xs text-[#DDC98E] backdrop-blur">← Your library</Link>
+          <Link href="/" className="self-start rounded-full border border-[#DDC98E]/40 bg-[#070707]/50 px-4 py-1.5 text-xs text-[#DDC98E] backdrop-blur">← FFY app</Link>
           <div>
             <p className="font-display text-[34px] font-light leading-none">The Sacred No</p>
             <div className="mt-3 flex items-center justify-between">
@@ -418,7 +418,7 @@ export function SacredNoDay(props: {
       <div ref={top} className="mx-auto max-w-xl px-5 pb-20 pt-5">
         <div className="flex items-center justify-between gap-2">
           <div className="flex flex-wrap gap-2">
-            <Link href="/" className="rounded-full border border-[#DDC98E]/40 px-4 py-1.5 text-xs text-[#DDC98E]">← Your library</Link>
+            <Link href="/" className="rounded-full border border-[#DDC98E]/40 px-4 py-1.5 text-xs text-[#DDC98E]">← FFY app</Link>
             <Link href="/practice/the-sacred-no" className="rounded-full border border-[#DDC98E]/40 px-4 py-1.5 text-xs text-[#DDC98E]">← The Sacred No</Link>
           </div>
           <span className="text-[10px] uppercase tracking-[0.3em] text-[#DDC98E]">Day {day} of 7</span>

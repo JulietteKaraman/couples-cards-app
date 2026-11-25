@@ -122,7 +122,7 @@ function MonthContent() {
           href="/"
           className="inline-flex min-h-[44px] items-center gap-1.5 rounded-full border-[1.5px] border-[rgba(221,201,142,0.55)] px-4 text-sm text-[#DDC98E] transition hover:border-[#DDC98E]"
         >
-          ← Your library
+          ← FFY app
         </Link>
 
         <p className="mt-8 text-[11px] uppercase tracking-[0.18em] text-[#DDC98E]">The month</p>

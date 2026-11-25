@@ -82,7 +82,7 @@ export default function TasteThirtyOneTouchPoints() {
     <main className="min-h-screen bg-[#070707] text-ffy-cream [background-image:radial-gradient(110%_55%_at_50%_0%,rgba(13,53,53,0.9)_0%,rgba(7,7,7,0)_70%)]">
       <div className="mx-auto max-w-2xl px-5 pb-20 pt-6">
         <a href="/" className="inline-flex min-h-[44px] items-center gap-1.5 rounded-full border-[1.5px] border-[rgba(221,201,142,0.55)] px-4 text-sm text-[#DDC98E] transition hover:border-[#DDC98E]">
-          ← Your library
+          ← FFY app
         </a>
         <p className="mt-4 text-[11px] uppercase tracking-[0.2em] text-[#DDC98E]">
           31 Touch Points · a taste

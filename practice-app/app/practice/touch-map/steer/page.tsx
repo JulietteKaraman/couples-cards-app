@@ -44,7 +44,7 @@ function Hero({ place, eyebrow, title }: { place?: Place; eyebrow: string; title
       <Image src={ph.img} alt="" fill priority sizes="100vw" className="tm-drift object-cover" style={{ objectPosition: ph.pos ?? "center", filter: "grayscale(.35)" }} />
       <div className="absolute inset-0 bg-gradient-to-t from-[#070707] via-[#070707]/30 to-[#070707]/50" />
       <div className="absolute inset-x-0 top-0 mx-auto flex max-w-2xl flex-wrap gap-2 px-5 pt-6">
-        <Link href="/" className="inline-flex min-h-[44px] items-center rounded-full border-[1.5px] border-[rgba(221,201,142,0.55)] bg-[#070707]/40 px-4 text-sm text-[#DDC98E] backdrop-blur">← Your library</Link>
+        <Link href="/" className="inline-flex min-h-[44px] items-center rounded-full border-[1.5px] border-[rgba(221,201,142,0.55)] bg-[#070707]/40 px-4 text-sm text-[#DDC98E] backdrop-blur">← FFY app</Link>
         <Link href="/practice/touch-map" className="inline-flex min-h-[44px] items-center rounded-full border-[1.5px] border-[rgba(221,201,142,0.55)] bg-[#070707]/40 px-4 text-sm text-[#DDC98E] backdrop-blur">← Your Touch Map</Link>
       </div>
       <div className="absolute inset-x-0 bottom-0 mx-auto max-w-2xl px-5 pb-6">

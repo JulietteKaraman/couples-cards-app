@@ -227,7 +227,7 @@ export default function WhenSheStopsReaching() {
       {/* Stays dark while his phone's saved step is read, so there is no white flash. */}
       <div className="mx-auto max-w-2xl px-5 pb-36 pt-6" style={{ visibility: ready ? "visible" : "hidden" }}>
         <div className="mb-5 flex items-center justify-between gap-3">
-          <Link href="/" className="inline-flex min-h-[44px] items-center gap-1.5 rounded-full border-[1.5px] border-[rgba(221,201,142,0.55)] px-4 text-sm text-[#DDC98E]">← Your library</Link>
+          <Link href="/" className="inline-flex min-h-[44px] items-center gap-1.5 rounded-full border-[1.5px] border-[rgba(221,201,142,0.55)] px-4 text-sm text-[#DDC98E]">← FFY app</Link>
           {!onCover && (
             <button type="button" onClick={again} className="inline-flex min-h-[44px] items-center text-sm text-[#DDC98E] underline underline-offset-4">Do it again</button>
           )}

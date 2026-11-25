@@ -50,7 +50,7 @@ function RebootKitEntryContent() {
 
       <div className="mx-auto max-w-2xl px-6 pb-14 pt-10">
         <div className="flex flex-wrap gap-2">
-          <Link href="/" className="inline-flex items-center gap-1.5 rounded-full border border-ffy-gold-deep/40 px-4 py-2 text-sm font-medium text-ffy-gold-deep transition hover:bg-ffy-gold-deep/5">← Your library</Link>
+          <Link href="/" className="inline-flex items-center gap-1.5 rounded-full border border-ffy-gold-deep/40 px-4 py-2 text-sm font-medium text-ffy-gold-deep transition hover:bg-ffy-gold-deep/5">← FFY app</Link>
           <Link
             href="/practice/communication-reboot-kit"
             className="inline-flex items-center gap-1.5 rounded-full border border-ffy-gold-deep/40 px-4 py-2 text-sm font-medium text-ffy-gold-deep transition hover:bg-ffy-gold-deep/5"

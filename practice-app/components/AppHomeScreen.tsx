@@ -35,7 +35,7 @@ export function AppHomeScreen() {
         <li>Open this page in <b className="font-medium text-ffy-cream">Chrome</b>.</li>
         <li>Tap the three dots at the top right, then <b className="font-medium text-ffy-cream">Add to Home screen</b> (or Install app).</li>
       </ol>
-      <p className="mt-3">It appears on your phone as <b className="font-medium text-ffy-cream">FFY</b>.</p>
+      <p className="mt-3">It appears on your phone as <b className="font-medium text-ffy-cream">FFY the App</b>.</p>
       <button type="button" onClick={() => setState("line")} className="mt-3 min-h-[40px] text-[13px] text-[#DDC98E] underline underline-offset-4">Close</button>
     </div>
   );

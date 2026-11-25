@@ -51,7 +51,7 @@ function OneTouchEntryContent() {
 
   const back = (
     <span className="inline-flex flex-wrap justify-center gap-2">
-      <Link href="/" className="rounded-full border border-[#DDC98E]/40 px-4 py-1.5 text-xs text-[#DDC98E]">← Your library</Link>
+      <Link href="/" className="rounded-full border border-[#DDC98E]/40 px-4 py-1.5 text-xs text-[#DDC98E]">← FFY app</Link>
       <Link href="/practice/one-touch" className="rounded-full border border-[#DDC98E]/40 px-4 py-1.5 text-xs text-[#DDC98E]">← One Touch</Link>
     </span>
   );
