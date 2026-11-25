@@ -11,7 +11,6 @@ import { Blocks } from "@/components/Blocks";
 import { CollectionGate } from "@/components/auth/CollectionGate";
 import { useAuth } from "@/components/providers/AuthProvider";
 import { ADMIN_EMAIL } from "@/lib/entitlements/admin";
-import { PURCHASE_URLS } from "@/lib/entitlements/config";
 import { getCompletedWithTimes, markComplete } from "@/lib/entitlements/progress";
 import { FeelTracker, GiverReceiverNotes, readFeels, readNotes } from "@/components/Interactive";
 import {
@@ -24,12 +23,9 @@ import {
   whenItOpens,
 } from "@/lib/content/31-touch-points-drip";
 
-// 24 Nov 2026 (Juliette, from Viv's test): someone who doesn't own 31 Touch Points gets day one free, as a taste.
-const TASTE_SLUG_31TP = "day-1-the-menu";
 export default function TouchPointEntry() {
-  const routeSlug = useParams().slug as string;
   return (
-    <CollectionGate collectionSlug={thirtyOneTouchPoints.slug} taste={routeSlug === TASTE_SLUG_31TP}>
+    <CollectionGate collectionSlug={thirtyOneTouchPoints.slug}>
       <TouchPointEntryContent />
     </CollectionGate>
   );
@@ -42,7 +38,7 @@ export default function TouchPointEntry() {
 function TouchPointEntryContent() {
   const params = useParams();
   const slug = params.slug as string;
-  const { user, entitledCollections } = useAuth();
+  const { user } = useAuth();
   const [completed, setCompleted] = useState(false);
   const [needsFill, setNeedsFill] = useState("");
   const [doneSlugs, setDoneSlugs] = useState<string[] | null>(null);
@@ -146,7 +142,6 @@ function TouchPointEntryContent() {
   // "Show me what a buyer sees" link turns that bypass off when she wants to
   // walk the product the way a buyer meets it.
   const isAdmin = adminBypassActive(user?.email, ADMIN_EMAIL);
-  const tasting = !isAdmin && !entitledCollections.includes(thirtyOneTouchPoints.slug);
   const locked = !isAdmin && doneSlugs !== null && thisDay > unlockedThrough;
   const lastOpen = entries.find((x) => dayOf(x.slug) === unlockedThrough);
 
@@ -251,17 +246,7 @@ function TouchPointEntryContent() {
           </>
         )}
 
-        {tasting && (
-          <div className="mt-10 rounded-3xl border-2 border-[#DDC98E] bg-[rgba(13,53,53,0.6)] p-6 text-center">
-            <p className="text-[11px] uppercase tracking-[0.18em] text-[#DDC98E]">That was day one</p>
-            <p className="mt-3 font-display text-2xl font-light leading-snug">There are thirty more, one a day.</p>
-            <p className="mt-3 text-[15px] text-[rgba(254,252,250,0.82)]">Each one opens the morning after the last. Buy it once and it&rsquo;s yours to keep.</p>
-            <a href={PURCHASE_URLS[thirtyOneTouchPoints.slug]} target="_blank" rel="noreferrer" className="mt-6 inline-flex min-h-[48px] items-center rounded-full bg-[#DDC98E] px-6 text-[15px] font-medium text-[#070707]">Keep going</a>
-            <div><Link href="/" className="mt-4 inline-flex min-h-[44px] items-center text-sm text-[#DDC98E] underline underline-offset-4">Back to the free practices</Link></div>
-          </div>
-        )}
-
-        {isDay && !tasting && (
+        {isDay && (
           <div className="mt-10">
             {completed ? (
               <div className="ffy-done rounded-3xl border-2 border-[#DDC98E] bg-[rgba(13,53,53,0.6)] p-6 text-center">
@@ -316,7 +301,7 @@ function TouchPointEntryContent() {
           ) : (
             <span />
           )}
-          {next && !tasting ? (
+          {next ? (
             <Link href={`/practice/31-touch-points/${next.slug}`} className="min-h-[44px] py-3 text-right text-[#DDC98E]">
               {next.title} →
             </Link>
