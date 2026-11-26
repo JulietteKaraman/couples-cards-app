@@ -852,7 +852,7 @@ function Answers({ paid, trial, start, shelves, startTopic, men, women }: { paid
   useEffect(() => {
     if (data[shelf]) return;
     // Her Thursday answers to members' questions join the library for good, newest first (20 Nov 2026).
-    const fromMembers = (): Promise<Answer[]> => loadWall().then((w) => (w?.answers || []).map((a) => ({ slug: `m-${a.id}`, q: a.question, blocks: a.answer.split(/\n+/).filter(Boolean).map((x) => ({ t: "p" as const, x })) }))).catch(() => []);
+    const fromMembers = (): Promise<Answer[]> => loadWall().then((w) => (w?.answers || []).map((a) => ({ slug: `m-${a.id}`, q: a.question, audio: a.audio, blocks: a.answer.split(/\n+/).filter(Boolean).map((x) => ({ t: "p" as const, x })) }))).catch(() => []);
     const get = shelf === "meditations" ? loadMeditations()
       // Juliette's answer cards (20 Nov 2026): her own essay lines, sorted by topic, alongside the written answers.
       : shelf === "answers" ? Promise.all([fromMembers(), fetch(`/scrumptious-confessions/cards.json`).then((r) => (r.ok ? r.json() : [])).catch(() => []), fetch(`/scrumptious-confessions/answers.json`).then((r) => r.json())]).then(([m, k, j]) => [...m, ...k, ...j])
@@ -976,7 +976,7 @@ function SendToMe({ item, notice, button, onType, once, onSent, light }: { item:
 const weekOf = (d: string) => { const x = new Date(d + "T12:00:00"); const back = (x.getDay() + 6) % 7; x.setDate(x.getDate() - back); return x.toISOString().slice(0, 10); };
 
 type WallQ = { id: string; body: string; metoo: number; created_at: string };
-type WallA = { id: string; question_id: string; question: string; answer: string; created_at: string };
+type WallA = { id: string; question_id: string; question: string; answer: string; created_at: string; audio?: string };
 type WallData = { questions: WallQ[]; thisWeek: WallA[]; answers: WallA[]; confessed?: { id: string; body: string; created_at: string }[] };
 // The questions this phone asked (ids only, never words), so it can show "I answered you" (20 Nov 2026).
 const MINE_KEY = "ffy.confessions.mine.v1";
@@ -987,7 +987,13 @@ async function loadWall(): Promise<WallData | null> {
   const token = data.session?.access_token;
   if (!token) return null;
   const res = await fetch("/api/confessions/wall", { headers: { Authorization: `Bearer ${token}` } }).catch(() => null);
-  return res?.ok ? res.json() : null;
+  if (!res?.ok) return null;
+  const w = (await res.json()) as WallData;
+  // Her voice answers (26 Nov 2026): recorded on her phone, published as files with a small list of which
+  // question each one answers. An answer with a recording plays it above the words.
+  const voice: Record<string, string> = await fetch("/scrumptious-confessions/answer-audio.json", { cache: "no-store" }).then((r) => (r.ok ? r.json() : {})).catch(() => ({}));
+  const add = (a: WallA): WallA => (voice[a.question_id] ? { ...a, audio: voice[a.question_id] } : a);
+  return { ...w, thisWeek: w.thisWeek.map(add), answers: w.answers.map(add) };
 }
 const normQ = (x: string) => x.toLowerCase().replace(/['\u2018\u2019`]/g, "").replace(/[^a-z0-9\s]/g, " ");
 const STOP = new Set("i me my we our you your he she him her it its a an the and or but to of in on for with is am are was do does did have has why how what when can cant dont not so that this just".split(" "));
@@ -1155,7 +1161,7 @@ function AnswerItem({ a, open, onOpen }: { a: WallA; open: boolean; onOpen: () =
         <span className="text-[16px] leading-snug">{a.question}</span>
         <span className="shrink-0 text-[#DDC98E]">{open ? "\u2212" : "+"}</span>
       </button>
-      {open && <div className="space-y-3 px-4 pb-5 text-[15px] leading-relaxed text-[#cfc8bb]">{a.answer.split(/\n+/).map((x, i) => <p key={i}>{x}</p>)}</div>}
+      {open && <div className="space-y-3 px-4 pb-5 text-[15px] leading-relaxed text-[#cfc8bb]">{a.audio && <div className="pb-1"><SpeedPlayer src={a.audio} label="Hear my answer" /></div>}{a.answer.split(/\n+/).map((x, i) => <p key={i}>{x}</p>)}</div>}
     </div>
   );
 }
