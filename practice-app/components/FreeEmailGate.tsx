@@ -46,10 +46,14 @@ function sendToKit(c: { email: string; firstName: string }, freebie: Freebie, we
 export function FreeEmailGate({
   freebie,
   fullPage = false,
+  skipFrom,
   children,
 }: {
   freebie: Freebie;
   fullPage?: boolean;
+  /** 26 Nov 2026 (Juliette): people who already gave their email elsewhere (the ManyChat TOUCH DM links with
+   *  ?from=dm) are not asked twice. Remembered on the phone so a refresh doesn't ask either. */
+  skipFrom?: string;
   children: React.ReactNode;
 }) {
   const { user, loading } = useAuth();
@@ -65,6 +69,13 @@ export function FreeEmailGate({
       setOpen(true);
       return;
     }
+    if (skipFrom) {
+      const SK = `ffy.freebie.skip.${freebie}`;
+      try {
+        if (new URLSearchParams(window.location.search).get("from") === skipFrom) localStorage.setItem(SK, "1");
+        if (localStorage.getItem(SK) === "1") { setOpen(true); return; }
+      } catch { /* no storage: fall through to the usual step */ }
+    }
     const known = readContact();
     if (!known) {
       setOpen(false);
@@ -75,7 +86,7 @@ export function FreeEmailGate({
       saveContact({ ...known, freebies: [...known.freebies, freebie] });
     }
     setOpen(true);
-  }, [loading, user, freebie]);
+  }, [loading, user, freebie, skipFrom]);
 
   if (open === true) return <>{children}</>;
 

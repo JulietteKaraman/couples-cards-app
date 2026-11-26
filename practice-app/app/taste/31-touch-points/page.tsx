@@ -109,7 +109,7 @@ export default function TasteThirtyOneTouchPoints() {
         </p>
 
         {/* 26 Nov 2026 (Juliette): free things ask for a first name and email first, so people land on the list. */}
-        <FreeEmailGate freebie="the-fruit">
+        <FreeEmailGate freebie="the-fruit" skipFrom="dm">
         <Blocks blocks={before} dark />
 
         <div className="mt-8">
