@@ -1426,6 +1426,8 @@ function Hub({ name, fracs, dones, resume, open, partLabel }: {
         <Ring frac={total} done={nDone} />
       </div>
       <p className="mt-3 text-[16px] leading-relaxed text-[#cfc8bb]">{COPY.tagline}</p>
+      {/* 26 Nov 2026 (Juliette, yes to Kate O'Connor's tip: "tell people to bookmark the app so they can find it again"). Top of the page now. */}
+      <HomePrompt slug="let-her-land" line={COPY.homeLine} />
 
       {AUDIO.welcome && (
         <div className="mt-6 flex items-center gap-4" data-testid="welcome-slot">
@@ -1482,7 +1484,6 @@ function Hub({ name, fracs, dones, resume, open, partLabel }: {
       </a>
 
       <p className="mt-5 text-center text-[14px] text-[#a79f90]">{COPY.keepLine}</p>
-      <HomePrompt slug="let-her-land" />
 
       {/* 21 Nov 2026 (Juliette): "the main page should be her freebies, and then 'Want to do more?'" */}
       <div className="mt-14 border-t border-[#DDC98E]/25 pt-10 text-center" data-testid="do-more">

@@ -129,6 +129,7 @@ export const COPY = {
   moreKicker: "When you're ready",
   moreTitle: "Want to do more with me?",
   moreLine: "Everything above is yours, free. These are for when you want to go further.",
+  homeLine: "Add this to your home screen so you can always find me again.",
   confKicker: "A taste of what's next",
   confTitle: "Scrumptious Confessions",
   confLine: "People tell me they could listen to my voice for hours. So I built an app where you can.",

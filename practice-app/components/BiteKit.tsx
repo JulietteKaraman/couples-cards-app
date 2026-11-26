@@ -168,7 +168,7 @@ export function MuteNote() {
 }
 
 // Same steps the cards app teaches. Hidden once it is on the home screen, or once dismissed.
-export function HomePrompt({ slug }: { slug: string }) {
+export function HomePrompt({ slug, line }: { slug: string; line?: string }) {
   const key = `ffy.a2hs.${slug}.v1`;
   const [show, setShow] = useState(false);
   useEffect(() => {
@@ -184,7 +184,7 @@ export function HomePrompt({ slug }: { slug: string }) {
   if (!show) return null;
   return (
     <div className="mt-5 rounded-2xl border border-[#DDC98E]/40 p-4 text-[14px] leading-relaxed text-[#cfc8bb]" data-testid="home-prompt">
-      <p className="text-[#f1ece2]"><span className="text-[#DDC98E]">Put this on your home screen</span>, so it opens in one tap next time.</p>
+      {line ? <p className="text-[#f1ece2]">{line}</p> : <p className="text-[#f1ece2]"><span className="text-[#DDC98E]">Put this on your home screen</span>, so it opens in one tap next time.</p>}
       <p className="mt-2"><b className="font-medium text-[#f1ece2]">iPhone:</b> tap Share at the bottom of Safari, scroll down, tap Add to Home Screen.</p>
       <p className="mt-1"><b className="font-medium text-[#f1ece2]">Android:</b> tap the three dots in Chrome, tap Add to Home screen.</p>
       <button type="button" onClick={() => { write(key, true); setShow(false); }} className="mt-2 inline-flex min-h-[44px] items-center text-[14px] text-[#DDC98E] underline underline-offset-4">No thanks</button>
