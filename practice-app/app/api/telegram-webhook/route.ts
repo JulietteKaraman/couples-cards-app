@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { ownerChatId, ownerCode, saveOwner } from "@/lib/telegram/owner";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { telegramSecret } from "@/lib/telegram/secret";
 import { rememberChatId, groupChatId, tg, GROUP_SLUG } from "@/lib/telegram/bot";
@@ -89,6 +90,19 @@ async function onPrivateMessage(m: TgMessage) {
   const from = m.from?.id;
   const dm = m.chat?.id;
   if (!from || !dm || m.from?.is_bot) return;
+
+  // Juliette connecting her Thursday reminder (26 Nov 2026): /start <owner code> from the link on /admin/confessions.
+  const code = ownerCode();
+  const said = (m.text || "").trim();
+  if (code && said === `/start ${code}`) {
+    await saveOwner(dm);
+    await reply(dm, "Done. Every Thursday morning I'll send you the questions waiting for your answers in Scrumptious Confessions.");
+    return;
+  }
+  if (dm === (await ownerChatId())) {
+    await reply(dm, "This chat is for your Thursday reminders. Answer the questions at https://app.feelfullyyou.com/admin/confessions");
+    return;
+  }
 
   const { data: rows } = await supabaseAdmin
     .from("telegram_members")

@@ -104,6 +104,7 @@ function Inner() {
                 <p className="mt-1 text-[15px] text-[#cfc8bb]">{data.nightly.body}</p>
               </div>
             )}
+            <ThursdayReminder />
             <h2 className="mt-8 font-display text-2xl font-light">Questions bank</h2>
             <p className="mt-1 text-[14px] text-[#a79f90]">From the app. No names, ever. Questions go on every member&rsquo;s wall the moment they&rsquo;re sent. Answer them here on Thursday, most Me too first.</p>
             <div className="mt-3 flex flex-wrap gap-2">
@@ -160,6 +161,27 @@ function Inner() {
         )}
       </div>
     </main>
+  );
+}
+
+/* Thursday reminder on Telegram (26 Nov 2026): one tap to connect, then every Thursday morning the bot sends her
+   the questions waiting for her answers. */
+function ThursdayReminder() {
+  const [st, setSt] = useState<{ connected?: boolean; link?: string; error?: string } | null>(null);
+  useEffect(() => {
+    authed("/api/admin/telegram-owner").then((r) => r.json()).then(setSt).catch(() => setSt({ error: "Couldn't check Telegram." }));
+  }, []);
+  if (!st) return null;
+  return (
+    <div className="mt-6 rounded-2xl border border-[#DDC98E]/40 p-4" data-testid="thursday-reminder">
+      <p className="text-[12px] uppercase tracking-[0.16em] text-[#a79f90]">Thursday reminder</p>
+      {st.error ? <p className="mt-1 text-[15px] text-[#cfc8bb]">{st.error}</p>
+        : st.connected ? <p className="mt-1 text-[15px] text-[#cfc8bb]">On. Every Thursday morning Telegram sends you the questions waiting for your answers.</p>
+        : <>
+            <p className="mt-1 text-[15px] text-[#cfc8bb]">Get the week&rsquo;s questions on Telegram every Thursday morning. Tap once, then press Start in Telegram.</p>
+            {st.link && <a href={st.link} target="_blank" rel="noreferrer" className="mt-3 inline-flex min-h-[44px] items-center rounded-full bg-[#DDC98E] px-5 text-[14px] font-medium text-[#070707]">Connect my Telegram</a>}
+          </>}
+    </div>
   );
 }
 
