@@ -1061,7 +1061,7 @@ function YourTurn() {
     <section className="mt-8 space-y-6">
       {/* How it works, in three steps (Juliette 20 Nov 2026: "somewhere ... we have to explain how it works"). */}
       <ol className="grid grid-cols-3 gap-2 text-center text-[13px] leading-snug text-[#cfc8bb]">
-        <li className="rounded-2xl border border-[#DDC98E]/30 p-3"><span className="block font-display text-[20px] text-[#DDC98E]">1</span>Ask, with no name</li>
+        <li className="rounded-2xl border border-[#DDC98E]/30 p-3"><span className="block font-display text-[20px] text-[#DDC98E]">1</span>Ask anonymously</li>
         <li className="rounded-2xl border border-[#DDC98E]/30 p-3"><span className="block font-display text-[20px] text-[#DDC98E]">2</span>Everyone sees it and taps Me too</li>
         <li className="rounded-2xl border border-[#DDC98E]/30 p-3"><span className="block font-display text-[20px] text-[#DDC98E]">3</span>I answer on Thursday. It stays in the library</li>
       </ol>
@@ -1073,8 +1073,8 @@ function YourTurn() {
       <div className="ask-tile rounded-3xl bg-[#DDC98E] p-5 text-[#0d3535]">{/* gold = the place to type; light blue = the wall (Juliette 20 Nov 2026) */}
         <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#0d3535]/80">Ask me anything</p>
         <p className="mt-2 font-display text-[22px] font-light text-[#0d3535]">Your question about intimacy, Touch, desire, sex.</p>
-        <p className="mt-2 text-[15px] text-[#0d3535]/80">Type it below. It goes on the wall with no name. I answer every Thursday.</p>
-        <SendToMe item="question" light onType={setDraft} onSent={refresh} notice="No name goes with it, ever. Everyone in Scrumptious Confessions can read it." button="Ask my question" />
+        <p className="mt-2 text-[15px] text-[#0d3535]/80">Type it below. It goes on the wall anonymously. I answer every Thursday.</p>
+        <SendToMe item="question" light onType={setDraft} onSent={refresh} notice="It's anonymous, always. Everyone in Scrumptious Confessions can read it." button="Ask my question" />
         {similar.length > 0 && (
           <div className="mt-4 space-y-2">
             <p className="text-[13px] uppercase tracking-[0.14em] text-[#0d3535]/70">Someone may have asked this already</p>
