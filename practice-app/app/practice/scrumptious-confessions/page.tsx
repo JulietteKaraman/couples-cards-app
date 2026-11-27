@@ -1065,6 +1065,10 @@ function YourTurn() {
         <li className="rounded-2xl border border-[#DDC98E]/30 p-3"><span className="block font-display text-[20px] text-[#DDC98E]">2</span>Everyone sees it and taps Me too</li>
         <li className="rounded-2xl border border-[#DDC98E]/30 p-3"><span className="block font-display text-[20px] text-[#DDC98E]">3</span>I answer on Thursday. It stays in the library</li>
       </ol>
+      {/* Juliette in her own voice: where a question goes (27 Nov 2026, "Under Questions intro"). */}
+      <div className="rounded-2xl border border-[#DDC98E]/30 p-4">
+        <SpeedPlayer src="/scrumptious-confessions/answers/where-your-questions-go.m4a" label="Where your questions go" />
+      </div>
       {/* Its own colour so it reads as the place to type (Juliette 20 Nov 2026). */}
       <div className="ask-tile rounded-3xl bg-[#DDC98E] p-5 text-[#0d3535]">{/* gold = the place to type; light blue = the wall (Juliette 20 Nov 2026) */}
         <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#0d3535]/80">Ask me anything</p>
