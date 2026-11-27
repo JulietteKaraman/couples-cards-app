@@ -899,7 +899,7 @@ function Answers({ paid, trial, start, shelves, startTopic, men, women }: { paid
       )}
       {!paid && <p className="mt-3 text-[14px] text-[#DDC98E]">{trial ? "🔒 In your free week you see every question. The answers open with your first month, on day 8. Three meditations are yours now." : "🔒 These open when you start your 7 days free."}</p>}
       {starter && list.length > 0 && <p className="mt-5 font-display text-[20px] text-[#f1ece2]">Five to start with</p>}
-      {all && topic && shown.length === 0 && <p className="mt-5 rounded-2xl border border-[#DDC98E]/30 p-4 text-[15px] text-[#cfc8bb]">I haven&rsquo;t answered this one yet. Ask me on the Questions wall, with no name on it, and I&rsquo;ll answer it on a Thursday, in my voice.</p>}
+      {all && topic && shown.length === 0 && <p className="mt-5 rounded-2xl border border-[#DDC98E]/30 p-4 text-[15px] text-[#cfc8bb]">I haven&rsquo;t answered this one yet. Ask me on the Questions wall, anonymously, and I&rsquo;ll answer it on a Thursday, in my voice.</p>}
       <ul className="mt-4 space-y-2">
         {(starter ? list : shelf === "meditations" ? shown : shown.slice(0, find || topic ? 60 : 12)).map((a) => (
           <li key={a.slug} className="rounded-2xl border border-[#DDC98E]/25">
