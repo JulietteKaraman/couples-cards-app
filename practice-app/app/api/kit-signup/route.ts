@@ -33,19 +33,23 @@ const APP_SIGNUP_TAG_ID = 22701818;
 // (FreeEmailGate, 1 Nov 2026). Same tags and welcome sequences as the website
 // forms for these freebies, so both doors land in one place. Only these two
 // can be asked for, so nobody can tag themselves into anything else from here.
-const FREEBIES: Record<string, { tagId: number; sequenceId: number }> = {
-  "between-touches": { tagId: 20896291, sequenceId: 2825129 },
-  "touch-base": { tagId: 20896290, sequenceId: 2825130 },
+// 28 Nov 2026 (Juliette: "one welcome at a time"): for the freebies marked viaAutomation, this route
+// only TAGS. The Kit automation "Free gift welcome: ..." sees the tag and starts the welcome sequence,
+// unless the person is already in a welcome (tag "Welcome running"). Enrolling here as well would bypass
+// that check, so do not add the sequence call back for these.
+const FREEBIES: Record<string, { tagId: number; sequenceId: number; viaAutomation?: boolean }> = {
+  "between-touches": { tagId: 20896291, sequenceId: 2825129, viaAutomation: true },
+  "touch-base": { tagId: 20896290, sequenceId: 2825130, viaAutomation: true },
   // Let Her Land, the free offering in the Already Her Bundle (3 Nov 2026). Its own tag and
   // sequence; it never touches the Touch Base or Between Touches ones. The sequence stays
   // empty and sends nothing until its email is published.
   "let-her-land": { tagId: 25392202, sequenceId: 2956349 },
   // Quiet Isn't Yes, the free piece for men (10 Nov 2026). Own tag and sequence. The sequence
   // sends nothing until its emails are written, approved and published.
-  "quiet-isnt-yes": { tagId: 25673987, sequenceId: 2964949 },
+  "quiet-isnt-yes": { tagId: 25673987, sequenceId: 2964949, viaAutomation: true },
   // The Fruit, the free 31 Touch Points taster (26 Nov 2026, Juliette: free things should put people on the list).
   // Same tag and sequence the ManyChat TOUCH DM uses, so both doors land in one place.
-  "the-fruit": { tagId: 26235735, sequenceId: 2949146 },
+  "the-fruit": { tagId: 26235735, sequenceId: 2949146, viaAutomation: true },
 };
 
 export async function POST(req: Request) {
@@ -103,7 +107,7 @@ export async function POST(req: Request) {
       body: JSON.stringify({ email_address: emailAddress }),
     });
 
-    if (free) {
+    if (free && !free.viaAutomation) {
       const seqRes = await fetch(`${KIT_BASE}/sequences/${free.sequenceId}/subscribers`, {
         method: "POST",
         headers,
